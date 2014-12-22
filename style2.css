@@ -1,0 +1,513 @@
+body {
+	/*text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+	font-weight:normal;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+	font-size:16px;
+	*/
+}
+
+html {
+	overflow-y:auto;
+	overflow-x:auto;
+}
+
+tr{
+	cursor:pointer;
+}
+
+.circle {
+	fill-opacity: 0.8;
+	stroke-opacity: 0.8;
+	z-index:500;
+}
+
+.loading {
+	font-size: 2em;
+}
+
+.link {
+	stroke-width: 0.5px;
+	stroke-opacity: 0.3;
+	z-index:-500;
+}
+
+div.nodetext {
+	pointer-events: none;
+	width:90%;
+	background-color: inherit;		/*before it was white, now it inherits from browser*/
+	/*font: 16px sans-serif;
+	stroke: #fff;
+	stroke-width: .5px;
+	*/
+}
+
+.active{
+	font-weight:bold;
+}
+
+/*.All{
+background-color: black;
+}*/
+
+td.bar{
+	/*padding:2px 2px 2px 10px;
+	*/
+	color: white;
+}
+
+.legend_row:hover{
+	background-color:#a1f0ff	
+
+}
+
+.inactive {
+	color: #bdbdbd;
+}
+
+.inactive .bar div {
+	background-color: #bdbdbd;
+}
+
+/*
+NMP
+*/
+.labels text {
+	pointer-events: none;
+	font: 14px sans-serif;
+	cursor: default;
+}
+
+.overlay {
+	fill: none;
+	pointer-events: all;
+}
+
+@keyframes zoominmove
+{
+	from {border-color:snow;}
+	to {border-color:paleturquoise;}
+}
+
+/*Safari and Chrome:*/
+@-webkit-keyframes zoominmove
+{
+	from {border-color:snow;}
+	to {border-color:paleturquoise;}
+}
+
+@keyframes dragmove
+{
+	from {border-color:snow;}
+	to {border-color:gainsboro;}
+}
+
+/*Safari and Chrome:*/
+@-webkit-keyframes dragmove
+{
+	from {border-color:snow;}
+	to {border-color:gainsboro;}
+}
+
+@keyframes zoomoutmove
+{
+	from {border-color:snow;}
+	to {border-color:mistyrose;}
+}
+
+/*Safari and Chrome:*/
+@-webkit-keyframes zoomoutmove
+{
+	from {border-color:snow;}
+	to {border-color:mistyrose;}
+}
+
+/* bachground color when going to fullscreen */
+*:fullscreen {
+ /*   transform: translate(50px,100px);
+*/	background-color: white;	/*none is not working everywhere*/
+}
+
+*:-webkit-full-screen {
+/*    -webkit-transform: translate(50px,100px);  Chrome, Safari, Opera 
+    transform: translate(50px,100px);
+*/  	background-color: white;	/*none is not working everywhere*/
+/* the below are used for consistency in all browsers because the presentation differs*/
+/*		position: fixed;
+		background: none;
+		width: 100%;
+		height: 100%;
+
+		top: 0;
+*/}
+
+:-webkit-full-screen #graph {
+  width: 100%;
+}
+
+/*  #mytext {
+  position: absolute; 
+  top: 100px; 
+  color: #FFF; 
+  text-align: center;
+  font-size: 20px;
+  background-color: rgba(221, 221, 221, 0.3);
+  z-index: 99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999;
+}*/
+
+*:-moz-full-screen {
+/*    -webkit-transform: translate(50px,100px);  Chrome, Safari, Opera 
+    transform: translate(50px,100px);
+*/  	background-color: white;	/*none is not working everywhere*/
+}
+
+*:-ms-fullscreen {
+/*	-ms-transform: translate(50px,100px); /* IE 9 */
+  	background-color: white;	/*none is not working everywhere*/
+}
+
+*:fullscreen::backdrop {
+    background-color: white;	/*none is not working everywhere*/
+}
+
+*:-webkit-full-screen::backdrop {
+    background-color: white;	/*none is not working everywhere*/
+}
+
+
+*:-ms-fullscreen::-ms-backdrop {
+    background-color: white;	/*none is not working everywhere*/
+}
+
+
+/* results presentations */
+.nav-wrap, #log { 
+	margin: auto; 
+	border-top:    2px solid gray; 
+	border-bottom: 2px solid gray; 
+}
+
+/* Example Two */
+#example-two, #log ul { 
+/*	background-color: red;
+	margin: 0 auto; 
+	list-style: none; 
+	position: relative; 
+/*	width: 960px; 
+*/}
+#example-two li, #log ul li { 
+/*	display: inline-block; 
+	background-color:green
+*/}
+#example-two li a, #log ul li a { 
+/*	position: relative; 
+	z-index: 200; 
+	color: #bbb; 
+	font-size: 14px; 
+	display: block; 
+	float: left; 
+	padding: 6px 10px 4px 10px;
+	text-decoration: none;
+	text-transform: uppercase; 
+*/}
+#example-two li a:hover { 
+	color: white; 
+}
+#example-two #magic-line-two { 
+	position: absolute; 
+	top: 0; 
+	left: 0; 
+	width: 100px; 
+	background: #900; 
+	z-index: 100; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+.current_page_item_two a { 
+	color: white !important; 
+}
+.ie6 #example-two li, .ie7 #example-two li {
+	display: inline;
+}
+
+/* Clearfix */
+.group:after { visibility: hidden; display: block; content: ""; clear: both; height: 0; }
+
+#leftButton, #rightButton {
+/*  position: absolute;
+  z-index: 2;
+  top: -1;
+  bottom: 0;
+  padding: 0;
+  margin: auto 0;
+  border: none;
+  outline: none;
+  color: #888;
+  background: transparent;
+  font-size:40px;
+  font-family: "Courier New", courier, fixed;
+  opacity: 0.2;
+  filter: alpha(opacity=0);
+  -webkit-transition: opacity .5s;
+  -moz-transition: opacity .5s;
+  -o-transition: opacity .5s;
+  transition: opacity .5s;
+*/}
+ 
+#leftButton {
+/*  padding-right: 150px;
+  left:0;
+*/}
+ 
+#rightButton {
+/*  padding-left: 150px;
+  right: 0;
+*/}
+
+/* (Turn off dotted black outline on FF3) */
+ 
+#leftButton::-moz-focus-inner, #rightButton::-moz-focus-inner {
+  border: none;
+}
+ 
+/*
+  Left and right button hover states:
+  Fade them in to 50% opacity
+*/
+ 
+#leftButton:hover, #rightButton:hover {
+  opacity: .5;
+  filter: alpha(opacity=50);
+  outline: none;
+}
+
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 10px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: gainsboro; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: gainsboro; 
+}
+
+.alert {
+	padding: 8px 35px 8px 14px;
+	margin-bottom: 18px;
+	color: #c09853;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	background-color: #fcf8e3;
+	border: 1px solid #fbeed5;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+
+.alert-info {
+	color: #3a87ad;
+	background-color: #d9edf7;
+	border-color: #bce8f1;
+}
+
+
+/*for the left table creation*/
+div.table
+{
+    display:table;
+    width:inherit;
+}
+
+div.row
+{
+    width:inherit;
+    display:table-row;
+}
+
+div.cell
+{
+    display:table-cell;
+    padding: 5px 5px;
+}
+
+
+.btn-custom-red { background-color: hsl(0, 100%, 66%) !important; background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff8484", endColorstr="#ff5151"); background-image: -khtml-gradient(linear, left top, left bottom, from(#ff8484), to(#ff5151)); background-image: -moz-linear-gradient(top, #ff8484, #ff5151); background-image: -ms-linear-gradient(top, #ff8484, #ff5151); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ff8484), color-stop(100%, #ff5151)); background-image: -webkit-linear-gradient(top, #ff8484, #ff5151); background-image: -o-linear-gradient(top, #ff8484, #ff5151); background-image: linear-gradient(#ff8484, #ff5151); border-color: #ff5151 #ff5151 hsl(0, 100%, 63.5%); color: #333 !important; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.16); -webkit-font-smoothing: antialiased; }
+
+.btn-custom-green { background-color: hsl(0, 100%, 66%) !important; background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff8484", endColorstr="#ff5151"); background-image: -khtml-gradient(linear, left top, left bottom, from(#ff8484), to(#ff5151)); background-image: -moz-linear-gradient(top, #ff8484, #ff5151); background-image: -ms-linear-gradient(top, #ff8484, #ff5151); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ff8484), color-stop(100%, #ff5151)); background-image: -webkit-linear-gradient(top, #ff8484, #ff5151); background-image: -o-linear-gradient(top, #ff8484, #ff5151); background-image: linear-gradient(#ff8484, #ff5151); border-color: #ff5151 #ff5151 hsl(0, 100%, 63.5%); color: #333 !important; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.16); -webkit-font-smoothing: antialiased; }
+
+/*div.colspan
+{
+    display:block;
+    float: center;
+    text-align: middle;
+}
+*/
+/*
+.span7 {
+position: relative;
+}
+.span7 img {
+	float:right;
+	clear:right;
+	margin-right:auto;
+	cursor:pointer;
+}
+.span7>#reset {
+    position: absolute;
+        top: 20px;
+
+    right: 0px;
+}
+*//*.ENERGY{
+stroke: #08104a;
+fill:#0d2878;
+background-color: #0d2878;
+color: #0d2878;
+}
+.NMP{
+stroke: #234056;
+fill:#3a6a99;
+background-color:#3a6a99;
+color:#3a6a99;
+}
+.SPA{
+stroke: #11505e;
+fill:#1f92ad;
+background-color:#1f92ad;
+color:#1f92ad;
+}
+.SEC{
+stroke: #28665e;
+fill:#3e9e92;
+background-color:#3e9e92;
+color:#3e9e92;
+}
+.TPT{
+stroke: #058592;
+fill:#088533;
+background-color:#088533;
+color:#088533;
+}
+.HEALTH{
+//stroke: #54470f;
+//fill:#7f6b17;
+stroke: #214924;
+fill: #2F6833;
+background-color:#2F6833;
+color:#2F6833;
+}
+.ICT{
+stroke: #54511c;
+fill:#827d2b;
+background-color:#827d2b;
+color:#827d2b;
+}
+.ENV{
+stroke: #485420;
+fill:#6d7f30;
+background-color:#6d7f30;
+color:#6d7f30;
+}
+.GA{
+stroke: #2e4f1d;
+fill:#4a7f2e;
+background-color:#4a7f2e;
+color:#4a7f2e;
+}
+.SSH{
+stroke: #47081d;
+fill:#6b0e2c;
+background-color:#6b0e2c;
+color:#6b0e2c;
+}
+.KBBE{
+stroke: #215925;
+fill:#307f35;
+background-color:#307f35;
+color:#307f35;
+}
+.ERC{
+//stroke: #54271e;
+stroke: #BF3081;
+//fill:#873f2d;
+fill: #E23998;
+background-color:#E23998;
+color:#E23998;
+}
+.PEOPLE{
+stroke:#a13214;
+fill:#d1411b;
+background-color:#d4411b;
+color:#d4411b;
+}
+.INCO{
+stroke: #9e4c15;
+fill: #de6b1e;
+background-color: #de6b1e;
+color: #de6b1e;
+}
+.SiS{
+stroke: #82302e;
+fill:#bf4644;
+background-color:#bf4644;
+color:#bf4644;
+}
+.REGPOT{
+stroke: #6b0f0d;
+fill:#c21a17;
+background-color:#c21a17;
+color:#c21a17;
+}
+.INFRA{
+stroke: #28233b;
+fill:#393254;
+background-color:#393254;
+color:#393254;
+}
+.SME{
+stroke: #2f2175;
+fill:#402da1;
+background-color:#402da1;
+color:#402da1;
+}
+.COH{
+stroke: #411a57;
+fill:#772f9e;
+background-color:#772f9e;
+color:#772f9e;
+}
+.REGIONS{
+stroke: #2e2237;
+fill:#822f4c;
+background-color:#822f4c;
+color:#822f4c;
+}
+.Fission{
+stroke: #000000;
+fill:#000000;
+background-color:#000000;
+color:#000000;
+}
+.Fusion{
+stroke: #353535;
+fill:#353535;
+background-color:#353535;
+color:#353535;
+}
+*/
+

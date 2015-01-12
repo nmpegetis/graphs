@@ -12,7 +12,6 @@ ini_set('memory_limit', '4096M');
 // https://www.digitalocean.com/community/tutorials/how-to-install-and-use-memcache-on-ubuntu-14-04
 // DON'T FORGET to restart the server at the end
 
-
 $meminstance = new Memcache();
 $meminstance->pconnect('localhost', 11211);
 

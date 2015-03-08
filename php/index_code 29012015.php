@@ -4,110 +4,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title ;?></title>
     <link href="../../../images/favicon.ico" rel="shortcut icon" />
-
-	<!-- Latest compiled and minified CSS -->
-	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
-	<!-- Optional theme -->
-	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
-	<link rel="stylesheet" href="../../../css/bootstrap.min.css">
-	<link rel="stylesheet" href="../../../css/bootstrap-theme.min.css">
-
-	
-	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.css" />
-	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.filter.css" />
-
-	<link rel="stylesheet" type="text/css" href="../../../style2.css" />
-	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.min.css" />
-	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.css" />
-	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.min.css" />
-	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.css" />
-	<link rel="stylesheet" type="text/css" href="../../../slider/css/slider.css" />
-	<link rel="stylesheet" type="text/css" href="../../../slider/less/slider.less" />
-	<!-- <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.3/themes/flick/jquery-ui.css" /> -->
-
-	<style>
-		.ui-widget-*{
-			background: 50% 50% #eeeeee
-		}
-
-		.vcenter {
-		    margin-top: 1%;
-		}
-
-		.subd-vcenter {
-		    display: inline-block;
-		    vertical-align: middle;
-		    float: none;
-		}
-
-
-		#chord_circle circle {
-			fill: none;
-			pointer-events: all;
-		}
-		 
-		.group path {
-			fill-opacity: .5;
-		}
-		 
-		path.chord {
-			stroke: #000;
-			stroke-width: .25px;
-		}
-		 
-		#chord_circle:hover path.fade {
-			display: none;
-		}
-
-		.divider-vertical {
-			height: inherit;
-			padding: 0 10 0 10;
-			margin: 0 9px;
-			border-left: 1px solid #020202;
-			border-right: 1px solid #000000;
-		}
-
-
-#slider12a .slider-track-right {
-	border-bottom-color: blue;
-	background-color: blue;
-	background: #8283FF;
-	/*background: blue;*/
-}
-
-	</style>
-
-	<!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
-
-	<!-- Latest compiled and minified JavaScript -->
-	 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
-	<!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script> -->
-
-	<!-- // <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
-	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
-
-	<script src="../../../js/d3.v3.min.js"></script>
-
-	<!-- Latest compiled and minified JavaScript -->
-	<!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.js"></script> -->
-	<!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.min.js"></script> -->
-	 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
-
-	<script src="../../../js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="../../../js/jquery-ui.min.js"></script>
-
-
-	<script type="text/javascript" src="../../../utils.js"></script>
-
-	<script type="text/javascript" src="../../../jquery.jswipe-0.1.2.js"></script>
-
-	<!-- // <script type="text/javascript" src="http://fgnass.github.io/spin.js/spin.min.js"></script> -->
-	<script type="text/javascript" src="../../../js/spin.min.js"></script>
-
-	<script type="text/javascript" src="../../../select/jquery.multiselect.min.js"></script>
-	<script type="text/javascript" src="../../../select/jquery.multiselect.filter.js"></script>
-	<script type="text/javascript" src="../../../slider/js/bootstrap-slider.js"></script>
-
+	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script>
 		// use below to change layout in mobile devices
 		function detectmob() { 
@@ -139,7 +36,51 @@
 		}
 	</script>
 
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 
+	<script type="text/javascript" src="../../../utils.js"></script>
+
+	<script type="text/javascript" src="../../../jquery.jswipe-0.1.2.js"></script>
+	<script type="text/javascript" src="http://fgnass.github.io/spin.js/spin.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.css" />
+	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.filter.css" />
+	<script type="text/javascript" src="../../../select/jquery.multiselect.min.js"></script>
+	<script type="text/javascript" src="../../../select/jquery.multiselect.filter.js"></script>
+
+
+	<link href="../../../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="../../../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+	<script src="../../../bootstrap/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="../../../style2.css" />
+	<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+
+	<style>
+		.ui-widget-content{
+			background: 50% 50% #eeeeee
+		}
+
+		#chord_circle circle {
+			fill: none;
+			pointer-events: all;
+		}
+		 
+		.group path {
+			fill-opacity: .5;
+		}
+		 
+		path.chord {
+			stroke: #000;
+			stroke-width: .25px;
+		}
+		 
+		#chord_circle:hover path.fade {
+			display: none;
+		}
+
+	</style>
 	<script type='text/javascript'>//<![CDATA[ 
 	window.focus();
 	$(document).ready(function() {
@@ -177,7 +118,6 @@
 			yScale,
 			legend,
 			mytext,
-			mytextTitle,
 			grantslist1,
 			grantslist2,
 			explist,
@@ -251,7 +191,6 @@
 			counterMax = 4,
 			counter = 0,
 			found = 0,
-			smfound = 0,				//similarnodes found
 			flagForTranformation = 0
 			charge = <?php echo $charge ;?>,
 				/* catch switching in and out full screen */
@@ -294,40 +233,17 @@
 			chord_r1 = chord_height / 2,
 			chord_r0 = chord_r1 - 15,	//-15 is for padding labels outside the outerRadius
 			chord_formatPercent = d3.format(".1%"),
-			chord_svg = [],
-			percentageSum = 0;
+			chord_svg = [];
 
 		spinner = new Spinner(opts).spin(target);
-		$("#tags").val("");							// when refreshing page placeholder in topic search is shown
-		$("#header1").hide();
-		$("#header2").hide();
-		$("#log").hide();
-		$("#similarNodes").hide();
-		$("#upButton").hide();
-		$("#downButton").hide();
-		$("#exitHeader2").click(function(){
-			$( "#header2" ).hide();
-			$( "#similarNodes" ).hide();						
-		});
-		$("#exitHeader1").click(function(){
-			$( "#header1" ).hide();
-			$( "#log" ).hide();						
-		});
 
-$("#ex8").slider({
-	tooltip: 'always'
-});
-
-$("#ex6").slider({ id: "slider12a", min: 0, max: 100, value: 50 });
-$("#ex6").on("slide", function(slideEvt) {
-	$("#ex6SliderVal").text(slideEvt.value);
-});
 		// function creation jquery percentage
 		jQuery.extend({
 			percentage: function(a, b){
 				return Math.round((a/b)*100);
 			}
 		});
+
 
 		// creating hashCode function()
 		String.prototype.hashCode = function(){
@@ -342,24 +258,17 @@ $("#ex6").on("slide", function(slideEvt) {
 		}
 
 
-//initialization of tooltips and popover
-		$(function () {
-			$('[data-toggle="tooltip"]').tooltip()
-		})
-		$(function () {
-			$('[data-toggle="popover"]').popover()
-		})
-
+		
 
 	// hide until json data have been loaded from server
-		$("#myTab").hide();
+		$("#subdivision_btn").hide();
 		$("#experiment_btn").hide();
 		$("#boost_btn").hide();
 
 
 		$(function(){
 			$("#grants").multiselect({
-			   noneSelectedText: "<?php echo $node_name;?>s"
+			   noneSelectedText: "Select a <?php echo $node_name;?>"
 			});
 			$("#experiments").multiselect({
 			   multiple: false,
@@ -384,9 +293,8 @@ $("#ex6").on("slide", function(slideEvt) {
 			nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3,
 
 
-		// $("#dialogExp").text(experimentName)
-		// $("#dialogDesc").text(experimentDescription)
-console.log("5678")
+		$("#dialogExp").text(experimentName)
+		$("#dialogDesc").text(experimentDescription)
 
 		ajaxCall(experimentName,expsimilarity);
 
@@ -424,8 +332,7 @@ console.log("5678")
 			if(detectmob() || $(window).width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
 				w = $(window).width();//800,
 				h = $(window).width();//800,
-				$('#mytext-title').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-				$('#mytext-content').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+				$('#mytext').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
 				$('#myinfo').attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
 				
 				if($('#jumpPrevious').length == 0)
@@ -445,8 +352,7 @@ console.log("5678")
 			}
 			else if ($(window).width()>755 && flagForTranformation==1){
 				flagForTranformation = 0;
-				$('#mytext-title').attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
-				$('#mytext-content').attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
+				$('#mytext').attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
 				$('#myinfo').attr("style","float:;clear:; min-height:;height:;min-width:;width:;");
 				$('#mygraph').attr("style","float:;padding-right:;clear:;");
 				$('#jumpNext').remove();
@@ -456,7 +362,7 @@ console.log("5678")
 				$('#mysubdivision').insertAfter('#mygraph');
 			}
 
-//			svgElement.style["width"]= w;
+			svgElement.style["width"]= w;
 			svgElement.style["height"] = h;
 
 			svgimgIN.setAttributeNS(null,'x',$('#graph').width()-27);
@@ -600,8 +506,7 @@ console.log("5678")
 		if(detectmob() || $(window).width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
 			w = $(window).width();//800,
 			h = $(window).width();//800,
-			$('#mytext-title').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-			$('#mytext-content').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+			$('#mytext').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
 			$('#myinfo').attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
 			
 			if($('#jumpPrevious').length == 0)
@@ -623,13 +528,13 @@ console.log("5678")
 
 	/* event handlers */
 		vis = d3.select("#graph")
-			// .style("width", w)
+			.style("width", w)
 			.style("height", h)
 			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
 			.style("preserveAspectRatio", "xMidYMid meet")
 			.style("border-style","solid")
 			.style("cursor","pointer")
-			.style("border-color","#f6f6f6");
+			.style("border-color","snow");
 
 
 	/*** Create scales to handle zoom coordinates ***/
@@ -642,8 +547,7 @@ console.log("5678")
 
 
 		legend = d3.select("#legend");
-		mytextTitle = d3.select("#mytext-title");
-		mytext = d3.select("#mytext-content");
+		mytext = d3.select("#mytext");
 		grantslist1 = d3.select("#grantsGroup1");
 		grantslist2 = d3.select("#grantsGroup2");
 		explist = d3.select("#experiments");
@@ -747,7 +651,7 @@ console.log("5678")
 					$('fullscreen_exit').attr('visibility', 'hidden');
 
 					vis.style("position","");
-					vis.style("width","100%");
+					vis.style("width","95%");
 					vis.style("height","");
 					vis.style("top","");
 					vis.style("background-color","none");
@@ -793,8 +697,6 @@ console.log("5678")
 			.size([w, h])
 			.on("tick", initialTick);
 			
-
-
 	
 // Na tsekarw me to Enter ti tha anoigei. An  leitourgei swsta
 		$(document).keydown(function(e) {
@@ -973,7 +875,7 @@ console.log("5678")
 				else if (svgElement.webkitCancelFullScreen) {
 
 					vis.style("position","");
-					vis.style("width","100%");
+					vis.style("width","95%");
 					vis.style("top","");							/// <--------- emeina edw : meta na to midenisw otan bgainei apo to fullscreen
 					vis.style("background-color","none");
 
@@ -1167,10 +1069,6 @@ console.log("5678")
 			return function(d, i) {
 				// all grants must be unchecked
 				$("#grants").multiselect("uncheckAll");
-				$("#boost_btn").show();
-
-				// $( "#similarNodes" ).empty();			//clear anything included in child nodes
-				smfound=0;								// similar nodes found initialization
 
 				if($(this).css("fill-opacity") < normal)
 					return false;
@@ -1249,24 +1147,11 @@ console.log("5678")
 
 				/* maybe use: tfidf algorithm to find discriminative topics and words */
 
-//					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
+					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
 					if(d == o){
-
-						$("#mytext-title").empty();
-						mytextTitle.append("div").append("ul")
-							.attr("class", "pagination active")
-							.attr("data-toggle","tooltip")
-							.attr("data-placement","right")
-							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.area + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
-						var str = "";
 						topicsGroupPerNode = grants[o.id];
 						if(topics1 != null){
-
-//							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS: <br/>";
-							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS: ";
-							// str += "<button id='boost_btn' class='btn btn-link btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'><span  class='navbar-brand glyphicon glyphicon-info-check' aria-hidden='true'>boost</span><span class='sr-only'>Experiment Description</span></button> <br/>";
-							str += "<br/>";
+							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS:<br/>";
 							len = topicsGroupPerNode.length;
 							for(var i=0;i<len;i++){
 								var mywords = topics1[topicsGroupPerNode[i].topic];
@@ -1279,103 +1164,15 @@ console.log("5678")
 								}
 								str += "<br/><br/>";
 							}
-//						str += "<br/></br> SIMILAR TO:</span>";
+						str += "<br/></br> SIMILAR TO:</span>";
 						}
 					}
-					else{
-						$("#header1").hide();
-						$("#log").hide();
-						$("#tags").val("");	
-						$("#header2").show();
-						$("#similarNodes").show();
-
-						var similarNodes = "";
-	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.area + "result\"><a class=\"" + o.area + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
-						smfound++;
-
-						$('#simNode'+i).hover(function(){
-							console.log("hover");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-							$(this).css("opacity","0.5");
-						},function(){
-							console.log("hover2");
-							$(this).css("opacity","initial");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-						});
-
-						$( "#similarNodes > div > ul" ).append(similarNodes);
-
-					}
+					
 					/* move circle elements above all others within the same grouping */ 
 		//			vis.selectAll(".circle").moveToFront();
 					vis.selectAll(".labels").moveToFront();
-
 			
 					return str;
-				});
-
-				counter=0;						//(re)-initialize counter to zero
-				counterMax = 10;
-
-				$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-				counter+=counterMax;
-
-				$("#upButton").hide();
-				if($('#similarNodes > div > ul > li:last').css('display') == 'inline'){
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-				else{
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-
-				$('#downButton').on("click",function(){
-					if ((counter+counterMax)<smfound){
-						$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-						counter+=counterMax;
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-
-					}
-					else {
-						$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li visible")
-						$("#downButton").hide();
-					}
-				});
-
-				$('#upButton').on("click",function(){
-					if (counter-counterMax>0){
-						$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-						counter-=counterMax;
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-
-					}
-					else{
-						$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-						counter = 10;
-
-						console.log("1 li visible")
-						$("#upButton").hide();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-					}
 				});
 
 				fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
@@ -1386,17 +1183,10 @@ console.log("5678")
 
 
 		function fadeChord(opacity, showText) {
-
-			// all grants must be unchecked
-			$("#grants").multiselect("uncheckAll");
-			$("#boost_btn").show();
-
-			// $( "#similarNodes" ).empty();			//clear anything included in child nodes
-			smfound=0;								// similar nodes found initialization
-
 			if (showText)
 				return function(d, i) {
 				// all grants must be unchecked
+				$("#grants").multiselect("uncheckAll");
 
 				fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
 				vis.selectAll(".labels")
@@ -1404,6 +1194,8 @@ console.log("5678")
 				}
 			else
 				return function(d, i) {
+				// all grants must be unchecked
+				$("#grants").multiselect("uncheckAll");
 
 				if($(this).css("fill-opacity") < normal)
 					return false;
@@ -1470,7 +1262,6 @@ console.log("5678")
 
 				selectedLabelIndex = 0; // labels.indexOf(selectedLabelData);
 
-
 				var temp = mytext.selectAll("div.nodetext").data([selectedLabelData].concat(labels)).enter().append("div").attr("class", function(o) {
 					if( d.index == o.index )
 						return "nodetext " + o.area + " active";
@@ -1483,63 +1274,27 @@ console.log("5678")
 
 				/* maybe use: tfidf algorithm to find discriminative topics and words */
 
-//					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
+					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
 					if(d == o){
-
-						$("#mytext-title").empty();
-						mytextTitle.append("div").append("ul")
-							.attr("class", "pagination active")
-							.attr("data-toggle","tooltip")
-							.attr("data-placement","right")
-							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.area + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
-						var str = "";
 						topicsGroupPerNode = grants[o.id];
 						if(topics1 != null){
-							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS: ";
-							// str += "<button id='boost_btn' class='btn btn-link btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'><span  class='navbar-brand glyphicon glyphicon-info-check' aria-hidden='true'>boost</span><span class='sr-only'>Experiment Description</span></button> <br/>";
-							str += "<br/>";
+							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS:<br/>";
 							len = topicsGroupPerNode.length;
 							for(var i=0;i<len;i++){
 								var mywords = topics1[topicsGroupPerNode[i].topic];
 								var wlen = mywords.length;
 								
-								for(var j=0;j<wlen;j++){
+								for(var j=0;j<wlen;j++){							
 									str += "<span class='topic' style='opacity:" + mywords[j].counts/mywords[0].counts + ";'>" + mywords[j].item + "</span>";
 									if(j<wlen-1)
 										str += ",&nbsp";
 								}
 								str += "<br/><br/>";
 							}
-//						str += "<br/></br> SIMILAR TO:</span>";
+						str += "<br/></br> SIMILAR TO:</span>";
 						}
 					}
-					else{
-						$("#header1").hide();
-						$("#log").hide();
-						$("#tags").val("");	
-						$("#header2").show();
-						$("#similarNodes").show();
 
-						var similarNodes = "";
-	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.area + "result\"><a class=\"" + o.area + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
-						smfound++;
-
-
-						$('#simNode'+i).hover(function(){
-							console.log("hover");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-							$(this).css("opacity","0.5");
-						},function(){
-							console.log("hover2");
-							$(this).css("opacity","initial");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-						});
-
-						$( "#similarNodes > div > ul" ).append(similarNodes);
-
-					}
 					
 					/* move circle elements above all others within the same grouping */ 
 		//			vis.selectAll(".circle").moveToFront();
@@ -1547,71 +1302,6 @@ console.log("5678")
 			
 					return str;
 				});
-
-				counter=0;						//(re)-initialize counter to zero
-				counterMax = 10;
-
-				$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-				counter+=counterMax;
-
-				$("#upButton").hide();
-				if($('#similarNodes > div > ul > li:last').css('display') == 'inline'){
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-				else{
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-
-				$('#downButton').on("click",function(){
-					if ((counter+counterMax)<smfound){
-						$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-						counter+=counterMax;
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-
-					}
-					else {
-						$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li visible")
-						$("#downButton").hide();
-					}
-				});
-
-				$('#upButton').on("click",function(){
-					if (counter-counterMax>0){
-						$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-						counter-=counterMax;
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-
-					}
-					else{
-						$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-						counter = 10;
-
-						console.log("1 li visible")
-						$("#upButton").hide();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-					}
-				});
-
-
 				temp.on("mouseover",function(){alert("click");});
 
 				fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
@@ -1624,13 +1314,6 @@ console.log("5678")
 
 	/* test function is similar to fade function*/
 		function testGrantSelection(mynode, opacity){
-
-			// all grants must be unchecked
-			$("#grants").multiselect("uncheckAll");
-			$("#boost_btn").show();
-
-			// $( "#similarNodes" ).empty();			//clear anything included in child nodes
-			smfound=0;								// similar nodes found initialization
 
 			console.log("prints BEFORE")
 			/*console.log("nodeCircles")
@@ -1747,22 +1430,11 @@ console.log("5678")
 
 				/* maybe use: tfidf algorithm to find discriminative topics and words */
 
-					// var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
+					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
 					if(mynode == o){
-						$("#mytext-title").empty();
-						mytextTitle.append("div").append("ul")
-							.attr("class", "pagination active")
-							.attr("data-toggle","tooltip")
-							.attr("data-placement","right")
-							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.area + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
-						var str = "";
-
 						topicsGroupPerNode = grants[o.id];
 						if(topics1 != null){
-							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS: ";
-							// str += "<button id='boost_btn' class='btn btn-link btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'><span  class='navbar-brand glyphicon glyphicon-info-check' aria-hidden='true'>boost</span><span class='sr-only'>Experiment Description</span></button> <br/>";
-							str += "<br/>";
+							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS:<br/>";
 
 							len = topicsGroupPerNode.length;
 							for(var i=0;i<len;i++){
@@ -1776,34 +1448,9 @@ console.log("5678")
 								}
 								str += "<br/><br/>";
 							}
-//						str += "<br/></br> SIMILAR TO:</span>";
+
+						str += "<br/></br> SIMILAR TO:</span>";
 						}
-					}
-					else{
-						$("#header1").hide();
-						$("#log").hide();
-						$("#tags").val("");	
-						$("#header2").show();
-						$("#similarNodes").show();
-
-						var similarNodes = "";
-	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.area + "result\"><a class=\"" + o.area + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
-						smfound++;
-
-
-						$('#simNode'+i).hover(function(){
-							console.log("hover");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-							$(this).css("opacity","0.5");
-						},function(){
-							console.log("hover2");
-							$(this).css("opacity","initial");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-						});
-
-						$( "#similarNodes > div > ul" ).append(similarNodes);
-
 					}
 					
 					/* move circle elements above all others within the same grouping */ 
@@ -1812,119 +1459,6 @@ console.log("5678")
 			
 					return str;
 				});
-
-			counter=0;						//(re)-initialize counter to zero
-			counterMax = 10;
-
-			$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-			counter+=counterMax;
-
-			$("#upButton").hide();
-			if($('#similarNodes > div > ul > li:last').css('display') == 'inline'){
-				console.log("last li visible")
-				$("#downButton").hide();
-			}
-			else{
-				console.log("last li not visible")
-				$("#downButton").show();
-			}
-
-			$('#downButton').on("click",function(){
-				if ((counter+counterMax)<smfound){
-					$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-					counter+=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else {
-					$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-			});
-
-		//for mobile
-			$('#similarNodes').on("swipeup",function(){
-				if ((counter+counterMax)<smfound){
-					$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-					counter+=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else {
-					$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-			});
-
-
-			$('#upButton').on("click",function(){
-				if (counter-counterMax>0){
-					$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-					counter-=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else{
-					$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-					counter = 10;
-
-					console.log("1 li visible")
-					$("#upButton").hide();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-			});
-
-		//for mobile
-			$('#similarNodes').on("swipedown",function(){
-				if (counter-counterMax>0){
-					$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-					counter-=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else{
-					$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-					counter = 10;
-
-					console.log("1 li visible")
-					$("#upButton").hide();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-			});
 
 			fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
 			vis.selectAll(".labels")
@@ -1954,12 +1488,8 @@ console.log(selectnodeLabels)
 	/* test function is similar to fade function*/
 		function test(mynode, opacity){
 
-			// all grants must be unchecked
+		// all grants must be unchecked
 			$("#grants").multiselect("uncheckAll");
-			$("#boost_btn").show();
-
-			// $( "#similarNodes" ).empty();			//clear anything included in child nodes
-			smfound=0;								// similar nodes found initialization
 
 			var types = new Array();
 
@@ -2061,22 +1591,11 @@ console.log(selectnodeLabels)
 
 				/* maybe use: tfidf algorithm to find discriminative topics and words */
 
-//					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
+					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
 					if(mynode == o){
-						$("#mytext-title").empty();			
-						mytextTitle.append("div").append("ul")
-							.attr("class", "pagination active")
-							.attr("data-toggle","tooltip")
-							.attr("data-placement","right")
-							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.area + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
-						var str = "";
-
 						topicsGroupPerNode = grants[o.id];
 						if(topics1 != null){
-							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS: ";
-							// str += "<button id='boost_btn' class='btn btn-link btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'><span  class='navbar-brand glyphicon glyphicon-info-check' aria-hidden='true'>boost</span><span class='sr-only'>Experiment Description</span></button> <br/>";
-							str += "<br/>";
+							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS:<br/>";
 
 							len = topicsGroupPerNode.length;
 							for(var i=0;i<len;i++){
@@ -2097,36 +1616,8 @@ console.log(selectnodeLabels)
 								str += "<br/><br/>";
 							}
 
-//						str += "<br/></br> SIMILAR TO:</span>";
+						str += "<br/></br> SIMILAR TO:</span>";
 						}
-					}
-					else{
-						$("#header1").hide();
-						$("#log").hide();
-						$("#tags").val("");	
-						$("#header2").show();
-						$("#similarNodes").show();
-
-						var similarNodes = "";
-	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.area + "result\"><a class=\"" + o.area + "result \" id=\"simNode" + i + "\" rel=\"#C6AA01\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
-						smfound++;
-
-//todo auto pou den douleuei sto linking einai ta key
-
-
-						$('#simNode'+i).hover(function(){
-							console.log("hover");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-							$(this).css("opacity","0.5");
-						},function(){
-							console.log("hover2");
-							$(this).css("opacity","initial");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-						});
-
-						$( "#similarNodes > div > ul" ).append(similarNodes);
-
 					}
 					
 					/* move circle elements above all others within the same grouping */ 
@@ -2134,120 +1625,6 @@ console.log(selectnodeLabels)
 			
 					return str;
 				});
-
-
-			counter=0;						//(re)-initialize counter to zero
-			counterMax = 10;
-
-			$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-			counter+=counterMax;
-
-			$("#upButton").hide();
-			if($('#similarNodes > div > ul > li:last').css('display') == 'inline'){
-				console.log("last li visible")
-				$("#downButton").hide();
-			}
-			else{
-				console.log("last li not visible")
-				$("#downButton").show();
-			}
-
-			$('#downButton').on("click",function(){
-				if ((counter+counterMax)<smfound){
-					$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-					counter+=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else {
-					$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-			});
-
-		//for mobile
-			$('#similarNodes').on("swipeup",function(){
-				if ((counter+counterMax)<smfound){
-					$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-					counter+=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else {
-					$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-			});
-
-
-			$('#upButton').on("click",function(){
-				if (counter-counterMax>0){
-					$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-					counter-=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else{
-					$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-					counter = 10;
-
-					console.log("1 li visible")
-					$("#upButton").hide();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-			});
-
-		//for mobile
-			$('#similarNodes').on("swipedown",function(){
-				if (counter-counterMax>0){
-					$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-					counter-=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else{
-					$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-					counter = 10;
-
-					console.log("1 li visible")
-					$("#upButton").hide();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-			});
 
 			$(".topic").on("click",function(){
 				//alert("clicked keyword "+$(this).html());
@@ -2298,20 +1675,7 @@ console.log(selectnodeLabels)
 				types.push($($(this).find("td").get(0)).find("div").html());
 			});
 			showtype(fade_out, types);
-			//mytext.selectAll(".nodetext").remove();
-			$(".nodetext").remove();
-			$("#similarNodes > div > ul").empty();
-
-			$("#boost_btn").hide();
-			$("#header1").hide();
-			$("#log").hide();
-			$("#tags").val("");	
-			$("#header2").hide();
-			$("#similarNodes").hide();
-
-			$("#upButton").hide();
-			$("#downButton").hide();
-
+			mytext.selectAll(".nodetext").remove();
 
 			selectnodeCircles = nodeCircles
 			selectnodeLabels = nodeLabels
@@ -2363,20 +1727,7 @@ console.log(selectnodeLabels)
 					types.push($($(this).find("td").get(0)).find("div").html());
 				});
 				showtype(fade_out, types);
-				//mytext.selectAll(".nodetext").remove();
-				$(".nodetext").remove();
-				$("#similarNodes > div > ul").empty();
-
-				$("#boost_btn").hide();
-				$("#header1").hide();
-				$("#log").hide();
-				$("#tags").val("");	
-				$("#header2").hide();
-				$("#similarNodes").hide();
-
-				$("#upButton").hide();
-				$("#downButton").hide();
-
+				mytext.selectAll(".nodetext").remove();
 			}
 		}
 
@@ -2544,12 +1895,10 @@ console.log(selectnodeLabels)
 				.on("mouseout", svgimgIN.setAttributeNS(null,'fill-opacity',0.7));
 			svgimgIN
 				.addEventListener("click", function(){
-					if(!detectmob() || $(window).width()<=755){						
-						$("#mytext-title").detach().prependTo("#foreignObject");
-						$("#mytext-content").detach().prependTo("#mytext-title");
-					}
+					if(!detectmob() || $(window).width()<=755)
+						$("#mytext").detach().prependTo("#foreignObject");
 					console.log("web1")						
-					$("#mytext-content > div").show();
+					$("#mytext > div").show();
 					svgfullscreen()
 				});
 			
@@ -2576,11 +1925,9 @@ console.log(selectnodeLabels)
 			svgimgOUT
 				.addEventListener("click", function(){
 					svgfullscreenExit()
-					if(!detectmob() || $(window).width()<=755){
-						$("#mytext-title").detach().prependTo("#myinfo")
-						$("#mytext-content").detach().prependTo("#mytext-title")						
-					}									// do only if not a mobile
-					console.log("web2")						
+					if(!detectmob() || $(window).width()<=755)									// do only if not a mobile
+						$("#mytext").detach().prependTo("#myinfo")
+						console.log("web2")						
 				});
 
 			svgimgReset = document.createElementNS('http://www.w3.org/2000/svg','image');
@@ -2885,31 +2232,10 @@ console.log(selectnodeLabels)
 
 /**** DB CONNECTION FUNCTIONS ****/
 		function ajaxCall(experiment,expsimilarity){
-			// $.ajax({
-			// 	type: "GET",
-			// 	async: true,
-			// 	url: "./dbfront.php",
-			// 	data:"s="+expsimilarity+"&ex="+experiment,
-			// 	success: function(resp){
-			// 		spinner.stop();
-			// 		myresponse = JSON.parse(resp);
-			// 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
-			// 		topics1 = myresponse.topicsNoSort;
-			// 		topics2 = myresponse.topics;
-			// 		grants = myresponse.grants;
-			// 		experiments = myresponse.expers;
-			// 		renderpage(myresponse.resp);
-
-			// 	},
-			// 	error: function(e){
-			// 		alert('Error: ' + JSON.stringify(e));
-			// 	}
-			// });
-
 			$.ajax({
 				type: "GET",
 				async: true,
-				url: "../../../jsonFET.php",
+				url: "./dbfront.php",
 				data:"s="+expsimilarity+"&ex="+experiment,
 				success: function(resp){
 					spinner.stop();
@@ -3154,23 +2480,12 @@ console.log(selectnodeLabels)
 
 			var rows;
 			rows = legend.selectAll("tr")
-				.data(legend_data);
-				rows
+				.data(legend_data)
 				.enter()
 				.append("tr")
 				.style("height","10px")
 				.attr("class","legend_row")
-				.attr("id",function(d) {return "legend_row" + d.name;})
-				.on("click",function(d,i){
-
-					$("#mytext-title").empty();
-					mytextTitle.append("div").append("ul")
-						.attr("class", "pagination active")
-						.attr("data-toggle","tooltip")
-						.attr("data-placement","right")
-						.attr("title","...more about subdivision and link...")
-//						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
-						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s ");
+				.on("click",function(d){
 					if($(this).hasClass("active_row")){
 						$(this).removeClass("active_row");
 						$(this).addClass("inactive");
@@ -3192,13 +2507,60 @@ console.log(selectnodeLabels)
 						}
 					}
 
+					$("#mytext")
+						.append("div")
+						.attr("class", "nodetext " + d.name + " active")
+
+						// .attr("class", function(o) {
+						//  	//if( d.index == o.index )
+						// 	//	return "nodetext " + d.name + " active";
+						// 	return "nodetext " + d.name + " active";
+						// })
+						.attr("display","table")
+						.html(function() {	
+
+							for (var i = 0; i < subdConnections.length; i++) {
+								if (subdConnections[i] == d.name){
+									var str = d.name + ":<br/>	<?php echo $node_name;?>s:" + d.pr + "<br/>	<?php echo $node_name;?> relations:" + mytextsubdivisions[i].relations;
+
+									str += "<div class='row'><div class='cell' style='border-top:solid'>relations → </div><div class='cell' style='border-top:solid'>From</div><div class='cell'style='border-top:solid'>To</div></div>";
+									str += "<div class='row'><div class='cell'></div><div class='cell'>"+d.name+"</div><div class='cell'>"+d.name+"</div></div>";
+									str += "<div class='row'><div class='cell'></div><div class='cell'>To</div><div class='cell'>From</div></div>";
+
+									for (var j = 0; j < subdConnections.length; j++) {
+
+										mytextsubdivisions.forEach(function(z){
+											if(z.name == d.name){
+												if(z.name != mytextsubdivisions[j].name)
+													str += "<div class='row'><div class='cell' style='color:"+mytextsubdivisions[j].color+";border-right:solid "+mytextsubdivisions[i].color+";border-top:solid "+mytextsubdivisions[i].color+";'><div>" + mytextsubdivisions[j].name + "</div></div><div class='cell' style='border-top:solid "+mytextsubdivisions[i].color+";'>"
+													 + subdBiConnectionsNum[i][j]
+													 + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/mytextsubdivisions[i].relations)
+													 + ")</div><div class='cell' style='color:"+mytextsubdivisions[j].color+";border-left:solid "+mytextsubdivisions[i].color+";border-top:solid "+mytextsubdivisions[i].color+";'>" 
+													 + subdBiConnectionsNum[j][i]
+													 + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
+													 + ")</div></div>" ;
+												else
+													str += "<div class='row'><div class='cell' style='border-right:solid;border-top:solid;'>" + z.name + "</div><div class='cell' style='border-top:solid;'>"
+												 + subdBiConnectionsNum[i][i]
+												 + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
+												 + ")</div><div class='cell' style='border-left:solid;border-top:solid;'>"
+												 + subdBiConnectionsNum[i][i]
+												 + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
+												 + ")</div></div>" ;
+											}
+										})
+									 }
+								}
+							}
+							return str;
+						});
+
 					//find all types to show
 					var types = new Array();
 					var collection = null;
 					if($(".active_row").length == 0){
 						collection = $(".legend_row");
-						$("#mytext-content").empty();
-						$("#mytext-title").empty();
+						$("#mytext").empty();
 					}
 					else
 						collection = $(".active_row");
@@ -3237,120 +2599,6 @@ console.log(selectnodeLabels)
 				.style("width","40px")
 				.style("height","100%")
 				.text(function(d){return numberWithCommas(d.pr);});
-
-
-
-			rows//.append("td")
-				 .append("div")
-//				.attr("class","btn btn-primary btn-block")
-				.attr("class","subd-vcenter btn-primary btn-block")
-				// .attr("type","button")
-				.style("height","100%")
-				.attr("data-toggle","collapse")
-				.attr("data-target",function(d) {return "#collapse"+d.name;})
-				.attr("aria-expanded","false")
-				.attr("aria-controls",function(d) {return "#collapse"+d.name;})
-				.append("center")
-				.append("i")
-				.attr("class","glyphicon glyphicon-chevron-down")
-
-
-			rows
-				.enter()
-				.append("tr")
-				.attr("id",function(d) {return "collapse"+d.name;})
-				.attr("class","collapse ")
-//				.attr("class",function(d) {return "collapse "+d.name;})
-				.append("td")
-				.attr("colspan","4")				
-				.append("div")
-				.attr("display","table");
-				// .html("        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably havent heard of them accusamus labore sustainable VHS.");
-
-
-
-				$(document).bind("chordready", function(){
-					rows.each(function(d, i) {
-	//    				console.log(this, d, i);
-						$("#collapse"+d.name)
-	//						.append("div")
-	//						.attr("class", "nodetext " + d.name + " active")
-	//						.attr("class", "collapse in")
-
-							// .attr("class", function(o) {
-							//  	//if( d.index == o.index )
-							// 	//	return "nodetext " + d.name + " active";
-							// 	return "nodetext " + d.name + " active";
-							// })
-							.html(function() {	
-								for (var i = 0; i < subdConnections.length; i++) {
-									if (subdConnections[i] == d.name){
-										var str = "";
-
-			//									var str = d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-
-			// 					percentageSum = d.source.value+d.target.value
-			// 					return subdivisionsChord[d.source.index].name
-			// //					 + " (#" +  d.source.value
-			// //					 + ")"
-			// 					 + " ↔ " + subdivisionsChord[d.target.index].name 				
-			// //					 + " (#" +  d.target.value
-			// //					 + ")"
-			// 					 + ": " + percentageSum
-			// 					 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-			// 					 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-			// 					 + ")" ; // &harr; the name of the arrow
-
-
-										str += "<td colspan='4'><div class='table table-condensed table-striped'><div class='table-row-group' style='overflow-y:scroll;height:"+$(window).height()/4+"'><div class='row'><div class='cell' style='border-top:solid'>Area </div><div class='cell' style='border-top:solid'>Relations</div></div>";
-										// str += "<div class='row'><div class='cell'></div><div class='cell'>"+d.name+"</div></div>";
-										// str += "<div class='row'><div class='cell'></div><div class='cell'>To</div></div>";
-
-										for (var j = 0; j < subdConnections.length; j++) {
-											subdConnections.forEach(function(z){
-												if(z == d.name){
-													if(z != subdConnections[j].name){
-
-						percentageSum = subdBiConnectionsNum[i][j]+subdBiConnectionsNum[j][i]
-//				string += "\n"+subdConnections[i]+","+rgb2hex(clrArray[i])+","+subdConnectionsNum[i]+","+relations[i];
-
-														str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
-														 // + "<div class='cell' style='border-top:solid "+mytextsubdivisions[i].color+";'>"
-														 // + subdBiConnectionsNum[i][j]
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/mytextsubdivisions[i].relations)
-														 // + ")</div>"
-														 // + "<div class='cell' style='color:"+mytextsubdivisions[j].color+";border-left:solid "+mytextsubdivisions[i].color+";border-top:solid "+mytextsubdivisions[i].color+";'>" 
-														 // + subdBiConnectionsNum[j][i]
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
-														 // + ")</div></div>" ;
-														 + "<div class='cell' style='color:"+rgb2hex(clrArray[j])+";'>" 
-														 + percentageSum
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
-														 // + ")</div></div>" ;
-														 + "</div></div>" ;
-													}
-													else
-														str += "<div class='row'><div class='cell'>" + z + "</div><div class='cell'>"
-													 + subdBiConnectionsNum[i][i]
-													 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
-													 // + ")</div><div class='cell' style='border-left:solid;border-top:solid;'>"
-													 // + subdBiConnectionsNum[i][i]
-													 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
-													 // + ")</div></div>" ;
-													 + "</div></div></div></td>" ;
-												}
-											})
-										 }
-									}
-								}
-								return str;
-							});
-							$("#collapse"+d.name).insertAfter($("#legend_row"+d.name));
-
-	    				});
-
-
-				});
 
 			loadingText = vis.append("svg:text")
 							.style("font-size",w/20)
@@ -3440,8 +2688,8 @@ console.log(selectnodeLabels)
 										if((expsimilarity = d.initialSimilarity) == null){
 											expsimilarity = <?php echo $expsimilarity ;?>;
 										}
-										// $("#dialogExp").text(experimentName)
-										// $("#dialogDesc").text(experimentDescription)
+										$("#dialogExp").text(experimentName)
+										$("#dialogDesc").text(experimentDescription)
 										console.log("experimentName:"+d.id)
 										console.log("experimentDescription:"+d.desc)
 										console.log("expsimilarity:"+d.initialSimilarity)
@@ -3453,7 +2701,7 @@ console.log(selectnodeLabels)
 							// experimentDescription = function(){
 							// 	experiment.
 							// };
-							$("#myTab").hide();
+							$("#subdivision_btn").hide();
 
 							// spinner added again
 							$("#legend").empty();
@@ -3462,11 +2710,11 @@ console.log(selectnodeLabels)
 							$("svg:text").empty();
 							$("#chord_circle").remove();
 
-//							$("#subdivision_btn").attr("value","Plot Subdivisions in Chords");
-							// plot = 0;
-							// $("#chord").hide();
-							// $("#graph").show();
-							// $("#thresholds").show();
+							$("#subdivision_btn").attr("value","Plot Subdivisions in Chords");
+							plot = 0;
+							$("#chord").hide();
+							$("#graph").show();
+							$("#thresholds").show();
 
 							chord_arc = [];
 							chord_layout = [];
@@ -3476,7 +2724,7 @@ console.log(selectnodeLabels)
 							//$("#mygraph").empty();
 
 							// to parakatw prepei na ginei unbind giati diaforetika sto idio koumpi meta apo kathe allagi grafou ginetai bind ksana to click event kai ti deuteri fora me ena click patietai 2 fores (kai de deixnei tipota), tin 3i fora me ena click patietai 3 fores (deixnei) k.o.k
-//						    $("#myTab").unbind('click');
+						    $("#subdivision_btn").unbind('click');
 							spinner = new Spinner(opts).spin(target);
 
 							nodeConnections = [];
@@ -3655,62 +2903,36 @@ $(this).find("option:selected").click()
 			createJsonFile()			
 			createCSVFile()
 
-			$("#myTab").show();
+			$("#subdivision_btn").show();
 			$("#experiment_btn").show();
+			$("#boost_btn").show();
 			
 			$("#experiment_btn").on("click", function(){
-				// var SplitText = "Experiment Description"
-				// var $dialog = $('<div></div>')
-				// .html(SplitText )
-				// .dialog({
-				// 	modal:true,
-				// 	resizable: true,
-				// 	draggable: true,
-				// 	position: ['center',20],
-				// 	height: 250,
-				// 	width: 600,
-				// 	title: 'Experiment Description',
-				// 	buttons: {
-				// 		Ok: function() {
-				// 			$( this ).dialog( "close" );
-				// 		}
-				// 	}
-				// });
-
- 				
-
-				d3.select("#experiments").selectAll("option")
-					.each(function(d){
-						if(experimentName == d.id){
-
-							experimentName = d.id;
-							experimentDescription = d.desc;
-							if((expsimilarity = d.initialSimilarity) == null){
-								expsimilarity = <?php echo $expsimilarity ;?>;
-							}
-							console.log("experimentName:"+d.id)
-							console.log("experimentDescription:"+d.desc)
-							console.log("expsimilarity:"+d.initialSimilarity)
+				var SplitText = "Experiment Description"
+				var $dialog = $('<div></div>')
+				.html(SplitText )
+				.dialog({
+					modal:true,
+					resizable: true,
+					draggable: true,
+					position: ['center',20],
+					height: 250,
+					width: 600,
+					title: 'Experiment Description',
+					buttons: {
+						Ok: function() {
+							$( this ).dialog( "close" );
 						}
-					});
+					}
+				});
 
-				experimentName = myval;
+				$dialog.dialog('open');
 
-
- 				$(this).attr("data-title","Experiment Description");
- 				
- 				$(this).attr("data-content",experimentDescription);
-
-				$(this).popover('toggle');
-
-				// $dialog.dialog('open');
-
-				// $dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>"+experimentName+"</b></p><p>"+experimentDescription+"</p>");
+				$dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>"+experimentName+"</b></p><p>"+experimentDescription+"</p>");
 			});
 
-
 			$("#boost_btn").on("click", function(){
-console.log("btn clicked")
+
 				topicstemp = topics1
 				topics1 = topics2
 				topics2 = topicstemp
@@ -3760,45 +2982,26 @@ console.log("btn clicked")
 
 			createChord();
 
-	// shows the tab and its contents
-//			$('#graphdiv').click(function (e) {
-//				//e.preventDefault();
-//				$(this).tab('show');
-//			})
+			$("#subdivision_btn").on("click", function(){
+				if(plot==0){
+					console.log("Plot Force-Directed Graph clicked")
+					$("#graph").hide();
+					$("#thresholds").hide();
 
-	// shows the tab and its contents
-//			$('#chorddiv').click(function (e) {
-//				//e.preventDefault();
-//				$(this).tab('show');
-//			})
+					$("#chord").show();
+					$("#subdivision_btn").attr("value","Plot Force-Directed Graph");
+					plot = 1;
+				}
+				else{
+					console.log("Plot Subdivisions in Chords clicked")
+					$("#chord").hide();
+					$("#graph").show();
+					$("#thresholds").show();
 
-	// shows the tab and its contents
-//			$('#chord2div').click(function (e) {
-//				//e.preventDefault();
-//				$(this).tab('show');
-//			})
-
-
-			// $("#subdivision_btn").on("click", function(){
-			// 	if(plot==0){
-			// 		console.log("Plot Force-Directed Graph clicked")
-			// 		$("#graph").hide();
-			// 		$("#thresholds").hide();
-
-			// 		$("#chord").show();
-			// 		$("#subdivision_btn").text("Force-Directed Graph");
-			// 		plot = 1;
-			// 	}
-			// 	else{
-			// 		console.log("Plot Subdivisions in Chords clicked")
-			// 		$("#chord").hide();
-			// 		$("#graph").show();
-			// 		$("#thresholds").show();
-
-			// 		$("#subdivision_btn").text("Chord Graph");
-			// 		plot = 0;
-			// 	}
-			// });
+					$("#subdivision_btn").attr("value","Plot Subdivisions in Chords");
+					plot = 0;
+				}
+			});
 		}
 
 
@@ -3876,7 +3079,7 @@ var u =0;
 				.attr("cy", function(d) {
 					return d.y
 				})
-				.on("mouseover", fade(fade_out, true))						//edw prepei na fainontai ola ta alla project oxi ta 10 prwta
+				.on("mouseover", fade(fade_out, true))
 				.on("mouseout", normalizeNodesAndRemoveLabels())
 				.on("click", function(d,i){
 					var myfade = fade(fade_out, true);
@@ -3889,7 +3092,6 @@ var u =0;
 					else{
 						focused = d.name;
 						test(d,fade_out);
-
 						nodeCircles.on("mouseout", function(){return false;})
 							.on("mouseover", function(){return false;});
 					}
@@ -3961,19 +3163,14 @@ var u =0;
 				}
 			}
 
-// 29012015 - changed the projects that go to itself into zero (0) so the chord does not show the inner relations from a subdivision to itself. Only the relations to other subdivisions.
+
 		//creating the JSON file for the 2nd layout (Chord)
 			var string = "["
 
 			for (var i = 0; i < subdConnections.length-1; i++) {
 				string += "["
 				for (var j = 0; j < subdConnections.length-1; j++) {
-					if (i != j){						
-						string += subdBiConnectionsNum[i][j]+","
-					}
-					else{
-						string += "0,"
-					}
+					string += subdBiConnectionsNum[i][j]+","
 				}
 				string += subdBiConnectionsNum[i][subdConnections.length-1]+"],"	// the last one inner []
 			}
@@ -3981,8 +3178,7 @@ var u =0;
 			for (var j = 0; j < subdConnections.length-1; j++) {
 				string += subdBiConnectionsNum[subdConnections.length-1][j]+","
 			}
-//			string += subdBiConnectionsNum[subdConnections.length-1][subdConnections.length-1]+"]]"	// the last one inner [] of the outer []
-			string += "0]]"	// the last one inner [] of the outer []
+			string += subdBiConnectionsNum[subdConnections.length-1][subdConnections.length-1]+"]]"	// the last one inner [] of the outer []
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////// USE BELOW LATER THAT IT WILL BE ON GRAPH 	///////////////
@@ -4017,8 +3213,6 @@ var u =0;
 				},
 				success: function(){
 					  console.log("JSON file Created")
-					  	$(document).trigger("chordready");
-
 				},
 				error: function(e){
 					alert('Error: ' + JSON.stringify(e));
@@ -4132,33 +3326,16 @@ function createChord(){
 	//$("#chord").remove();
 	if ($("#chord").length){
 		chord_svg = d3.select("#chord")
-			//.style("width", w)
-			.style("height", h)
-			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-			.style("preserveAspectRatio", "xMidYMid meet")
-			.style("border-style","solid")
-//			.style("cursor","pointer")
-//			.style("border-color","snow")
-			.style("border-color","#f6f6f6")
 			.append("svg:g")
 			.attr("id", "chord_circle")
-//			.attr("transform", "translate(" + chord_width / 2 + "," + ((chord_height / 2)+40) + ")"); 
-			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
+			.attr("transform", "translate(" + chord_width / 2 + "," + ((chord_height / 2)+40) + ")"); 
 
 		chord_svg.append("circle")
 		.attr("r", chord_outerRadius);
 
 	}
 	else{	
-		var chord_svg = d3.select("#chorddiv")
-			//.style("width", w)
-			.style("height", h)
-			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-			.style("preserveAspectRatio", "xMidYMid meet")
-			.style("border-style","solid")
-			.style("cursor","pointer")
-			.style("border-color","snow")
-			.append("svg:svg")
+		var chord_svg = d3.select("#mygraph").append("svg:svg")
 			.attr("id", "chord")
 		//	.attr("style", "visibility:hidden")	
 			.attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
@@ -4168,9 +3345,7 @@ function createChord(){
 			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
 	}
 
-
-
-//	$("#chord").hide();
+	$("#chord").hide();
 
 	chord_svg.append("circle")
 	.attr("r", chord_outerRadius);
@@ -4194,9 +3369,7 @@ function createChord(){
 			 
 			// Add a mouseover title.
 			 chord_group.append("title").text(function(d, i) {
-			 										var str = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-
-				 return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
+				 return subdivisionsChord[i].name + ":\n\t<?php echo $node_name;?>s:" + subdivisionsChord[i].projects + "\n\t<?php echo $node_name;?> relations:" + parseInt(d.value);
 			 });
 		 
 			// Add the group arc.
@@ -4231,18 +3404,7 @@ function createChord(){
 			 chord_chord
 			 	.append("title")
 			 	.text(function(d) {
-					percentageSum = d.source.value+d.target.value
-					return subdivisionsChord[d.source.index].name
-//					 + " (#" +  d.source.value
-//					 + ")"
-					 + " ↔ " + subdivisionsChord[d.target.index].name 				
-//					 + " (#" +  d.target.value
-//					 + ")"
-					 + ": " + percentageSum
-					 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-					 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-					 + ")" ; // &harr; the name of the arrow
-/*					if(subdivisionsChord[d.source.index].name != subdivisionsChord[d.target.index].name){
+					if(subdivisionsChord[d.source.index].name != subdivisionsChord[d.target.index].name)
 						return subdivisionsChord[d.source.index].name
 						 + " → " + subdivisionsChord[d.target.index].name
 						 + ": " + d.source.value
@@ -4252,15 +3414,12 @@ function createChord(){
 						 + ": " + d.target.value
 						+ " (" + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
 						 + ")" ;
-					}
-					else{						
+					else
 						return subdivisionsChord[d.source.index].name
 					 + " → " + subdivisionsChord[d.target.index].name
 					 + ": " + d.source.value
 					 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
 					 + ")" ;
-					}
-*/
 			 });
 	 
 			function chord_mouseover(d, i) {
@@ -4314,7 +3473,6 @@ function createChord(){
 		/* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
 		$(function() {
 
-
 			var availableTags = [];
 			var availableLabels = [];			
 
@@ -4367,60 +3525,50 @@ function createChord(){
 					return result;
 				}
 
-// 				if($(window).width()<350 || ($(window).width()>995 && $(window).width()<1375)){				
-// 					counterMax = 2;
-// 				}
-// 				else if($(window).width()<415 || ($(window).width()>1375 && $(window).width()<1656)){
-// 					counterMax = 3;
-// 				}
-// /*				else if($(window).width()<755 || $(window).width()>1657){
-// 					counterMax = 4;
-// 				}
-// */				else if($(window).width()<490 || ($(window).width()>1656 && $(window).width()<2000)){
-// 					counterMax = 4;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else if($(window).width()<565 || ($(window).width()>=2000 && $(window).width()>=2300)){
-// 					counterMax = 5;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else if($(window).width()<640 || ($(window).width()>2300 && $(window).width()<2650)){
-// 					counterMax = 6;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else if($(window).width()<715 || ($(window).width()>=2650 && $(window).width()<=3000)){
-// 					counterMax = 7;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else if($(window).width()<755 || $(window).width()>3000){
-// 					counterMax = 8;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else {	//if($(window).width()<995
-// 					counterMax = 1;
-// 				}
+				if($(window).width()<350 || ($(window).width()>995 && $(window).width()<1375)){				
+					counterMax = 2;
+				}
+				else if($(window).width()<415 || ($(window).width()>1375 && $(window).width()<1656)){
+					counterMax = 3;
+				}
+/*				else if($(window).width()<755 || $(window).width()>1657){
+					counterMax = 4;
+				}
+*/				else if($(window).width()<490 || ($(window).width()>1656 && $(window).width()<2000)){
+					counterMax = 4;
+					$('#log > li').hide().slice(counter, counter+counterMax).show();
+				}
+				else if($(window).width()<565 || ($(window).width()>=2000 && $(window).width()>=2300)){
+					counterMax = 5;
+					$('#log > li').hide().slice(counter, counter+counterMax).show();
+				}
+				else if($(window).width()<640 || ($(window).width()>2300 && $(window).width()<2650)){
+					counterMax = 6;
+					$('#log > li').hide().slice(counter, counter+counterMax).show();
+				}
+				else if($(window).width()<715 || ($(window).width()>=2650 && $(window).width()<=3000)){
+					counterMax = 7;
+					$('#log > li').hide().slice(counter, counter+counterMax).show();
+				}
+				else if($(window).width()<755 || $(window).width()>3000){
+					counterMax = 8;
+					$('#log > li').hide().slice(counter, counter+counterMax).show();
+				}
+				else {	//if($(window).width()<995
+					counterMax = 1;
+				}
 
 
 				function log( message ) {
 
-					$("#boost_btn").hide();
-					$( "#header2" ).hide();
-					$( "#similarNodes" ).hide();
-					$( "#header1" ).show();
-					$( "#log" ).show();
-
-
 					$( "#log" ).scrollTop( 0 );
-//					$( "#log" ).append( "<div style=\"padding-right:20px;display: inline-block;\"><span style=\"float:left;\"><button id=\"upButtonLog\" style=\" position: relative; z-index: 2; top: -4; bottom: 0; padding: 0; margin: auto 0; border: none; outline: none; color: #888; background: transparent; font-size:40px; font-family: \"Courier New\", courier, fixed; opacity: 0.2; filter: alpha(opacity=0); -webkit-transition: opacity .5s; -moz-transition: opacity .5s; -o-transition: opacity .5s; transition: opacity .5s;\">&lt;</button></span><ul class=\"group\" id=\"example-two\" style=\"margin: 0 auto; list-style: none; position: relative;\">")
-					var grantsTopicSet = "";
-					grantsTopicSet = "<div><button id=\"upButtonLog\" class=\"btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all previous\" style=\"padding-left:5px;padding-right:5px;width:100%;text-align: center;\" ><span><i class=\"glyphicon glyphicon-arrow-up\"></i>Previous 10</span></button><ul class=\"pagination pagination-sm\">";
+					$( "#log" ).append( "<div style=\"padding-right:20px;display: inline-block;\"><span style=\"float:left;\"><button id=\"leftButton\" style=\" position: relative; z-index: 2; top: -4; bottom: 0; padding: 0; margin: auto 0; border: none; outline: none; color: #888; background: transparent; font-size:40px; font-family: \"Courier New\", courier, fixed; opacity: 0.2; filter: alpha(opacity=0); -webkit-transition: opacity .5s; -moz-transition: opacity .5s; -o-transition: opacity .5s; transition: opacity .5s;\">&lt;</button></span><ul class=\"group\" id=\"example-two\" style=\"margin: 0 auto; list-style: none; position: relative;\">")
 					for (i=0 ; i<availableTags.length ; i++){
 					/*svgSortedTopicWords is sorted so the ids are placed in the right descending sort*/
 //						if (message==svgSortedTopicWords[i].item){
 						if (message==availableTags[i].item){
 //id=\"a-"+counter+"\" 
-//							$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-							grantsTopicSet += "<li class=\"" + availableTags[i].area + "result\"><a class=\"" + availableTags[i].area + "result \" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
+							$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
 
 
 							var zoomFactor = 4;
@@ -4438,15 +3586,11 @@ function createChord(){
 							});
 						}
 					}
-//					$( "#log" ).append("<span style=\"float:right;\"><button id=\"downButtonLog\" style=\" position: relative; z-index: 2; top: 4; bottom: 0; padding: 0; margin: auto 0; border: none; outline: none; color: #888; background: transparent; font-size:40px; font-family: \"Courier New\", courier, fixed; opacity: 0.2; filter: alpha(opacity=0); -webkit-transition: opacity .5s; -moz-transition: opacity .5s; -o-transition: opacity .5s; transition: opacity .5s; float:right;\">&gt;</button></span></div></ul>")
-					grantsTopicSet += "</ul><button id=\"downButtonLog\" class=\"btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all next\" style=\"padding-left:5px;padding-right:5px;width:100%;text-align: center;\"><span>Next 10<i class=\"glyphicon glyphicon-arrow-down\"></i></span></li></button></div>";
-
-					$( "#log" ).append(grantsTopicSet);
-
+					$( "#log" ).append("<span style=\"float:right;\"><button id=\"rightButton\" style=\" position: relative; z-index: 2; top: 4; bottom: 0; padding: 0; margin: auto 0; border: none; outline: none; color: #888; background: transparent; font-size:40px; font-family: \"Courier New\", courier, fixed; opacity: 0.2; filter: alpha(opacity=0); -webkit-transition: opacity .5s; -moz-transition: opacity .5s; -o-transition: opacity .5s; transition: opacity .5s; float:right;\">&gt;</button></span></div></ul>")
 
 				}
 
-		var zoomFactor = 4;
+							var zoomFactor = 4;
 
 				$( "#tags" ).autocomplete({
 					source: unique(availableLabels),
@@ -4454,127 +3598,47 @@ function createChord(){
 
 					select: function( event, ui ) {
 						$( "#log" ).empty();			//clear anything included in child nodes
-						counter=0;						//(re)-initialize counter to zero
-						found=0;
+						counter =0;						//(re)-initialize counter to zero
+						found =0;
 
 						log( ui.item ?
 							ui.item.label :
 							"Nothing selected, input was " + this.value);
 
-
-						counterMax = 10;
-						$('#log > div > ul > li').hide().slice(counter, counter+counterMax).show();
-						counter+=counterMax;
-
-						$("#upButtonLog").hide();
-						if($('#log > div > ul > li:last').css('display') == 'inline'){
-							console.log("last li visible")
-							$("#downButtonLog").hide();
-						}
-						else{
-							console.log("last li not visible")
-							$("#downButtonLog").show();
-						}
-
-						$('#downButtonLog').on("click",function(){
-							if ((counter+counterMax)<found){
-								$('#log > div > ul > li').hide().slice(counter, counter+counterMax).show();
-								counter+=counterMax;
-
-								console.log("1 li not visible")
-								$("#upButtonLog").show();
-
-								console.log("last li not visible")
-								$("#downButtonLog").show();
-
-							}
-							else {
-								$('#log > div > ul > li').hide().slice(counter, found).show();
-
-								console.log("1 li not visible")
-								$("#upButtonLog").show();
-
-								console.log("last li visible")
-								$("#downButtonLog").hide();
-							}
+						$('#log > li').hide().slice(counter, counter+counterMax).show();
+						$('#rightButton').on("click",function(){
+							console.log("right");
+							if ((counter+counterMax)<found)
+								counter++;
+							$('#log > li').hide().slice(counter, counter+counterMax).show();
 						});
 
 					//for mobile
-						$('#log').on("swipeup",function(){
-							if ((counter+counterMax)<found){
-								$('#log > div > ul > li').hide().slice(counter, counter+counterMax).show();
-								counter+=counterMax;
-
-								console.log("1 li not visible")
-								$("#upButtonLog").show();
-
-								console.log("last li not visible")
-								$("#downButtonLog").show();
-
-							}
-							else {
-								$('#log > div > ul > li').hide().slice(counter, found).show();
-
-								console.log("1 li not visible")
-								$("#upButtonLog").show();
-
-								console.log("last li visible")
-								$("#downButtonLog").hide();
-							}
+						$('#log').on("swiperight",function(){
+							console.log("right");
+							if ((counter+counterMax)<found)
+								counter++;
+							$('#log > li').hide().slice(counter, counter+counterMax).show();
 						});
 
 
-						$('#upButtonLog').on("click",function(){
-							if (counter-counterMax>0){
-								$('#log > div > ul > li').hide().slice(counter-counterMax, counter).show();
-								counter-=counterMax;
-
-								console.log("1 li not visible")
-								$("#upButtonLog").show();
-
-								console.log("last li not visible")
-								$("#downButtonLog").show();
-
-							}
-							else{
-								$('#log > div > ul > li').hide().slice(0, counter).show();
-								counter = 10;
-
-								console.log("1 li visible")
-								$("#upButtonLog").hide();
-
-								console.log("last li not visible")
-								$("#downButtonLog").show();
-							}
+						$('#leftButton').on("click",function(){
+							console.log("left");
+							if (counter>0)
+								counter--;
+							$('#log > li').hide().slice(counter, counter+counterMax).show();
 						});
 
 					//for mobile
-						$('#log').on("swipedown",function(){
-							if (counter-counterMax>0){
-								$('#log > div > ul > li').hide().slice(counter-counterMax, counter).show();
-								counter-=counterMax;
-
-								console.log("1 li not visible")
-								$("#upButtonLog").show();
-
-								console.log("last li not visible")
-								$("#downButtonLog").show();
-
-							}
-							else{
-								$('#log > div > ul > li').hide().slice(0, counter).show();
-								counter = 10;
-
-								console.log("1 li visible")
-								$("#upButtonLog").hide();
-
-								console.log("last li not visible")
-								$("#downButtonLog").show();
-							}
+						$('#log').on("swipeleft",function(){
+							console.log("left");
+							if (counter>0)
+								counter--;
+							$('#log > li').hide().slice(counter, counter+counterMax).show();
 						});
 
 
-						$('#log > div > ul > li > a').on("click",function(){
+						$('#log > li > a').on("click",function(){
 
 							//if (parseInt(vis.select("#circle-node-"+this.id).attr("cx")) < w/2 && parseInt(vis.select("#circle-node-"+this.id).attr("cy")) < h/2)
 							//if (parseInt(vis.select("#circle-node-"+this.id).attr("cx")) < w/2)
@@ -4582,8 +3646,10 @@ function createChord(){
 							//else
 							//	zoomer.translate([(w/2)+parseInt(vis.select("#circle-node-"+this.id).attr("cx")),0]);
 							//zoomer.event(vis);
+
 							test(nodes[this.id],0.1);
 						});
+
 					}
 				});
 			});		
@@ -4594,225 +3660,72 @@ function createChord(){
 
 	</head>
 	<body>
-		<!-- navbar-inverse -->
-		<nav class="navbar navbar-default" style="max-height:30px">
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#headmenu">
-					<a class="navbar-brand" href="http://astero.di.uoa.gr/graphs/">  
-						<span class="sr-only">Home</span>
-					</a>
-					<!-- 					        <span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					-->
-	      		</button>
-				<a class="navbar-brand" href="http://astero.di.uoa.gr/graphs/">  
-					<span class="glyphicon glyphicon-home"></span>
-				</a>
-			</div>
-			<div class="collapse navbar-collapse " id="headmenu">
-				<ul class="nav navbar-nav divider-vertical">
-					<li class="active"><a href="#"><?php echo $title ;?> <span class="sr-only">(current)</span></a></li>
-				</ul>
-				 <ul class="nav navbar-nav vcenter" data-toggle="tooltip" data-placement="bottom" title="Select an experiment out of the available for <?php echo $title ;?>">
-					<li>
-						<!-- <h5>Experiment:&nbsp;</h5> -->
-						<select id="experiments"></select>
-					</li>
-				</ul>
-				 <ul class="nav navbar-nav">
-					<li>
-			      		<button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Experiment Description" data-toggle="popover" data-placement="bottom" data-content="">
-							<span  class="navbar-brand glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-							<span class="sr-only">Experiment Description</span>
-						</button>
-					</li>
-				</ul>
-<!-- 				<form class="navbar-form navbar-left" role="search">
-					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Search">
-					</div>
-					<button type="submit" class="btn btn-default">Submit</button>
-				</form>
- -->				<ul class="nav navbar-nav navbar-right">
-<!-- 					<li>
-						Zoom Level: Similarity > &nbsp;
-							<input type="text" id="thr1" class="ui-corner-all" maxlength="9" placeholder="thr1" style="width:40px">
-						 % | Connectivity > &nbsp;
-						 	<input type="text" id="thr2" class="ui-corner-all" maxlength="9" placeholder="thr2" style="width:40px">
-						  %
-					</li>
- -->
-					<li>
-						<!-- Zoom Level:  -->
-
-<!-- 
-<input id="ex6" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50" />
-<span id="ex6CurrentSliderValLabel" >Current Slider Value: <span id="ex6SliderVal">3</span></span>
- -->
- 						<div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds in Zoom Level. S for Similarity threshold. C for Connectivity threshold"> 
-							<span class="input-group-addon">S ></span>
-
-
-							<input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr1"  style="width:50px">
-							<span class="input-group-addon">%</span>
-							<span class="input-group-addon">C ></span>
-							<input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr2"  style="width:50px">
-							<span class="input-group-addon">%</span>
-						</div>
-					</li>
-<!-- 					<li>Labels: Similarity
-						<input type="text" id="thr3" class="ui-corner-all" maxlength="9" placeholder="thr3" style="width:40px"> % | Connectivity > &nbsp;<input type="text" id="thr4" class="ui-corner-all" maxlength="9" placeholder="thr4" style="width:40px"> %</li>
- -->
-					<li style="padding-left:10px">
-						<!-- Labels: -->
-						<div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds for all shown labels on the graph. S for Similarity threshold. C for Connectivity threshold"> 
-							<span class="input-group-addon">S ></span>
-							<input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr3" style="width:50px">
-							<span class="input-group-addon">%</span>
-							<span class="input-group-addon">C ></span>
-							<input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr4"  style="width:50px">
-							<span class="input-group-addon">%</span>
-						</div>
-					</li>
-
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
-						<ul class="dropdown-menu" role="menu">
-						</ul>
-					</li>
-				</ul>
-			</div><!-- /.navbar-collapse -->
-		</nav>
 		<div class="container-fluid">
-			<div class="col-md-3">
-				<div id="mytext-title" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml"></div>
-			</div>
-<!-- 			<div id="thresholds" class="col-md-5" style="float:right;display:block;">
-				<table>
-				<tr><th>Parameters for Labeling:</th></tr>
-				<tr><td>Labels shown on current Zoom state: </td><td>Similarity > &nbsp;<input type="text" id="thr1" class="ui-corner-all" maxlength="9" placeholder="thr1" style="width:40px"> % | </td><td>Connectivity > &nbsp;<input type="text" id="thr2" class="ui-corner-all" maxlength="9" placeholder="thr2" style="width:40px"> %<tr><td>
-				<tr><td>Labels shown on Graph: </td><td>Similarity > &nbsp;<input type="text" id="thr3" class="ui-corner-all" maxlength="9" placeholder="thr3" style="width:40px"> % | </td><td>Connectivity > &nbsp;<input type="text" id="thr4" class="ui-corner-all" maxlength="9" placeholder="thr4" style="width:40px"> %<tr><td>
-				</table>
-			</div>
- -->
-				<div class="col-md-2">
-				<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
-					<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
-					</optgroup>
-					<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
-					</optgroup>
-				</select>
-<!--						<button id="experiment_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:80%;text-align: center;">Grants</button>
--->			</div>
-			<div class="col-md-4">
-			</div>
-			<div class="col-md-3">
-				<label for="tags"  style="width:100%"><h5>Topic Word Search:<h5></label>
-				<input id="tags" class="ui-corner-all" placeholder="input a topic word..."  style="width:100%">
-			</div>
-		</div>
-		<hr/>
-<!-- 		<div class=" container-fluid">
-			<div class="col-md-3">
+			<a href="http://astero.di.uoa.gr/graphs/">
+				<header style="background-color:#eee;float:center">
+					<div style="width:100%;"><button type="button" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;margin-right:-10px; width:inherit;float:right;text-align: left;"/><span class="ui-icon ui-icon-arrowthick-1-w" aria-hidden="true" style="float:left"></span>
+					Back to Main page of Graph Layouts</button></div>
+				</header>
+			</a>
+			<div class="row-fluid">
+				<div class="span3">
 					<h5><?php echo $node_name;?>s:&nbsp;</h5>
-					<select id="grants" multiple="multiple" style="width:inherit">
-						<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
-						</optgroup>
-						<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
-						</optgroup>
-					</select>
+						<select id="grants" multiple="multiple" style="width:inherit">
+							<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
+							</optgroup>
+							<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
+							</optgroup>
+						</select>
 				</div>
-			<div class="col-md-4">
-				<h5>Experiment:&nbsp;</h5><select id="experiments" style="width:inherit"></select>
+				<div class="span3">
+					<h5>Experiment:&nbsp;<button type="button" id="experiment_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;margin-right:-10px; width:inherit;float:right;text-align: center;"/>Show Experiment Description</button></h5><select id="experiments" style="width:inherit"></select>
+				</div>
+				<div class="span3">
+					<label for="tags"><h5>Topic Word Search:&nbsp;<button type="button" id="boost_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;margin-right:-10px; width:inherit;float:right;text-align: center;"/><span class="ui-icon ui-icon-circle-close" aria-hidden="true"></span> Boost Discriminative Words</button><h5></label>
+					<input id="tags" class="ui-corner-all" placeholder="input a topic word..." style="width:100%">
+				</div>
+				<div class="span3">
+					<h5><?php echo $node_name;?>s where Topic Word is found:&nbsp;<h5>
+					<div class="nav-wrap" id="log"></div>
+				</div>
 			</div>
-		</div>
- -->		<div class=" container-fluid">
-			<div class="col-md-2" id="myinfo">
-				<h5 id="header1">Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp;<span id="exitHeader1"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
-				<div class="nav-wrap" id="log"></div>
-				<h5 id="header2">Similar <?php echo $node_name;?>s based on TA-XINets inference:&nbsp;<span id="exitHeader2"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
-				<div class="nav-wrap" id="similarNodes">
-					<div><button id="upButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 10</span></button><ul class="pagination pagination-sm">
-						</ul><button id="downButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 10<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
-					</div>
-				</div>
-				<!-- btn-link -->
-				<button id='boost_btn' class='btn btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'><span  class='navbar-brand glyphicon glyphicon-info-check' aria-hidden='true'>Boost descr. words</span><span class='sr-only'>Boost Words</span></button>
-				<div id="mytext-content" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml">
-<!-- 		      		<button id="boost_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Boost Descriminative Words" data-toggle="popover" data-placement="bottom" data-content="">
-						<span  class="navbar-brand glyphicon glyphicon-info-check" aria-hidden="true">asdasd</span>
-						<span class="sr-only">Experiment Description</span>
-					</button>					
+			<div class="row-fluid">
+				<div class="span2" id="myinfo">
+					<div id="mytext" style="max-width:20%;width:20%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml"></div>
+ <!-- 					<div id="mytext" style="max-width:20%;width:20%;vertical-align:top;position:absolute;word-break:break-all;  z-index:2147483647;" xmlns="http://www.w3.org/1999/xhtml"></div>
  -->				</div>
-<!-- 					<div id="mytext" style="max-width:20%;width:20%;vertical-align:top;position:absolute;word-break:break-all;  z-index:2147483647;" xmlns="http://www.w3.org/1999/xhtml"></div>
--->			</div>
-			<div class="col-md-7" id="mygraph" style="padding-top:5px">
-
-<!-- 				<div class="col-md-4">
-					<button id="experiment_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:80%;text-align: center;">Description</button>
-				</div>
- -->
- 				<div style="padding-right:2%">
-					<ul class="nav navbar-nav nav-tabs navbar-right" id="myTab">
-						<li class="active"><a data-toggle="tab" data-target="#graphdiv">Force-Directed Graph</a></li>
-						<li class="dropdown">
-							<a class="dropdown-toggle" id="chordmenu" data-toggle="dropdown" data-target="#">Chord<b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu" aria-labelledby="chordmenu">
-								<li><a data-toggle="tab" data-target="#chorddiv">Full connectivity</a></li>
-								<li><a data-toggle="tab" data-target="#chord2div">Disciplinarity Connectivity</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-<!--					<div class="tabbable">
-					<ul id="myTab" class="navbar-nav nav-tabs">
-						<li id="subdivision_btn" class="active"><a data-toggle="tab" href="#graphdiv">Force-Directed Graph</li>
-						<li id="subdivision_btn" class="dropdown">Chord Graph</li>
-					</ul>
--->
-					<!-- <div class="col-md-4"> -->
-
-						<!-- <button id="subdivision_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;">Chord Graph</button> 
-					<button id="subdivision_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;">Chord Graph</button>
--->
-<!--  					</div>
-				</div>
--->
-					<!-- </div> -->
-				<div class="tab-content" id="myTabContent">
-					<div id="graphdiv" class="tab-pane active in">
-						<svg id="graph" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
+				<div class="span7" id="mygraph">
+					<svg id="graph" style="width:95%;margin-left:auto;" xmlns="http://www.w3.org/2000/svg">
 						<!-- used to add the mytext here when in fullscreen -->
 						<foreignobject id="foreignObject" width="100%" max-width="100%" >
 						</foreignobject>
-						</svg>
-					</div>
-					<div id="chorddiv" class="tab-pane">
-						<svg id="chord" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
-						<!-- used to add the mytext here when in fullscreen -->
-						</svg>
-						<!-- <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p> -->
-					</div>
-					<div id="chord2div" class="tab-pane">
-						<p>... To be placed the disciplinary chord ...</p>
+					</svg>
+					<div id="thresholds" style="width: 7%; text-align: center;float:right;display:block;">
+ 						<h5>Labels:</h5><hr/>
+ 						<h5>Zoom</h5>
+						<h6>Similarity:&nbsp;<input type="text" id="thr1" class="ui-corner-all" maxlength="9" placeholder="thr1" style="width:40px"> %</h6>
+						<h6>Connectivity:&nbsp;<input type="text" id="thr2" class="ui-corner-all" maxlength="9" placeholder="thr2" style="width:40px"> %</h6>
+						<hr/>
+ 						<h5>Graph</h5>
+						<h6>Similarity:&nbsp;<input type="text" id="thr3" class="ui-corner-all" maxlength="9" placeholder="thr3" style="width:40px"> %</h6>
+						<h6>Connectivity:&nbsp;<input type="text" id="thr4" class="ui-corner-all" maxlength="9" placeholder="thr4" style="width:40px"> %</h6>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-3" id="mysubdivision" style="overflow:auto;">
-				<table class="table table-condensed table-striped">
-					<thead>
-						<tr>
-							<th><?php echo $node_areaName;?></th>
-							<th># of <?php echo $node_name;?>s</th>
-							<th>count</th>
-							<th>stats</th>
-						</tr>
-					</thead>
-					<tbody id="legend"></tbody>
-				</table>
+				<div class="span3" id="mysubdivision" style="overflow:auto;">
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+							<input type="button" id="subdivision_btn" class="ui-multiselect ui-widget ui-state-default ui-corner-all" style="width: 100%; text-align: center;"  value="Plot <?php echo $node_categoryName;?> in Chords">
+							</tr>
+							<tr>
+								<th><?php echo $node_categoryName;?></th>
+								<th># of <?php echo $node_name;?>s</th>
+								<th>count</th>
+							</tr>
+						</thead>
+						<tbody id="legend"></tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</body>

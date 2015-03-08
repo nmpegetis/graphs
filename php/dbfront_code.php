@@ -16,7 +16,6 @@ ini_set('memory_limit', $memory_limit);
 $meminstance = new Memcache();
 $meminstance->pconnect('localhost', $memcache_port);
 
-
 class database {
 	private $db,$last_query = null;
 
@@ -135,7 +134,7 @@ if (!$experiments) {
 	$stmt = $mydb->doQuery($query);
 	$res = $stmt->fetch();
 	do {
-		array_push($experiments,array("id"=>$res[0],"desc"=>$res[1]));	
+		array_push($experiments,array("id"=>$res[0],"desc"=>$res[1],"initialSimilarity"=>$res[2]));	
 	} while ($res = $stmt->fetch());
 
    	$meminstance->set($querykey, $experiments, 0, $memcache_time);

@@ -31,7 +31,7 @@ $experimentDescription = "Topic modeling based on: 1)Abstracts from ACM publicat
 $node_name = "Field";
 $node_groupName1 = "ACM Fields";
 $node_groupName2 = "ACM Fields";
-$node_areaName = "Categories";
+$node_categoryName = "Categories";
 
 
 // appearance
@@ -44,7 +44,7 @@ $smallestFontVar = 13;
 // similarities for the graph labeling 
 $expsimilarity = 0.6;			// similarity for querying the database
 $similarityThr = 0.68;			// similarity threshold
-$nodeConnectionsThr = 0.1; 		// node connections threshold
+$nodeConnectionsThr = 0.7; 		// node connections threshold
 $maxNodeConnectionsThr = 0; 	//percentage of minimum node connections for label printing
 $linkThr = 0.4;					//similarity value threshold for label printin
 

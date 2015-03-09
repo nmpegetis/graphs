@@ -2885,27 +2885,29 @@ console.log(selectnodeLabels)
 
 /**** DB CONNECTION FUNCTIONS ****/
 		function ajaxCall(experiment,expsimilarity){
-			// $.ajax({
-			// 	type: "GET",
-			// 	async: true,
-			// 	url: "./dbfront.php",
-			// 	data:"s="+expsimilarity+"&ex="+experiment,
-			// 	success: function(resp){
-			// 		spinner.stop();
-			// 		myresponse = JSON.parse(resp);
-			// 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
-			// 		topics1 = myresponse.topicsNoSort;
-			// 		topics2 = myresponse.topics;
-			// 		grants = myresponse.grants;
-			// 		experiments = myresponse.expers;
-			// 		renderpage(myresponse.resp);
+			 $.ajax({
+			 	type: "GET",
+			 	async: true,
+			 	url: "./dbfront.php",
+			 	data:"s="+expsimilarity+"&ex="+experiment,
+			 	success: function(resp){
+			 		spinner.stop();
+			 		myresponse = JSON.parse(resp);
+			 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
+			 		topics1 = myresponse.topicsNoSort;
+			 		topics2 = myresponse.topics;
+			 		grants = myresponse.grants;
+			 		experiments = myresponse.expers;
+			 		renderpage(myresponse.resp);
 
-			// 	},
-			// 	error: function(e){
-			// 		alert('Error: ' + JSON.stringify(e));
-			// 	}
-			// });
+			 	},
+			 	error: function(e){
+					alert('Error: ' + JSON.stringify(e));
+			 	}
+			 });
 
+// THE BELOW FOR LOCALHOST TESTING
+/*
 			$.ajax({
 				type: "GET",
 				async: true,
@@ -2926,6 +2928,7 @@ console.log(selectnodeLabels)
 					alert('Error: ' + JSON.stringify(e));
 				}
 			});
+*/
 		}
 
 

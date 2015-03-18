@@ -43,20 +43,14 @@
 		    vertical-align: middle;
 		    float: none;
 		}
-		
-	/*decrease height of navbar*/
-		.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;}
-		.navbar {min-height:35px !important; max-height:35px !important}
-		/*.navbar-default .naxbar-xs .navbar-collapse .navbar {min-height:20px !important; max-height:20px !important}*/
-		.navbar-brand {padding: 5px 10px 5px 15px }
-		.btn-xs {padding:0px 0px 0px 10px;}
-		#experiments, #filters {padding: 5px 5px;}
-		.input-group, .input-group-addon, .form-control, #experiments, #filters {min-height:30px !important; max-height:30px !important}
-		.chord_circle circle {
+.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;}
+.navbar {min-height:40px !important}
+
+		#chord_circle circle {
 			fill: none;
 			pointer-events: all;
-		 }
-
+		}
+		 
 		.group path {
 			fill-opacity: .5;
 		}
@@ -66,7 +60,7 @@
 			stroke-width: .25px;
 		}
 		 
-		.chord_circle:hover path.fade {
+		#chord_circle:hover path.fade {
 			display: none;
 		}
 
@@ -76,7 +70,6 @@
 			margin: 0 9px;
 			border-left: 1px solid #020202;
 			border-right: 1px solid #000000;
-			max-height:35px !important
 		}
 
 
@@ -86,12 +79,6 @@
 	background: #8283FF;
 	/*background: blue;*/
 }
-
-
-		/*chrome fix bug the below*/
-		.input-group-addon, .input-group {
-		    width: auto;
-		}
 
 	</style>
 
@@ -185,7 +172,6 @@
 			labels = [],
 			links = [],						// includes all the links among the nodes 
 			nodes = [],						// includes all the nodes
-			subdivisionsChord = [], 		// before its contents were in a csv file
 			chord_group,
 			chord_chord,
 			selectedLabelIndex = null,
@@ -267,13 +253,12 @@
 			nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>,
 			maxNodeConnectionsThr = <?php echo $maxNodeConnectionsThr ;?>,
 			linkThr = <?php echo $linkThr ;?>,
-			gravity = <?php echo $gravity ;?>,
-			charge = <?php echo $charge ;?>,
 			counterMax = 4,
 			counter = 0,
 			found = 0,
 			smfound = 0,				//similarnodes found
 			flagForTranformation = 0
+			charge = <?php echo $charge ;?>,
 				/* catch switching in and out full screen */
 			isSvgFullscreen = false,
 			JSONerror =0,		// I think this fixes the error "JSON.parse(resp)"
@@ -300,7 +285,6 @@
 				left: '50%' // Left position relative to parent
 			},
 			relations = [],	
-			relationsCross = [],					// for the cross disciplinary areas
 			names = [],
 			subdConnections = [],
 			subdBiConnections = [],
@@ -316,40 +300,26 @@
 			chord_r0 = chord_r1 - 15,	//-15 is for padding labels outside the outerRadius
 			chord_formatPercent = d3.format(".1%"),
 			chord_svg = [],
-			percentageSum = 0,
-			clickedNode =0,
-			gravity;
+			percentageSum = 0;
 
 		spinner = new Spinner(opts).spin(target);
-
 		$("#tags").val("");							// when refreshing page placeholder in topic search is shown
-		$("#log").hide();
-		$("#similarNodes").hide();
-		$("#areaNodes").hide();
-
-		$("#upButton").hide();
-		$("#downButton").hide();
-
 		$("#header1").hide();
 		$("#header2").hide();
-		$("#header3").hide();
-
-		$("#exitHeader1").click(function(){
-			$( "#header1" ).hide();
-			$( "#log" ).hide();						
-		});
+		$("#log").hide();
+		$("#similarNodes").hide();
+		$("#upButton").hide();
+		$("#downButton").hide();
 		$("#exitHeader2").click(function(){
 			$( "#header2" ).hide();
 			$( "#similarNodes" ).hide();						
 		});
-		$("#exitHeader3").click(function(){
-			$( "#header3" ).hide();
-			$( "#areaNodes" ).hide();						
+		$("#exitHeader1").click(function(){
+			$( "#header1" ).hide();
+			$( "#log" ).hide();						
 		});
-
 		 $("#filter1").hide();
 		 $("#filter2").hide();
-
 
 	// hide until json data have been loaded from server
 		$("#myTab").hide();
@@ -408,34 +378,22 @@ $("#ex6").on("slide", function(slideEvt) {
 		});
 
 
-// pass configuration with parameters
-
 		experimentDescription = "";
 		if((experimentName = getUrlParameter('ex')) == null){
 			experimentName = '<?php echo $experimentName ;?>';
 			experimentDescription = "<?php echo $experimentDescription ;?>";
 		}
 
-
-		if (/^FET*/.test(experimentName))
-			nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
-
 		if((expsimilarity = getUrlParameter('s')) == null){
 			expsimilarity = <?php echo $expsimilarity ;?>;
 		}
 
-		if((gravity = getUrlParameter('g')) == null){
-			gravity = <?php echo $gravity ;?>;
-		}
-
-		if((charge = getUrlParameter('c')) == null){
-			charge = <?php echo $charge ;?>;
-		}
+		if (/^FET*/.test(experimentName))
+			nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
 
 
 		// $("#dialogExp").text(experimentName)
 		// $("#dialogDesc").text(experimentDescription)
-
 
 		ajaxCall(experimentName,expsimilarity);
  		$("#mygraph-container").attr("style","position:fixed;width:"+9*w/8);
@@ -701,52 +659,35 @@ $("#ex6").on("slide", function(slideEvt) {
 		search = d3.select("#search");
 		focused = false;
 
-		$("#thr1").val("> "+$.percentage(similarityThr,1)+" %");
-		$("#thr2").val("> "+$.percentage(nodeConnectionsThr,1)+" %");
-		$("#thr3").val("> "+$.percentage(linkThr,1)+" %");
-		$("#thr4").val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
+		$("#thr1").val($.percentage(similarityThr,1));
+		$("#thr2").val($.percentage(nodeConnectionsThr,1));
+		$("#thr3").val($.percentage(linkThr,1));
+		$("#thr4").val($.percentage(maxNodeConnectionsThr,1));
 
-		$("#thr1").focus(function(){
-			$("#thr1").val($.percentage(similarityThr,1));
-		});
 		$("#thr1").change(function(){
 			console.log("similarityThr="+similarityThr)
 			similarityThr = $("#thr1").val()/100;			
 			console.log("similarityThr="+similarityThr)
 			browseTick();
-			$("#thr1").val("> "+$.percentage(similarityThr,1)+" %");
-		});
-
-		$("#thr2").focus(function(){
-			$("#thr2").val($.percentage(nodeConnectionsThr,1));
 		});
 		$("#thr2").change(function(){
 			console.log("nodeConnectionsThr="+nodeConnectionsThr)
 			nodeConnectionsThr = $("#thr2").val()/100;			
 			console.log("nodeConnectionsThr="+nodeConnectionsThr)
 			browseTick();
-			$("#thr2").val("> "+$.percentage(nodeConnectionsThr,1)+" %");
 		});
 
-		$("#thr3").focus(function(){
-			$("#thr3").val($.percentage(linkThr,1));
-		});
 		$("#thr3").change(function(){
 			console.log("linkThr="+linkThr)
 			linkThr = $("#thr3").val()/100;			
 			console.log("linkThr="+linkThr)
-			$("#thr3").val("> "+$.percentage(linkThr,1)+" %");
 		});
 		$("#thr3").attr('disabled',true);
 
-		$("#thr4").focus(function(){
-			$("#thr4").val($.percentage(maxNodeConnectionsThr,1));
-		});
 		$("#thr4").change(function(){
 			console.log("maxNodeConnectionsThr="+maxNodeConnectionsThr)
 			maxNodeConnectionsThr = $("#thr4").val()/100;			
 			console.log("maxNodeConnectionsThr="+maxNodeConnectionsThr)
-			$("#thr4").val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
 		});
 		$("#thr4").attr('disabled',true);
 
@@ -857,7 +798,7 @@ $("#ex6").on("slide", function(slideEvt) {
 				return d.value;
 			})
 			.charge( charge*(($(window).width()*w*0.3)/(755*755))) // according to http://jsfiddle.net/cSn6w/8/
-			.gravity(gravity)
+			.gravity(<?php echo $gravity ;?>)
 			.size([w, h])
 			.on("tick", initialTick);
 			
@@ -1150,21 +1091,21 @@ $("#ex6").on("slide", function(slideEvt) {
 		function showtype(opacity, types){
 
 			nodeCircles.style("fill-opacity", function(o) {
-				if(types.indexOf(o.color) === -1)
+				if(types.indexOf(o.area) === -1)
 					return opacity;
 				else
 					return normal;
 			});
 
 			nodeCircles.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.color) === -1)
+				if(types.indexOf(o.area) === -1)
 					return opacity;
 				else
 					return normal;
 			});
 
 			nodeLabels.style("fill-opacity", function(o) {
-				if(types.indexOf(o.color) === -1){
+				if(types.indexOf(o.area) === -1){
 						return opacity*3;
 				}
 				else{
@@ -1173,7 +1114,7 @@ $("#ex6").on("slide", function(slideEvt) {
 			});
 
 			nodeLabels.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.color) === -1){
+				if(types.indexOf(o.area) === -1){
 					return opacity*3;
 				}
 				else{
@@ -1183,11 +1124,8 @@ $("#ex6").on("slide", function(slideEvt) {
 
 		/* links stay with opacity or not in hover according to below condition */
 			linkLines.style("stroke-opacity", function(o) {
-				return types.indexOf(o.source.color) != -1 || types.indexOf(o.target.color) != -1 ? normal/2 : opacity;
+				return types.indexOf(o.source.area) != -1 || types.indexOf(o.target.area) != -1 ? normal/2 : opacity;
 			});
-
-
-
 		}
 
 
@@ -1195,21 +1133,21 @@ $("#ex6").on("slide", function(slideEvt) {
 		function showtype2(opacity, types){
 
 			selectnodeCircles.style("fill-opacity", function(o) {
-				if(types.indexOf(o.color) === -1)
+				if(types.indexOf(o.area) === -1)
 					return opacity;
 				else
 					return normal;
 			});
 
 			selectnodeCircles.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.color) === -1)
+				if(types.indexOf(o.area) === -1)
 					return opacity;
 				else
 					return normal;
 			});
 
 			selectnodeLabels.style("fill-opacity", function(o) {
-				if(types.indexOf(o.color) === -1){
+				if(types.indexOf(o.area) === -1){
 						return opacity*3;
 				}
 				else{
@@ -1218,7 +1156,7 @@ $("#ex6").on("slide", function(slideEvt) {
 			});
 
 			selectnodeLabels.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.color) === -1){
+				if(types.indexOf(o.area) === -1){
 					return opacity*3;
 				}
 				else{
@@ -1228,7 +1166,7 @@ $("#ex6").on("slide", function(slideEvt) {
 
 		/* links stay with opacity or not in hover according to below condition */
 			linkLines.style("stroke-opacity", function(o) {
-				return types.indexOf(o.source.color) != -1 || types.indexOf(o.target.color) != -1 ? normal/2 : opacity;
+				return types.indexOf(o.source.area) != -1 || types.indexOf(o.target.area) != -1 ? normal/2 : opacity;
 			});
 		}
 
@@ -1310,8 +1248,8 @@ $("#ex6").on("slide", function(slideEvt) {
 
 				var temp = mytext.selectAll("div.nodetext").data([selectedLabelData].concat(labels)).enter().append("div").attr("class", function(o) {
 					if( d.index == o.index )
-						return "nodetext " + o.color + " active";
-					return "nodetext " + o.color;
+						return "nodetext " + o.area + " active";
+					return "nodetext " + o.area;
 				})
 				.html(function(o) {	
 // NMP +
@@ -1324,15 +1262,12 @@ $("#ex6").on("slide", function(slideEvt) {
 					if(d == o){
 
 						$("#mytext-title").empty();
-						$("#mytext-title").show();
-						//$("#mytext-content").empty();
-						$("#mytext-content").show();
 						mytextTitle.append("div").append("ul")
 							.attr("class", "pagination active")
 							.attr("data-toggle","tooltip")
 							.attr("data-placement","right")
 							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.color + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
+							.append("li").append("a").attr("class", "nodetext " + o.area + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
 						var str = "";
 						topicsGroupPerNode = grants[o.id];
 						if(topics1 != null){
@@ -1360,16 +1295,12 @@ $("#ex6").on("slide", function(slideEvt) {
 						$("#header1").hide();
 						$("#log").hide();
 						$("#tags").val("");	
-
-						$("#header3").hide();
-						$("#areaNodes").hide();
-						
 						$("#header2").show();
 						$("#similarNodes").show();
 
 						var similarNodes = "";
 	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
+						similarNodes += "<li class=\"" + o.area + "result\"><a class=\"" + o.area + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
 						$('#simNode'+i).hover(function(){
@@ -1551,8 +1482,8 @@ $("#ex6").on("slide", function(slideEvt) {
 
 				var temp = mytext.selectAll("div.nodetext").data([selectedLabelData].concat(labels)).enter().append("div").attr("class", function(o) {
 					if( d.index == o.index )
-						return "nodetext " + o.color + " active";
-					return "nodetext " + o.color;
+						return "nodetext " + o.area + " active";
+					return "nodetext " + o.area;
 				})
 				.html(function(o) {	
 // NMP +
@@ -1565,15 +1496,12 @@ $("#ex6").on("slide", function(slideEvt) {
 					if(d == o){
 
 						$("#mytext-title").empty();
-						$("#mytext-title").show();
-						//$("#mytext-content").empty();
-						$("#mytext-content").show();
 						mytextTitle.append("div").append("ul")
 							.attr("class", "pagination active")
 							.attr("data-toggle","tooltip")
 							.attr("data-placement","right")
 							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.color + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
+							.append("li").append("a").attr("class", "nodetext " + o.area + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
 						var str = "";
 						topicsGroupPerNode = grants[o.id];
 						if(topics1 != null){
@@ -1599,16 +1527,12 @@ $("#ex6").on("slide", function(slideEvt) {
 						$("#header1").hide();
 						$("#log").hide();
 						$("#tags").val("");	
-
-						$("#header3").hide();
-						$("#areaNodes").hide();
-						
 						$("#header2").show();
 						$("#similarNodes").show();
 
 						var similarNodes = "";
 	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
+						similarNodes += "<li class=\"" + o.area + "result\"><a class=\"" + o.area + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
 
@@ -1822,8 +1746,8 @@ $("#ex6").on("slide", function(slideEvt) {
 				.append("div")
 				.attr("class", function(o) {
 					if( mynode.index == o.index )
-						return "nodetext " + o.color + " active";
-					return "nodetext " + o.color;
+						return "nodetext " + o.area + " active";
+					return "nodetext " + o.area;
 				})
 				.html(function(o) {
 //NMP +
@@ -1835,15 +1759,12 @@ $("#ex6").on("slide", function(slideEvt) {
 					// var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
 					if(mynode == o){
 						$("#mytext-title").empty();
-						$("#mytext-title").show();
-						//$("#mytext-content").empty();
-						$("#mytext-content").show();
 						mytextTitle.append("div").append("ul")
 							.attr("class", "pagination active")
 							.attr("data-toggle","tooltip")
 							.attr("data-placement","right")
 							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.color + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
+							.append("li").append("a").attr("class", "nodetext " + o.area + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
 						var str = "";
 
 						topicsGroupPerNode = grants[o.id];
@@ -1871,16 +1792,12 @@ $("#ex6").on("slide", function(slideEvt) {
 						$("#header1").hide();
 						$("#log").hide();
 						$("#tags").val("");	
-
-						$("#header3").hide();
-						$("#areaNodes").hide();
-
 						$("#header2").show();
 						$("#similarNodes").show();
 
 						var similarNodes = "";
 	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
+						similarNodes += "<li class=\"" + o.area + "result\"><a class=\"" + o.area + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
 
@@ -2143,8 +2060,8 @@ console.log(selectnodeLabels)
 				.append("div")
 				.attr("class", function(o) {
 					if( mynode.index == o.index )
-						return "nodetext " + o.color + " active";
-					return "nodetext " + o.color;
+						return "nodetext " + o.area + " active";
+					return "nodetext " + o.area;
 				})
 				.html(function(o) {
 //NMP +
@@ -2156,15 +2073,12 @@ console.log(selectnodeLabels)
 //					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
 					if(mynode == o){
 						$("#mytext-title").empty();			
-						$("#mytext-title").show();
-						//$("#mytext-content").empty();
-						$("#mytext-content").show();
 						mytextTitle.append("div").append("ul")
 							.attr("class", "pagination active")
 							.attr("data-toggle","tooltip")
 							.attr("data-placement","right")
 							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.color + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
+							.append("li").append("a").attr("class", "nodetext " + o.area + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
 						var str = "";
 
 						topicsGroupPerNode = grants[o.id];
@@ -2199,16 +2113,12 @@ console.log(selectnodeLabels)
 						$("#header1").hide();
 						$("#log").hide();
 						$("#tags").val("");	
-
-						$("#header3").hide();
-						$("#areaNodes").hide();
-
 						$("#header2").show();
 						$("#similarNodes").show();
 
 						var similarNodes = "";
 	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + i + "\" rel=\"#C6AA01\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
+						similarNodes += "<li class=\"" + o.area + "result\"><a class=\"" + o.area + "result \" id=\"simNode" + i + "\" rel=\"#C6AA01\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
 //todo auto pou den douleuei sto linking einai ta key
@@ -2400,22 +2310,15 @@ console.log(selectnodeLabels)
 			//mytext.selectAll(".nodetext").remove();
 			$(".nodetext").remove();
 			$("#similarNodes > div > ul").empty();
-			$("#areaNodes > div > ul").empty();
 
 			$("#boost_btn").hide();
-
 			$("#header1").hide();
 			$("#log").hide();
 			$("#tags").val("");	
 			$("#header2").hide();
 			$("#similarNodes").hide();
-			$("#header3").hide();
-			$("#areaNodes").hide();
-
-			$("#filter1").hide();
-			$("#filter2").hide();
-			$("#mytext-title").empty();
-			$("#mytext-content").empty();
+			 $("#filter1").hide();
+			 $("#filter2").hide();
 
 			$("#upButton").hide();
 			$("#downButton").hide();
@@ -2474,22 +2377,15 @@ console.log(selectnodeLabels)
 				//mytext.selectAll(".nodetext").remove();
 				$(".nodetext").remove();
 				$("#similarNodes > div > ul").empty();
-				$("#areaNodes > div > ul").empty();
 
 				$("#boost_btn").hide();
-
 				$("#header1").hide();
 				$("#log").hide();
 				$("#tags").val("");	
 				$("#header2").hide();
 				$("#similarNodes").hide();
-				$("#header3").hide();
-				$("#areaNodes").hide();
-
 				$("#filter1").hide();
 				$("#filter2").hide();
-				$("#mytext-title").empty();
-				$("#mytext-content").empty();
 
 
 				$("#upButton").hide();
@@ -2865,7 +2761,7 @@ console.log(selectnodeLabels)
 						labelIsOnGraph[discriminativeWord[nodes[k].index]] = false;
 
 					/* use sorting to avoid item multiply printed in d3 graph */
-						svgSortedTopicWords.push({key:nodes[k].index, name:nodes[k].name, key_k:k, item:discriminativeWord[nodes[k].index], value:discriminativeWordCounts[nodes[k].index], area:nodes[k].color});
+						svgSortedTopicWords.push({key:nodes[k].index, name:nodes[k].name, key_k:k, item:discriminativeWord[nodes[k].index], value:discriminativeWordCounts[nodes[k].index], area:nodes[k].area});
 						topicWords[nodes[k].index] = discriminativeWord[nodes[k].index];
 						// console.log("IN k="+k+" FINAL discriminativeWord="+discriminativeWord[nodes[k].index]+" with counts = "+discriminativeWordCounts[nodes[k].index]);
 					}
@@ -2939,7 +2835,7 @@ console.log(selectnodeLabels)
 
 				nodeLabels
 					.attr("class", function(d) {
-					return "labels " + d.color
+					return "labels " + d.area
 				})
 				.attr("x", function(d) {
 					return (d.x+7);
@@ -3024,28 +2920,28 @@ console.log(selectnodeLabels)
 			 });
 
 // THE BELOW FOR LOCALHOST TESTING
+/*
+			$.ajax({
+				type: "GET",
+				async: true,
+				url: "../../../jsonFET.php",
+				data:"s="+expsimilarity+"&ex="+experiment,
+				success: function(resp){
+					spinner.stop();
+					myresponse = JSON.parse(resp);
+					//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
+					topics1 = myresponse.topicsNoSort;
+					topics2 = myresponse.topics;
+					grants = myresponse.grants;
+					experiments = myresponse.expers;
+					renderpage(myresponse.resp);
 
-			// $.ajax({
-			// 	type: "GET",
-			// 	async: true,
-			// 	url: "../../../jsonFET.php",
-			// 	data:"s="+expsimilarity+"&ex="+experiment,
-			// 	success: function(resp){
-			// 		spinner.stop();
-			// 		myresponse = JSON.parse(resp);
-			// 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
-			// 		topics1 = myresponse.topicsNoSort;
-			// 		topics2 = myresponse.topics;
-			// 		grants = myresponse.grants;
-			// 		experiments = myresponse.expers;
-			// 		renderpage(myresponse.resp);
-
-			// 	},
-			// 	error: function(e){
-			// 		alert('Error: ' + JSON.stringify(e));
-			// 	}
-			// });
-
+				},
+				error: function(e){
+					alert('Error: ' + JSON.stringify(e));
+				}
+			});
+*/
 		}
 
 
@@ -3096,84 +2992,7 @@ console.log(selectnodeLabels)
 			for (var j = 0; j < response.length; j++) {
 				if (typeof node_hash[response[j].node1id]==="undefined"){
 					var nodetype;
-					if (/^FET*/.test(experimentName)){
-						response[j].category1_3 = response[j].category1_3.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-')
-	//					response[j].category1_1 = response[j].category1_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-						var nodeindex = type_hash.indexOf(response[j].category1_3)
-						if(nodeindex != -1){
-							nodetype = nodeindex;
-							legend_data[nodeindex].pr++;
-						}
-						else{
-							type_hash.push(response[j].category1_3);
-							nodetype = type_hash.length;
-							legend_data[type_hash.length-1] = new Object();
-							legend_data[type_hash.length-1].name = response[j].category1_3;
-							legend_data[type_hash.length-1].pr=1;
-							legend_data[type_hash.length-1].desc=response[j].category1_3descr;
-
-						// if we want to have darker stroke, augment it to 2 or more
-							if (response[j].category1_1 == "FETOpen"){
-								console.log("FETOpen")
-								style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; background-color:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
-							/* styling for results in autocomplete search */	
-								style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
-							}
-							else if (response[j].category1_1 == "FETProactive"){
-								console.log("FETProactive")
-								style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; background-color:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
-							/* styling for results in autocomplete search */	
-								style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
-							}
-							else if (response[j].category1_1 == "FETFlagship"){
-								console.log("FETFlagship")
-								style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; background-color:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
-							/* styling for results in autocomplete search */	
-								style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
-							}
-							else {
-								console.log("error: "+response[j].category1_3)
-							}
-
-							colorCnt++;
-						}
-
-						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_2, subarea: response[j].category1_3, subareaDescr: response[j].category1_3descr, color:response[j].category1_3}; //value # of publications
-
-						node_hash[response[j].node1id] = nodeCnt;
-						nodeCnt++;
-
-					}
-					else if (/^HEALTH*/.test(experimentName)){
-						response[j].category1_3 = response[j].category1_3.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-')
-	//					response[j].category1_1 = response[j].category1_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-						var nodeindex = type_hash.indexOf(response[j].category1_3)
-						if(nodeindex != -1){
-							nodetype = nodeindex;
-							legend_data[nodeindex].pr++;
-						}
-						else{
-							type_hash.push(response[j].category1_3);
-							nodetype = type_hash.length;
-							legend_data[type_hash.length-1] = new Object();
-							legend_data[type_hash.length-1].name = response[j].category1_3;
-							legend_data[type_hash.length-1].pr=1;
-							legend_data[type_hash.length-1].desc=response[j].category1_3descr;
-
-						// if we want to have darker stroke, augment it to 2 or more
-							style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-						/* styling for results in autocomplete search */	
-							style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-							colorCnt++;
-						}
-
-						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_2, subarea: response[j].category1_3, subareaDescr: response[j].category1_3descr, color:response[j].category1_3}; //value # of publications
-
-						node_hash[response[j].node1id] = nodeCnt;
-						nodeCnt++;
-
-					}
-					else{
+					if (/^Full*/.test(experimentName)){
 						response[j].category1_2 = response[j].category1_2.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-')
 	//					response[j].category1_1 = response[j].category1_1.replace(/(.+?)\ (.+?)/, '$1-$2')
 						var nodeindex = type_hash.indexOf(response[j].category1_2)
@@ -3187,7 +3006,6 @@ console.log(selectnodeLabels)
 							legend_data[type_hash.length-1] = new Object();
 							legend_data[type_hash.length-1].name = response[j].category1_2;
 							legend_data[type_hash.length-1].pr=1;
-							legend_data[type_hash.length-1].desc=response[j].category1_3descr;
 
 						// if we want to have darker stroke, augment it to 2 or more
 							style.innerHTML += "."+response[j].category1_2+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
@@ -3196,92 +3014,45 @@ console.log(selectnodeLabels)
 							colorCnt++;
 						}
 
-						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_2, subarea: response[j].category1_3, subareaDescr: response[j].category1_3descr, color:response[j].category1_2}; //value # of publications
+						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_2, area: response[j].category1_2, subarea: response[j].category1_2}; //value # of publications
 
 						node_hash[response[j].node1id] = nodeCnt;
 						nodeCnt++;
+					}
+					else{
+						response[j].category1_1 = response[j].category1_1.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-')
+	//					response[j].category1_1 = response[j].category1_1.replace(/(.+?)\ (.+?)/, '$1-$2')
+						var nodeindex = type_hash.indexOf(response[j].category1_1)
+						if(nodeindex != -1){
+							nodetype = nodeindex;
+							legend_data[nodeindex].pr++;
+						}
+						else{
+							type_hash.push(response[j].category1_1);
+							nodetype = type_hash.length;
+							legend_data[type_hash.length-1] = new Object();
+							legend_data[type_hash.length-1].name = response[j].category1_1;
+							legend_data[type_hash.length-1].pr=1;
+
+						// if we want to have darker stroke, augment it to 2 or more
+							style.innerHTML += "."+response[j].category1_1+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
+						/* styling for results in autocomplete search */	
+							style.innerHTML += "."+response[j].category1_1+"result{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
+							colorCnt++;
+						}
+
+						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_1, subarea: response[j].category1_1}; //value # of publications
+
+						node_hash[response[j].node1id] = nodeCnt;
+						nodeCnt++;
+
 					}
 
 				}
 
 				if (typeof node_hash[response[j].node2id]==="undefined"){
 					var nodetype;
-					if (/^FET*/.test(experimentName)){
-						response[j].category2_3 = response[j].category2_3.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-')
-	//					response[j].category2_1 = response[j].category2_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-						var nodeindex = type_hash.indexOf(response[j].category2_3)
-						if(nodeindex != -1){
-							nodetype = nodeindex;
-							legend_data[nodeindex].pr++;
-						}
-						else{
-							type_hash.push(response[j].category2_3);
-							nodetype = type_hash.length;
-							legend_data[type_hash.length-1] = new Object();
-							legend_data[type_hash.length-1].name = response[j].category2_3;
-							legend_data[type_hash.length-1].pr=1;
-							legend_data[type_hash.length-1].desc=response[j].category2_3descr;
-
-
-							if (response[j].category2_1 == "FETOpen"){
-								console.log("FETOpen")
-								style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; background-color:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
-							/* styling for results in autocomplete search */	
-								style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
-							}
-							else if (response[j].category2_1 == "FETProactive"){
-								console.log("FETProactive")
-								style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; background-color:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
-							/* styling for results in autocomplete search */	
-								style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
-							}
-							else if (response[j].category2_1 == "FETFlagship"){
-								console.log("FETFlagship")
-								style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; background-color:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
-							/* styling for results in autocomplete search */	
-								style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
-							}
-							else {
-								console.log("error: "+response[j].category2_1)
-							}
-
-
-							colorCnt++;
-						}
-
-						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_2, subarea: response[j].category2_3, subareaDescr: response[j].category2_3descr, color:response[j].category2_3}; //value # of publications
-						node_hash[response[j].node2id] = nodeCnt;
-						nodeCnt++;
-					}
-					else if (/^HEALTH*/.test(experimentName)){
-						response[j].category2_3 = response[j].category2_3.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-')
-	//					response[j].category2_1 = response[j].category2_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-						var nodeindex = type_hash.indexOf(response[j].category2_3)
-						if(nodeindex != -1){
-							nodetype = nodeindex;
-							legend_data[nodeindex].pr++;
-						}
-						else{
-							type_hash.push(response[j].category2_3);
-							nodetype = type_hash.length;
-							legend_data[type_hash.length-1] = new Object();
-							legend_data[type_hash.length-1].name = response[j].category2_3;
-							legend_data[type_hash.length-1].pr=1;
-							legend_data[type_hash.length-1].desc=response[j].category2_3descr;
-
-
-						// if we want to have darker stroke, augment it to 2 or more
-							style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-						/* styling for results in autocomplete search */	
-							style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-							colorCnt++;
-						}
-
-						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_2, subarea: response[j].category2_3, subareaDescr: response[j].category2_3descr, color:response[j].category2_3}; //value # of publications
-						node_hash[response[j].node2id] = nodeCnt;
-						nodeCnt++;
-					}
-					else{
+					if (/^Full*/.test(experimentName)){
 						response[j].category2_2 = response[j].category2_2.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-')
 	//					response[j].category2_1 = response[j].category2_1.replace(/(.+?)\ (.+?)/, '$1-$2')
 						var nodeindex = type_hash.indexOf(response[j].category2_2)
@@ -3295,7 +3066,6 @@ console.log(selectnodeLabels)
 							legend_data[type_hash.length-1] = new Object();
 							legend_data[type_hash.length-1].name = response[j].category2_2;
 							legend_data[type_hash.length-1].pr=1;
-							legend_data[type_hash.length-1].desc=response[j].category2_3descr;
 
 
 						// if we want to have darker stroke, augment it to 2 or more
@@ -3305,7 +3075,34 @@ console.log(selectnodeLabels)
 							colorCnt++;
 						}
 
-						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_2, subarea: response[j].category2_3, subareaDescr: response[j].category2_3descr, color:response[j].category2_2}; //value # of publications
+						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_2, area: response[j].category2_2, subarea: response[j].category2_2}; //value # of publications
+						node_hash[response[j].node2id] = nodeCnt;
+						nodeCnt++;
+					}
+					else{
+						response[j].category2_1 = response[j].category2_1.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-')
+	//					response[j].category2_1 = response[j].category2_1.replace(/(.+?)\ (.+?)/, '$1-$2')
+						var nodeindex = type_hash.indexOf(response[j].category2_1)
+						if(nodeindex != -1){
+							nodetype = nodeindex;
+							legend_data[nodeindex].pr++;
+						}
+						else{
+							type_hash.push(response[j].category2_1);
+							nodetype = type_hash.length;
+							legend_data[type_hash.length-1] = new Object();
+							legend_data[type_hash.length-1].name = response[j].category2_1;
+							legend_data[type_hash.length-1].pr=1;
+
+
+						// if we want to have darker stroke, augment it to 2 or more
+							style.innerHTML += "."+response[j].category2_1+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
+						/* styling for results in autocomplete search */	
+							style.innerHTML += "."+response[j].category2_1+"result{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
+							colorCnt++;
+						}
+
+						nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_1, subarea: response[j].category2_1}; //value # of publications
 						node_hash[response[j].node2id] = nodeCnt;
 						nodeCnt++;
 					}
@@ -3371,27 +3168,18 @@ console.log(selectnodeLabels)
 			legend_data.sort(compare);
 			nodes.sort(compareGrants);
 
-			createJsonFile()			
-			createCSVFile()
-
-
 			var rows;
 			rows = legend.selectAll("tr")
 				.data(legend_data);
-			rows
+				rows
 				.enter()
 				.append("tr")
 				.style("height","10px")
 				.attr("class","legend_row")
 				.attr("id",function(d) {return "legend_row" + d.name;})
-				.attr("data-toggle","tooltip")
-				.attr("data-placement","bottom")
-				.attr("title",function(d) {return d.desc;})
 				.on("click",function(d,i){
+
 					$("#mytext-title").empty();
-					$("#mytext-title").show();
-					$("#mytext-content").empty();
-					$("#mytext-content").show();
 					mytextTitle.append("div").append("ul")
 						.attr("class", "pagination active")
 						.attr("data-toggle","tooltip")
@@ -3427,7 +3215,6 @@ console.log(selectnodeLabels)
 						collection = $(".legend_row");
 						$("#mytext-content").empty();
 						$("#mytext-title").empty();
-						$("#mytext-content").empty();
 					}
 					else
 						collection = $(".active_row");
@@ -3498,7 +3285,7 @@ console.log(selectnodeLabels)
 
 
 
-//				$(document).bind("chordready", function(){
+				$(document).bind("chordready", function(){
 					rows.each(function(d, i) {
 	//    				console.log(this, d, i);
 						$("#collapse"+d.name)
@@ -3579,7 +3366,7 @@ console.log(selectnodeLabels)
 	    				});
 
 
-//				});
+				});
 
 			loadingText = vis.append("svg:text")
 							.style("font-size",w/20)
@@ -3788,7 +3575,7 @@ console.log(selectnodeLabels)
 						$("#graph").empty();
 
 						$("svg:text").empty();
-//						$(".chord_circle").remove();
+						$("#chord_circle").remove();
 
 //							$("#subdivision_btn").attr("value","Plot Subdivisions in Chords");
 						// plot = 0;
@@ -3796,13 +3583,10 @@ console.log(selectnodeLabels)
 						// $("#graph").show();
 						// $("#thresholds").show();
 
-//						chord_arc = [];
-//						chord_layout = [];
-//						chord_path = [];
-//						chord_svg = [];
-$("#chorddiv").empty();
-$("#chord2div").empty();
-
+						chord_arc = [];
+						chord_layout = [];
+						chord_path = [];
+						chord_svg = [];
 
 						//$("#mygraph").empty();
 
@@ -3828,7 +3612,6 @@ $("#chord2div").empty();
 						subdConnections = [];
 						subdConnectionsNum = [];
 						relations = [];
-						relationsCross = [];
 						names = [];
 						subdBiConnections = [];
 						subdBiConnectionsNum = [];
@@ -3849,7 +3632,6 @@ $("#chord2div").empty();
 //						 	expsimilarity = <?php echo $expsimilarity ;?>;			// to allazw katw kai to pairnw apo ti basi
 
 						ajaxCall(myval,expsimilarity);			 		$("#mygraph-container").attr("style","position:fixed;width:"+8*w/7);
-
 
 					} 
 				});
@@ -3984,7 +3766,6 @@ $(this).find("option:selected").click()
 
 					for(var i=0;i<nodes.length;i++){
 						if(include(array_of_checked_values,nodes[i].name)){
-							clickedNode = nodes[i]
 							testGrantSelection(nodes[i],fade_out);
 							selectnodeCircles = selectnodeCircles.filter(function(element) {
 									if(nodes[i].name != element.name)
@@ -4006,9 +3787,9 @@ $(this).find("option:selected").click()
 
 
 		//Create json file and csv file for chord visualization 
-// 14032015	
-//			createJsonFile()			
-//			createCSVFile()
+	
+			createJsonFile()			
+			createCSVFile()
 
 			$("#myTab").show();
 			$("#experiment_btn").show();
@@ -4049,7 +3830,7 @@ $(this).find("option:selected").click()
 						}
 					});
 
-				// experimentName = myval;
+				experimentName = myval;
 
 
  				$(this).attr("data-title","Experiment Description");
@@ -4065,63 +3846,55 @@ $(this).find("option:selected").click()
 
 
 			$("#boost_btn").on("click", function(){
-			console.log("btn clicked")
+console.log("btn clicked")
 				topicstemp = topics1
 				topics1 = topics2
 				topics2 = topicstemp
 
-				$("mytext-content").hide();
 				findTopicLabels();
 
-				// var SplitText = "Boost Discriminative Words"
-				// var $dialog = $('<div></div>')
-				// .html(SplitText )
-				// .dialog({
-				// 	modal:true,
-				// 	resizable: true,
-				// 	draggable: true,
-				// 	position: ['center',20],
-				// 	height: 200,
-				// 	width: 420,
-				// 	title: 'Boost Discriminative Words',
-				// 	buttons: {
-				// 		Ok: function() {
-				// 			$( this ).dialog( "close" );
-				// 		}
-				// 	},
-				// 	open: function() {
-				// 		setTimeout(function() {
-				// 			$dialog.dialog("close");
-				// 		}, 2000);
-				// 	}
-				// });
+				var SplitText = "Boost Discriminative Words"
+				var $dialog = $('<div></div>')
+				.html(SplitText )
+				.dialog({
+					modal:true,
+					resizable: true,
+					draggable: true,
+					position: ['center',20],
+					height: 200,
+					width: 420,
+					title: 'Boost Discriminative Words',
+					buttons: {
+						Ok: function() {
+							$( this ).dialog( "close" );
+						}
+					},
+					open: function() {
+						setTimeout(function() {
+							$dialog.dialog("close");
+						}, 2000);
+					}
+				});
 
 
 //				$dialog.dialog({
 //				});
 
 //				$dialog.dialog('open');
-				
-				test(clickedNode,0.1);
-
-				console.log("btn changed")
 				if (topicsFlag){
-					// $dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>Topics Words Changed!</b></p><p>Topic Words are NOT using Discriminative Weights</p>");			
+					$dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>Topics Words Changed!</b></p><p>Topic Words are NOT using Discriminative Weights</p>");			
 					topicsFlag = false
-					$("#boost_btn > ul > li > a > span").attr("class","glyphicon glyphicon-remove");
+					$("#boost_btn > span").attr("class","ui-icon ui-icon-circle-close");
 				}
 				else{
-					// $dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>Topics Words Changed!</b></p><p>Topic Words are sorted with Discriminative Weights</p>");
+					$dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>Topics Words Changed!</b></p><p>Topic Words are sorted with Discriminative Weights</p>");
 					topicsFlag = true
-					$("#boost_btn > ul > li > a > span").attr("class","glyphicon glyphicon-ok");
+					$("#boost_btn > span").attr("class","ui-icon ui-icon-circle-check");
 				}	
-				$("mytext-content").show();
-
 			});
 
 
-			createChord(1);
-			createChord(2);
+			createChord();
 
 	// shows the tab and its contents
 //			$('#graphdiv').click(function (e) {
@@ -4200,7 +3973,7 @@ $(this).find("option:selected").click()
 var u =0;
 			linkLines.enter().append("svg:line")					//edw ftiaxnei tis akmes 
 				.attr("class", function(d) {
-					return "link " + d.target.color
+					return "link " + d.target.area
 				})				
 				.attr("x1", function(d) {
 					return d.source.x;
@@ -4225,7 +3998,7 @@ var u =0;
 			nodeCircles.enter()									// edw ftiaxnei tous kombous sss
 				.append("svg:circle")
 				.attr("class", function(d) {
-					return "circle " + d.color
+					return "circle " + d.area
 				})
 				.attr("id", function(d) {
 					return "circle-node-"+d.index
@@ -4251,7 +4024,6 @@ var u =0;
 					}
 					else{
 						focused = d.name;
-						clickedNode = d;
 						test(d,fade_out);
 
 						nodeCircles.on("mouseout", function(){return false;})
@@ -4281,16 +4053,15 @@ var u =0;
 
 		/* test function is similar to fade function*/
 		function createJsonFile(){
-//			if (/^FET*/.test(experimentName)){}
 
 			nodeCircles.each(function(mynode) {
-				var areaIndex = subdConnections.indexOf(mynode.color)
+				var areaIndex = subdConnections.indexOf(mynode.area)
 				if(areaIndex != -1){	// if already exists
 					subdConnectionsNum[areaIndex]++;
 				}
 				else{
-					subdConnections.push(mynode.color);
-					areaIndex = subdConnections.indexOf(mynode.color)
+					subdConnections.push(mynode.area);
+					areaIndex = subdConnections.indexOf(mynode.area)
 					subdConnectionsNum[areaIndex] = 1;
 
 					subdBiConnections.push(areaIndex)
@@ -4304,13 +4075,13 @@ var u =0;
 				nodeCircles.each(function(d) {
 					if (isNodeConnected(mynode, d)) {
 						if (d != mynode){
-							var areaBiIndex = subdBiConnections[areaIndex].indexOf(d.color)
+							var areaBiIndex = subdBiConnections[areaIndex].indexOf(d.area)
 							if(areaBiIndex != -1){	// if already exists
 								subdBiConnectionsNum[areaIndex][areaBiIndex]++;
 							}
 							else{
-								subdBiConnections[areaIndex].push(d.color);
-								areaBiIndex = subdBiConnections[areaIndex].indexOf(d.color)
+								subdBiConnections[areaIndex].push(d.area);
+								areaBiIndex = subdBiConnections[areaIndex].indexOf(d.area)
 								subdBiConnectionsNum[areaIndex][areaBiIndex] = 1;
 							}
 						}
@@ -4326,41 +4097,28 @@ var u =0;
 				}
 			}
 
-
-			// copy : subdBiConnectionsNumCross = subdBiConnectionsNum; //http://stackoverflow.com/questions/13756482/create-copy-of-multi-dimensional-array-not-reference-javascript
-			subdBiConnectionsNumCross = subdBiConnectionsNum.map(function(arr) {
-			    return arr.slice();
-			});
-
-// for the crossdisciplinary connectivity
-			for (var i = 0; i < subdConnections.length; i++) {
-				subdBiConnectionsNumCross[i][i] = 0;
-			}
-
-// 		  	$(document).trigger("chordready");
-
 // 29012015 - changed the projects that go to itself into zero (0) so the chord does not show the inner relations from a subdivision to itself. Only the relations to other subdivisions.
 		//creating the JSON file for the 2nd layout (Chord)
-// 			var string = "["
+			var string = "["
 
-// 			for (var i = 0; i < subdConnections.length-1; i++) {
-// 				string += "["
-// 				for (var j = 0; j < subdConnections.length-1; j++) {
-// 					if (i != j){						
-// 						string += subdBiConnectionsNum[i][j]+","
-// 					}
-// 					else{
-// 						string += "0,"
-// 					}
-// 				}
-// 				string += subdBiConnectionsNum[i][subdConnections.length-1]+"],"	// the last one inner []
-// 			}
-// 			string += "["			// the last one outer []
-// 			for (var j = 0; j < subdConnections.length-1; j++) {
-// 				string += subdBiConnectionsNum[subdConnections.length-1][j]+","
-// 			}
-// //			string += subdBiConnectionsNum[subdConnections.length-1][subdConnections.length-1]+"]]"	// the last one inner [] of the outer []
-// 			string += "0]]"	// the last one inner [] of the outer []
+			for (var i = 0; i < subdConnections.length-1; i++) {
+				string += "["
+				for (var j = 0; j < subdConnections.length-1; j++) {
+					if (i != j){						
+						string += subdBiConnectionsNum[i][j]+","
+					}
+					else{
+						string += "0,"
+					}
+				}
+				string += subdBiConnectionsNum[i][subdConnections.length-1]+"],"	// the last one inner []
+			}
+			string += "["			// the last one outer []
+			for (var j = 0; j < subdConnections.length-1; j++) {
+				string += subdBiConnectionsNum[subdConnections.length-1][j]+","
+			}
+//			string += subdBiConnectionsNum[subdConnections.length-1][subdConnections.length-1]+"]]"	// the last one inner [] of the outer []
+			string += "0]]"	// the last one inner [] of the outer []
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////// USE BELOW LATER THAT IT WILL BE ON GRAPH 	///////////////
@@ -4383,25 +4141,26 @@ var u =0;
 		// }
 		////////////////////////////////////////////////////////////////////////////////////////////
 			// some jQuery to write to file
-			// $.ajax({
-			// 	type : "POST",
-			// 	async: true,
-			// 	url : "./fileCreator.php",
-			// 	dataType : 'text',		// this is json if we put it like this JSON object 
-			// 	data : {
-			// /*        json : JSON.stringify(jsonObject) /* convert here only */
-			// 		func : "json",			// declare the function you want to use from fileCreator.php
-			// 		json : string
-			// 	},
-			// 	success: function(){
-			// 		  console.log("JSON file Created")
- 		//   			$(document).trigger("chordready");
-			// 	},
-			// 	error: function(e){
-			// 		alert('Error: ' + JSON.stringify(e));
-			// 	}
+			$.ajax({
+				type : "POST",
+				async: true,
+				url : "./fileCreator.php",
+				dataType : 'text',		// this is json if we put it like this JSON object 
+				data : {
+			/*        json : JSON.stringify(jsonObject) /* convert here only */
+					func : "json",			// declare the function you want to use from fileCreator.php
+					json : string
+				},
+				success: function(){
+					  console.log("JSON file Created")
+					  	$(document).trigger("chordready");
 
-			// });
+				},
+				error: function(e){
+					alert('Error: ' + JSON.stringify(e));
+				}
+
+			});
 
 			//console.log("JSON:"+string)
 
@@ -4424,9 +4183,8 @@ var u =0;
 
 		function createCSVFile(){
 			var max_proj = 0;
-			var string = "name,color,projects,relations,relationsCross";
+			var string = "name,color,projects,relations";
 			var subdSum = 0;
-			var subdSumCross = 0;
 
 			for (var i = 0; i < subdConnections.length; i++) {
 				clrArray.push($("."+subdConnections[i]).css("color"))
@@ -4436,38 +4194,35 @@ var u =0;
 
 
 				subdSum = 0;
-				subdSumCross = 0;
 				for (var j = 0; j < subdConnections.length; j++) {
-					subdSum += subdBiConnectionsNum[i][j];
-					subdSumCross += subdBiConnectionsNumCross[i][j];
+					subdSum += subdBiConnectionsNum[i][j]
 				}
 				relations.push(subdSum);
-				relationsCross.push(subdSumCross);
 			};
 
+
 			for (var i = 0; i < subdConnections.length; i++) {
-				string += "\n"+subdConnections[i]+","+rgb2hex(clrArray[i])+","+subdConnectionsNum[i]+","+relations[i]+","+relationsCross[i];
-				subdivisionsChord[i] = {name: subdConnections[i], color:rgb2hex(clrArray[i]), projects:subdConnectionsNum[i], relations:relations[i], relationsCross:relationsCross[i]};
+				string += "\n"+subdConnections[i]+","+rgb2hex(clrArray[i])+","+subdConnectionsNum[i]+","+relations[i];
 			}
 
-			// $.ajax({
-			// 	type : "POST",
-			// 	async: true,
-			// 	url : "./fileCreator.php",
-			// 	dataType : 'text',		// this is json if we put it like this JSON object 
-			// 	data : {
-			//         json : JSON.stringify(jsonObject), /* convert here only */
-			// 		func : "csv",
-			// 		csv : string
-			// 	},
-			// 	success: function(){
-			// 		console.log("CSV file Created")
-			// 	},
-			// 	error: function(e){
-			// 		alert('Error: ' + e);
-			// 	}
+			$.ajax({
+				type : "POST",
+				async: true,
+				url : "./fileCreator.php",
+				dataType : 'text',		// this is json if we put it like this JSON object 
+				data : {
+			/*        json : JSON.stringify(jsonObject) /* convert here only */
+					func : "csv",
+					csv : string
+				},
+				success: function(){
+					console.log("CSV file Created")
+				},
+				error: function(e){
+					alert('Error: ' + e);
+				}
 
-			// });
+			});
 		}
 
 
@@ -4486,7 +4241,7 @@ var u =0;
 ///////////////////////////////////////
 
 
-function createChord(type){
+function createChord(){
 	var chord_width = w + <?php echo $chord_width ;?>,
 		chord_height = h + <?php echo $chord_height ;?>,
 		wordWidth = <?php echo $wordWidth ;?>,
@@ -4511,27 +4266,26 @@ function createChord(type){
 	.radius(chord_innerRadius);
 		 
 	//$("#chord").remove();
-// 	if ($("#chord").length){
-// 		chord_svg = d3.select("#chord")
-// 			//.style("width", w)
-// 			.style("height", h)
-// 			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-// 			.style("preserveAspectRatio", "xMidYMid meet")
-// 			.style("border-style","solid")
-// //			.style("cursor","pointer")
-// //			.style("border-color","snow")
-// 			.style("border-color","#f6f6f6")
-// 			.append("svg:g")
-// 			.attr("id", "chord_circle")
-// //			.attr("transform", "translate(" + chord_width / 2 + "," + ((chord_height / 2)+40) + ")"); 
-// 			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
+	if ($("#chord").length){
+		chord_svg = d3.select("#chord")
+			//.style("width", w)
+			.style("height", h)
+			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+			.style("preserveAspectRatio", "xMidYMid meet")
+			.style("border-style","solid")
+//			.style("cursor","pointer")
+//			.style("border-color","snow")
+			.style("border-color","#f6f6f6")
+			.append("svg:g")
+			.attr("id", "chord_circle")
+//			.attr("transform", "translate(" + chord_width / 2 + "," + ((chord_height / 2)+40) + ")"); 
+			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
 
-// 		chord_svg.append("circle")
-// 		.attr("r", chord_outerRadius);
+		chord_svg.append("circle")
+		.attr("r", chord_outerRadius);
 
-// 	}
-// 	else if (type == 1){
-	if (type == 1){
+	}
+	else{	
 		var chord_svg = d3.select("#chorddiv")
 			//.style("width", w)
 			.style("height", h)
@@ -4541,30 +4295,12 @@ function createChord(type){
 			.style("cursor","pointer")
 			.style("border-color","snow")
 			.append("svg:svg")
-//			.attr("id", "chord")
+			.attr("id", "chord")
 		//	.attr("style", "visibility:hidden")	
 			.attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
 			.attr("height", chord_height+wordHeight)
 			.append("svg:g")
-			.attr("class", "chord_circle")
-			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
-	}
-	else {	
-		var chord_svg = d3.select("#chord2div")
-			//.style("width", w)
-			.style("height", h)
-			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-			.style("preserveAspectRatio", "xMidYMid meet")
-			.style("border-style","solid")
-			.style("cursor","pointer")
-			.style("border-color","snow")
-			.append("svg:svg")
-//			.attr("id", "chord2")
-		//	.attr("style", "visibility:hidden")	
-			.attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
-			.attr("height", chord_height+wordHeight)
-			.append("svg:g")
-			.attr("class", "chord_circle")
+			.attr("id", "chord_circle")
 			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
 	}
 
@@ -4578,40 +4314,25 @@ function createChord(type){
 
 
 
-	// d3.csv("./list.csv", function(aasdasd) {
-	// $.each(subdivisionsChord, function(aasdasd) {
-		//d3.json("./matrix.json", function(matrix) {
-		 // $.each(subdBiConnectionsNum, function(i,matrix) {
-		//	console.log(subdBiConnectionsNum)
+	d3.csv("./list.csv", function(subdivisionsChord) {
+		d3.json("./matrix.json", function(matrix) {
 			// Compute the chord layout.
-			// chord_layout.matrix(matrix);			
-			if (type == 1){
-				chord_layout.matrix(subdBiConnectionsNum);
-			}
-			else{				
-				chord_layout.matrix(subdBiConnectionsNumCross);
-			}
+			chord_layout.matrix(matrix);
 			mytextsubdivisions = subdivisionsChord; 
 			// Add a group per neighborhood.
 			chord_group = chord_svg.selectAll(".group")
 				.data(chord_layout.groups)
 				.enter().append("svg:g")
-				.attr("class", function(d, i) { return "group "+subdivisionsChord[i].name; })
+				.attr("class", "group")
 				.on("mouseover", chord_mouseover)
 				.on("mouseout", chord_mouseout);
 				//.on("click",chord_click);
 			 
 			// Add a mouseover title.
 			 chord_group.append("title").text(function(d, i) {
-				// var str = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-				// var strCross = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-				// return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
-				if (type == 1){
-					return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relations + " <?php echo $node_name;?> relations in all areas";
-				}
-				else{
-					return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relationsCross + " <?php echo $node_name;?> relations in other areas";
-				}
+			 										var str = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
+
+				 return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
 			 });
 		 
 			// Add the group arc.
@@ -4638,7 +4359,7 @@ function createChord(type){
 			chord_chord = chord_svg.selectAll(".chord")
 				.data(chord_layout.chords)
 				.enter().append("path")
-				.attr("class", function(d, i) { return "chord "+subdivisionsChord[d.source.index].name; })
+				.attr("class", "chord")
 				.style("fill", function(d) { return subdivisionsChord[d.source.index].color; })
 				.attr("d", chord_path);
 				
@@ -4647,34 +4368,16 @@ function createChord(type){
 			 	.append("title")
 			 	.text(function(d) {
 					percentageSum = d.source.value+d.target.value
-
-					if (type == 1){
-
-						return subdivisionsChord[d.source.index].name
-	//					 + " (#" +  d.source.value
-	//					 + ")"
-						 + " ↔ " + subdivisionsChord[d.target.index].name 				
-	//					 + " (#" +  d.target.value
-	//					 + ")"
-						 + ": " + percentageSum
-						 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-						 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-						 + ")" ; // &harr; the name of the arrow
-			 		}
-			 		else{
-
-						return subdivisionsChord[d.source.index].name
-	//					 + " (#" +  d.source.value
-	//					 + ")"
-						 + " ↔ " + subdivisionsChord[d.target.index].name 				
-	//					 + " (#" +  d.target.value
-	//					 + ")"
-						 + ": " + percentageSum
-						 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relationsCross)
-						 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relationsCross)
-						 + ")" ; // &harr; the name of the arrow
-
-			 		}
+					return subdivisionsChord[d.source.index].name
+//					 + " (#" +  d.source.value
+//					 + ")"
+					 + " ↔ " + subdivisionsChord[d.target.index].name 				
+//					 + " (#" +  d.target.value
+//					 + ")"
+					 + ": " + percentageSum
+					 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
+					 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
+					 + ")" ; // &harr; the name of the arrow
 /*					if(subdivisionsChord[d.source.index].name != subdivisionsChord[d.target.index].name){
 						return subdivisionsChord[d.source.index].name
 						 + " → " + subdivisionsChord[d.target.index].name
@@ -4735,8 +4438,8 @@ function createChord(type){
 			// 	}
 			// }
 
-		// });
-	//});
+		});
+	});
 }
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
@@ -4785,7 +4488,7 @@ function createChord(type){
 		
 							availableLabels.push(str);
 							//console.log("my= "+nodes[k].index+" "+nodes[k].value)
-							availableTags.push({item:str, id:nodes[k].index, value:nodes[k].value, key:k, name:nodes[k].name, area:nodes[k].color, value:nodes[k].value});
+							availableTags.push({item:str, id:nodes[k].index, value:nodes[k].value, key:k, name:nodes[k].name, area:nodes[k].area, value:nodes[k].value});
 						}
 					}
 				}
@@ -4839,10 +4542,6 @@ function createChord(type){
 					$("#boost_btn").hide();
 					$( "#header2" ).hide();
 					$( "#similarNodes" ).hide();
-
-					$("#header3").hide();
-					$("#areaNodes").hide();
-
 					$( "#header1" ).show();
 					$( "#log" ).show();
 
@@ -5019,7 +4718,6 @@ function createChord(type){
 							//else
 							//	zoomer.translate([(w/2)+parseInt(vis.select("#circle-node-"+this.id).attr("cx")),0]);
 							//zoomer.event(vis);
-							clickedNode = this;
 							test(nodes[this.id],0.1);
 						});
 					}
@@ -5037,117 +4735,122 @@ function createChord(type){
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#headmenu">
-						<a class="navbar-brand" href="http://astero.di.uoa.gr/graphs/">  
-							<span class="sr-only">Home</span>
-						</a>
-						<!-- 					        <span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						-->
-		      		</button>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#headmenu">
 					<a class="navbar-brand" href="http://astero.di.uoa.gr/graphs/">  
-						<span class="glyphicon glyphicon-home"></span>
+						<span class="sr-only">Home</span>
 					</a>
-				</div>
-				<div class="collapse navbar-collapse " id="headmenu">
-	<!-- 				<ul class="nav navbar-nav divider-vertical">
-						<li class="active"><a href="#"><?php echo $title ;?> <span class="sr-only">(current)</span></a></li>
-					</ul>
-	 -->
-
-	 				 <ul class="nav navbar-nav divider-vertical">
-						<li>
-							<!-- <h5>Experiment:&nbsp;</h5> -->
-							<select id="experiments" data-toggle="tooltip" data-placement="bottom" title="Select an experiment of <?php echo $title ;?>, <?php echo $subtitle ;?> Research Analytics"></select>
-						</li>
-						<li>
-				      		<!-- <button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Experiment Description" data-toggle="popover" data-placement="bottom" data-content="asdfasdf" title="another title"> -->
-				      		<button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Experiment Description" data-toggle="tooltip" data-placement="bottom" data-content="asdfasdf">
-								<span  class="navbar-brand glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-								<span class="sr-only">Experiment Description</span>
-							</button>
-						</li>
-					</ul>
-					<ul class="nav navbar-nav" data-toggle="tooltip" data-placement="bottom" title="Select an option of filtering  <?php echo $node_name ;?> elements">
-						<li>
-							Filter by: 
-							<select id="filters">
-								<option id="opt0"></option>
-								<option id="opt1"><?php echo $node_name."s" ;?></option>
-								<option id="opt2">Topic word search</option>
-							</select>
-						</li>
-						<li id="filter1" style="padding-left:10px">
-							<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
-								<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
-								</optgroup>
-								<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
-								</optgroup>
-							</select>
-						</li>
-						<li  id="filter2" style="padding-left:10px;width:inherit">
-						<input id="tags" class="ui-corner-all"  placeholder="input a topic word..." >
-						</li>
-					</ul>
-
-
-
-
-	 <!-- 				<form class="navbar-form navbar-left" role="search">
-						<div class="form-group">
-							<input type="text" class="form-control" placeholder="Search">
-						</div>
-						<button type="submit" class="btn btn-default">Submit</button>
-					</form>
-	 -->			<ul class="nav navbar-nav navbar-right divider-vertical">
-	<!-- 					<li>
-							Zoom Level: Similarity > &nbsp;
-								<input type="text" id="thr1" class="ui-corner-all" maxlength="9" placeholder="thr1" style="width:40px">
-							 % | Connectivity > &nbsp;
-							 	<input type="text" id="thr2" class="ui-corner-all" maxlength="9" placeholder="thr2" style="width:40px">
-							  %
-						</li>
-	 -->
-						<li>
-							<!-- Zoom Level:  -->
-
-	<!-- 
-	<input id="ex6" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50" />
-	<span id="ex6CurrentSliderValLabel" >Current Slider Value: <span id="ex6SliderVal">3</span></span>
-	 -->
-	 						<div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds in Zoom Level. S for Similarity threshold. C for Connectivity threshold"> 
-								<span class="input-group-addon">S</span>
-								<input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr1"  style="width:75px">
-								<span class="input-group-addon">C</span>
-								<input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr2"  style="width:75px">
-							</div>
-						</li>
-	<!-- 					<li>Labels: Similarity
-							<input type="text" id="thr3" class="ui-corner-all" maxlength="9" placeholder="thr3" style="width:40px"> % | Connectivity > &nbsp;<input type="text" id="thr4" class="ui-corner-all" maxlength="9" placeholder="thr4" style="width:40px"> %</li>
-	 -->
-						<li style="padding-left:10px">
-							<!-- Labels: -->
-							<div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds for all shown labels on the graph. S for Similarity threshold. C for Connectivity threshold"> 
-								<span class="input-group-addon">S</span>
-								<input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr3" style="width:75px">
-								<span class="input-group-addon">C</span>
-								<input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr4"  style="width:75px">
-							</div>
-						</li>
-
-<!-- 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
-							<ul class="dropdown-menu" role="menu">
-							</ul>
-						</li>
- -->					</ul>
-				</div><!-- /.navbar-collapse -->
+					<!-- 					        <span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					-->
+	      		</button>
+				<a class="navbar-brand" href="http://astero.di.uoa.gr/graphs/">  
+					<span class="glyphicon glyphicon-home"></span>
+				</a>
 			</div>
+			<div class="collapse navbar-collapse " id="headmenu">
+<!-- 				<ul class="nav navbar-nav divider-vertical">
+					<li class="active"><a href="#"><?php echo $title ;?> <span class="sr-only">(current)</span></a></li>
+				</ul>
+ -->
+
+ 				 <ul class="nav navbar-nav divider-vertical" data-toggle="tooltip" data-placement="bottom" title="Select an experiment out of the available for <?php echo $title ;?>">
+					<li>
+						<!-- <h5>Experiment:&nbsp;</h5> -->
+						<select id="experiments"></select>
+					</li>
+					<li>
+			      		<button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Experiment Description" data-toggle="popover" data-placement="bottom" data-content="">
+							<span  class="navbar-brand glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+							<span class="sr-only">Experiment Description</span>
+						</button>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav" data-toggle="tooltip" data-placement="bottom" title="Select an option of filtering  <?php echo $node_name ;?> elements">
+					<li>
+						Filter by: 
+						<select id="filters">
+							<option id="opt0"></option>
+							<option id="opt1"><?php echo $node_name."s" ;?></option>
+							<option id="opt2">Topic word search</option>
+						</select>
+					</li>
+					<li id="filter1">
+					<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
+						<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
+						</optgroup>
+						<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
+						</optgroup>
+					</select>
+					</li>
+					<li  id="filter2">
+					<input id="tags" class="ui-corner-all" placeholder="input a topic word..." >
+					</li>
+				</ul>
+
+
+
+
+ <!-- 				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Search">
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+ -->			<ul class="nav navbar-nav navbar-right divider-vertical">
+<!-- 					<li>
+						Zoom Level: Similarity > &nbsp;
+							<input type="text" id="thr1" class="ui-corner-all" maxlength="9" placeholder="thr1" style="width:40px">
+						 % | Connectivity > &nbsp;
+						 	<input type="text" id="thr2" class="ui-corner-all" maxlength="9" placeholder="thr2" style="width:40px">
+						  %
+					</li>
+ -->
+					<li>
+						<!-- Zoom Level:  -->
+
+<!-- 
+<input id="ex6" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50" />
+<span id="ex6CurrentSliderValLabel" >Current Slider Value: <span id="ex6SliderVal">3</span></span>
+ -->
+ 						<div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds in Zoom Level. S for Similarity threshold. C for Connectivity threshold"> 
+							<span class="input-group-addon">S ></span>
+
+
+							<input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr1"  style="width:50px">
+							<span class="input-group-addon">%</span>
+							<span class="input-group-addon">C ></span>
+							<input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr2"  style="width:50px">
+							<span class="input-group-addon">%</span>
+						</div>
+					</li>
+<!-- 					<li>Labels: Similarity
+						<input type="text" id="thr3" class="ui-corner-all" maxlength="9" placeholder="thr3" style="width:40px"> % | Connectivity > &nbsp;<input type="text" id="thr4" class="ui-corner-all" maxlength="9" placeholder="thr4" style="width:40px"> %</li>
+ -->
+					<li style="padding-left:10px">
+						<!-- Labels: -->
+						<div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds for all shown labels on the graph. S for Similarity threshold. C for Connectivity threshold"> 
+							<span class="input-group-addon">S ></span>
+							<input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr3" style="width:50px">
+							<span class="input-group-addon">%</span>
+							<span class="input-group-addon">C ></span>
+							<input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr4"  style="width:50px">
+							<span class="input-group-addon">%</span>
+						</div>
+					</li>
+
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
+						<ul class="dropdown-menu" role="menu">
+						</ul>
+					</li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div>
 		</nav>
 		<div class="container-fluid" style="margin-bottom:0px"> <!--- margin is set mostly for the header placing-->
-			<div class="col-md-5">
+			<div class="col-md-4">
 				<!-- <div id="mytext-title" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml"></div> -->
 			</div>
 <!-- 			<div id="thresholds" class="col-md-5" style="float:right;display:block;">
@@ -5161,7 +4864,7 @@ function createChord(type){
 				<div class="col-md-3" style="margin-top:-30px"> <!--- margin is set mostly for the header placing-->
 					<!-- <div class="page-header"> -->
 					   <h4 style="position:fixed;"><?php echo $title ;?> 
-					   		<small style="position:fixed;"><?php echo $subtitle ;?> <span class="sr-only">(current page name)</span></small>
+					   		<!-- <small style="position:fixed;"><?php echo $subtitle ;?> <span class="sr-only">(current page name)</span></small> -->
 					   </h4>
 					<!-- </div> -->
 
@@ -5202,8 +4905,7 @@ function createChord(type){
 				<div>
 					<h5 id="header1">Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp;<span id="exitHeader1"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
 				</div>
-				<div class="nav-wrap" id="log"></div>
-
+					<div class="nav-wrap" id="log"></div>
 				<div>
 					<h5 id="header2">Similar <?php echo $node_name;?>s based on TA-XINets inference:&nbsp;<span id="exitHeader2"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
 				</div>
@@ -5212,35 +4914,8 @@ function createChord(type){
 						</ul><button id="downButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 10<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
 					</div>
 				</div>
-
-				<div>
-					<h5 id="header3">Similar <?php echo $node_name;?>s based on <?php echo $node_areaName;?> classification:&nbsp;<span id="exitHeader3"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
-				</div>
-				<div class="nav-wrap" id="areaNodes">
-					<div><button id="upButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 10</span></button><ul class="pagination pagination-sm">
-						</ul><button id="downButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 10<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
-					</div>
-				</div>
-
 				<!-- btn-link -->
-<!-- 				<button id='boost_btn' class='navbar-toggle  btn btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'>
-					<a class="navbar-brand">  Boost Words
-						<span  class='glyphicon glyphicon-info-check' aria-hidden='true'></span><span class='sr-only'>Boost Descriminative Words</span>
-					</a>
-				</button>
- -->
-
-				<div id='boost_btn' >
-					<ul class="pagination active btn-primary" data-toggle="tooltip" data-placement="bottom" title="Click to boost the topics by ordering them according to the words descriminativity">
-						<li> 
-							<a>
-								Boost Words <span class="badge badge-info glyphicon glyphicon-remove"></span>
-							</a>
-						</li>
-					</ul>
-				</div>
-
-
+				<button id='boost_btn' class='btn btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'><span  class='navbar-brand glyphicon glyphicon-info-check' aria-hidden='true'>Boost descr. words</span><span class='sr-only'>Boost Words</span></button>
 				<div id="mytext-content" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml">
 <!-- 		      		<button id="boost_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Boost Descriminative Words" data-toggle="popover" data-placement="bottom" data-content="">
 						<span  class="navbar-brand glyphicon glyphicon-info-check" aria-hidden="true">asdasd</span>
@@ -5263,7 +4938,7 @@ function createChord(type){
 								<a class="dropdown-toggle" id="chordmenu" data-toggle="dropdown" data-target="#">Chord<b class="caret"></b></a>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="chordmenu">
 									<li><a data-toggle="tab" data-target="#chorddiv">Full connectivity</a></li>
-									<li><a data-toggle="tab" data-target="#chord2div">Crossdisciplinary Connectivity</a></li>
+									<li><a data-toggle="tab" data-target="#chord2div">Disciplinarity Connectivity</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -5292,13 +4967,13 @@ function createChord(type){
 							</svg>
 						</div>
 						<div id="chorddiv" class="tab-pane">
-							<!-- <svg id="chord" style="width:100%;" xmlns="http://www.w3.org/2000/svg"> -->
+							<svg id="chord" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
 							<!-- used to add the mytext here when in fullscreen -->
-							<!-- </svg> -->
+							</svg>
 							<!-- <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p> -->
 						</div>
 						<div id="chord2div" class="tab-pane">
-							<!-- <p>... To be placed the disciplinary chord ...</p> -->
+							<p>... To be placed the disciplinary chord ...</p>
 						</div>
 					</div>
 				</div>

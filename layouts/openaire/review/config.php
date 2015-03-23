@@ -33,6 +33,7 @@ $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptio
 ///////////////////////////////////
 
 $title = "OpenAIRE Review (January, 27 2015)";								// title of the webpage
+$subtitle = "";								// subtitle of the webpage
 $experimentName = "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos";	// first experiment to load 
 $experimentDescription = "Topic modeling analyzing: 1)Full Text of publications and project descriptions related to FP7 HEALTH 2)Research Areas 3)Venues (e.g., PubMed, Arxiv, ACM) 4)Grants per Publication Links SimilarityType:cos"; 	// first description to load
 $node_name = "Grant";

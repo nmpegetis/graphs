@@ -33,6 +33,7 @@ $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptio
 ///////////////////////////////////
 
 $title = "FP7 Health";								// title of the webpage
+$subtitle = "";								// subtitle of the webpage
 $experimentName = "HEALTHTender_70T_800IT_0IIT_100B_4M_cos";	// first experiment to load 
 $experimentDescription = "Topic modeling analyzing: 1)Full Text of publications and project descriptions related to FP7 HEALTH 2)Research Areas 3)Venues (e.g., PubMed, Arxiv, ACM) 4)Grants per Publication Links SimilarityType:cos"; 	// first description to load
 $node_name = "Grant";

@@ -93,6 +93,15 @@
 		    width: auto;
 		}
 
+/*natalia asked for padding and font-size on the right table*/
+.table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th{
+	padding: 1px;
+	font-size: 13px;
+}
+
+.active {
+	color:green;
+}
 	</style>
 
 	<!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
@@ -355,6 +364,8 @@
 		$("#myTab").hide();
 		$("#experiment_btn").hide();
 		$("#boost_btn").hide();
+		$("#categories").hide();
+
 
 
 $("#ex8").slider({
@@ -416,9 +427,26 @@ $("#ex6").on("slide", function(slideEvt) {
 			experimentDescription = "<?php echo $experimentDescription ;?>";
 		}
 
-
-		if (/^FET*/.test(experimentName))
+// hard code for meeting in Brusseles.. to be moved
+		if (/^FET*/.test(experimentName)){
+		$("#categories").show();
 			nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
+			expsimilarity = 0.45;
+			gravity = 1;
+			charge = -1100;
+		}
+		else if (/^HEALTH*/.test(experimentName)){
+			expsimilarity = 0.45;
+			gravity = 3;
+			charge = -1100;
+		$("#categories").hide();
+		}
+		else if (/^Full*/.test(experimentName)){
+			expsimilarity = 0.6;
+			gravity = 7;
+			charge = -400;
+		$("#categories").hide();
+		}
 
 		if((expsimilarity = getUrlParameter('s')) == null){
 			expsimilarity = <?php echo $expsimilarity ;?>;
@@ -1148,7 +1176,6 @@ $("#ex6").on("slide", function(slideEvt) {
 /**** FADING AND COLORING FUNCTIONS ****/
 	/* refills the opacity of each color after fading */
 		function showtype(opacity, types){
-
 			nodeCircles.style("fill-opacity", function(o) {
 				if(types.indexOf(o.color) === -1)
 					return opacity;
@@ -1232,6 +1259,49 @@ $("#ex6").on("slide", function(slideEvt) {
 			});
 		}
 
+
+		function showtype3(opacity, types){
+			nodeCircles.style("fill-opacity", function(o) {
+			console.log(o)
+				if(types.indexOf(o.name) === -1)
+					return opacity;
+				else
+					return normal;
+			});
+
+			nodeCircles.style("stroke-opacity", function(o) {
+				if(types.indexOf(o.name) === -1)
+					return opacity;
+				else
+					return normal;
+			});
+
+			nodeLabels.style("fill-opacity", function(o) {
+				if(types.indexOf(o.name) === -1){
+						return opacity*3;
+				}
+				else{
+					return strong;
+				}
+			});
+
+			nodeLabels.style("stroke-opacity", function(o) {
+				if(types.indexOf(o.name) === -1){
+					return opacity*3;
+				}
+				else{
+					return strong;
+				}
+			});
+
+		/* links stay with opacity or not in hover according to below condition */
+			linkLines.style("stroke-opacity", function(o) {
+				return types.indexOf(o.source.name) != -1 || types.indexOf(o.target.name) != -1 ? normal/2 : opacity;
+			});
+
+
+
+		}
 
 	/* fade */
 		function fade(opacity, showText) {
@@ -1369,10 +1439,10 @@ $("#ex6").on("slide", function(slideEvt) {
 
 						var similarNodes = "";
 	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
+						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
-						$('#simNode'+i).hover(function(){
+						$('#simNode'+o.index).hover(function(){
 							console.log("hover");
 							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
 							$(this).css("opacity","0.5");
@@ -1608,11 +1678,10 @@ $("#ex6").on("slide", function(slideEvt) {
 
 						var similarNodes = "";
 	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
+						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
-
-						$('#simNode'+i).hover(function(){
+						$('#simNode'+o.index).hover(function(){
 							console.log("hover");
 							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
 							$(this).css("opacity","0.5");
@@ -1880,11 +1949,10 @@ $("#ex6").on("slide", function(slideEvt) {
 
 						var similarNodes = "";
 	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + i + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
+						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
-
-						$('#simNode'+i).hover(function(){
+						$('#simNode'+o.index).hover(function(){
 							console.log("hover");
 							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
 							$(this).css("opacity","0.5");
@@ -1907,6 +1975,23 @@ $("#ex6").on("slide", function(slideEvt) {
 
 			counter=0;						//(re)-initialize counter to zero
 			counterMax = 10;
+
+
+				$("#similarNodes > div > ul > li > a").on("click",function(){
+					//if (parseInt(vis.select("#circle-node-"+this.id).attr("cx")) < w/2 && parseInt(vis.select("#circle-node-"+this.id).attr("cy")) < h/2)
+					//if (parseInt(vis.select("#circle-node-"+this.id).attr("cx")) < w/2)
+					//	zoomer.translate([w/2-parseInt(vis.select("#circle-node-"+this.id).attr("cx")),0]);
+					//else
+					//	zoomer.translate([(w/2)+parseInt(vis.select("#circle-node-"+this.id).attr("cx")),0]);
+					//zoomer.event(vis);
+										console.log("this=")
+					console.log(this)
+
+					clickedNode = this;
+					console.log("this="+this)
+					test(nodes[this.id],0.1);
+				});
+
 
 			$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
 			counter+=counterMax;
@@ -2016,7 +2101,10 @@ $("#ex6").on("slide", function(slideEvt) {
 					console.log("last li not visible")
 					$("#downButton").show();
 				}
+
 			});
+
+
 
 			fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
 			vis.selectAll(".labels")
@@ -2039,6 +2127,7 @@ console.log(nodeLabels)
 console.log("selectnodeLabels")
 console.log(selectnodeLabels)
 */
+			clickedNode = mynode;
 		}
 
 
@@ -2208,13 +2297,12 @@ console.log(selectnodeLabels)
 
 						var similarNodes = "";
 	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + i + "\" rel=\"#C6AA01\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
+						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + o.index + "\" rel=\"#C6AA01\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
 //todo auto pou den douleuei sto linking einai ta key
 
-
-						$('#simNode'+i).hover(function(){
+						$('#simNode'+o.index).hover(function(){
 							console.log("hover");
 							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
 							$(this).css("opacity","0.5");
@@ -2356,6 +2444,8 @@ console.log(selectnodeLabels)
 			fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
 			vis.selectAll(".labels")
 				.style("font-size",fontsize+"px");	
+
+			clickedNode = mynode;
 		}
 
 
@@ -3114,19 +3204,16 @@ console.log(selectnodeLabels)
 
 						// if we want to have darker stroke, augment it to 2 or more
 							if (response[j].category1_1 == "FETOpen"){
-								console.log("FETOpen")
 								style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; background-color:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
 							/* styling for results in autocomplete search */	
 								style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
 							}
 							else if (response[j].category1_1 == "FETProactive"){
-								console.log("FETProactive")
 								style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; background-color:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
 							/* styling for results in autocomplete search */	
 								style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
 							}
 							else if (response[j].category1_1 == "FETFlagship"){
-								console.log("FETFlagship")
 								style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; background-color:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
 							/* styling for results in autocomplete search */	
 								style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
@@ -3224,19 +3311,16 @@ console.log(selectnodeLabels)
 
 
 							if (response[j].category2_1 == "FETOpen"){
-								console.log("FETOpen")
 								style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; background-color:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
 							/* styling for results in autocomplete search */	
 								style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
 							}
 							else if (response[j].category2_1 == "FETProactive"){
-								console.log("FETProactive")
 								style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; background-color:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
 							/* styling for results in autocomplete search */	
 								style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
 							}
 							else if (response[j].category2_1 == "FETFlagship"){
-								console.log("FETFlagship")
 								style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; background-color:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
 							/* styling for results in autocomplete search */	
 								style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
@@ -3489,6 +3573,7 @@ console.log(selectnodeLabels)
 				.append("tr")
 				.attr("id",function(d) {return "collapse"+d.name;})
 				.attr("class","collapse ")
+				.attr("style","cursor:default")
 //				.attr("class",function(d) {return "collapse "+d.name;})
 				.append("td")
 				.attr("colspan","4")				
@@ -3542,34 +3627,40 @@ console.log(selectnodeLabels)
 
 						percentageSum = subdBiConnectionsNum[i][j]+subdBiConnectionsNum[j][i]
 //				string += "\n"+subdConnections[i]+","+rgb2hex(clrArray[i])+","+subdConnectionsNum[i]+","+relations[i];
-
-														str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
-														 // + "<div class='cell' style='border-top:solid "+mytextsubdivisions[i].color+";'>"
-														 // + subdBiConnectionsNum[i][j]
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/mytextsubdivisions[i].relations)
-														 // + ")</div>"
-														 // + "<div class='cell' style='color:"+mytextsubdivisions[j].color+";border-left:solid "+mytextsubdivisions[i].color+";border-top:solid "+mytextsubdivisions[i].color+";'>" 
-														 // + subdBiConnectionsNum[j][i]
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
-														 // + ")</div></div>" ;
-														 + "<div class='cell' style='color:"+rgb2hex(clrArray[j])+";'>" 
-														 + percentageSum
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
-														 // + ")</div></div>" ;
-														 + "</div></div>" ;
+														if (percentageSum > 0){
+															str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
+															 // + "<div class='cell' style='border-top:solid "+mytextsubdivisions[i].color+";'>"
+															 // + subdBiConnectionsNum[i][j]
+															 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/mytextsubdivisions[i].relations)
+															 // + ")</div>"
+															 // + "<div class='cell' style='color:"+mytextsubdivisions[j].color+";border-left:solid "+mytextsubdivisions[i].color+";border-top:solid "+mytextsubdivisions[i].color+";'>" 
+															 // + subdBiConnectionsNum[j][i]
+															 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
+															 // + ")</div></div>" ;
+															 + "<div class='cell' style='color:"+rgb2hex(clrArray[j])+";'>" 
+															 + percentageSum
+															 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
+															 // + ")</div></div>" ;
+															 + "</div></div>" ;
+														}
 													}
-													else
-														str += "<div class='row'><div class='cell'>" + z + "</div><div class='cell'>"
-													 + subdBiConnectionsNum[i][i]
-													 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
-													 // + ")</div><div class='cell' style='border-left:solid;border-top:solid;'>"
-													 // + subdBiConnectionsNum[i][i]
-													 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
-													 // + ")</div></div>" ;
-													 + "</div></div></div></td>" ;
+													else{
+														if (subdBiConnectionsNum[i][i] > 0){
+
+															str += "<div class='row'><div class='cell'>" + z + "</div><div class='cell'>"
+															 + subdBiConnectionsNum[i][i]
+															 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
+															 // + ")</div><div class='cell' style='border-left:solid;border-top:solid;'>"
+															 // + subdBiConnectionsNum[i][i]
+															 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
+															 // + ")</div></div>" ;
+															 + "</div></div>";
+														}
+													}
 												}
 											})
-										 }
+										}
+										str += "</div></td>" ;
 									}
 								}
 								return str;
@@ -3629,6 +3720,7 @@ console.log(selectnodeLabels)
 			selectnodeLabels = nodeLabels
 
 			$(function(){
+
 
 				//refreshes the inner options
 				$("#grants").multiselect("refresh");
@@ -3750,6 +3842,129 @@ console.log(selectnodeLabels)
 // 					}
 // 				});
 
+//hard code....
+				$("#category1").on("click", function (){
+					if ($("#category1").hasClass("activeCategory")){
+						$("#category1 > a").attr("style","background-color:#fff;color:#1f77b4")						
+						$("#category1").attr("class","")
+
+						var types = [];
+						 $(".circle").each(function(){
+	//						types.push($(this).attr("class"));
+							types.push(this.classList[1]);
+						});
+	
+						showtype(fade_out, types);
+					}
+					else{
+						$("#category2 > a").attr("style","background-color:#fff;color:#ff7f0e")						
+						$("#category3 > a").attr("style","background-color:#fff;color:#2ca02c")						
+						$("#categories > ul > li ").attr("class","")												
+						$("#category1").attr("class","activeCategory")
+						$("#category1 > a").attr("style","background-color:#ddd;color:#1f77b4")						
+
+						var collection = null;
+						if($(".activeCategory").length == 0){
+						}
+						else{
+							collection = $(".circle").filter(function(){
+								var color = $(this).css("color");
+								return rgb2hex(color) === "#1f77b4";
+							});
+						}
+
+						var types = [];
+						collection.each(function(){
+	//						types.push($(this).attr("class"));2ca02c
+							types.push(this.classList[1]);
+						});
+	
+						showtype(fade_out, types);
+						mytext.selectAll(".nodetext").remove();
+					}
+				});
+				$("#category2").on("click", function (){
+					if ($("#category2").hasClass("activeCategory")){
+						$("#category2 > a").attr("style","background-color:#fff;color:#ff7f0e")						
+						$("#category2").attr("class","")
+
+						var types = [];
+						 $(".circle").each(function(){
+	//						types.push($(this).attr("class"));
+							types.push(this.classList[1]);
+						});
+	
+						showtype(fade_out, types);
+					}
+					else{
+						$("#category1 > a").attr("style","background-color:#fff;color:#1f77b4")						
+						$("#category3 > a").attr("style","background-color:#fff;color:#2ca02c")						
+						$("#categories > ul > li ").attr("class","")												
+						$("#category2").attr("class","activeCategory")
+						$("#category2 > a").attr("style","background-color:#ddd;color:#ff7f0e")						
+
+						var collection = null;
+						if($(".activeCategory").length == 0){
+						}
+						else{
+							collection = $(".circle").filter(function(){
+								var color = $(this).css("color");
+								return rgb2hex(color) === "#ff7f0e";
+							});
+						}
+
+						var types = [];
+						collection.each(function(){
+	//						types.push($(this).attr("class"));
+							types.push(this.classList[1]);
+						});
+	
+						showtype(fade_out, types);
+						mytext.selectAll(".nodetext").remove();
+					}
+				});
+				$("#category3").on("click", function (){
+					if ($("#category3").hasClass("activeCategory")){
+						$("#category3 > a").attr("style","background-color:#fff;color:#2ca02c")						
+						$("#category3").attr("class","")
+
+						var types = [];
+						 $(".circle").each(function(){
+	//						types.push($(this).attr("class"));
+							types.push(this.classList[1]);
+						});
+	
+						showtype(fade_out, types);
+					}
+					else{
+						$("#category1 > a").attr("style","background-color:#fff;color:#1f77b4")						
+						$("#category2 > a").attr("style","background-color:#fff;color:#ff7f0e")						
+						$("#categories > ul > li ").attr("class","")												
+						$("#category3").attr("class","activeCategory")
+						$("#category3 > a").attr("style","background-color:#ddd;color:#2ca02c")						
+
+
+						var collection = null;
+						if($(".activeCategory").length == 0){
+						}
+						else{
+							collection = $(".circle").filter(function(){
+								var color = $(this).css("color");
+								return rgb2hex(color) === "#2ca02c";
+							});
+						}
+
+						var types = [];
+						collection.each(function(){
+	//						types.push($(this).attr("class"));
+							types.push(this.classList[1]);
+						});
+	
+						showtype(fade_out, types);
+						mytext.selectAll(".nodetext").remove();
+					}
+				});
+
 				$("#experiments").on("click", function (e,d){
 					// finds the click event and refreshes before the beforeclose event.
 					var myval = $(this).find("option:selected").val();						
@@ -3848,8 +4063,67 @@ $("#chord2div").empty();
 						linkThr = <?php echo $linkThr ;?>;
 //						 	expsimilarity = <?php echo $expsimilarity ;?>;			// to allazw katw kai to pairnw apo ti basi
 
+
+// hard code for the Brusseles ... to be moved
+if (/^FET*/.test(experimentName)){
+	nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
+	expsimilarity = 0.45;
+	$("#categories").hide();
+}
+else if (/^HEALTH*/.test(experimentName)){
+	expsimilarity = 0.45;
+	$("#categories").hide();
+}
+else if (/^Full*/.test(experimentName)){
+	expsimilarity = 0.6;
+	$("#categories").hide();
+}
+
 						ajaxCall(myval,expsimilarity);			 		$("#mygraph-container").attr("style","position:fixed;width:"+8*w/7);
 
+// hard code for the Brusseles ... to be moved ... paizei rolo kai i othoni einia ftiagmena gia 13-15
+if (/^FET*/.test(experimentName)){
+	gravity = 3;
+	charge = -1100;
+	window['force']['charge'](charge)
+	window['force']['gravity'](gravity)
+	force.start();
+	$("#categories").show();
+}
+else if (/^HEALTH*/.test(experimentName)){
+	gravity = 7;
+	charge = -1100;
+	window['force']['charge'](charge)
+	window['force']['gravity'](gravity)
+	force.start();
+}
+else if (/^Full*/.test(experimentName)){
+	gravity = 10;
+	charge = -200;
+	window['force']['charge'](charge)
+	window['force']['gravity'](gravity)
+	force.start();
+}
+
+
+
+					d3.select("#experiments").selectAll("option")
+						.text(function(d){
+							if(experimentName == d.id){
+
+								experimentName = d.id;
+								experimentDescription = d.desc;
+								if((expsimilarity = d.initialSimilarity) == null){
+									expsimilarity = <?php echo $expsimilarity ;?>;
+								}
+								// $("#dialogExp").text(experimentName)
+								// $("#dialogDesc").text(experimentDescription)
+								console.log("new experimentName:"+d.id)
+								console.log("new experimentDescription:"+d.desc)
+								console.log("new expsimilarity:"+d.initialSimilarity)
+							}
+							return d.id;
+						});
 
 					} 
 				});
@@ -4101,7 +4375,8 @@ $(this).find("option:selected").click()
 //				});
 
 //				$dialog.dialog('open');
-				
+				console.log(clickedNode)
+//				clickednode = nodes["name"]
 				test(clickedNode,0.1);
 
 				console.log("btn changed")
@@ -4607,10 +4882,10 @@ function createChord(type){
 				// var strCross = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
 				// return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
 				if (type == 1){
-					return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relations + " <?php echo $node_name;?> relations in all areas";
+					return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relations + " <?php echo $node_name;?> relations directed to all areas";
 				}
 				else{
-					return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relationsCross + " <?php echo $node_name;?> relations in other areas";
+					return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relationsCross + " <?php echo $node_name;?> relations directed only to other areas";
 				}
 			 });
 		 
@@ -4698,7 +4973,6 @@ function createChord(type){
 	 
 			function chord_mouseover(d, i) {
 				chord_chord.classed("fade", function(p) {
-
 					return p.source.index != i
 					&& p.target.index != i;
 				});
@@ -4835,6 +5109,10 @@ function createChord(type){
 
 
 				function log( message ) {
+					var searchResultNodes = [];				//initialize every time in topic word search
+
+					$("#mytext-title").hide();
+					$("#mytext-content").hide();
 
 					$("#boost_btn").hide();
 					$( "#header2" ).hide();
@@ -4859,6 +5137,7 @@ function createChord(type){
 //							$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
 							grantsTopicSet += "<li class=\"" + availableTags[i].area + "result\"><a class=\"" + availableTags[i].area + "result \" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
 
+							searchResultNodes.push(availableTags[i].name);	//node results in topic word search
 
 							var zoomFactor = 4;
 
@@ -4879,6 +5158,48 @@ function createChord(type){
 					grantsTopicSet += "</ul><button id=\"downButtonLog\" class=\"btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all next\" style=\"padding-left:5px;padding-right:5px;width:100%;text-align: center;\"><span>Next 10<i class=\"glyphicon glyphicon-arrow-down\"></i></span></li></button></div>";
 
 					$( "#log" ).append(grantsTopicSet);
+
+
+
+///initialize
+						var types = [];
+						 $(".circle").each(function(){
+	//						types.push($(this).attr("class"));
+							types.push(this.classList[1]);
+						});
+	
+						showtype(fade_out, types);
+///find what to show
+
+						// var collection = null;
+
+						// collection = nodeCircles.filter(function(){
+						// 	console.log("this.index")
+						// 	console.log(this)
+									
+						// 	if(include(searchResultNodes,this.index)){	
+						// 		console.log("this.name"+this.name)		
+						// 		return 1;
+						// 	}
+						// 	else{
+						// 		return 0;			
+						// 	}
+						// 	// var color = $(this).css("color");
+						// 	// return rgb2hex(color) === "#1f77b4";
+						// });
+
+						var types = [];
+	// 					collection.each(function(){
+	// //						types.push($(this).attr("class"));2ca02c
+	// 						types.push(this.classList[1]);
+	// 					});
+	console.log("ss")
+	console.log(searchResultNodes)
+						showtype3(fade_out, searchResultNodes);
+	console.log("ss")
+	console.log(searchResultNodes)
+//						showtype(fade_out, types);
+	// 					mytext.selectAll(".nodetext").remove();
 
 
 				}
@@ -5173,13 +5494,19 @@ function createChord(type){
 				</select>
  --><!--						<button id="experiment_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:80%;text-align: center;">Grants</button>
 -->			</div>
-			<div class="col-md-4">
-			</div>
 			<div class="col-md-3">
+			</div>
+			<div class="col-md-4" style="padding:0px;float:right;width:auto;margin:-30px 0 -10px" id="categories">
 <!-- 				<label for="tags"  style="width:100%"><h5>Topic Word Search:
 				<input id="tags" class="ui-corner-all" placeholder="input a topic word..." >
 				</h5></label>
- -->			</div>
+ -->		
+ 				<ul class="pagination pagination-sm"  style="padding:0px;cursor:pointer">
+ 					<li class="" id="category1"><a class="" style="color:#1f77b4" id="">FET Open <span class="badge badge-info" style="background-color:#1f77b4">o</span></a></li>
+ 					<li class="" id="category2"><a class="" id="" style="color:#ff7f0e">FET Proactive <span class="badge badge-info" style="background-color:#ff7f0e">o</span></a></li>
+ 					<li class="" id="category3"><a class="" id="" style="color:#2ca02c">FET Flagships <span class="badge badge-info" style="background-color:#2ca02c">o</span></a></li>
+				</ul>
+			</div>
 		</div>
 		<!-- <hr/> -->
 <!-- 		<div class=" container-fluid">
@@ -5200,23 +5527,23 @@ function createChord(type){
 			<div class="col-md-2" id="myinfo">
 				<div id="mytext-title" style="word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml"></div>
 				<div>
-					<h5 id="header1">Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp;<span id="exitHeader1"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
+					<h5 id="header1" style="cursor:pointer">Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp;<span id="exitHeader1"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
 				</div>
-				<div class="nav-wrap" id="log"></div>
+				<div class="nav-wrap" id="log" style="cursor:pointer"></div>
 
 				<div>
-					<h5 id="header2">Similar <?php echo $node_name;?>s based on TA-XINets inference:&nbsp;<span id="exitHeader2"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
+					<h5 id="header2" style="cursor:pointer">Similar <?php echo $node_name;?>s based on TA-XINets inference:&nbsp;<span id="exitHeader2"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
 				</div>
-				<div class="nav-wrap" id="similarNodes">
+				<div class="nav-wrap" id="similarNodes" style="cursor:pointer">
 					<div><button id="upButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 10</span></button><ul class="pagination pagination-sm">
 						</ul><button id="downButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 10<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
 					</div>
 				</div>
 
 				<div>
-					<h5 id="header3">Similar <?php echo $node_name;?>s based on <?php echo $node_areaName;?> classification:&nbsp;<span id="exitHeader3"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
+					<h5 id="header3" style="cursor:pointer">Similar <?php echo $node_name;?>s based on <?php echo $node_areaName;?> classification:&nbsp;<span id="exitHeader3"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
 				</div>
-				<div class="nav-wrap" id="areaNodes">
+				<div class="nav-wrap" id="areaNodes" style="cursor:pointer">
 					<div><button id="upButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 10</span></button><ul class="pagination pagination-sm">
 						</ul><button id="downButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 10<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
 					</div>
@@ -5230,7 +5557,7 @@ function createChord(type){
 				</button>
  -->
 
-				<div id='boost_btn' >
+				<div id='boost_btn' style="cursor:pointer">
 					<ul class="pagination active btn-primary" data-toggle="tooltip" data-placement="bottom" title="Click to boost the topics by ordering them according to the words descriminativity">
 						<li> 
 							<a>

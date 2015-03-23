@@ -26,6 +26,7 @@ $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptio
 ///////////////////////////////////
 
 $title = "ACM Categories";								// title of the webpage
+$subtitle = "";								// subtitle of the webpage
 $experimentName = "ACM_250T_1000IT_0IIT_100B_4M_cos";	// first experiment to load 
 $experimentDescription = "Topic modeling based on: 1)Abstracts from ACM publications 2)Authors 3)Citations 4)ACMCategories SimilarityType:cos Similarity on Authors & Categories"; 	// first description to load
 $node_name = "Field";

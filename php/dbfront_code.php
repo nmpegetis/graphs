@@ -4,7 +4,7 @@ ini_set('max_execution_time', $max_execution_time);
 //ini_set('memory_limit', '-1');		// unlimited memory
 ini_set('memory_limit', $memory_limit);	
 
-
+set_time_limit(0);
 /// ! important
 // Firstly memcache should be installed in server to use the class Memcache().
 // Check the below:

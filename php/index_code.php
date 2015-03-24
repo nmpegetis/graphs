@@ -289,7 +289,7 @@
 			clrArray = [],
 			plot = 0,
 			experDescription = "",
-			target = document.getElementById('mygraph'),
+			target = document.getElementById('graphdiv'),
 			opts = {
 				lines: 17, // The number of lines to draw
 				length: 20, // The length of each line
@@ -1210,7 +1210,7 @@ $("#ex6").on("slide", function(slideEvt) {
 
 		/* links stay with opacity or not in hover according to below condition */
 			linkLines.style("stroke-opacity", function(o) {
-				return types.indexOf(o.source.color) != -1 || types.indexOf(o.target.color) != -1 ? normal/2 : opacity;
+				return types.indexOf(o.source.color) != -1 && types.indexOf(o.target.color) != -1 ? normal/2 : opacity;
 			});
 
 
@@ -1262,7 +1262,6 @@ $("#ex6").on("slide", function(slideEvt) {
 
 		function showtype3(opacity, types){
 			nodeCircles.style("fill-opacity", function(o) {
-			console.log(o)
 				if(types.indexOf(o.name) === -1)
 					return opacity;
 				else
@@ -1298,10 +1297,8 @@ $("#ex6").on("slide", function(slideEvt) {
 			linkLines.style("stroke-opacity", function(o) {
 				return types.indexOf(o.source.name) != -1 || types.indexOf(o.target.name) != -1 ? normal/2 : opacity;
 			});
-
-
-
 		}
+
 
 	/* fade */
 		function fade(opacity, showText) {
@@ -1315,6 +1312,7 @@ $("#ex6").on("slide", function(slideEvt) {
 
 				if($(this).css("fill-opacity") < normal)
 					return false;
+
 				labels = [];
 				var selectedLabelData = null;
 
@@ -1322,6 +1320,7 @@ $("#ex6").on("slide", function(slideEvt) {
 				vis.selectAll(".labels")
 					.style("fill-opacity", opacity*3)
 					.style("stroke-opacity",opacity*3);
+
 
 				nodeCircles.style("fill-opacity", function(o) {
 					var isNodeConnectedBool = isNodeConnected(d, o);
@@ -1416,8 +1415,14 @@ $("#ex6").on("slide", function(slideEvt) {
 								var mywords = topics1[topicsGroupPerNode[i].topic];
 								var wlen = mywords.length;
 								
+
 								for(var j=0;j<wlen;j++){
-									str += "<span class='topic' style='opacity:" + mywords[j].counts/mywords[0].counts + ";'>" + mywords[j].item + "</span>";
+									var opacity; 
+									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.3) {
+										opacity = 0.3;
+									}
+
+									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
 									if(j<wlen-1)
 										str += ",&nbsp";
 								}
@@ -1656,7 +1661,11 @@ $("#ex6").on("slide", function(slideEvt) {
 								var wlen = mywords.length;
 								
 								for(var j=0;j<wlen;j++){
-									str += "<span class='topic' style='opacity:" + mywords[j].counts/mywords[0].counts + ";'>" + mywords[j].item + "</span>";
+									var opacity; 
+									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.3) {
+										opacity = 0.3;
+									}
+									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
 									if(j<wlen-1)
 										str += ",&nbsp";
 								}
@@ -1926,8 +1935,14 @@ $("#ex6").on("slide", function(slideEvt) {
 								var mywords = topics1[topicsGroupPerNode[i].topic];
 								var wlen = mywords.length;
 								
+
 								for(var j=0;j<wlen;j++){								
-									str += "<span class='topic' style='opacity:" + mywords[j].counts/mywords[0].counts + ";'>" + mywords[j].item + "</span>";
+									var opacity; 
+									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.3) {
+										opacity = 0.3;
+									}
+
+									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
 									if(j<wlen-1)
 										str += ",&nbsp";
 								}
@@ -2273,7 +2288,12 @@ console.log(selectnodeLabels)
 									// 	// DO NOTHING
 									// }	
 									// else{									
-										str += "<span class='topic' style='opacity:" + mywords[j].counts/mywords[0].counts + ";'>" + mywords[j].item + "</span>";
+										var opacity; 
+										if ((opacity = mywords[j].counts/mywords[0].counts) < 0.3) {
+											opacity = 0.3;
+										}
+
+										str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
 										if(j<wlen-1)
 											str += ",&nbsp";
 //									}

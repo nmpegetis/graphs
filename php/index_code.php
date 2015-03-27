@@ -1418,8 +1418,8 @@ $("#ex6").on("slide", function(slideEvt) {
 
 								for(var j=0;j<wlen;j++){
 									var opacity; 
-									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.3) {
-										opacity = 0.3;
+									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.8) {
+										opacity = 0.8;
 									}
 
 									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
@@ -1662,8 +1662,8 @@ $("#ex6").on("slide", function(slideEvt) {
 								
 								for(var j=0;j<wlen;j++){
 									var opacity; 
-									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.3) {
-										opacity = 0.3;
+									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.8) {
+										opacity = 0.8;
 									}
 									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
 									if(j<wlen-1)
@@ -1938,8 +1938,8 @@ $("#ex6").on("slide", function(slideEvt) {
 
 								for(var j=0;j<wlen;j++){								
 									var opacity; 
-									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.3) {
-										opacity = 0.3;
+									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.8) {
+										opacity = 0.8;
 									}
 
 									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
@@ -2289,8 +2289,8 @@ console.log(selectnodeLabels)
 									// }	
 									// else{									
 										var opacity; 
-										if ((opacity = mywords[j].counts/mywords[0].counts) < 0.3) {
-											opacity = 0.3;
+										if ((opacity = mywords[j].counts/mywords[0].counts) < 0.8) {
+											opacity = 0.8;
 										}
 
 										str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
@@ -3124,6 +3124,7 @@ console.log(selectnodeLabels)
 			 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
 			 		topics1 = myresponse.topicsNoSort;
 			 		topics2 = myresponse.topics;
+			 		console.log(topics2)
 			 		grants = myresponse.grants;
 			 		experiments = myresponse.expers;
 			 		renderpage(myresponse.resp);

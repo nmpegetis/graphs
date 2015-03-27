@@ -39,6 +39,11 @@ $query_grants = "select authorid, topicid, Weight from topicauthorview where Exp
 
 $query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+//$query_topicsdistribution = "select * from topicsperyearview";
+$query_topicsdistribution = null;
+//$query_treemap = "select * from treemapview";
+$query_treemap = null;
+$query_trends = "select * from top50distributionview";
 
 
 ///////////////////////////////////

@@ -26,6 +26,9 @@ $query_grants = "select project_code, TopicId, AVG(Weight) as weight from Topics
 $query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 
 $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+$query_topicsdistribution = null;
+$query_treemap = null;
+$query_trends = null;
 
 
 ///////////////////////////////////

@@ -14,7 +14,7 @@ $db_path = "../../../dbs/".$db_name;
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
 
 //$query_graphLayout = "select EntityId1,EntityId2,OurCategory1,CV1_Category0,CV1_Category1,OurCategory2,CV2_Category0,CV2_Category1,catCnts1,catCnts2,Similarity from EntitySimilarityView_cat where ExperimentId=?  and  Similarity>?";
-$query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,EntityId1 as node1name,EntityId2 as node2name,rootcategory1 as category1_0,rootcategory1 as category1_1,rootcategory1 as category1_2,rootcategory2 as category2_0,rootcategory2 as category2_1,rootcategory2  as category2_2,catCnts1 as category1_counts,catCnts2 as category2_counts,Similarity from EntitySimilarityView_cat where ExperimentId=?  and  Similarity>?";
+$query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,CV1_Category1 as node1name,CV2_Category1 as node2name,rootcategory1 as category1_0,rootcategory1 as category1_1,rootcategory1 as category1_2,rootcategory2 as category2_0,rootcategory2 as category2_1,rootcategory2  as category2_2,catCnts1 as category1_counts,catCnts2 as category2_counts,Similarity from EntitySimilarityView_cat where ExperimentId=?  and  Similarity>?";
 //$query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,EntityId1 as node1name,EntityId2 as node2name,AC1_Category0 as category1_1, AC1_Category0 as category1_2, AC1_Category0 as category1_3, AC2_Category0 as category2_1, AC2_Category0 as category2_2,AC2_Category0 as category2_3, catCnts1 as category1_counts,catCnts2 as category2_counts,Similarity from EntitySimilarityView_cat where ExperimentId=? and  Similarity>?";
 
 $query_experiments = "select distinct ExperimentId,Description from experiment";
@@ -22,7 +22,11 @@ $query_experiments = "select distinct ExperimentId,Description from experiment";
 $query_grants = "select catid, topicid, Weight from topiccategoryview where ExperimentId=?";
 $query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
-
+//$query_topicsdistribution = "select * from topicsperyearview order by topicid";
+$query_topicsdistribution = null;
+//$query_treemap = "select * from treemapview";
+$query_treemap = null;
+$query_trends = "select * from top50distributionview";
 
 ///////////////////////////////////
 ///// front-end configuration /////

@@ -367,15 +367,6 @@
 		$("#categories").hide();
 
 
-
-$("#ex8").slider({
-	tooltip: 'always'
-});
-
-$("#ex6").slider({ id: "slider12a", min: 0, max: 100, value: 50 });
-$("#ex6").on("slide", function(slideEvt) {
-	$("#ex6SliderVal").text(slideEvt.value);
-});
 		// function creation jquery percentage
 		jQuery.extend({
 			percentage: function(a, b){
@@ -410,12 +401,6 @@ $("#ex6").on("slide", function(slideEvt) {
 			$("#grants").multiselect({
 			   noneSelectedText: "<?php echo $node_name;?>s"
 			});
-			// $("#experiments").multiselect({
-			//    multiple: false,
-			//    header: "Select an experiment",
-			//    noneSelectedText: "Select an experiment",
-			//    selectedList: 1
-			// });
 		});
 
 
@@ -5455,10 +5440,6 @@ function createChord(type){
 						<li>
 							<!-- Zoom Level:  -->
 
-	<!-- 
-	<input id="ex6" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50" />
-	<span id="ex6CurrentSliderValLabel" >Current Slider Value: <span id="ex6SliderVal">3</span></span>
-	 -->
 	 						<div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds in Zoom Level. S for Similarity threshold. C for Connectivity threshold"> 
 								<span class="input-group-addon">S</span>
 								<input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr1"  style="width:75px">

@@ -80,28 +80,20 @@
 		}
 
 
-#slider12a .slider-track-right {
-	border-bottom-color: blue;
-	background-color: blue;
-	background: #8283FF;
-	/*background: blue;*/
-}
-
-
 		/*chrome fix bug the below*/
 		.input-group-addon, .input-group {
 		    width: auto;
 		}
 
-/*natalia asked for padding and font-size on the right table*/
-.table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th{
-	padding: 1px;
-	font-size: 13px;
-}
+		/*natalia asked for padding and font-size on the right table*/
+		.table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th{
+			padding: 1px;
+			font-size: 13px;
+		}
 
-.active {
-	color:green;
-}
+		.active {
+			color:green;
+		}
 	</style>
 
 	<!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
@@ -181,7 +173,6 @@
 			svgimgReset,
 			svgimgResetFS,
 			prev_w,
-			diff,
 			w = $(window).width()/2,//800,
 			h = $(window).width()/2,//800,
 			radius = d3.scale.linear().domain([0, 978000]).range(["2", "30"]),
@@ -236,17 +227,13 @@
 			selectnodeLabels = {},
 			previous_scale = 1,
 			zoom_type = 1,
-			drag,
 			zoomer,
-			initialized,
 			force,
 			myresponse,
-			hull,
 			fontsize,
-			fontcolor,
 			svgElement = document.getElementById("graph"),
-			k,n,
-			wordsMapCounts = {},
+			k,
+			n,
 			topicsMap = {},
 			discriminativeTopic = {},
 			discriminativeTopicWeight = {},
@@ -259,16 +246,10 @@
 			len,
 			topicPerTopicsGroup,
 			weightPerTopicsGroup,
-			timesOfWordApperaranceInGroup,
-			i,j,nl,nw,
-			neigborTopicWords = {},
-			topicWord,				//shows the best topic word for each topic 
+			i,j,nl,
 			mywords,
 			wlen,
-			maxWordCounts,
-			neighborLength,
 			label = {},
-			groupedNodes = [],
 			fontsizeVar = <?php echo $fontsizeVar ;?>,
 			smallestFontVar = <?php echo $smallestFontVar ;?>,
 			expsimilarity = <?php echo $expsimilarity ;?>,
@@ -285,10 +266,7 @@
 			flagForTranformation = 0
 				/* catch switching in and out full screen */
 			isSvgFullscreen = false,
-			JSONerror =0,		// I think this fixes the error "JSON.parse(resp)"
 			clrArray = [],
-			plot = 0,
-			experDescription = "",
 			target = document.getElementById('graphdiv'),
 			opts = {
 				lines: 17, // The number of lines to draw
@@ -310,7 +288,6 @@
 			},
 			relations = [],	
 			relationsCross = [],					// for the cross disciplinary areas
-			names = [],
 			subdConnections = [],
 			subdBiConnections = [],
 			subdConnectionsNum = [],
@@ -475,13 +452,9 @@
 //function debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}}
 //var myEfficientFn = debounce(function() {
 		function onResize() {
-//		$(window).on('resize',function (e) {
 			prev_w = w;
 			w = $(window).width()/2,
 			h = $(window).width()/2,
-			// console.log("new graph width is "+w);
-			// console.log("previous graph width is "+prev_w);
-			diff=w-prev_w;
 
 	 		$("#mygraph-container").attr("style","position:fixed;width:"+9*w/8);
 
@@ -564,7 +537,6 @@
 					.attr("y", h / 2);
 
 
-//				console.log("222")
 /*ATTENTION: the below is required and is fired only in Chrome, Safari etc. That is because in Mozilla and other browsers the event for fullscreenchange holds forever when being in fullscreen, while with -webkit used in chrome and safari the event holds for one second*/
 		   if (isSvgFullscreen) {			
 				// you have just ENTERED full screen video
@@ -575,51 +547,6 @@
 				vis.style("position","fixed");
 			}
 
-//				console.log("333")
-
-			// console.log("w/prev_w="+w/prev_w);
-			// console.log("window width="+$(window).width());
-
-
-
-
-
-			if($(window).width()<350 || ($(window).width()>995 && $(window).width()<1375)){				
-				counterMax = 2;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
-			else if($(window).width()<415 || ($(window).width()>=1375 && $(window).width()<=1656)){
-				counterMax = 3;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
-/*			else if($(window).width()<755 || $(window).width()>1657){
-				counterMax = 4;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
-*/			else if($(window).width()<490 || ($(window).width()>1656 && $(window).width()<2000)){
-				counterMax = 4;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
-			else if($(window).width()<565 || ($(window).width()>=2000 && $(window).width()>=2300)){
-				counterMax = 5;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
-			else if($(window).width()<640 || ($(window).width()>2300 && $(window).width()<2650)){
-				counterMax = 6;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
-			else if($(window).width()<715 || ($(window).width()>=2650 && $(window).width()<=3000)){
-				counterMax = 7;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
-			else if($(window).width()<755 || $(window).width()>3000){
-				counterMax = 8;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
-			else {	//if($(window).width()<995
-				counterMax = 1;
-				$('#log > li').hide().slice(counter, counter+counterMax).show();
-			}
 
 		// semantic zooming
 			scaleFactor = w/prev_w;
@@ -648,7 +575,6 @@
 			resizeGraph();
 
 			prev_w = w;
-//		});
 }
 // the below 2 lines go with debounce function	
 //}, 100);
@@ -848,17 +774,6 @@
 		});
 
 
-		initialized = false;//
-
-/*		if ($(window).width() > 755)
-			charge *= ($(window).width()/755);
-		else
-			charge *= ($(window).width()/380);
-*/   //use instead of below
-
-//		if ($(window).width() < 755)
-//			charge *= 2;
-	// the above for the new database
 		if ($(window).width() < 755)
 			charge *= 1.5;
 
@@ -1161,22 +1076,64 @@
 /**** FADING AND COLORING FUNCTIONS ****/
 	/* refills the opacity of each color after fading */
 		function showtype(opacity, types){
+		// 	console.log("showtype1 o=")
+		// 	nodeCircles.style("fill-opacity", function(o) {
+		// 		//console.log(o)
+		// 		if(types.indexOf(o.color) === -1)
+		// 			return opacity;
+		// 		else
+		// 			return normal;
+		// 	});
+
+		// 	nodeCircles.style("stroke-opacity", function(o) {
+		// 		if(types.indexOf(o.color) === -1)
+		// 			return opacity;
+		// 		else
+		// 			return normal;
+		// 	});
+
+		// 	nodeLabels.style("fill-opacity", function(o) {
+		// 		if(types.indexOf(o.color) === -1){
+		// 				return opacity*3;
+		// 		}
+		// 		else{
+		// 			return strong;
+		// 		}
+		// 	});
+
+		// 	nodeLabels.style("stroke-opacity", function(o) {
+		// 		if(types.indexOf(o.color) === -1){
+		// 			return opacity*3;
+		// 		}
+		// 		else{
+		// 			return strong;
+		// 		}
+		// 	});
+
+		// /* links stay with opacity or not in hover according to below condition */
+		// 	linkLines.style("stroke-opacity", function(o) {
+		// 		return types.indexOf(o.source.color) != -1 && types.indexOf(o.target.color) != -1 ? normal/2 : opacity;
+		// 	});
+
+			console.log("showtype1 o=")
 			nodeCircles.style("fill-opacity", function(o) {
-				if(types.indexOf(o.color) === -1)
+				// console.log(types.indexOf(o.index))
+				if(types.indexOf(o.index) === -1)
 					return opacity;
 				else
 					return normal;
 			});
 
 			nodeCircles.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.color) === -1)
+				if(types.indexOf(o.index) === -1)
 					return opacity;
 				else
 					return normal;
 			});
 
 			nodeLabels.style("fill-opacity", function(o) {
-				if(types.indexOf(o.color) === -1){
+				console.log(o)
+				if(types.indexOf(o.index) === -1){
 						return opacity*3;
 				}
 				else{
@@ -1185,7 +1142,7 @@
 			});
 
 			nodeLabels.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.color) === -1){
+				if(types.indexOf(o.index) === -1){
 					return opacity*3;
 				}
 				else{
@@ -1195,10 +1152,8 @@
 
 		/* links stay with opacity or not in hover according to below condition */
 			linkLines.style("stroke-opacity", function(o) {
-				return types.indexOf(o.source.color) != -1 && types.indexOf(o.target.color) != -1 ? normal/2 : opacity;
+				return types.indexOf(o.source.index) != -1 || types.indexOf(o.target.index) != -1 ? normal/2 : opacity;
 			});
-
-
 
 		}
 
@@ -1244,45 +1199,6 @@
 			});
 		}
 
-
-		function showtype3(opacity, types){
-			nodeCircles.style("fill-opacity", function(o) {
-				if(types.indexOf(o.name) === -1)
-					return opacity;
-				else
-					return normal;
-			});
-
-			nodeCircles.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.name) === -1)
-					return opacity;
-				else
-					return normal;
-			});
-
-			nodeLabels.style("fill-opacity", function(o) {
-				if(types.indexOf(o.name) === -1){
-						return opacity*3;
-				}
-				else{
-					return strong;
-				}
-			});
-
-			nodeLabels.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.name) === -1){
-					return opacity*3;
-				}
-				else{
-					return strong;
-				}
-			});
-
-		/* links stay with opacity or not in hover according to below condition */
-			linkLines.style("stroke-opacity", function(o) {
-				return types.indexOf(o.source.name) != -1 || types.indexOf(o.target.name) != -1 ? normal/2 : opacity;
-			});
-		}
 
 
 	/* fade */
@@ -1523,252 +1439,6 @@
 		}
 
 
-		function fadeChord(opacity, showText) {
-
-			// all grants must be unchecked
-			$("#grants").multiselect("uncheckAll");
-			$("#boost_btn").show();
-
-			// $( "#similarNodes" ).empty();			//clear anything included in child nodes
-			smfound=0;								// similar nodes found initialization
-
-			if (showText)
-				return function(d, i) {
-				// all grants must be unchecked
-
-				fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
-				vis.selectAll(".labels")
-					.style("font-size",fontsize+"px");	
-				}
-			else
-				return function(d, i) {
-
-				if($(this).css("fill-opacity") < normal)
-					return false;
-				labels = [];
-				var selectedLabelData = null;
-
-			/* text opacity for all... goes first. later some will have normal opacity*/ 
-				vis.selectAll(".labels")
-					.style("fill-opacity", opacity*3)
-					.style("stroke-opacity",opacity*3);
-
-				nodeCircles.style("fill-opacity", function(o) {
-					var isNodeConnectedBool = isNodeConnected(d, o);
-					var thisOpacity = isNodeConnectedBool ? normal : opacity;
-					if (!isNodeConnectedBool) {
-						this.setAttribute('style', "stroke-opacity:" + opacity + ";fill-opacity:" + opacity + ";");
-					}
-					else {
-						if (o == d){							
-							selectedLabelData = o;
-						}
-						else{
-							labels.push(o);							
-						}
-					}
-					if(o == d)
-						return strong;
-					return thisOpacity;
-				});
-
-
-				nodeLabels.style("fill-opacity", function(o) {
-					var isNodeConnectedBool = isNodeConnected(d, o);
-					var thisOpacity = isNodeConnectedBool ? strong : opacity;
-					/*if !neighbor && !this node*/
-					if (!isNodeConnectedBool) {
-						this.setAttribute('style', "stroke-opacity:" + opacity*3 + ";fill-opacity:" + opacity*3 + ";");
-					}
-					/*if this node*/
-					if(o == d)
-						return strong;
-					/*if neighbor node*/
-					return thisOpacity;
-				});
-
-				nodeLabels.style("stroke-opacity", function(o) {
-					var isNodeConnectedBool = isNodeConnected(d, o);
-					var thisOpacity = isNodeConnectedBool ? strong : opacity;
-					/*if !neighbor && !this node*/
-					if (!isNodeConnectedBool) {
-						this.setAttribute('style', "stroke-opacity:" + opacity*3 + ";fill-opacity:" + opacity*3 + ";");
-					}
-				/*if neighbor || this node*/
-					return thisOpacity;
-				});
-
-				linkLines.style("stroke-opacity", function(o) {
-					return o.source === d || o.target === d ? normal : opacity;
-				});
-
-				labels.sort(function(a, b) {
-					return b.value - a.value
-				})
-
-				selectedLabelIndex = 0; // labels.indexOf(selectedLabelData);
-
-
-				var temp = mytext.selectAll("div.nodetext").data([selectedLabelData].concat(labels)).enter().append("div").attr("class", function(o) {
-					if( d.index == o.index )
-						return "nodetext " + o.color + " active";
-					return "nodetext " + o.color;
-				})
-				.html(function(o) {	
-// NMP +
-					var topicsGroupPerNode,
-						len;
-
-				/* maybe use: tfidf algorithm to find discriminative topics and words */
-
-//					var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
-					if(d == o){
-
-						$("#mytext-title").empty();
-						$("#mytext-title").show();
-						//$("#mytext-content").empty();
-						$("#mytext-content").show();
-						mytextTitle.append("div").append("ul")
-							.attr("class", "pagination active")
-							.attr("data-toggle","tooltip")
-							.attr("data-placement","right")
-							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.color + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
-						var str = "";
-						topicsGroupPerNode = grants[o.id];
-						if(topics1 != null){
-							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS: ";
-							// str += "<button id='boost_btn' class='btn btn-link btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'><span  class='navbar-brand glyphicon glyphicon-info-check' aria-hidden='true'>boost</span><span class='sr-only'>Experiment Description</span></button> <br/>";
-							str += "<br/>";
-							len = topicsGroupPerNode.length;
-							for(var i=0;i<len;i++){
-								var mywords = topics1[topicsGroupPerNode[i].topic];
-								var wlen = mywords.length;
-								
-								for(var j=0;j<wlen;j++){
-									var opacity; 
-									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.8) {
-										opacity = 0.8;
-									}
-									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
-									if(j<wlen-1)
-										str += ",&nbsp";
-								}
-								str += "<br/><br/>";
-							}
-//						str += "<br/></br> SIMILAR TO:</span>";
-						}
-					}
-					else{
-						$("#header1").hide();
-						$("#log").hide();
-						$("#tags").val("");	
-
-						$("#header3").hide();
-						$("#areaNodes").hide();
-						
-						$("#header2").show();
-						$("#similarNodes").show();
-
-						var similarNodes = "";
-	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
-						smfound++;
-
-						$('#simNode'+o.index).hover(function(){
-							console.log("hover");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-							$(this).css("opacity","0.5");
-						},function(){
-							console.log("hover2");
-							$(this).css("opacity","initial");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-						});
-
-						$( "#similarNodes > div > ul" ).append(similarNodes);
-
-					}
-					
-					/* move circle elements above all others within the same grouping */ 
-		//			vis.selectAll(".circle").moveToFront();
-					vis.selectAll(".labels").moveToFront();
-			
-					return str;
-				});
-
-				counter=0;						//(re)-initialize counter to zero
-				counterMax = 10;
-
-				$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-				counter+=counterMax;
-
-				$("#upButton").hide();
-				if($('#similarNodes > div > ul > li:last').css('display') == 'inline'){
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-				else{
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-
-				$('#downButton').on("click",function(){
-					if ((counter+counterMax)<smfound){
-						$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-						counter+=counterMax;
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-
-					}
-					else {
-						$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li visible")
-						$("#downButton").hide();
-					}
-				});
-
-				$('#upButton').on("click",function(){
-					if (counter-counterMax>0){
-						$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-						counter-=counterMax;
-
-						console.log("1 li not visible")
-						$("#upButton").show();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-
-					}
-					else{
-						$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-						counter = 10;
-
-						console.log("1 li visible")
-						$("#upButton").hide();
-
-						console.log("last li not visible")
-						$("#downButton").show();
-					}
-				});
-
-
-				temp.on("mouseover",function(){alert("click");});
-
-				fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
-				vis.selectAll(".labels")
-					.style("font-size",fontsize+"px");	
-			}
-
-		}
-
 
 	/* test function is similar to fade function*/
 		function testGrantSelection(mynode, opacity){
@@ -1777,33 +1447,8 @@
 			$("#grants").multiselect("uncheckAll");
 			$("#boost_btn").show();
 
-			// $( "#similarNodes" ).empty();			//clear anything included in child nodes
 			smfound=0;								// similar nodes found initialization
 
-			console.log("prints BEFORE")
-			/*console.log("nodeCircles")
-			console.log(nodeCircles)
-			console.log("selectnodeCircles")
-			console.log(selectnodeCircles)
-			console.log("nodeLabels")
-			console.log(nodeLabels)
-			console.log("selectnodeLabels")
-			console.log(selectnodeLabels)
-			*/
-			var types = new Array();
-
-			var collection = null;
-			if($(".active_row").length == 0){
-				collection = $(".legend_row");
-			}
-			else
-				collection = $(".active_row");
-
-			collection.each(function(){
-				types.push($($(this).find("td").get(0)).find("div").html());
-			});
-
-			showtype(fade_out, types);
 			mytext.selectAll(".nodetext").remove();
 
 			labels = [];
@@ -2110,23 +1755,6 @@
 			vis.selectAll(".labels")
 				.style("font-size",fontsize+"px");
 
-
-
-			// to afairei apo tous selectnodecircles gia na min to afairesei se apomeni fora me allo node
-//			selectnodeCircles.remove(mynode);
-//			selectnodeLabels.remove(mynode);
-
-
-/*console.log("prints AFTER")
-console.log("nodeCircles")
-console.log(nodeCircles)
-console.log("selectnodeCircles")
-console.log(selectnodeCircles)
-console.log("nodeLabels")
-console.log(nodeLabels)
-console.log("selectnodeLabels")
-console.log(selectnodeLabels)
-*/
 			clickedNode = mynode;
 		}
 
@@ -2142,20 +1770,6 @@ console.log(selectnodeLabels)
 			// $( "#similarNodes" ).empty();			//clear anything included in child nodes
 			smfound=0;								// similar nodes found initialization
 
-			var types = new Array();
-
-			var collection = null;
-			if($(".active_row").length == 0){
-				collection = $(".legend_row");
-			}
-			else
-				collection = $(".active_row");
-
-			collection.each(function(){
-				types.push($($(this).find("td").get(0)).find("div").html());
-			});
-
-			showtype(fade_out, types);
 			mytext.selectAll(".nodetext").remove();
 
 			labels = [];
@@ -2268,25 +1882,17 @@ console.log(selectnodeLabels)
 								var wlen = mywords.length;
 								
 								for(var j=0;j<wlen;j++){
-									// if ((mywords[j].item).match("^null") || (mywords[j].item).match("^cid")){
-									// 	// checks the first word in the given topic, if null then deletes the word, else if cid deletes the 
-									// 	// DO NOTHING
-									// }	
-									// else{									
-										var opacity; 
-										if ((opacity = mywords[j].counts/mywords[0].counts) < 0.8) {
-											opacity = 0.8;
-										}
+									var opacity; 
+									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.8) {
+										opacity = 0.8;
+									}
 
-										str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
-										if(j<wlen-1)
-											str += ",&nbsp";
-//									}
+									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
+									if(j<wlen-1)
+										str += ",&nbsp";
 								}
 								str += "<br/><br/>";
 							}
-
-//						str += "<br/></br> SIMILAR TO:</span>";
 						}
 					}
 					else{
@@ -2301,7 +1907,6 @@ console.log(selectnodeLabels)
 						$("#similarNodes").show();
 
 						var similarNodes = "";
-	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
 						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + o.index + "\" rel=\"#C6AA01\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
 						smfound++;
 
@@ -2478,19 +2083,14 @@ console.log(selectnodeLabels)
 			return 0;
 		}
 
-	/* reset like normalizeNodesAndRemoveLabels */
-		function reset(){
+	/* reset */
+		function reset(){					/* normalizeNodesAndRemoveLabels */
 			var types = new Array();
-			var collection = null;
-			if($(".active_row").length == 0){
-				collection = $(".legend_row");
-			}
-			else
-				collection = $(".active_row");
-
-			collection.each(function(){
-				types.push($($(this).find("td").get(0)).find("div").html());
+			$(".circle").each(function(){
+	 			types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
+			
 			});
+
 			showtype(fade_out, types);
 			//mytext.selectAll(".nodetext").remove();
 			$(".nodetext").remove();
@@ -2515,10 +2115,7 @@ console.log(selectnodeLabels)
 			$("#upButton").hide();
 			$("#downButton").hide();
 
-
-			selectnodeCircles = nodeCircles
-			selectnodeLabels = nodeLabels
-
+			$("#filters").val("opt0");
 		}
 
 	/* collide */
@@ -2549,48 +2146,6 @@ console.log(selectnodeLabels)
 					|| y1 > ny2
 					|| y2 < ny1;
 			};
-		}
-
-	/* normalizeNodesAndRemoveLabels */
-		function normalizeNodesAndRemoveLabels() {
-			return function(d, i) {
-				var types = new Array();
-
-				var collection = null;
-				if($(".active_row").length == 0){
-					collection = $(".legend_row");
-				}
-				else
-					collection = $(".active_row");
-				collection.each(function(){
-					types.push($($(this).find("td").get(0)).find("div").html());
-				});
-				showtype(fade_out, types);
-				//mytext.selectAll(".nodetext").remove();
-				$(".nodetext").remove();
-				$("#similarNodes > div > ul").empty();
-				$("#areaNodes > div > ul").empty();
-
-				$("#boost_btn").hide();
-
-				$("#header1").hide();
-				$("#log").hide();
-				$("#tags").val("");	
-				$("#header2").hide();
-				$("#similarNodes").hide();
-				$("#header3").hide();
-				$("#areaNodes").hide();
-
-				$("#filter1").hide();
-				$("#filter2").hide();
-				$("#mytext-title").empty();
-				$("#mytext-content").empty();
-
-
-				$("#upButton").hide();
-				$("#downButton").hide();
-
-			}
 		}
 
 
@@ -2852,14 +2407,11 @@ console.log(selectnodeLabels)
 
 			k = 0,
 			n = nodes.length,
-			wordsMapCounts = {},
 			topicsMap = {},
 			discriminativeTopic = {},
 			discriminativeTopicWeight = {},
 			discriminativeWord = {},
-			discriminativeWordCounts = {},
-			neigborTopicWords = {},
-			topicWord = "";				//shows the best topic word for each topic 
+			discriminativeWordCounts = {};
 
 
 		/* maybe use: tfidf algorithm to find discriminative topics and words */
@@ -2921,17 +2473,12 @@ console.log(selectnodeLabels)
 			var searchWords = "";
 
 			while (++k < n) {
-				topicWord = "";				//shows the best topic word for each topic 
-				timesOfWordApperaranceInGroup = 1;
-				neigborTopicWords = {};
 
 			/* algorithm steps */
 			/* Step 1: if the node has a lot of connection as found from the previous loop, then a discriminative topic exists and so we take it */
 				if (discriminativeTopic[nodes[k].index] != null){
 					mywords = topics1[discriminativeTopic[nodes[k].index]];
 					wlen = mywords.length;
-					maxWordCounts = 0;
-					topicWord = "";
 					neighborNode;
 					
 			/* Step 2: temporarily set the most discriminative word as the first word in topic and in the end the true one will occur with the algorithm */
@@ -3026,11 +2573,6 @@ console.log(selectnodeLabels)
 				/* after creating the labels we put them in nodeLabels variable */
 
 				fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
-
-			// fontcolor has a hexadecimal code of grey, reason of 16 is to be a two digit number
-				fontcolor = (150-(previous_scale*50) > 16) ? Math.round(150-(previous_scale*50)).toString(16) : "00";
-				// use below for scales of grey in labeling
-				// .attr("fill","#"+fontcolor+fontcolor+fontcolor)
 
 				nodeLabels
 					.attr("class", function(d) {
@@ -3522,11 +3064,14 @@ console.log(selectnodeLabels)
 					else
 						collection = $(".active_row");
 
-					collection.each(function(){
-						types.push($($(this).find("td").get(0)).find("div").html());
+					collection.each(function(col_index,col_elem){
+						$(".circle").each(function(cir_index,cir_elem){
+							if ( cir_elem.classList[1] == $($(col_elem).find("td").get(0)).find("div").html()){
+					 			types.push(parseInt(cir_elem.classList[2]));
+							}
+						});
 					});
 
-					//showtypes
 					showtype(fade_out, types);
 
 				});
@@ -3585,98 +3130,65 @@ console.log(selectnodeLabels)
 				.attr("colspan","4")				
 				.append("div")
 				.attr("display","table");
-				// .html("        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably havent heard of them accusamus labore sustainable VHS.");
 
+			rows
+				.each(function(d, i) {
+					$("#collapse"+d.name)
+						.html(function() {	
+							for (var i = 0; i < subdConnections.length; i++) {
+								if (subdConnections[i] == d.name){
+									var str = "";
+									str += "<td colspan='4'><div class='table table-condensed table-striped'><div class='table-row-group' style='overflow-y:scroll;height:"+$(window).height()/4+"'><div class='row'><div class='cell' style='border-top:solid'>Area </div><div class='cell' style='border-top:solid'>Relations</div></div>";
 
+									for (var j = 0; j < subdConnections.length; j++) {
+										subdConnections.forEach(function(z){
+											if(z == d.name){
+												if(z != subdConnections[j].name){
 
-//				$(document).bind("chordready", function(){
-					rows.each(function(d, i) {
-	//    				console.log(this, d, i);
-						$("#collapse"+d.name)
-	//						.append("div")
-	//						.attr("class", "nodetext " + d.name + " active")
-	//						.attr("class", "collapse in")
-
-							// .attr("class", function(o) {
-							//  	//if( d.index == o.index )
-							// 	//	return "nodetext " + d.name + " active";
-							// 	return "nodetext " + d.name + " active";
-							// })
-							.html(function() {	
-								for (var i = 0; i < subdConnections.length; i++) {
-									if (subdConnections[i] == d.name){
-										var str = "";
-
-			//									var str = d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-
-			// 					percentageSum = d.source.value+d.target.value
-			// 					return subdivisionsChord[d.source.index].name
-			// //					 + " (#" +  d.source.value
-			// //					 + ")"
-			// 					 + " ↔ " + subdivisionsChord[d.target.index].name 				
-			// //					 + " (#" +  d.target.value
-			// //					 + ")"
-			// 					 + ": " + percentageSum
-			// 					 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-			// 					 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-			// 					 + ")" ; // &harr; the name of the arrow
-
-
-										str += "<td colspan='4'><div class='table table-condensed table-striped'><div class='table-row-group' style='overflow-y:scroll;height:"+$(window).height()/4+"'><div class='row'><div class='cell' style='border-top:solid'>Area </div><div class='cell' style='border-top:solid'>Relations</div></div>";
-										// str += "<div class='row'><div class='cell'></div><div class='cell'>"+d.name+"</div></div>";
-										// str += "<div class='row'><div class='cell'></div><div class='cell'>To</div></div>";
-
-										for (var j = 0; j < subdConnections.length; j++) {
-											subdConnections.forEach(function(z){
-												if(z == d.name){
-													if(z != subdConnections[j].name){
-
-						percentageSum = subdBiConnectionsNum[i][j]+subdBiConnectionsNum[j][i]
-//				string += "\n"+subdConnections[i]+","+rgb2hex(clrArray[i])+","+subdConnectionsNum[i]+","+relations[i];
-														if (percentageSum > 0){
-															str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
-															 // + "<div class='cell' style='border-top:solid "+mytextsubdivisions[i].color+";'>"
-															 // + subdBiConnectionsNum[i][j]
-															 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/mytextsubdivisions[i].relations)
-															 // + ")</div>"
-															 // + "<div class='cell' style='color:"+mytextsubdivisions[j].color+";border-left:solid "+mytextsubdivisions[i].color+";border-top:solid "+mytextsubdivisions[i].color+";'>" 
-															 // + subdBiConnectionsNum[j][i]
-															 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
-															 // + ")</div></div>" ;
-															 + "<div class='cell' style='color:"+rgb2hex(clrArray[j])+";'>" 
-															 + percentageSum
-															 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
-															 // + ")</div></div>" ;
-															 + "</div></div>" ;
-														}
-													}
-													else{
-														if (subdBiConnectionsNum[i][i] > 0){
-
-															str += "<div class='row'><div class='cell'>" + z + "</div><div class='cell'>"
-															 + subdBiConnectionsNum[i][i]
-															 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
-															 // + ")</div><div class='cell' style='border-left:solid;border-top:solid;'>"
-															 // + subdBiConnectionsNum[i][i]
-															 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
-															 // + ")</div></div>" ;
-															 + "</div></div>";
-														}
+													percentageSum = subdBiConnectionsNum[i][j]+subdBiConnectionsNum[j][i]
+													if (percentageSum > 0){
+														str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
+														 // + "<div class='cell' style='border-top:solid "+mytextsubdivisions[i].color+";'>"
+														 // + subdBiConnectionsNum[i][j]
+														 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/mytextsubdivisions[i].relations)
+														 // + ")</div>"
+														 // + "<div class='cell' style='color:"+mytextsubdivisions[j].color+";border-left:solid "+mytextsubdivisions[i].color+";border-top:solid "+mytextsubdivisions[i].color+";'>" 
+														 // + subdBiConnectionsNum[j][i]
+														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
+														 // + ")</div></div>" ;
+														 + "<div class='cell' style='color:"+rgb2hex(clrArray[j])+";'>" 
+														 + percentageSum
+														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
+														 // + ")</div></div>" ;
+														 + "</div></div>" ;
 													}
 												}
-											})
-										}
-										str += "</div></td>" ;
+												else{
+													if (subdBiConnectionsNum[i][i] > 0){
+
+														str += "<div class='row'><div class='cell'>" + z + "</div><div class='cell'>"
+														 + subdBiConnectionsNum[i][i]
+														 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
+														 // + ")</div><div class='cell' style='border-left:solid;border-top:solid;'>"
+														 // + subdBiConnectionsNum[i][i]
+														 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
+														 // + ")</div></div>" ;
+														 + "</div></div>";
+													}
+												}
+											}
+										})
 									}
+									str += "</div></td>" ;
 								}
-								return str;
-							});
-							$("#collapse"+d.name).insertAfter($("#legend_row"+d.name));
+							}
+							return str;
+						});
 
-	    				});
+					$("#collapse"+d.name).insertAfter($("#legend_row"+d.name));
 
+				});
 
-//				});
 
 			loadingText = vis.append("svg:text")
 							.style("font-size",w/20)
@@ -3739,114 +3251,6 @@ console.log(selectnodeLabels)
 					}
 				});
 
-				// $("#experiments").multiselect("refresh");					
-
-				// ginetai mono mia fora
-/*				selectnodeCircles = nodeCircles
-				selectnodeLabels = nodeLabels
-*/
-
-//				$("#experiments").bind("multiselectclick", function(d, matches){
-// 				$("#experiments").multiselect({
-// 					click: function (e,d){
-// 						// finds the click event and refreshes before the beforeclose event.
-// 						var myval = $(this).find("option:selected").val();						
-
-// 					},
-// 					beforeclose: function (e,d){
-// 						var myval = $(this).find("option:selected").val();
-
-// 						if(myval != experimentName){
-
-// 							d3.select("#experiments").selectAll("option")
-// 								.text(function(d){
-// 									if(experimentName == d.id){
-
-// 										experimentName = d.id;
-// 										experimentDescription = d.desc;
-// 										if((expsimilarity = d.initialSimilarity) == null){
-// 											expsimilarity = <?php echo $expsimilarity ;?>;
-// 										}
-// 										// $("#dialogExp").text(experimentName)
-// 										// $("#dialogDesc").text(experimentDescription)
-// 										console.log("experimentName:"+d.id)
-// 										console.log("experimentDescription:"+d.desc)
-// 										console.log("expsimilarity:"+d.initialSimilarity)
-// 									}
-// 									return d.id;
-// 								});
-
-// 							experimentName = myval;
-// 							// experimentDescription = function(){
-// 							// 	experiment.
-// 							// };
-// 							$("#myTab").hide();
-
-// 							// spinner added again
-// 							$("#legend").empty();
-// 							$("#graph").empty();
-
-// 							$("svg:text").empty();
-// 							$("#chord_circle").remove();
-
-// //							$("#subdivision_btn").attr("value","Plot Subdivisions in Chords");
-// 							// plot = 0;
-// 							// $("#chord").hide();
-// 							// $("#graph").show();
-// 							// $("#thresholds").show();
-
-// 							chord_arc = [];
-// 							chord_layout = [];
-// 							chord_path = [];
-// 							chord_svg = [];
-
-// 							//$("#mygraph").empty();
-
-// 							// to parakatw prepei na ginei unbind giati diaforetika sto idio koumpi meta apo kathe allagi grafou ginetai bind ksana to click event kai ti deuteri fora me ena click patietai 2 fores (kai de deixnei tipota), tin 3i fora me ena click patietai 3 fores (deixnei) k.o.k
-// //						    $("#myTab").unbind('click');
-// 							spinner = new Spinner(opts).spin(target);
-
-// 							nodeConnections = [];
-// 							maxNodeConnections = 0;
-// 							labeled = [];
-// 							topicWords = [];		
-// 							topics1 = [];
-// 							topics2 = [];
-// 							topicstemp = [];
-// 							topicsFlag = false;
-// 							grants = [];
-// 							myresponse = [];
-// 							nodes = [];
-// 							links = [];
-// 							labels = [];
-
-// 							// for the CSV and the JSON chord creation
-// 							subdConnections = [];
-// 							subdConnectionsNum = [];
-// 							relations = [];
-// 							names = [];
-// 							subdBiConnections = [];
-// 							subdBiConnectionsNum = [];
-// 							nodesToFade = [];
-
-// 							//$("#grants").multiselect("destroy");
-// 							//$("#grants").trigger("reset");
-// 							$("option").remove();
-// 							$("#grants").multiselect();
-
-// 							similarityThr = <?php echo $similarityThr ;?>;
-// 							nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
-// 							if (/^FET*/.test(experimentName))
-// 								nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3,
-
-// 							maxNodeConnectionsThr = <?php echo $maxNodeConnectionsThr ;?>;
-// 							linkThr = <?php echo $linkThr ;?>;
-// //						 	expsimilarity = <?php echo $expsimilarity ;?>;			// to allazw katw kai to pairnw apo ti basi
-
-// 							ajaxCall(myval,expsimilarity);
-// 						} 
-// 					}
-// 				});
 
 //hard code....
 				$("#category1").on("click", function (){
@@ -3856,8 +3260,7 @@ console.log(selectnodeLabels)
 
 						var types = [];
 						 $(".circle").each(function(){
-	//						types.push($(this).attr("class"));
-							types.push(this.classList[1]);
+							types.push(this.classList[2]);
 						});
 	
 						showtype(fade_out, types);
@@ -3882,7 +3285,7 @@ console.log(selectnodeLabels)
 						var types = [];
 						collection.each(function(){
 	//						types.push($(this).attr("class"));2ca02c
-							types.push(this.classList[1]);
+							types.push(this.classList[2]);
 						});
 	
 						showtype(fade_out, types);
@@ -3897,7 +3300,7 @@ console.log(selectnodeLabels)
 						var types = [];
 						 $(".circle").each(function(){
 	//						types.push($(this).attr("class"));
-							types.push(this.classList[1]);
+							types.push(this.classList[2]);
 						});
 	
 						showtype(fade_out, types);
@@ -3922,7 +3325,7 @@ console.log(selectnodeLabels)
 						var types = [];
 						collection.each(function(){
 	//						types.push($(this).attr("class"));
-							types.push(this.classList[1]);
+							types.push(this.classList[2]);
 						});
 	
 						showtype(fade_out, types);
@@ -3937,7 +3340,7 @@ console.log(selectnodeLabels)
 						var types = [];
 						 $(".circle").each(function(){
 	//						types.push($(this).attr("class"));
-							types.push(this.classList[1]);
+							types.push(this.classList[2]);
 						});
 	
 						showtype(fade_out, types);
@@ -3963,7 +3366,7 @@ console.log(selectnodeLabels)
 						var types = [];
 						collection.each(function(){
 	//						types.push($(this).attr("class"));
-							types.push(this.classList[1]);
+							types.push(this.classList[2]);
 						});
 	
 						showtype(fade_out, types);
@@ -3999,9 +3402,7 @@ console.log(selectnodeLabels)
 							});
 
 						experimentName = myval;
-						// experimentDescription = function(){
-						// 	experiment.
-						// };
+
 						$("#myTab").hide();
 
 						// spinner added again
@@ -4009,26 +3410,10 @@ console.log(selectnodeLabels)
 						$("#graph").empty();
 
 						$("svg:text").empty();
-//						$(".chord_circle").remove();
 
-//							$("#subdivision_btn").attr("value","Plot Subdivisions in Chords");
-						// plot = 0;
-						// $("#chord").hide();
-						// $("#graph").show();
-						// $("#thresholds").show();
+						$("#chorddiv").empty();
+						$("#chord2div").empty();
 
-//						chord_arc = [];
-//						chord_layout = [];
-//						chord_path = [];
-//						chord_svg = [];
-$("#chorddiv").empty();
-$("#chord2div").empty();
-
-
-						//$("#mygraph").empty();
-
-						// to parakatw prepei na ginei unbind giati diaforetika sto idio koumpi meta apo kathe allagi grafou ginetai bind ksana to click event kai ti deuteri fora me ena click patietai 2 fores (kai de deixnei tipota), tin 3i fora me ena click patietai 3 fores (deixnei) k.o.k
-//						    $("#myTab").unbind('click');
 						spinner = new Spinner(opts).spin(target);
 
 						nodeConnections = [];
@@ -4045,19 +3430,14 @@ $("#chord2div").empty();
 						links = [];
 						labels = [];
 
-						// for the CSV and the JSON chord creation
 						subdConnections = [];
 						subdConnectionsNum = [];
 						relations = [];
 						relationsCross = [];
-						names = [];
 						subdBiConnections = [];
 						subdBiConnectionsNum = [];
 						nodesToFade = [];
 
-						//$("#grants").multiselect("destroy");
-						//$("#grants").trigger("reset");
-						// $("option").remove();			// auto eprepe na mpainei oso uparxei to multiselect
 						$("#grants").multiselect();
 
 						similarityThr = <?php echo $similarityThr ;?>;
@@ -4067,7 +3447,6 @@ $("#chord2div").empty();
 
 						maxNodeConnectionsThr = <?php echo $maxNodeConnectionsThr ;?>;
 						linkThr = <?php echo $linkThr ;?>;
-//						 	expsimilarity = <?php echo $expsimilarity ;?>;			// to allazw katw kai to pairnw apo ti basi
 
 
 // hard code for the Brusseles ... to be moved
@@ -4157,11 +3536,15 @@ else if (/^Full*/.test(experimentName)){
 
 //http://www.erichynds.com/blog/jquery-ui-multiselect-widget
 				$("#grants").bind("multiselectcheckall", function(event, matches){
-					reset();
+					reset();					
+					selectnodeCircles = nodeCircles
+					selectnodeLabels = nodeLabels
 				});
 
 				$("#grants").bind("multiselectuncheckall", function(event, matches){
 					reset();
+					selectnodeCircles = nodeCircles
+					selectnodeLabels = nodeLabels
 				});
 
 
@@ -4173,13 +3556,7 @@ else if (/^Full*/.test(experimentName)){
 	//						console.log("inputs"+i+":"+ui.inputs[i].value)
 						};
 
-						// for (var i=0;i<ui.inputs.length;i++)
-						// {
-						// 	//console.log("inputs"+i+":"+nodesToFade[i])
-						// };
-					// },
-					// beforeclose: function (e,d){
-						if (ui.checked)
+						if (ui.checked){
 							nodeCircles
 								.filter(function(d) {
 									if(include(nodesToFade,d.name)){			
@@ -4191,7 +3568,8 @@ else if (/^Full*/.test(experimentName)){
 								})
 								.style("fill-opacity", fade_out)
 								.style("stroke-opacity", fade_out);
-						else
+						}
+						else{
 							nodeCircles
 								.filter(function(d) {
 									if(include(nodesToFade,d.name)){			
@@ -4203,18 +3581,19 @@ else if (/^Full*/.test(experimentName)){
 								})
 								.style("fill-opacity", normal)
 								.style("stroke-opacity", normal);
+						}
 
-$(this).find("option:selected").click()
+						$(this).find("option:selected").click()
 						nodesToFade.empty();
 					}
 				});
-									$("#grants").multiselect("refresh");
+	
+				$("#grants").multiselect("refresh");
 
 				$("#grantsGroup2").bind("multiselectoptgrouptoggle", function(event, ui){
 					for (var i=0;i<ui.inputs.length;i++)
 					{
 						nodesToFade.push(ui.inputs[i].value);
-//						console.log("inputs"+i+":"+ui.inputs[i].value)
 					};
 
 
@@ -4251,7 +3630,6 @@ $(this).find("option:selected").click()
 				$("#grants").bind("multiselectclick", function(event, matches){
 					//if unchecked 
 					if (!matches.checked){
-						// console.log("uncheck")
 						nodes.filter(function(e){
 							selectnodeCircles = nodeCircles
 							selectnodeLabels = nodeLabels
@@ -4285,34 +3663,10 @@ $(this).find("option:selected").click()
 			});
 
 
-		//Create json file and csv file for chord visualization 
-// 14032015	
-//			createJsonFile()			
-//			createCSVFile()
-
 			$("#myTab").show();
 			$("#experiment_btn").show();
 			
 			$("#experiment_btn").on("click", function(){
-				// var SplitText = "Experiment Description"
-				// var $dialog = $('<div></div>')
-				// .html(SplitText )
-				// .dialog({
-				// 	modal:true,
-				// 	resizable: true,
-				// 	draggable: true,
-				// 	position: ['center',20],
-				// 	height: 250,
-				// 	width: 600,
-				// 	title: 'Experiment Description',
-				// 	buttons: {
-				// 		Ok: function() {
-				// 			$( this ).dialog( "close" );
-				// 		}
-				// 	}
-				// });
-
- 				
 
 				d3.select("#experiments").selectAll("option")
 					.each(function(d){
@@ -4329,18 +3683,12 @@ $(this).find("option:selected").click()
 						}
 					});
 
-				// experimentName = myval;
-
 
  				$(this).attr("data-title","Experiment Description");
  				
  				$(this).attr("data-content",experimentDescription);
 
 				$(this).popover('toggle');
-
-				// $dialog.dialog('open');
-
-				// $dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>"+experimentName+"</b></p><p>"+experimentDescription+"</p>");
 			});
 
 
@@ -4353,46 +3701,16 @@ $(this).find("option:selected").click()
 				$("mytext-content").hide();
 				findTopicLabels();
 
-				// var SplitText = "Boost Discriminative Words"
-				// var $dialog = $('<div></div>')
-				// .html(SplitText )
-				// .dialog({
-				// 	modal:true,
-				// 	resizable: true,
-				// 	draggable: true,
-				// 	position: ['center',20],
-				// 	height: 200,
-				// 	width: 420,
-				// 	title: 'Boost Discriminative Words',
-				// 	buttons: {
-				// 		Ok: function() {
-				// 			$( this ).dialog( "close" );
-				// 		}
-				// 	},
-				// 	open: function() {
-				// 		setTimeout(function() {
-				// 			$dialog.dialog("close");
-				// 		}, 2000);
-				// 	}
-				// });
-
-
-//				$dialog.dialog({
-//				});
-
-//				$dialog.dialog('open');
 				console.log(clickedNode)
-//				clickednode = nodes["name"]
+
 				test(clickedNode,0.1);
 
 				console.log("btn changed")
 				if (topicsFlag){
-					// $dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>Topics Words Changed!</b></p><p>Topic Words are NOT using Discriminative Weights</p>");			
 					topicsFlag = false
 					$("#boost_btn > ul > li > a > span").attr("class","glyphicon glyphicon-remove");
 				}
 				else{
-					// $dialog.html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span><b>Topics Words Changed!</b></p><p>Topic Words are sorted with Discriminative Weights</p>");
 					topicsFlag = true
 					$("#boost_btn > ul > li > a > span").attr("class","glyphicon glyphicon-ok");
 				}	
@@ -4404,45 +3722,6 @@ $(this).find("option:selected").click()
 			createChord(1);
 			createChord(2);
 
-	// shows the tab and its contents
-//			$('#graphdiv').click(function (e) {
-//				//e.preventDefault();
-//				$(this).tab('show');
-//			})
-
-	// shows the tab and its contents
-//			$('#chorddiv').click(function (e) {
-//				//e.preventDefault();
-//				$(this).tab('show');
-//			})
-
-	// shows the tab and its contents
-//			$('#chord2div').click(function (e) {
-//				//e.preventDefault();
-//				$(this).tab('show');
-//			})
-
-
-			// $("#subdivision_btn").on("click", function(){
-			// 	if(plot==0){
-			// 		console.log("Plot Force-Directed Graph clicked")
-			// 		$("#graph").hide();
-			// 		$("#thresholds").hide();
-
-			// 		$("#chord").show();
-			// 		$("#subdivision_btn").text("Force-Directed Graph");
-			// 		plot = 1;
-			// 	}
-			// 	else{
-			// 		console.log("Plot Subdivisions in Chords clicked")
-			// 		$("#chord").hide();
-			// 		$("#graph").show();
-			// 		$("#thresholds").show();
-
-			// 		$("#subdivision_btn").text("Chord Graph");
-			// 		plot = 0;
-			// 	}
-			// });
 		}
 
 
@@ -4467,7 +3746,6 @@ $(this).find("option:selected").click()
 				.links(links
 							.map(function(d) {
 								ew++;
-				//uncomment below to see how it works								
 								return jQuery.extend(d, {
 									source: d.source,
 									target: d.target
@@ -4481,8 +3759,11 @@ $(this).find("option:selected").click()
 var u =0;
 			linkLines.enter().append("svg:line")					//edw ftiaxnei tis akmes 
 				.attr("class", function(d) {
-					return "link " + d.target.color
+					return "link " + d.target.color  + " " + d.target.index
 				})				
+				.attr("id", function(d) {
+					return d.source.index+"-"+d.target.index
+				})
 				.attr("x1", function(d) {
 					return d.source.x;
 				})
@@ -4506,7 +3787,7 @@ var u =0;
 			nodeCircles.enter()									// edw ftiaxnei tous kombous sss
 				.append("svg:circle")
 				.attr("class", function(d) {
-					return "circle " + d.color
+					return "circle " + d.color + " " + d.index
 				})
 				.attr("id", function(d) {
 					return "circle-node-"+d.index
@@ -4521,13 +3802,17 @@ var u =0;
 					return d.y
 				})
 				.on("mouseover", fade(fade_out, true))						//edw prepei na fainontai ola ta alla project oxi ta 10 prwta
-				.on("mouseout", normalizeNodesAndRemoveLabels())
+				.on("mouseout", function(d, i) {
+					reset();
+				})
 				.on("click", function(d,i){
 					var myfade = fade(fade_out, true);
 					if(focused == d.name){
 						focused = '';
 						nodeCircles.on("mouseover", fade(fade_out, true))
-							.on("mouseout", normalizeNodesAndRemoveLabels());
+							.on("mouseout", function(d, i) {
+								reset();
+							});
 						reset();
 					}
 					else{
@@ -4545,7 +3830,13 @@ var u =0;
 			nodeLabels = vis.selectAll(".labels")
 				.data(nodes);
 			nodeLabels.enter()
-				.append("svg:text");
+				.append("svg:text")
+				.attr("class", function(d) {
+					return "labels " + d.color  + " " + d.index
+				})				
+				.attr("id", function(d) {
+					return "circle-label-"+d.index
+				});
 
 			nodeLabels.exit().remove();
 
@@ -4562,7 +3853,6 @@ var u =0;
 
 		/* test function is similar to fade function*/
 		function createJsonFile(){
-//			if (/^FET*/.test(experimentName)){}
 
 			nodeCircles.each(function(mynode) {
 				var areaIndex = subdConnections.indexOf(mynode.color)
@@ -4617,75 +3907,6 @@ var u =0;
 			for (var i = 0; i < subdConnections.length; i++) {
 				subdBiConnectionsNumCross[i][i] = 0;
 			}
-
-// 		  	$(document).trigger("chordready");
-
-// 29012015 - changed the projects that go to itself into zero (0) so the chord does not show the inner relations from a subdivision to itself. Only the relations to other subdivisions.
-		//creating the JSON file for the 2nd layout (Chord)
-// 			var string = "["
-
-// 			for (var i = 0; i < subdConnections.length-1; i++) {
-// 				string += "["
-// 				for (var j = 0; j < subdConnections.length-1; j++) {
-// 					if (i != j){						
-// 						string += subdBiConnectionsNum[i][j]+","
-// 					}
-// 					else{
-// 						string += "0,"
-// 					}
-// 				}
-// 				string += subdBiConnectionsNum[i][subdConnections.length-1]+"],"	// the last one inner []
-// 			}
-// 			string += "["			// the last one outer []
-// 			for (var j = 0; j < subdConnections.length-1; j++) {
-// 				string += subdBiConnectionsNum[subdConnections.length-1][j]+","
-// 			}
-// //			string += subdBiConnectionsNum[subdConnections.length-1][subdConnections.length-1]+"]]"	// the last one inner [] of the outer []
-// 			string += "0]]"	// the last one inner [] of the outer []
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////// USE BELOW LATER THAT IT WILL BE ON GRAPH 	///////////////
-		//     var jsonObject = {
-		//         "metros" : [],
-		//         "routes" : []
-		//     };
-
-
-		// // write subdivisionsChord to JSON Object
-		// for ( var index = 0; index < graph.getVerticies().length; index++) {
-		//     /* do not yet convert to JSON here */
-		//     jsonObject.metros[index] = graph.getVertex(index).getData();
-		// }
-
-		// // write routes to JSON Object
-		// for ( var index = 0; index < graph.getEdges().length; index++) {
-		//     /* do not yet convert to JSON here */
-		//     jsonObject.routes[index] = graph.getEdge(index);
-		// }
-		////////////////////////////////////////////////////////////////////////////////////////////
-			// some jQuery to write to file
-			// $.ajax({
-			// 	type : "POST",
-			// 	async: true,
-			// 	url : "./fileCreator.php",
-			// 	dataType : 'text',		// this is json if we put it like this JSON object 
-			// 	data : {
-			// /*        json : JSON.stringify(jsonObject) /* convert here only */
-			// 		func : "json",			// declare the function you want to use from fileCreator.php
-			// 		json : string
-			// 	},
-			// 	success: function(){
-			// 		  console.log("JSON file Created")
- 		//   			$(document).trigger("chordready");
-			// 	},
-			// 	error: function(e){
-			// 		alert('Error: ' + JSON.stringify(e));
-			// 	}
-
-			// });
-
-			//console.log("JSON:"+string)
-
 		}
 
 
@@ -4730,34 +3951,7 @@ var u =0;
 				string += "\n"+subdConnections[i]+","+rgb2hex(clrArray[i])+","+subdConnectionsNum[i]+","+relations[i]+","+relationsCross[i];
 				subdivisionsChord[i] = {name: subdConnections[i], color:rgb2hex(clrArray[i]), projects:subdConnectionsNum[i], relations:relations[i], relationsCross:relationsCross[i]};
 			}
-
-			// $.ajax({
-			// 	type : "POST",
-			// 	async: true,
-			// 	url : "./fileCreator.php",
-			// 	dataType : 'text',		// this is json if we put it like this JSON object 
-			// 	data : {
-			//         json : JSON.stringify(jsonObject), /* convert here only */
-			// 		func : "csv",
-			// 		csv : string
-			// 	},
-			// 	success: function(){
-			// 		console.log("CSV file Created")
-			// 	},
-			// 	error: function(e){
-			// 		alert('Error: ' + e);
-			// 	}
-
-			// });
 		}
-
-
-
-
-
-
-
-
 
 
 
@@ -4791,27 +3985,6 @@ function createChord(type){
 	var chord_path = d3.svg.chord()
 	.radius(chord_innerRadius);
 		 
-	//$("#chord").remove();
-// 	if ($("#chord").length){
-// 		chord_svg = d3.select("#chord")
-// 			//.style("width", w)
-// 			.style("height", h)
-// 			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-// 			.style("preserveAspectRatio", "xMidYMid meet")
-// 			.style("border-style","solid")
-// //			.style("cursor","pointer")
-// //			.style("border-color","snow")
-// 			.style("border-color","#f6f6f6")
-// 			.append("svg:g")
-// 			.attr("id", "chord_circle")
-// //			.attr("transform", "translate(" + chord_width / 2 + "," + ((chord_height / 2)+40) + ")"); 
-// 			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
-
-// 		chord_svg.append("circle")
-// 		.attr("r", chord_outerRadius);
-
-// 	}
-// 	else if (type == 1){
 	if (type == 1){
 		var chord_svg = d3.select("#chorddiv")
 			//.style("width", w)
@@ -4822,8 +3995,6 @@ function createChord(type){
 			.style("cursor","pointer")
 			.style("border-color","snow")
 			.append("svg:svg")
-//			.attr("id", "chord")
-		//	.attr("style", "visibility:hidden")	
 			.attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
 			.attr("height", chord_height+wordHeight)
 			.append("svg:g")
@@ -4840,8 +4011,6 @@ function createChord(type){
 			.style("cursor","pointer")
 			.style("border-color","snow")
 			.append("svg:svg")
-//			.attr("id", "chord2")
-		//	.attr("style", "visibility:hidden")	
 			.attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
 			.attr("height", chord_height+wordHeight)
 			.append("svg:g")
@@ -4851,7 +4020,6 @@ function createChord(type){
 
 
 
-//	$("#chord").hide();
 
 	chord_svg.append("circle")
 	.attr("r", chord_outerRadius);
@@ -4859,165 +4027,124 @@ function createChord(type){
 
 
 
-	// d3.csv("./list.csv", function(aasdasd) {
-	// $.each(subdivisionsChord, function(aasdasd) {
-		//d3.json("./matrix.json", function(matrix) {
-		 // $.each(subdBiConnectionsNum, function(i,matrix) {
-		//	console.log(subdBiConnectionsNum)
-			// Compute the chord layout.
-			// chord_layout.matrix(matrix);			
-			if (type == 1){
-				chord_layout.matrix(subdBiConnectionsNum);
-			}
-			else{				
-				chord_layout.matrix(subdBiConnectionsNumCross);
-			}
-			mytextsubdivisions = subdivisionsChord; 
-			// Add a group per neighborhood.
-			chord_group = chord_svg.selectAll(".group")
-				.data(chord_layout.groups)
-				.enter().append("svg:g")
-				.attr("class", function(d, i) { return "group "+subdivisionsChord[i].name; })
-				.on("mouseover", chord_mouseover)
-				.on("mouseout", chord_mouseout);
-				//.on("click",chord_click);
-			 
-			// Add a mouseover title.
-			 chord_group.append("title").text(function(d, i) {
-				// var str = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-				// var strCross = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-				// return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
-				if (type == 1){
-					return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relations + " <?php echo $node_name;?> relations directed to all areas";
-				}
-				else{
-					return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relationsCross + " <?php echo $node_name;?> relations directed only to other areas";
-				}
-			 });
-		 
-			// Add the group arc.
-			var chord_groupPath = chord_group.append("path")
-				.attr("id", function(d, i) { return "group" + i; })
-				.attr("d", chord_arc)
-				.style("fill", function(d, i) { return subdivisionsChord[i].color; });
-		 
-			// Add a text label.
-			var chord_groupText = chord_group.append("svg:text")
-				.each(function(d) { 
-					d.angle = ((d.startAngle + d.endAngle) / 2)+0.03; })
-				.attr("x", 6)
-				.attr("dy", 15)
-				.attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-				.attr("transform", function(d) {
-					return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-						+ "translate(" + chord_r0 + ")"		
-						+ (d.angle > Math.PI ? "rotate(180)" : "");
-				})
-				.text(function(d, i) { return subdivisionsChord[i].name; });
-		 
-			// Add the chords.
-			chord_chord = chord_svg.selectAll(".chord")
-				.data(chord_layout.chords)
-				.enter().append("path")
-				.attr("class", function(d, i) { return "chord "+subdivisionsChord[d.source.index].name; })
-				.style("fill", function(d) { return subdivisionsChord[d.source.index].color; })
-				.attr("d", chord_path);
-				
-			// Add an elaborate mouseover title for each chord.
-			 chord_chord
-			 	.append("title")
-			 	.text(function(d) {
-					percentageSum = d.source.value+d.target.value
-
-					if (type == 1){
-
-						return subdivisionsChord[d.source.index].name
-	//					 + " (#" +  d.source.value
-	//					 + ")"
-						 + " ↔ " + subdivisionsChord[d.target.index].name 				
-	//					 + " (#" +  d.target.value
-	//					 + ")"
-						 + ": " + percentageSum
-						 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-						 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-						 + ")" ; // &harr; the name of the arrow
-			 		}
-			 		else{
-
-						return subdivisionsChord[d.source.index].name
-	//					 + " (#" +  d.source.value
-	//					 + ")"
-						 + " ↔ " + subdivisionsChord[d.target.index].name 				
-	//					 + " (#" +  d.target.value
-	//					 + ")"
-						 + ": " + percentageSum
-						 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relationsCross)
-						 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relationsCross)
-						 + ")" ; // &harr; the name of the arrow
-
-			 		}
-/*					if(subdivisionsChord[d.source.index].name != subdivisionsChord[d.target.index].name){
-						return subdivisionsChord[d.source.index].name
-						 + " → " + subdivisionsChord[d.target.index].name
-						 + ": " + d.source.value
-						 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-						 + ")\n" + subdivisionsChord[d.target.index].name
-						 + " → " + subdivisionsChord[d.source.index].name
-						 + ": " + d.target.value
-						+ " (" + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-						 + ")" ;
-					}
-					else{						
-						return subdivisionsChord[d.source.index].name
-					 + " → " + subdivisionsChord[d.target.index].name
-					 + ": " + d.source.value
-					 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-					 + ")" ;
-					}
-*/
-			 });
+	if (type == 1){
+		chord_layout.matrix(subdBiConnectionsNum);
+	}
+	else{				
+		chord_layout.matrix(subdBiConnectionsNumCross);
+	}
+	mytextsubdivisions = subdivisionsChord; 
+	// Add a group per neighborhood.
+	chord_group = chord_svg.selectAll(".group")
+		.data(chord_layout.groups)
+		.enter().append("svg:g")
+		.attr("class", function(d, i) { return "group "+subdivisionsChord[i].name; })
+		.on("mouseover", chord_mouseover)
+		.on("mouseout", chord_mouseout);
+		//.on("click",chord_click);
 	 
-			function chord_mouseover(d, i) {
-				chord_chord.classed("fade", function(p) {
-					return p.source.index != i
-					&& p.target.index != i;
-				});
+	// Add a mouseover title.
+	 chord_group.append("title").text(function(d, i) {
+		// var str = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
+		// var strCross = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
+		// return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
+		if (type == 1){
+			return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relations + " <?php echo $node_name;?> relations directed to all areas";
+		}
+		else{
+			return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relationsCross + " <?php echo $node_name;?> relations directed only to other areas";
+		}
+	 });
+ 
+	// Add the group arc.
+	var chord_groupPath = chord_group.append("path")
+		.attr("id", function(d, i) { return "group" + i; })
+		.attr("d", chord_arc)
+		.style("fill", function(d, i) { return subdivisionsChord[i].color; });
+ 
+	// Add a text label.
+	var chord_groupText = chord_group.append("svg:text")
+		.each(function(d) { 
+			d.angle = ((d.startAngle + d.endAngle) / 2)+0.03; })
+		.attr("x", 6)
+		.attr("dy", 15)
+		.attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+		.attr("transform", function(d) {
+			return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+				+ "translate(" + chord_r0 + ")"		
+				+ (d.angle > Math.PI ? "rotate(180)" : "");
+		})
+		.text(function(d, i) { return subdivisionsChord[i].name; });
+ 
+	// Add the chords.
+	chord_chord = chord_svg.selectAll(".chord")
+		.data(chord_layout.chords)
+		.enter().append("path")
+		.attr("class", function(d, i) { return "chord "+subdivisionsChord[d.source.index].name; })
+		.style("fill", function(d) { return subdivisionsChord[d.source.index].color; })
+		.attr("d", chord_path);
+		
+	// Add an elaborate mouseover title for each chord.
+	 chord_chord
+	 	.append("title")
+	 	.text(function(d) {
+			percentageSum = d.source.value+d.target.value
+
+			if (type == 1){
+
+				return subdivisionsChord[d.source.index].name
+				 + " ↔ " + subdivisionsChord[d.target.index].name 				
+				 + ": " + percentageSum
+				 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
+				 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
+				 + ")" ; // &harr; the name of the arrow
+	 		}
+	 		else{
+
+				return subdivisionsChord[d.source.index].name
+				 + " ↔ " + subdivisionsChord[d.target.index].name 				
+				 + ": " + percentageSum
+				 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relationsCross)
+				 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relationsCross)
+				 + ")" ; // &harr; the name of the arrow
+
+	 		}
+/*					if(subdivisionsChord[d.source.index].name != subdivisionsChord[d.target.index].name){
+				return subdivisionsChord[d.source.index].name
+				 + " → " + subdivisionsChord[d.target.index].name
+				 + ": " + d.source.value
+				 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
+				 + ")\n" + subdivisionsChord[d.target.index].name
+				 + " → " + subdivisionsChord[d.source.index].name
+				 + ": " + d.target.value
+				+ " (" + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
+				 + ")" ;
 			}
-
-
-			function chord_mouseout(d, i) {
-				chord_chord.classed("fade", function(p) {
-					return 0;
-				});
-
-//				$("#mytext > div").remove();
-
-
-//				fadeChord(fade_out, false);
-				
+			else{						
+				return subdivisionsChord[d.source.index].name
+			 + " → " + subdivisionsChord[d.target.index].name
+			 + ": " + d.source.value
+			 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
+			 + ")" ;
 			}
+*/
+	 });
 
-			// function chord_click(d, i) {
-			// 	if (chord_clicked){
-			// 		chord_chord.classed("fade", function(p) {
-			// 			return p.source.index != i
-			// 			&& p.target.index != i;
-			// 		});
+	function chord_mouseover(d, i) {
+		chord_chord.classed("fade", function(p) {
+			return p.source.index != i
+			&& p.target.index != i;
+		});
+	}
 
-			// 		fade(fade_out, true);
-			// 		chord_clicked = true;
-			// 	}
-			// 	else{
-			// 		chord_chord.classed("fade", function(p) {
-			// 			return 0;
-			// 		});
-			// 		chord_clicked = false;
-			// 	}
-			// }
 
-		// });
-	//});
+	function chord_mouseout(d, i) {
+		chord_chord.classed("fade", function(p) {
+			return 0;
+		});
+	}
 }
+
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
@@ -5080,38 +4207,6 @@ function createChord(type){
 					return result;
 				}
 
-// 				if($(window).width()<350 || ($(window).width()>995 && $(window).width()<1375)){				
-// 					counterMax = 2;
-// 				}
-// 				else if($(window).width()<415 || ($(window).width()>1375 && $(window).width()<1656)){
-// 					counterMax = 3;
-// 				}
-// /*				else if($(window).width()<755 || $(window).width()>1657){
-// 					counterMax = 4;
-// 				}
-// */				else if($(window).width()<490 || ($(window).width()>1656 && $(window).width()<2000)){
-// 					counterMax = 4;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else if($(window).width()<565 || ($(window).width()>=2000 && $(window).width()>=2300)){
-// 					counterMax = 5;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else if($(window).width()<640 || ($(window).width()>2300 && $(window).width()<2650)){
-// 					counterMax = 6;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else if($(window).width()<715 || ($(window).width()>=2650 && $(window).width()<=3000)){
-// 					counterMax = 7;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else if($(window).width()<755 || $(window).width()>3000){
-// 					counterMax = 8;
-// 					$('#log > li').hide().slice(counter, counter+counterMax).show();
-// 				}
-// 				else {	//if($(window).width()<995
-// 					counterMax = 1;
-// 				}
 
 
 				function log( message ) {
@@ -5143,7 +4238,7 @@ function createChord(type){
 //							$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
 							grantsTopicSet += "<li class=\"" + availableTags[i].area + "result\"><a class=\"" + availableTags[i].area + "result \" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
 
-							searchResultNodes.push(availableTags[i].name);	//node results in topic word search
+							searchResultNodes.push(availableTags[i].id);	//node results in topic word search
 
 							var zoomFactor = 4;
 
@@ -5168,45 +4263,14 @@ function createChord(type){
 
 
 ///initialize
-						var types = [];
-						 $(".circle").each(function(){
-	//						types.push($(this).attr("class"));
-							types.push(this.classList[1]);
+			 			var types = new Array();
+						$(".circle").each(function(){
+				 			types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
+						
 						});
-	
 						showtype(fade_out, types);
 ///find what to show
-
-						// var collection = null;
-
-						// collection = nodeCircles.filter(function(){
-						// 	console.log("this.index")
-						// 	console.log(this)
-									
-						// 	if(include(searchResultNodes,this.index)){	
-						// 		console.log("this.name"+this.name)		
-						// 		return 1;
-						// 	}
-						// 	else{
-						// 		return 0;			
-						// 	}
-						// 	// var color = $(this).css("color");
-						// 	// return rgb2hex(color) === "#1f77b4";
-						// });
-
-						var types = [];
-	// 					collection.each(function(){
-	// //						types.push($(this).attr("class"));2ca02c
-	// 						types.push(this.classList[1]);
-	// 					});
-	console.log("ss")
-	console.log(searchResultNodes)
-						showtype3(fade_out, searchResultNodes);
-	console.log("ss")
-	console.log(searchResultNodes)
-//						showtype(fade_out, types);
-	// 					mytext.selectAll(".nodetext").remove();
-
+						showtype(fade_out, searchResultNodes);
 
 				}
 
@@ -5379,18 +4443,11 @@ function createChord(type){
 					</a>
 				</div>
 				<div class="collapse navbar-collapse " id="headmenu">
-	<!-- 				<ul class="nav navbar-nav divider-vertical">
-						<li class="active"><a href="#"><?php echo $title ;?> <span class="sr-only">(current)</span></a></li>
-					</ul>
-	 -->
-
 	 				 <ul class="nav navbar-nav divider-vertical">
 						<li>
-							<!-- <h5>Experiment:&nbsp;</h5> -->
 							<select id="experiments" data-toggle="tooltip" data-placement="bottom" title="Select an experiment of <?php echo $title ;?>, <?php echo $subtitle ;?> Research Analytics"></select>
 						</li>
 						<li>
-				      		<!-- <button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Experiment Description" data-toggle="popover" data-placement="bottom" data-content="asdfasdf" title="another title"> -->
 				      		<button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Experiment Description" data-toggle="tooltip" data-placement="bottom" data-content="asdfasdf">
 								<span  class="navbar-brand glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 								<span class="sr-only">Experiment Description</span>
@@ -5422,21 +4479,7 @@ function createChord(type){
 
 
 
-	 <!-- 				<form class="navbar-form navbar-left" role="search">
-						<div class="form-group">
-							<input type="text" class="form-control" placeholder="Search">
-						</div>
-						<button type="submit" class="btn btn-default">Submit</button>
-					</form>
-	 -->			<ul class="nav navbar-nav navbar-right divider-vertical">
-	<!-- 					<li>
-							Zoom Level: Similarity > &nbsp;
-								<input type="text" id="thr1" class="ui-corner-all" maxlength="9" placeholder="thr1" style="width:40px">
-							 % | Connectivity > &nbsp;
-							 	<input type="text" id="thr2" class="ui-corner-all" maxlength="9" placeholder="thr2" style="width:40px">
-							  %
-						</li>
-	 -->
+					<ul class="nav navbar-nav navbar-right divider-vertical">
 						<li>
 							<!-- Zoom Level:  -->
 
@@ -5447,9 +4490,6 @@ function createChord(type){
 								<input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr2"  style="width:75px">
 							</div>
 						</li>
-	<!-- 					<li>Labels: Similarity
-							<input type="text" id="thr3" class="ui-corner-all" maxlength="9" placeholder="thr3" style="width:40px"> % | Connectivity > &nbsp;<input type="text" id="thr4" class="ui-corner-all" maxlength="9" placeholder="thr4" style="width:40px"> %</li>
-	 -->
 						<li style="padding-left:10px">
 							<!-- Labels: -->
 							<div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds for all shown labels on the graph. S for Similarity threshold. C for Connectivity threshold"> 
@@ -5473,36 +4513,17 @@ function createChord(type){
 			<div class="col-md-5">
 				<!-- <div id="mytext-title" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml"></div> -->
 			</div>
-<!-- 			<div id="thresholds" class="col-md-5" style="float:right;display:block;">
-				<table>
-				<tr><th>Parameters for Labeling:</th></tr>
-				<tr><td>Labels shown on current Zoom state: </td><td>Similarity > &nbsp;<input type="text" id="thr1" class="ui-corner-all" maxlength="9" placeholder="thr1" style="width:40px"> % | </td><td>Connectivity > &nbsp;<input type="text" id="thr2" class="ui-corner-all" maxlength="9" placeholder="thr2" style="width:40px"> %<tr><td>
-				<tr><td>Labels shown on Graph: </td><td>Similarity > &nbsp;<input type="text" id="thr3" class="ui-corner-all" maxlength="9" placeholder="thr3" style="width:40px"> % | </td><td>Connectivity > &nbsp;<input type="text" id="thr4" class="ui-corner-all" maxlength="9" placeholder="thr4" style="width:40px"> %<tr><td>
-				</table>
-			</div>
- -->
-				<div class="col-md-3" style="margin-top:-30px"> <!--- margin is set mostly for the header placing-->
-					<!-- <div class="page-header"> -->
-					   <h4 style="position:fixed;"><?php echo $title ;?> 
-					   		<small style="position:fixed;"><?php echo $subtitle ;?> <span class="sr-only">(current page name)</span></small>
-					   </h4>
-					<!-- </div> -->
+			<div class="col-md-3" style="margin-top:-30px"> <!--- margin is set mostly for the header placing-->
+			<!-- <div class="page-header"> -->
+			   <h4 style="position:fixed;"><?php echo $title ;?> 
+			   		<small style="position:fixed;"><?php echo $subtitle ;?> <span class="sr-only">(current page name)</span></small>
+			   </h4>
+			<!-- </div> -->
 
-<!-- 				<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
-					<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
-					</optgroup>
-					<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
-					</optgroup>
-				</select>
- --><!--						<button id="experiment_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:80%;text-align: center;">Grants</button>
--->			</div>
+			</div>
 			<div class="col-md-3">
 			</div>
 			<div class="col-md-4" style="padding:0px;float:right;width:auto;margin:-30px 0 -10px" id="categories">
-<!-- 				<label for="tags"  style="width:100%"><h5>Topic Word Search:
-				<input id="tags" class="ui-corner-all" placeholder="input a topic word..." >
-				</h5></label>
- -->		
  				<ul class="pagination pagination-sm"  style="padding:0px;cursor:pointer">
  					<li class="" id="category1"><a class="" style="color:#1f77b4" id="">FET Open <span class="badge badge-info" style="background-color:#1f77b4">o</span></a></li>
  					<li class="" id="category2"><a class="" id="" style="color:#ff7f0e">FET Proactive <span class="badge badge-info" style="background-color:#ff7f0e">o</span></a></li>
@@ -5510,22 +4531,7 @@ function createChord(type){
 				</ul>
 			</div>
 		</div>
-		<!-- <hr/> -->
-<!-- 		<div class=" container-fluid">
-			<div class="col-md-3">
-					<h5><?php echo $node_name;?>s:&nbsp;</h5>
-					<select id="grants" multiple="multiple" style="width:inherit">
-						<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
-						</optgroup>
-						<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
-						</optgroup>
-					</select>
-				</div>
-			<div class="col-md-4">
-				<h5>Experiment:&nbsp;</h5><select id="experiments" style="width:inherit"></select>
-			</div>
-		</div>
- -->		<div class=" container-fluid">
+		<div class=" container-fluid">
 			<div class="col-md-2" id="myinfo">
 				<div id="mytext-title" style="word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml"></div>
 				<div>
@@ -5551,13 +4557,6 @@ function createChord(type){
 					</div>
 				</div>
 
-				<!-- btn-link -->
-<!-- 				<button id='boost_btn' class='navbar-toggle  btn btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'>
-					<a class="navbar-brand">  Boost Words
-						<span  class='glyphicon glyphicon-info-check' aria-hidden='true'></span><span class='sr-only'>Boost Descriminative Words</span>
-					</a>
-				</button>
- -->
 
 				<div id='boost_btn' style="cursor:pointer">
 					<ul class="pagination active btn-primary" data-toggle="tooltip" data-placement="bottom" title="Click to boost the topics by ordering them according to the words descriminativity">
@@ -5571,19 +4570,9 @@ function createChord(type){
 
 
 				<div id="mytext-content" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml">
-<!-- 		      		<button id="boost_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Boost Descriminative Words" data-toggle="popover" data-placement="bottom" data-content="">
-						<span  class="navbar-brand glyphicon glyphicon-info-check" aria-hidden="true">asdasd</span>
-						<span class="sr-only">Experiment Description</span>
-					</button>					
- -->				</div>
-<!-- 					<div id="mytext" style="max-width:20%;width:20%;vertical-align:top;position:absolute;word-break:break-all;  z-index:2147483647;" xmlns="http://www.w3.org/1999/xhtml"></div>
--->			</div>
-			<div class="col-md-7" id="mygraph" style="padding-top:5px;">
-
-<!-- 				<div class="col-md-4">
-					<button id="experiment_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:80%;text-align: center;">Description</button>
 				</div>
- -->
+			</div>
+			<div class="col-md-7" id="mygraph" style="padding-top:5px;">
 	 			<div id="mygraph-container">
 	 				<div style="padding-right:2%">
 						<ul class="nav navbar-nav nav-tabs navbar-right" id="myTab">
@@ -5597,21 +4586,6 @@ function createChord(type){
 							</li>
 						</ul>
 					</div>
-	<!--					<div class="tabbable">
-						<ul id="myTab" class="navbar-nav nav-tabs">
-							<li id="subdivision_btn" class="active"><a data-toggle="tab" href="#graphdiv">Force-Directed Graph</li>
-							<li id="subdivision_btn" class="dropdown">Chord Graph</li>
-						</ul>
-	-->
-						<!-- <div class="col-md-4"> -->
-
-							<!-- <button id="subdivision_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;">Chord Graph</button> 
-						<button id="subdivision_btn" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;">Chord Graph</button>
-	-->
-	<!--  					</div>
-					</div>
-	-->
-						<!-- </div> -->
 					<div class="tab-content" id="myTabContent">
 						<div id="graphdiv" class="tab-pane active in">
 							<svg id="graph" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
@@ -5621,13 +4595,8 @@ function createChord(type){
 							</svg>
 						</div>
 						<div id="chorddiv" class="tab-pane">
-							<!-- <svg id="chord" style="width:100%;" xmlns="http://www.w3.org/2000/svg"> -->
-							<!-- used to add the mytext here when in fullscreen -->
-							<!-- </svg> -->
-							<!-- <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p> -->
 						</div>
 						<div id="chord2div" class="tab-pane">
-							<!-- <p>... To be placed the disciplinary chord ...</p> -->
 						</div>
 					</div>
 				</div>

@@ -72,8 +72,8 @@
 
 		.divider-vertical {
 			height: inherit;
-			padding: 0 10 0 10;
-			margin: 0 9px;
+			padding: 0px 10px 0px 10px;
+			margin: 0px 9px;
 			border-left: 1px solid #020202;
 			border-right: 1px solid #000000;
 			max-height:35px !important
@@ -2640,49 +2640,49 @@
 
 /**** DB CONNECTION FUNCTIONS ****/
 		function ajaxCall(experiment,expsimilarity){
-			 $.ajax({
-			 	type: "GET",
-			 	async: true,
-			 	url: "./dbfront.php",
-			 	data:"s="+expsimilarity+"&ex="+experiment,
-			 	success: function(resp){
-			 		spinner.stop();
-			 		myresponse = JSON.parse(resp);
-			 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
-			 		topics1 = myresponse.topicsNoSort;
-			 		topics2 = myresponse.topics;
-			 		console.log(topics2)
-			 		grants = myresponse.grants;
-			 		experiments = myresponse.expers;
-			 		renderpage(myresponse.resp);
-			 	},
-			 	error: function(e){
-					alert('Error: ' + JSON.stringify(e));
-			 	}
-			 });
+//			 $.ajax({
+//			 	type: "GET",
+//			 	async: true,
+//			 	url: "./dbfront.php",
+//			 	data:"s="+expsimilarity+"&ex="+experiment,
+//			 	success: function(resp){
+//			 		spinner.stop();
+//			 		myresponse = JSON.parse(resp);
+//			 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+//			 		topics1 = myresponse.topicsNoSort;
+//			 		topics2 = myresponse.topics;
+//			 		console.log(topics2)
+//			 		grants = myresponse.grants;
+//			 		experiments = myresponse.expers;
+//			 		renderpage(myresponse.resp);
+//			 	},
+//			 	error: function(e){
+//					alert('Error: ' + JSON.stringify(e));
+//			 	}
+//			 });
 
 // THE BELOW FOR LOCALHOST TESTING
 
-			// $.ajax({
-			// 	type: "GET",
-			// 	async: true,
-			// 	url: "../../../jsonFET.php",
-			// 	data:"s="+expsimilarity+"&ex="+experiment,
-			// 	success: function(resp){
-			// 		spinner.stop();
-			// 		myresponse = JSON.parse(resp);
-			// 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
-			// 		topics1 = myresponse.topicsNoSort;
-			// 		topics2 = myresponse.topics;
-			// 		grants = myresponse.grants;
-			// 		experiments = myresponse.expers;
-			// 		renderpage(myresponse.resp);
+			$.ajax({
+				type: "GET",
+				async: true,
+				url: "../../../jsonACMCategories.php",
+				data:"s="+expsimilarity+"&ex="+experiment,
+				success: function(resp){
+					spinner.stop();
+					myresponse = JSON.parse(resp);
+					//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+					topics1 = myresponse.topicsNoSort;
+					topics2 = myresponse.topics;
+					grants = myresponse.grants;
+					experiments = myresponse.expers;
+					renderpage(myresponse.resp);
 
-			// 	},
-			// 	error: function(e){
-			// 		alert('Error: ' + JSON.stringify(e));
-			// 	}
-			// });
+				},
+				error: function(e){
+					alert('Error: ' + JSON.stringify(e));
+				}
+			});
 
 		}
 

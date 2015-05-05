@@ -9,6 +9,7 @@
 	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
 	<!-- Optional theme -->
 	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
+
 	<link rel="stylesheet" href="../../../css/bootstrap.min.css">
 	<link rel="stylesheet" href="../../../css/bootstrap-theme.min.css">
 
@@ -16,17 +17,20 @@
 <!-- 	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.css" />
 	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.filter.css" />
  -->
+
 	<link rel="stylesheet" type="text/css" href="../../../css/style2.css" />
+
 <!-- 	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.css" />
 	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.css" />
- -->	<link rel="stylesheet" type="text/css" href="../../../slider/css/slider.css" />
+ -->
+ 	<link rel="stylesheet" type="text/css" href="../../../slider/css/slider.css" />
 	<link rel="stylesheet" type="text/css" href="../../../slider/less/slider.less" />
 	<!-- <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.3/themes/flick/jquery-ui.css" /> -->
 
-	<!-- Include the multiselect plugin's CSS and JS: -->
-	<link rel="stylesheet" href="../../../css/bootstrap-multiselect.css" type="text/css"/>
+<!-- Include the multiselect plugin's CSS and JS: -->
+	<link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" type="text/css"/>
 
 	<style>
 
@@ -102,7 +106,8 @@
 	<!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
 
 	<!-- Latest compiled and minified JavaScript -->
-	 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
+	<!-- // <script src="http://code.jquery.com/jquery.js"></script>     -->
 	<!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script> -->
 
 	<!-- // <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
@@ -113,7 +118,7 @@
 	<!-- Latest compiled and minified JavaScript -->
 	<!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.js"></script> -->
 	<!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.min.js"></script> -->
-	 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
+	 <!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script> -->
 
 	<script src="../../../js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="../../../js/jquery-ui.min.js"></script>
@@ -132,7 +137,7 @@
 	 
 	<!-- Include the plugin's CSS and JS: -->
 	<script type="text/javascript" src="../../../bootstrap/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="../../../js/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="../../../bootstrap/js/bootstrap-multiselect.js"></script>
 
 	<script type="text/javascript" src="../../../slider/js/bootstrap-slider.js"></script>
 
@@ -439,24 +444,6 @@
 
 		ajaxCall(experimentName,expsimilarity);
  		$("#mygraph-container").attr("style","position:fixed;width:"+9*w/8);
-
-		// bootstrap multiselect
-		$('#experiments').multiselect();
-		$("#experiments").multiselect('refresh');
-		$('#experiments').multiselect('enable');
-
-		$('#filters').multiselect();
-		$("#filters").multiselect('refresh');
-		$('#filters').multiselect('enable');
-
-		$('#grants').multiselect({
-			includeSelectAllOption: true,
-			enableFiltering: true,
-			enableCaseInsensitiveFiltering: true,
-			enableClickableOptGroups: true,
-//			disableIfEmpty: true,
-			nonSelectedText: "<?php echo $node_name;?>s"
-        });
 
 	/* window resizing */
 
@@ -3229,6 +3216,24 @@
 
 			$(function(){
 
+		// bootstrap multiselect
+		$('#experiments').multiselect();
+		// $("#experiments").multiselect('refresh');
+		// $('#experiments').multiselect('enable');
+
+		$('#filters').multiselect();
+		// $("#filters").multiselect('refresh');
+		// $('#filters').multiselect('enable');
+
+		$('#grants').multiselect({
+			includeSelectAllOption: true,
+			enableFiltering: true,
+			enableCaseInsensitiveFiltering: true,
+			enableClickableOptGroups: true,
+//			disableIfEmpty: true,
+			nonSelectedText: "<?php echo $node_name;?>s"
+		});
+
 
 				//refreshes the inner options
 				$("#grants").multiselect('refresh');
@@ -3579,9 +3584,7 @@ else if (/^Full*/.test(experimentName)){
 	// 					nodesToFade.empty();
 	// 				}
 	// 			});
-	
-				$("#grants").multiselect('refresh');
-				$('#grants').multiselect('enable');
+
 
 				// $("#grantsGroup2").bind("multiselectoptgrouptoggle", function(event, ui){
 				// 	for (var i=0;i<ui.inputs.length;i++)

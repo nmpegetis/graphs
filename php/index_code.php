@@ -9,28 +9,22 @@
 	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
 	<!-- Optional theme -->
 	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
-
 	<link rel="stylesheet" href="../../../css/bootstrap.min.css">
 	<link rel="stylesheet" href="../../../css/bootstrap-theme.min.css">
 
 	
-<!-- 	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.css" />
+	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.css" />
 	<link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.filter.css" />
- -->
 
 	<link rel="stylesheet" type="text/css" href="../../../css/style2.css" />
-
-<!-- 	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.css" />
 	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.css" />
- -->
- 	<link rel="stylesheet" type="text/css" href="../../../slider/css/slider.css" />
+	<link rel="stylesheet" type="text/css" href="../../../slider/css/slider.css" />
 	<link rel="stylesheet" type="text/css" href="../../../slider/less/slider.less" />
 	<!-- <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.3/themes/flick/jquery-ui.css" /> -->
 
-<!-- Include the multiselect plugin's CSS and JS: -->
-	<link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" type="text/css"/>
 
 	<style>
 
@@ -106,8 +100,7 @@
 	<!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
 
 	<!-- Latest compiled and minified JavaScript -->
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
-	<!-- // <script src="http://code.jquery.com/jquery.js"></script>     -->
+	 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
 	<!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script> -->
 
 	<!-- // <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
@@ -118,7 +111,7 @@
 	<!-- Latest compiled and minified JavaScript -->
 	<!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.js"></script> -->
 	<!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.min.js"></script> -->
-	 <!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script> -->
+	 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
 
 	<script src="../../../js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="../../../js/jquery-ui.min.js"></script>
@@ -131,16 +124,9 @@
 	<!-- // <script type="text/javascript" src="http://fgnass.github.io/spin.js/spin.min.js"></script> -->
 	<script type="text/javascript" src="../../../js/spin.min.js"></script>
 
-<!-- ta 2 apo katw den tha ta xreiazomai afou allaksw to multiselect widget -->
-	<!-- // <script type="text/javascript" src="../../../select/jquery.multiselect.min.js"></script> -->
-	<!-- // <script type="text/javascript" src="../../../select/jquery.multiselect.filter.js"></script> -->
-	 
-	<!-- Include the plugin's CSS and JS: -->
-	<script type="text/javascript" src="../../../bootstrap/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="../../../bootstrap/js/bootstrap-multiselect.js"></script>
-
+	<script type="text/javascript" src="../../../select/jquery.multiselect.min.js"></script>
+	<script type="text/javascript" src="../../../select/jquery.multiselect.filter.js"></script>
 	<script type="text/javascript" src="../../../slider/js/bootstrap-slider.js"></script>
-
 
 	<script>
 		// use below to change layout in mobile devices
@@ -389,11 +375,11 @@
 
 
 
-		// $(function(){
-		// 	$("#grants").multiselect({
-		// 	   noneSelectedText: "<?php echo $node_name;?>s"
-		// 	});
-		// });
+		$(function(){
+			$("#grants").multiselect({
+			   noneSelectedText: "<?php echo $node_name;?>s"
+			});
+		});
 
 
 // pass configuration with parameters
@@ -1091,7 +1077,9 @@
 /**** FADING AND COLORING FUNCTIONS ****/
 	/* refills the opacity of each color after fading */
 		function showtype(opacity, types){
+			console.log("showtype")
 			nodeCircles.style("fill-opacity", function(o) {
+				console.log(o)
 				if(types.indexOf(o.index) === -1)
 					return opacity;
 				else
@@ -1131,55 +1119,11 @@
 		}
 
 
-
-		function showtype2(opacity, types){
-
-			selectnodeCircles.style("fill-opacity", function(o) {
-				if(types.indexOf(o.color) === -1)
-					return opacity;
-				else
-					return normal;
-			});
-
-			selectnodeCircles.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.color) === -1)
-					return opacity;
-				else
-					return normal;
-			});
-
-			selectnodeLabels.style("fill-opacity", function(o) {
-				if(types.indexOf(o.color) === -1){
-						return opacity*3;
-				}
-				else{
-					return strong;
-				}
-			});
-
-			selectnodeLabels.style("stroke-opacity", function(o) {
-				if(types.indexOf(o.color) === -1){
-					return opacity*3;
-				}
-				else{
-					return strong;
-				}
-			});
-
-		/* links stay with opacity or not in hover according to below condition */
-			linkLines.style("stroke-opacity", function(o) {
-				return types.indexOf(o.source.color) != -1 || types.indexOf(o.target.color) != -1 ? normal/2 : opacity;
-			});
-		}
-
-
-
 	/* fade */
 		function fade(opacity, showText) {
 			return function(d, i) {
 				// all grants must be unchecked
-				// $("#grants").multiselect("uncheckAll");
-				$("#grants").multiselect('deselectAll', false)
+				$("#grants").multiselect("uncheckAll");
 				$("#boost_btn").show();
 
 				// $( "#similarNodes" ).empty();			//clear anything included in child nodes
@@ -1413,335 +1357,11 @@
 		}
 
 
-
-	/* test function is similar to fade function*/
-		function testGrantSelection(mynode, opacity){
-
-			// all grants must be unchecked
-			// $("#grants").multiselect("uncheckAll");
-			$("#grants").multiselect('deselectAll', false)
-			$("#boost_btn").show();
-
-			smfound=0;								// similar nodes found initialization
-
-			mytext.selectAll(".nodetext").remove();
-
-			labels = [];
-			var selectedLabelData = null;
-
-
-			/* text opacity for all... goes first. later some will have normal opacity*/ 
-			vis.selectAll(".labels")
-				.style("fill-opacity", opacity*3)
-				.style("stroke-opacity",opacity*3);
-
-			selectnodeCircles.style("fill-opacity", function(o) {
-				var isNodeConnectedBool = isNodeConnected(mynode, o);
-				var thisOpacity = isNodeConnectedBool ? normal : opacity;
-				if (!isNodeConnectedBool) {
-					this.setAttribute('style', "stroke-opacity:" + opacity + ";fill-opacity:" + opacity + ";");
-				}
-				else{
-					if(o == mynode){
-						return strong;							
-					}
-				}
-
-				return thisOpacity;
-			});
-
-
-			selectnodeLabels.style("fill-opacity", function(o) {
-				var isNodeConnectedBool = isNodeConnected(mynode, o);
-				var thisOpacity = isNodeConnectedBool ? strong : opacity;
-				/*if !neighbor && !this node*/
-				if (!isNodeConnectedBool) {
-					this.setAttribute('style', "stroke-opacity:" + opacity*3 + ";fill-opacity:" + opacity*3 + ";");
-				}
-				else{
-					/*if this node*/
-					if(o == mynode){
-						return strong;
-					}
-				}
-				/*if neighbor node*/
-				return thisOpacity;
-			});
-
-
-			selectnodeLabels.style("stroke-opacity", function(o) {
-				var isNodeConnectedBool = isNodeConnected(mynode, o);
-				var thisOpacity = isNodeConnectedBool ? strong : opacity;
-				/*if !neighbor && !this node*/
-				if (!isNodeConnectedBool) {
-					this.setAttribute('style', "stroke-opacity:" + opacity*3 + ";fill-opacity:" + opacity*3 + ";");
-				}
-				else {
-					if (o == mynode){
-						selectedLabelData = o;
-					}
-					else{
-						labels.push(o);
-					}
-				}
-				/*if neighbor || this node*/
-				return thisOpacity;
-			});
-
-
-			linkLines.style("stroke-opacity", function(o) {
-				return o.source === mynode || o.target === mynode ? normal : opacity;
-			});
-
-			labels.sort(function(a, b) {
-				return b.value - a.value
-			})
-
-			selectedLabelIndex = 0;
-
-			var temp = mytext.selectAll("div.nodetext")
-				.data([selectedLabelData].concat(labels))
-				.enter()
-				.append("div")
-				.attr("class", function(o) {
-					if( mynode.index == o.index )
-						return "nodetext " + o.color + " active";
-					return "nodetext " + o.color;
-				})
-				.html(function(o) {
-//NMP +
-					var topicsGroupPerNode,
-						len;
-
-				/* maybe use: tfidf algorithm to find discriminative topics and words */
-
-					// var str = '<?php echo $node_name;?>: ' + o.name + '</br> # Publications:' + o.value + "</br> Category: " + o.area;
-					if(mynode == o){
-						$("#mytext-title").empty();
-						$("#mytext-title").show();
-						//$("#mytext-content").empty();
-						$("#mytext-content").show();
-						mytextTitle.append("div").append("ul")
-							.attr("class", "pagination active")
-							.attr("data-toggle","tooltip")
-							.attr("data-placement","right")
-							.attr("title","...more about project and link...")
-							.append("li").append("a").attr("class", "nodetext " + o.color + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
-						var str = "";
-
-						topicsGroupPerNode = grants[o.id];
-						if(topics1 != null){
-							str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS: ";
-							// str += "<button id='boost_btn' class='btn btn-link btn-xs' role='button' data-container='body' data-trigger='focus' data-title='Boost Descriminative Words' data-toggle='popover' data-placement='right' data-content='...content...'><span  class='navbar-brand glyphicon glyphicon-info-check' aria-hidden='true'>boost</span><span class='sr-only'>Experiment Description</span></button> <br/>";
-							str += "<br/>";
-
-							len = topicsGroupPerNode.length;
-							for(var i=0;i<len;i++){
-								var mywords = topics1[topicsGroupPerNode[i].topic];
-								var wlen = mywords.length;
-								
-
-								for(var j=0;j<wlen;j++){								
-									var opacity; 
-									if ((opacity = mywords[j].counts/mywords[0].counts) < 0.8) {
-										opacity = 0.8;
-									}
-
-									str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
-									if(j<wlen-1)
-										str += ",&nbsp";
-								}
-								str += "<br/><br/>";
-							}
-//						str += "<br/></br> SIMILAR TO:</span>";
-						}
-					}
-					else{
-						$("#header1").hide();
-						$("#log").hide();
-						$("#tags").val("");	
-
-						$("#header3").hide();
-						$("#areaNodes").hide();
-
-						$("#header2").show();
-						$("#similarNodes").show();
-
-						var similarNodes = "";
-	//					$( "#log" ).append( "<li class=\"" + availableTags[i].area + "result\"style=\"display: inline-block;\"><a class=\"" + availableTags[i].area + "result\" id=\"" + availableTags[i].key + "\" rel=\"#C6AA01\" style=\"position: relative; z-index: 200;  font-size: 14px; display: block;	float: left; padding: 6px 5px 4px 5px;text-decoration: none;text-transform: uppercase;\" href=\"#\">" + availableTags[i].name + "</a></li>")
-						similarNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"simNode" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">"+ o.value +"</span></a></li>";
-						smfound++;
-
-						$('#simNode'+o.index).hover(function(){
-							console.log("hover");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-							$(this).css("opacity","0.5");
-						},function(){
-							console.log("hover2");
-							$(this).css("opacity","initial");
-							$(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-						});
-
-						$( "#similarNodes > div > ul" ).append(similarNodes);
-
-					}
-					
-					/* move circle elements above all others within the same grouping */ 
-		//			vis.selectAll(".circle").moveToFront();
-					vis.selectAll(".labels").moveToFront();
-			
-					return str;
-				});
-
-			counter=0;						//(re)-initialize counter to zero
-			counterMax = 10;
-
-
-				$("#similarNodes > div > ul > li > a").on("click",function(){
-					//if (parseInt(vis.select("#circle-node-"+this.id).attr("cx")) < w/2 && parseInt(vis.select("#circle-node-"+this.id).attr("cy")) < h/2)
-					//if (parseInt(vis.select("#circle-node-"+this.id).attr("cx")) < w/2)
-					//	zoomer.translate([w/2-parseInt(vis.select("#circle-node-"+this.id).attr("cx")),0]);
-					//else
-					//	zoomer.translate([(w/2)+parseInt(vis.select("#circle-node-"+this.id).attr("cx")),0]);
-					//zoomer.event(vis);
-										console.log("this=")
-					console.log(this)
-
-					clickedNode = this;
-					console.log("this="+this)
-					test(nodes[this.id],0.1);
-				});
-
-
-			$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-			counter+=counterMax;
-
-			$("#upButton").hide();
-			if($('#similarNodes > div > ul > li:last').css('display') == 'inline'){
-				console.log("last li visible")
-				$("#downButton").hide();
-			}
-			else{
-				console.log("last li not visible")
-				$("#downButton").show();
-			}
-
-			$('#downButton').on("click",function(){
-				if ((counter+counterMax)<smfound){
-					$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-					counter+=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else {
-					$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-			});
-
-		//for mobile
-			$('#similarNodes').on("swipeup",function(){
-				if ((counter+counterMax)<smfound){
-					$('#similarNodes > div > ul > li').hide().slice(counter, counter+counterMax).show();
-					counter+=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else {
-					$('#similarNodes > div > ul > li').hide().slice(counter, smfound).show();
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li visible")
-					$("#downButton").hide();
-				}
-			});
-
-
-			$('#upButton').on("click",function(){
-				if (counter-counterMax>0){
-					$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-					counter-=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else{
-					$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-					counter = 10;
-
-					console.log("1 li visible")
-					$("#upButton").hide();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-			});
-
-		//for mobile
-			$('#similarNodes').on("swipedown",function(){
-				if (counter-counterMax>0){
-					$('#similarNodes > div > ul > li').hide().slice(counter-counterMax, counter).show();
-					counter-=counterMax;
-
-					console.log("1 li not visible")
-					$("#upButton").show();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-
-				}
-				else{
-					$('#similarNodes > div > ul > li').hide().slice(0, counter).show();
-					counter = 10;
-
-					console.log("1 li visible")
-					$("#upButton").hide();
-
-					console.log("last li not visible")
-					$("#downButton").show();
-				}
-
-			});
-
-
-
-			fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
-			vis.selectAll(".labels")
-				.style("font-size",fontsize+"px");
-
-			clickedNode = mynode;
-		}
-
-
-
 	/* test function is similar to fade function*/
 		function test(mynode, opacity){
 
 			// all grants must be unchecked
-			// $("#grants").multiselect("uncheckAll");
-			$("#grants").multiselect('deselectAll', false)
-
+			$("#grants").multiselect("uncheckAll");
 			$("#boost_btn").show();
 
 			// $( "#similarNodes" ).empty();			//clear anything included in child nodes
@@ -2628,7 +2248,6 @@
 			 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
 			 		topics1 = myresponse.topicsNoSort;
 			 		topics2 = myresponse.topics;
-			 		console.log(topics2)
 			 		grants = myresponse.grants;
 			 		experiments = myresponse.expers;
 			 		renderpage(myresponse.resp);
@@ -3216,37 +2835,17 @@
 
 			$(function(){
 
-		// bootstrap multiselect
-		$('#experiments').multiselect();
-		// $("#experiments").multiselect('refresh');
-		// $('#experiments').multiselect('enable');
-
-		$('#filters').multiselect();
-		// $("#filters").multiselect('refresh');
-		// $('#filters').multiselect('enable');
-
-		$('#grants').multiselect({
-			includeSelectAllOption: true,
-			enableFiltering: true,
-			enableCaseInsensitiveFiltering: true,
-			enableClickableOptGroups: true,
-//			disableIfEmpty: true,
-			nonSelectedText: "<?php echo $node_name;?>s"
-		});
-
 
 				//refreshes the inner options
-				$("#grants").multiselect('refresh');
-				$('#grants').multiselect('enable');
-
-				// $("#grants").multiselect().multiselectfilter({
-				// 	http://www.erichynds.com/examples/jquery-ui-multiselect-widget/demos/#filter	
-				// 	filter: function(event, matches){
-				// 		if( !matches.length ){
-				// 			// do something
-				// 		}
-				// 	}
-				// });
+				$("#grants").multiselect("refresh");
+				$("#grants").multiselect().multiselectfilter({
+				/*	http://www.erichynds.com/examples/jquery-ui-multiselect-widget/demos/#filter	*/
+					filter: function(event, matches){
+						if( !matches.length ){
+							// do something
+						}
+					}
+				});
 
 
 //hard code....
@@ -3435,7 +3034,7 @@
 						subdBiConnectionsNum = [];
 						nodesToFade = [];
 
-						// $("#grants").multiselect();
+						$("#grants").multiselect();
 
 						similarityThr = <?php echo $similarityThr ;?>;
 						nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
@@ -3532,130 +3131,131 @@ else if (/^Full*/.test(experimentName)){
 				});
 
 //http://www.erichynds.com/blog/jquery-ui-multiselect-widget
-				// $("#grants").bind("multiselectcheckall", function(event, matches){
-				// 	reset();					
-				// 	selectnodeCircles = nodeCircles
-				// 	selectnodeLabels = nodeLabels
-				// });
+				$("#grants").bind("multiselectcheckall", function(event, matches){
+					reset();					
+					selectnodeCircles = nodeCircles
+					selectnodeLabels = nodeLabels
+				});
 
-				// $("#grants").bind("multiselectuncheckall", function(event, matches){
-				// 	reset();
-				// 	selectnodeCircles = nodeCircles
-				// 	selectnodeLabels = nodeLabels
-				// });
-
-
-	// 			$("#grantsGroup1").multiselect({
-	// 				optgrouptoggle: function(event, ui){
-	// 					for (var i=0;i<ui.inputs.length;i++)
-	// 					{
-	// 						nodesToFade.push(ui.inputs[i].value);
-	// //						console.log("inputs"+i+":"+ui.inputs[i].value)
-	// 					};
-
-	// 					if (ui.checked){
-	// 						nodeCircles
-	// 							.filter(function(d) {
-	// 								if(include(nodesToFade,d.name)){			
-	// 									return 1;
-	// 								}
-	// 								else{
-	// 									return 0;			
-	// 								}
-	// 							})
-	// 							.style("fill-opacity", fade_out)
-	// 							.style("stroke-opacity", fade_out);
-	// 					}
-	// 					else{
-	// 						nodeCircles
-	// 							.filter(function(d) {
-	// 								if(include(nodesToFade,d.name)){			
-	// 									return 1;
-	// 								}
-	// 								else{
-	// 									return 0;			
-	// 								}
-	// 							})
-	// 							.style("fill-opacity", normal)
-	// 							.style("stroke-opacity", normal);
-	// 					}
-
-	// 					$(this).find("option:selected").click()
-	// 					nodesToFade.empty();
-	// 				}
-	// 			});
+				$("#grants").bind("multiselectuncheckall", function(event, matches){
+					reset();
+					selectnodeCircles = nodeCircles
+					selectnodeLabels = nodeLabels
+				});
 
 
-				// $("#grantsGroup2").bind("multiselectoptgrouptoggle", function(event, ui){
-				// 	for (var i=0;i<ui.inputs.length;i++)
-				// 	{
-				// 		nodesToFade.push(ui.inputs[i].value);
-				// 	};
+				$("#grantsGroup1").multiselect({
+					optgrouptoggle: function(event, ui){
+						for (var i=0;i<ui.inputs.length;i++)
+						{
+							nodesToFade.push(ui.inputs[i].value);
+	//						console.log("inputs"+i+":"+ui.inputs[i].value)
+						};
+
+						if (ui.checked){
+							nodeCircles
+								.filter(function(d) {
+									if(include(nodesToFade,d.name)){			
+										return 1;
+									}
+									else{
+										return 0;			
+									}
+								})
+								.style("fill-opacity", fade_out)
+								.style("stroke-opacity", fade_out);
+						}
+						else{
+							nodeCircles
+								.filter(function(d) {
+									if(include(nodesToFade,d.name)){			
+										return 1;
+									}
+									else{
+										return 0;			
+									}
+								})
+								.style("fill-opacity", normal)
+								.style("stroke-opacity", normal);
+						}
+
+						$(this).find("option:selected").click()
+						nodesToFade.empty();
+					}
+				});
+	
+				$("#grants").multiselect("refresh");
+
+				$("#grantsGroup2").bind("multiselectoptgrouptoggle", function(event, ui){
+					for (var i=0;i<ui.inputs.length;i++)
+					{
+						nodesToFade.push(ui.inputs[i].value);
+					};
 
 
-				// 		if (ui.checked)
-				// 			nodeCircles
-				// 				.filter(function(d) {
-				// 					if(include(nodesToFade,d.name)){			
-				// 						return 0;
-				// 					}
-				// 					else{
-				// 						return 1;			
-				// 					}
-				// 				})
-				// 				.style("fill-opacity", fade_out)
-				// 				.style("stroke-opacity", fade_out);
-				// 		else
-				// 			nodeCircles
-				// 				.filter(function(d) {
-				// 					if(include(nodesToFade,d.name)){			
-				// 						return 0;
-				// 					}
-				// 					else{
-				// 						return 1;			
-				// 					}
-				// 				})
-				// 				.style("fill-opacity", normal)
-				// 				.style("stroke-opacity", normal);
+						if (ui.checked)
+							nodeCircles
+								.filter(function(d) {
+									if(include(nodesToFade,d.name)){			
+										return 0;
+									}
+									else{
+										return 1;			
+									}
+								})
+								.style("fill-opacity", fade_out)
+								.style("stroke-opacity", fade_out);
+						else
+							nodeCircles
+								.filter(function(d) {
+									if(include(nodesToFade,d.name)){			
+										return 0;
+									}
+									else{
+										return 1;			
+									}
+								})
+								.style("fill-opacity", normal)
+								.style("stroke-opacity", normal);
 
-				// 										nodesToFade.empty();
+														nodesToFade.empty();
 
-				// });
+				});
 
 
-				// $("#grants").bind("multiselectclick", function(event, matches){
-				// 	//if unchecked 
-				// 	if (!matches.checked){
-				// 		nodes.filter(function(e){
-				// 			selectnodeCircles = nodeCircles
-				// 			selectnodeLabels = nodeLabels
-				// 		});
-				// 	}
+				$("#grants").bind("multiselectclick", function(event, matches){
+					//if unchecked 
+					if (!matches.checked){
+						nodes.filter(function(e){
+							selectnodeCircles = nodeCircles
+							selectnodeLabels = nodeLabels
+						});
+					}
 
-					// var array_of_checked_values = $("#grants").multiselect("getChecked").map(function(){
-					// 	return this.value;    
-					// }).get();
+					var array_of_checked_values = $("#grants").multiselect("getChecked").map(function(){
+						return this.value;    
+					}).get();
 
-				// 	for(var i=0;i<nodes.length;i++){
-				// 		if(include(array_of_checked_values,nodes[i].name)){
-				// 			clickedNode = nodes[i]
-				// 			testGrantSelection(nodes[i],fade_out);
-				// 			selectnodeCircles = selectnodeCircles.filter(function(element) {
-				// 					if(nodes[i].name != element.name)
-				// 						return 1;
-				// 					else
-				// 						return 0;
-				// 			});
+					for(var i=0;i<nodes.length;i++){
+						if(include(array_of_checked_values,nodes[i].name)){
+							clickedNode = nodes[i]
+							test(nodes[i],fade_out);
+							selectnodeCircles = selectnodeCircles.filter(function(element) {
+									if(nodes[i].name != element.name)
+										return 1;
+									else
+										return 0;
+							});
 
-				// 			selectnodeLabels = selectnodeLabels.filter(function(element) {
-				// 					if(nodes[i].name != element.name)
-				// 						return 1;
-				// 					else
-				// 						return 0;
-				// 			});
-				// 		}
-				// 	}
-				// });
+							selectnodeLabels = selectnodeLabels.filter(function(element) {
+									if(nodes[i].name != element.name)
+										return 1;
+									else
+										return 0;
+							});
+						}
+					}
+				});
 			});
 
 
@@ -4460,16 +4060,12 @@ function createChord(type){
 							</select>
 						</li>
 						<li id="filter1" style="padding-left:10px">
-							<!-- <select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;"> -->
-							<select id="grants" multiple="multiple">
+							<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
 								<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
-									<option>asd</option>
 								</optgroup>
 								<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
-									<option>asd</option>
 								</optgroup>
 							</select>
-
 						</li>
 						<li  id="filter2" style="padding-left:10px;width:inherit">
 						<input id="tags" class="ui-corner-all"  placeholder="input a topic word..." >

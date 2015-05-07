@@ -54,16 +54,16 @@ class database {
 		$stmt = $this->db->prepare($query);
 		$this->last_query = $query;
 		if(!$stmt){
-			$arr = $this->db->errorInfo();
-			return false;
+            error_log("Failed to prepare query with message: ".$this->db->errorInfo(), 0);
+            return false;
 		}
 		return $stmt;
 	}
 
 	function doExecute($stmt,$params){
 		if(!$stmt->execute($params)){
-			$arr = $stmt->errorInfo();
-			return false;
+            error_log("Failed to execute query with message: ".$stmt->errorInfo(), 0);
+            return false;
 		}
 		return $stmt;
 	}
@@ -134,7 +134,7 @@ if (!$experiments) {
 	$stmt = $mydb->doQuery($query);
 	$res = $stmt->fetch();
 	do {
-		array_push($experiments,array("id"=>$res[0],"desc"=>$res[1],"initialSimilarity"=>$res[2]));	
+		array_push($experiments,array("id"=>$res[0],"desc"=>$res[1],"Metadata"=>$res[2],"initialSimilarity"=>$res[3],"PhraseBoost"=>$res[4]));
 	} while ($res = $stmt->fetch());
 
    	$meminstance->set($querykey, $experiments, 0, $memcache_time);

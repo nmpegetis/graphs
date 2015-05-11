@@ -528,9 +528,9 @@
 				zoom_type = 3;
 			}
 
-			previous_scale = scaleFactor; 
+			previous_scale = scaleFactor;
 
-			resizeGraph();
+            browseTick();
 
 			prev_w = w;
         }
@@ -1270,7 +1270,7 @@
         }
 
 
-            /* function returns 1 if an array contains an object or 0 if not */
+    /* function returns 1 if an array contains an object or 0 if not */
 		function include(arr,obj) {
 			return (arr.indexOf(obj) != -1);
 		}
@@ -1423,61 +1423,6 @@
 				.text(function(d) { 
 //					return d.index;
 					if (labeled[d.index]){
-
-						if((links[d.index].value>similarityThr-(0.2*previous_scale)) && (nodeConnections[d.index] > (nodeConnectionsThr/Math.sqrt(previous_scale))*maxNodeConnections)){
-							return label[d.index];
-						}
-						else{
-							return "";
-						}
-					}
-			});							
-
-			fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;	
-			vis.selectAll(".labels")
-				.style("font-size",fontsize+"px");					
-
-		/* move circle elements above all others within the same grouping */ 
-//			vis.selectAll(".circle").moveToFront();
-			vis.selectAll(".labels").moveToFront();
-		}
-
-
-		function resizeGraph() {
-
-			nodeCircles
-				.attr("cx", function(d) {
-					/* http://stackoverflow.com/questions/21344340/sematic-zooming-of-force-directed-graph-in-d3 */
-					return translation[0] + scaleFactor*d.x;
-				})
-				.attr("cy", function(d) {
-					return translation[1] + scaleFactor*d.y;
-				});
-			linkLines
-				.attr("x1", function(d) {
-					return translation[0] + scaleFactor*d.source.x;
-				})
-				.attr("y1", function(d) {
-					return translation[1] + scaleFactor*d.source.y;
-				})
-				.attr("x2", function(d) {
-					return translation[0] + scaleFactor*d.target.x;
-				})
-				.attr("y2", function(d) {
-					return translation[1] + scaleFactor*d.target.y;
-				});
-
-			nodeLabels
-				.attr("x",function (d){
-					return (translation[0] + scaleFactor*d.x+7)
-				})
-				.attr("y",function (d){
-					return (translation[1] + scaleFactor*d.y-7)
-				})
-				.text(function(d) { 
-//					return d.index;
-					if (labeled[d.index]){
-						// console.log("scale Factor"+previous_scale)
 
 						if((links[d.index].value>similarityThr-(0.2*previous_scale)) && (nodeConnections[d.index] > (nodeConnectionsThr/Math.sqrt(previous_scale))*maxNodeConnections)){
 							return label[d.index];

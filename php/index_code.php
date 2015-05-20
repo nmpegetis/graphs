@@ -95,6 +95,11 @@
 		.active {
 			color:green;
 		}
+
+        .shadow {
+            -webkit-filter: drop-shadow( 0px 0px 10px yellow);
+            filter: drop-shadow( 0px 0px 10px yellow ); /* Same syntax as box-shadow */
+        }
 	</style>
 
 	<!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
@@ -250,9 +255,9 @@
 			linkThr = <?php echo $linkThr ;?>,
 			gravity = <?php echo $gravity ;?>,
 			charge = <?php echo $charge ;?>,
-			counterMax = 10,
+			listLength = 10,
 			counter = 0,
-			smfound = 0,				            //classifiedNodes found
+			numOfClassifiedNodes = 0,				            //classifiedNodes found
 			flagForTranformation = 0,
 			isSvgFullscreen = false,	            // catch switching in and out full screen
 			clrArray = [],
@@ -1019,8 +1024,15 @@
 			return function(d, i) {
 				if($(this).css("fill-opacity") < normal)
 					return false;
+
+                // addClass for svg to place yellow shoadow
+                $(this).attr('class', function(index, classNames) {
+                    return classNames + ' shadow';
+                });
+
                 graphHandler(d,opacity);
-			}
+
+            }
 		}
 
 
@@ -1034,14 +1046,14 @@
             // show again window from the top
             $(window).scrollTop(0);
 
-            mytext.selectAll(".nodetext").remove();     // to eixa sto test
+            mytext.selectAll(".nodetext").remove();
 
             // all grants must be unchecked
             $("#grants").multiselect("uncheckAll");
             $("#boost_btn").show();
 
             // $( "#classifiedNodes" ).empty();			//clear anything included in child nodes
-            smfound = 0;								// similar nodes found initialization
+            numOfClassifiedNodes = 0;								// similar nodes found initialization
 
             labels = [];
             var selectedLabelData = null;
@@ -1157,16 +1169,7 @@
 
                         var classifiedNodes = "";
                         classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
-                        smfound++;
-//todo auto pou den douleuei sto linking einai ta key
-//                        console.log(o.color);
-//                        $('#' + o.color).hover(function () {
-//                            $(this).css("color", "green");		// for this to work I put the same class name in the <li> parent element of the <a> element
-//                            $(this).css("opacity", "0.5");
-//                        }, function () {
-//                            $(this).css("opacity", "initial");
-//                            $(this).css("color", "red");		// for this to work I put the same class name in the <li> parent element of the <a> element
-//                        });
+                        numOfClassifiedNodes++;
                         $("#classifiedNodes").find("div").find("ul").append(classifiedNodes);
                         $("#classifiedNodes").show();
                     }
@@ -1215,10 +1218,10 @@
 			var types = [];
 			$(".circle").each(function(){
 	 			types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
-			
+
 			});
 
-			showtype(fade_out, types);
+            showtype(fade_out, types);
 			//mytext.selectAll(".nodetext").remove();
 			$(".nodetext").remove();
 			$("#classifiedNodes").find("div").find("ul").empty();
@@ -1295,10 +1298,10 @@
 
         function classifiedNodeButtons(){
             counter=0;						//(re)-initialize counter to zero
-            counterMax = 10;
+            listLength = 10;
 
-            $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+counterMax).show();
-            counter+=counterMax;
+            $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+            counter+=listLength;
 
             $("#upButton").hide();
 
@@ -1308,14 +1311,14 @@
                 $("#downButton").show();
 
             $('#downButton').on("click",function(){
-                if ((counter+counterMax)<smfound){
-                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+counterMax).show();
+                if ((counter+listLength)<numOfClassifiedNodes){
+                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
                     $("#upButton").show();
                     $("#downButton").show();
-                    counter+=counterMax;
+                    counter+=listLength;
                 }
                 else {
-                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, smfound).show();
+                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, numOfClassifiedNodes).show();
                     $("#upButton").show();
                     $("#downButton").hide();
                 }
@@ -1323,71 +1326,79 @@
 
 
             $('#upButton').on("click",function(){
-                if (counter-counterMax>0){
-                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter-counterMax, counter).show();
+                if (counter-listLength>0){
+                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
                     $("#upButton").show();
                     $("#downButton").show();
-                    counter-=counterMax;
+                    counter-=listLength;
                 }
                 else{
-                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(0, counter).show();
+                    counter=0;
+                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
                     $("#upButton").hide();
                     $("#downButton").show();
-                    counter = 10;
+                    counter+=listLength;
                 }
             });
 
             //for mobile
             $('#classifiedNodes')
                 .on("swipeup",function(){
-                    if ((counter+counterMax)<smfound){
-                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+counterMax).show();
+                    if ((counter+listLength)<numOfClassifiedNodes){
+                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
                         $("#upButton").show();
                         $("#downButton").show();
-                        counter+=counterMax;
+                        counter+=listLength;
                     }
                     else {
-                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, smfound).show();
+                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, numOfClassifiedNodes).show();
                         $("#upButton").show();
                         $("#downButton").hide();
                     }
                 })
                 .on("swipedown",function(){
-                    if (counter-counterMax>0){
-                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter-counterMax, counter).show();
+                    if (counter-listLength>0){
+                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
                         $("#upButton").show();
                         $("#downButton").show();
-                        counter-=counterMax;
+                        counter-=listLength;
                     }
                     else{
-                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(0, counter).show();
+                        counter=0;
+                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
                         $("#upButton").hide();
                         $("#downButton").show();
-                        counter = 10;
+                        counter+=listLength;
                     }
                 });
 
             $("#classifiedNodes").find("div").find("ul").find("li").find("a")
-                .on("click",function(o){
-        // for zooming on the node
-    //                var zoomFactor = 4;
+                .on("click",function(){
+                    // for centering the node w/2 and h/3
+                    // zoomer.scale(2)
+                    // zoomer.event(vis);
+                    var dcx = (w/2-parseInt(vis.select("#circle-node-"+this.id).attr("cx")*zoomer.scale()));
+                    var dcy = (h/3-parseInt(vis.select("#circle-node-"+this.id).attr("cy")*zoomer.scale()));
+                    vis.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoomer.scale() + ")");
 
-                    //if (parseInt(vis.select("#circle-node-"+this.id).attr("cx")) < w/2 && parseInt(vis.select("#circle-node-"+this.id).attr("cy")) < h/2)
-                    //if (parseInt(vis.select("#circle-node-"+this.id).attr("cx")) < w/2)
-                    //	zoomer.translate([w/2-parseInt(vis.select("#circle-node-"+this.id).attr("cx")),0]);
-                    //else
-                    //	zoomer.translate([(w/2)+parseInt(vis.select("#circle-node-"+this.id).attr("cx")),0]);
-                    //zoomer.event(vis);
                     var clickednodeid = this.id;
+
+                    $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
+                        return classNames.replace('shadow', '');
+                    });
+
                     clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
                     clickGraph(clickedNode,0.1);
                 })
-                .on("mouseover",function(o){
-                    console.log("as")
-                    var fadednodeid = this.id;
-//                    $( "#circle-node-"+fadednodeid ).animate(function(){
-                        $( "#circle-node-"+fadednodeid ).css("color","yellow");
-  //                  }, 1500 );
+                .on("mouseover",function(){
+                    $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
+                        return classNames + ' shadow';
+                    });
+                })
+                .on("mouseout",function(){
+                    $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
+                        return classNames.replace('shadow', '');
+                    });
                 })
         }
 
@@ -1479,8 +1490,7 @@
 						$("#mytext-title").detach().prependTo("#foreignObject");
 						$("#mytext-content").detach().prependTo("#mytext-title");
 					}
-					console.log("web1");
-					$("#mytext-content > div").show();
+					$("#mytext-content").find("div").show();
 					svgfullscreen()
 				});
 			
@@ -2186,13 +2196,10 @@
 					$("#mytext-title").show();
 					$("#mytext-content").empty();
 					$("#mytext-content").show();
-					mytextTitle.append("div").append("ul")
-						.attr("class", "pagination active")
-						.attr("data-toggle","tooltip")
-						.attr("data-placement","right")
-						.attr("title","...more about subdivision and link...")
-//						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
-						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s ");
+                    $("#classifiedNodesHeader").hide();
+                    $("#classifiedNodes").hide();
+                    $("#classifiedNodes").find("div").find("ul").empty();   //clear anything included in child nodes
+
 					if($(this).hasClass("active_row")){
 						$(this).removeClass("active_row");
 						$(this).addClass("inactive");
@@ -2215,6 +2222,7 @@
 					}
 
 					//find all types to show
+
 					var types = [];
 					var collection = null;
 					if($(".active_row").length == 0){
@@ -2235,7 +2243,47 @@
 
 					showtype(fade_out, types);
 
-				});
+                    if($(".active_row").length != 0){
+                        $("#classifiedNodesHeader").html("Similar <?php echo $node_name;?>s based on area classification:&nbsp;");
+                        $("#classifiedNodesHeader").show();
+
+                        var classifiedNodes = "";
+                        numOfClassifiedNodes=0;
+
+                        var o;
+                        $.each(types,function(i,obj){
+                            o = $.grep(nodes, function(o) { return o.index == obj })[0];
+                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+                            numOfClassifiedNodes++;
+
+                        });
+
+
+                        if($(".active_row").length == 1) {
+                            mytextTitle.append("div").append("ul")
+                                .attr("class", "pagination active")
+                                .attr("data-toggle","tooltip")
+                                .attr("data-placement","right")
+                                .attr("title","...more about subdivision and link...")
+//						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
+                                .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                        }
+                        else{
+                            $("#mytext-title").empty();
+                            mytextTitle.append("div").append("ul")
+                                .attr("class", "pagination active")
+                                .attr("data-toggle", "tooltip")
+                                .attr("data-placement", "right")
+                                .attr("title", "...more about subdivision and link...")
+                                //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
+                                .append("li").append("a").attr("class", "btn-primary active").html($(".active_row").length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                        }
+
+                        $("#classifiedNodes").find("div").find("ul").append(classifiedNodes);
+                        classifiedNodeButtons();
+                        $("#classifiedNodes").show();
+                    }
+                });
 				//.style("width","140px");
 
 			rows.append("td")
@@ -2416,7 +2464,7 @@
 //hard code....
 				$("#category1").on("click", function (){
 					if ($("#category1").hasClass("activeCategory")){
-						$("#category1 > a").attr("style","background-color:#fff;color:#1f77b4");
+						$("#category1").find("a").attr("style","background-color:#fff;color:#1f77b4");
 						$("#category1").attr("class","");
 
 						var types = [];
@@ -2427,11 +2475,11 @@
 						showtype(fade_out, types);
 					}
 					else{
-						$("#category2 > a").attr("style","background-color:#fff;color:#ff7f0e");
-						$("#category3 > a").attr("style","background-color:#fff;color:#2ca02c");
-						$("#categories > ul > li ").attr("class","");
+						$("#category2").find("a").attr("style","background-color:#fff;color:#ff7f0e");
+						$("#category3").find("a").attr("style","background-color:#fff;color:#2ca02c");
+						$("#categories").find("ul").find("li").attr("class","");
 						$("#category1").attr("class","activeCategory");
-						$("#category1 > a").attr("style","background-color:#ddd;color:#1f77b4");
+						$("#category1").find("a").attr("style","background-color:#ddd;color:#1f77b4");
 
 						var collection = null;
 						if($(".activeCategory").length == 0){
@@ -2455,7 +2503,7 @@
 				});
 				$("#category2").on("click", function (){
 					if ($("#category2").hasClass("activeCategory")){
-						$("#category2 > a").attr("style","background-color:#fff;color:#ff7f0e");
+						$("#category2").find("a").attr("style","background-color:#fff;color:#ff7f0e");
 						$("#category2").attr("class","");
 
 						var types = [];
@@ -2467,11 +2515,11 @@
 						showtype(fade_out, types);
 					}
 					else{
-						$("#category1 > a").attr("style","background-color:#fff;color:#1f77b4");
-						$("#category3 > a").attr("style","background-color:#fff;color:#2ca02c");
-						$("#categories > ul > li ").attr("class","");
+						$("#category1").find("a").attr("style","background-color:#fff;color:#1f77b4");
+						$("#category3").find("a").attr("style","background-color:#fff;color:#2ca02c");
+						$("#categories").find("ul").find("li").attr("class","");
 						$("#category2").attr("class","activeCategory");
-						$("#category2 > a").attr("style","background-color:#ddd;color:#ff7f0e");
+						$("#category2").find("a").attr("style","background-color:#ddd;color:#ff7f0e");
 
 						var collection = null;
 						if($(".activeCategory").length == 0){
@@ -2495,7 +2543,7 @@
 				});
 				$("#category3").on("click", function (){
 					if ($("#category3").hasClass("activeCategory")){
-						$("#category3 > a").attr("style","background-color:#fff;color:#2ca02c");
+						$("#category3").find("a").attr("style","background-color:#fff;color:#2ca02c");
 						$("#category3").attr("class","");
 
 						var types = [];
@@ -2507,11 +2555,11 @@
 						showtype(fade_out, types);
 					}
 					else{
-						$("#category1 > a").attr("style","background-color:#fff;color:#1f77b4");
-						$("#category2 > a").attr("style","background-color:#fff;color:#ff7f0e");
-						$("#categories > ul > li ").attr("class","");
+						$("#category1").find("a").attr("style","background-color:#fff;color:#1f77b4");
+						$("#category2").find("a").attr("style","background-color:#fff;color:#ff7f0e");
+						$("#categories").find("ul").find("li").attr("class","");
 						$("#category3").attr("class","activeCategory");
-						$("#category3 > a").attr("style","background-color:#ddd;color:#2ca02c");
+						$("#category3").find("a").attr("style","background-color:#ddd;color:#2ca02c");
 
 
 						var collection = null;
@@ -2860,11 +2908,11 @@ else if (/^Full*/.test(experimentName)){
 				console.log("btn changed");
 				if (topicsFlag){
 					topicsFlag = false;
-					$("#boost_btn > ul > li > a > span").attr("class","glyphicon glyphicon-remove");
+					$("#boost_btn").find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-remove");
 				}
 				else{
 					topicsFlag = true;
-					$("#boost_btn > ul > li > a > span").attr("class","glyphicon glyphicon-ok");
+					$("#boost_btn").find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-ok");
 				}	
 				$("mytext-content").show();
 
@@ -2953,19 +3001,37 @@ var u =0;
 				.attr("cy", function(d) {
 					return d.y
 				})
-				.on("mouseover", fadeGraph(fade_out))						//edw prepei na fainontai ola ta alla project oxi ta 10 prwta
+				.on("mouseover", fadeGraph(fade_out))
 				.on("mouseout", function(d, i) {
-					reset();
+                    reset();
+
+                    $(this).attr('class', function(index, classNames) {
+                        return classNames.replace('shadow', '');
+                    });
 				})
 				.on("click", function(d,i){
-					var myfade = fadeGraph(fade_out);
+                    $(this).attr('class', function(index, classNames) {
+                        return classNames.replace('shadow', '');
+                    });
+
+                    var myfade = fadeGraph(fade_out);
 					if(focused == d.name){
 						focused = '';
 						nodeCircles.on("mouseover", fadeGraph(fade_out))
 							.on("mouseout", function(d, i) {
-								reset();
-							});
+                                reset();
+
+                                $(this).attr('class', function(index, classNames) {
+                                    return classNames.replace('shadow', '');
+                                });
+
+                            });
+
 						reset();
+
+                        $(this).attr('class', function(index, classNames) {
+                            return classNames.replace('shadow', '');
+                        });
 					}
 					else{
 						focused = d.name;
@@ -2975,6 +3041,10 @@ var u =0;
 						nodeCircles.on("mouseout", function(){return false;})
 							.on("mouseover", function(){return false;});
 					}
+
+                    $(this).attr('class', function(index, classNames) {
+                        return classNames.replace('shadow', '');
+                    });
 				});
 
 			nodeCircles.exit().remove();

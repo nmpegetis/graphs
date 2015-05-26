@@ -195,7 +195,7 @@
             thr2Elem = $("#thr2"),
             thr3Elem = $("#thr3"),
             thr4Elem = $("#thr4"),
-            grantsElem = $("#gragit nts"),
+            grantsElem = $("#grants"),
             category1Elem = $("#category1"),
             category2Elem = $("#category2"),
             category3Elem = $("#category3"),

@@ -160,10 +160,57 @@
 
 
 	<script type='text/javascript'>
-	window.focus();
 	$(document).ready(function() {
 
-	/* globals */
+
+        var windowElem = $(window),
+            documentElem = $(document),
+            bodyElem = $("body"),
+            headElem =$("head"),
+            tooltipElem = $('[data-toggle="tooltip"]'),
+            popoverElem = $('[data-toggle="popover"]'),
+            fullscreenEnterElem = $('fullscreen_enter'),
+            fullscreenExitElem = $('fullscreen_exit'),
+            classifiedNodesHeaderElem = $("#classifiedNodesHeader"),
+            classifiedNodesElem = $("#classifiedNodes"),
+            tagsElem = $("#tags"),
+            upButtonElem = $("#upButton"),
+            downButtonElem = $("#downButton"),
+            exitclassifiedNodesHederElem = $("#exitclassifiedNodesHeader"),
+            filter1Elem = $("#filter1"),
+            filter2Elem = $("#filter2"),
+            myTabElem = $("#myTab"),
+            experimentBtnElem = $("#experiment_btn"),
+            boostBtnElem = $("#boost_btn"),
+            categoriesElem = $("#categories"),
+            mygraphContainerElem = $("#mygraph-container"),
+            mytextTitleElem = $("#mytext-title"),
+            mytextContentElem = $("#mytext-content"),
+            myinfoElem = $("#myinfo"),
+            jumpPreviousElem = $("#jumpPrevious"),
+            mygraphElem = $("#mygraph"),
+            jumpNextElem = $("#jumpNext"),
+            mysubdivisionElem = $("#mysubdivision"),
+            thr1Elem = $("#thr1"),
+            thr2Elem = $("#thr2"),
+            thr3Elem = $("#thr3"),
+            thr4Elem = $("#thr4"),
+            grantsElem = $("#gragit nts"),
+            category1Elem = $("#category1"),
+            category2Elem = $("#category2"),
+            category3Elem = $("#category3"),
+            experimentsElem = $("#experiments"),
+            filtersElem = $("#filters"),
+            graphElem = $("#graph"),
+            legendElem = $("#legend"),
+            svgTextElem = $("svg:text"),
+            chorddivElem = $("#chorddiv"),
+            chord2divElem = $("#chord2div"),
+            grantsGroup1Elem = $("#grantsGroup1"),
+            grantsGroup2Elem = $("#grantsGroup2");
+
+
+        /* globals */
 		var style,
 			fade_out = <?php echo $fade_out ;?>,
 			strong = <?php echo $strong ;?>,
@@ -173,15 +220,15 @@
 			svgimgReset,
 			svgimgResetFS,
 			prev_w,
-			w = $(window).width()/2,//800,
-			h = $(window).width()/2,//800,
+			w = windowElem.width()/2,//800,
+			h = windowElem.width()/2,//800,
 			loading,
 			linkLines,
 			linkedByIndex = {},
 			nodeCircles,
 			text,
 			labels = [],
-			links = [],						// includes all the links among the nodes 
+			links = [],						// includes all the links among the nodes
 			nodes = [],						// includes all the nodes
 			subdivisionsChord = [], 		// before its contents were in a csv file
 			chord_group,
@@ -227,7 +274,6 @@
 			force,
 			myresponse,
 			fontsize,
-			svgElement = document.getElementById("graph"),
 			k,
 			n,
 			topicsMap = {},
@@ -295,27 +341,27 @@
 
 		var spinner = new Spinner(opts).spin(target);
 
-        $("#classifiedNodesHeader").hide();
-		$("#classifiedNodes").hide();
-        $("#tags").val("");					// when refreshing page placeholder in topic search is shown
+        classifiedNodesHeaderElem.hide();
+		classifiedNodesElem.hide();
+        tagsElem.val("");					// when refreshing page placeholder in topic search is shown
 
-		$("#upButton").hide();
-		$("#downButton").hide();
+		upButtonElem.hide();
+		downButtonElem.hide();
 
-		$("#exitclassifiedNodesHeader").click(function(){
-			$( "#classifiedNodesHeader" ).hide();
-            $( "#classifiedNodes" ).hide();
+		exitclassifiedNodesHederElem.click(function(){
+			classifiedNodesHeaderElem.hide();
+            classifiedNodesElem.hide();
         });
 
-		 $("#filter1").hide();
-		 $("#filter2").hide();
+		 filter1Elem.hide();
+		 filter2Elem.hide();
 
 
 	// hide until json data have been loaded from server
-		$("#myTab").hide();
-		$("#experiment_btn").hide();
-		$("#boost_btn").hide();
-		$("#categories").hide();
+		myTabElem.hide();
+		experimentBtnElem.hide();
+		boostBtnElem.hide();
+		categoriesElem.hide();
 
 
 	// function creation jquery percentage
@@ -328,16 +374,16 @@
 
     // initialization of tooltips and popover
 		$(function () {
-			$('[data-toggle="tooltip"]').tooltip()
+			tooltipElem.tooltip()
 		});
 		$(function () {
-			$('[data-toggle="popover"]').popover()
+			popoverElem.popover()
 		});
 
 
 
 		$(function(){
-			$("#grants").multiselect({
+			grantsElem.multiselect({
 			   noneSelectedText: "<?php echo $node_name;?>s"
 			});
 		});
@@ -352,7 +398,7 @@
 
     // hard code for meeting in Brusseles.. to be moved
 		if (/^FET*/.test(experimentName)){
-		$("#categories").show();
+		categoriesElem.show();
 			nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
 			expsimilarity = 0.45;
 			gravity = 1;
@@ -362,13 +408,13 @@
 			expsimilarity = 0.45;
 			gravity = 3;
 			charge = -1100;
-		$("#categories").hide();
+		categoriesElem.hide();
 		}
 		else if (/^Full*/.test(experimentName)){
 			expsimilarity = 0.6;
 			gravity = 7;
 			charge = -400;
-		$("#categories").hide();
+		categoriesElem.hide();
 		}
 
 		if((expsimilarity = getUrlParameter('s')) == null){
@@ -384,7 +430,7 @@
 		}
 
 		ajaxCall(experimentName,expsimilarity);
- 		$("#mygraph-container").attr("style","position:fixed;width:"+9*w/8);
+ 		mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
 
 	/* window resizing */
     // check:
@@ -393,7 +439,7 @@
 
 
 		var doit;
-		window.onresize = function(){
+		windowElem.onresize = function(){
 		  clearTimeout(doit);
 		  doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
 		};
@@ -403,82 +449,82 @@
 
         function onResize() {
 			prev_w = w;
-			w = $(window).width()/2,
-			h = $(window).width()/2,
+			w = windowElem.width()/2,
+			h = windowElem.width()/2,
 
-	 		$("#mygraph-container").attr("style","position:fixed;width:"+9*w/8);
+	 		mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
 
-			if(detectmob() || $(window).width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
-				w = $(window).width();
-				h = $(window).width();
-				$('#mytext-title').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-				$('#mytext-content').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-				$('#myinfo').attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
-				
-				if($('#jumpPrevious').length == 0)
-					$('#myinfo').prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
-				$('#jumpPrevious').on("click",function(){window.location = "#mygraph"});
+			if(detectmob() || windowElem.width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
+				w = windowElem.width();
+				h = windowElem.width();
+				mytextTitleElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+				mytextContentElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+				myinfoElem.attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
 
-				$('#mygraph').attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
-				
-				if($('#jumpNext').length == 0)
-					$('#mygraph').prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
-				$('#jumpNext').on("click",function(){window.location = "#myinfo"});
-				
-				$('#mysubdivision').attr("style","float:left;clear:left;min-width:20%;width:100%;");
-				$('#mygraph').insertBefore('#myinfo');
-				$('#mysubdivision').insertAfter('#myinfo');
+				if(jumpPreviousElem.length == 0)
+					myinfoElem.prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
+				jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
+
+				mygraphElem.attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
+
+				if(jumpNextElem.length == 0)
+					mygraphElem.prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
+				jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
+
+				mysubdivisionElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
+				mygraphElem.insertBefore('#myinfo');
+				mysubdivisionElem.insertAfter('#myinfo');
 				flagForTranformation = 1;
 			}
-			else if ($(window).width()>755 && flagForTranformation==1){
+			else if (windowElem.width()>755 && flagForTranformation==1){
 				flagForTranformation = 0;
-				$('#mytext-title').attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
-				$('#mytext-content').attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
-				$('#myinfo').attr("style","float:;clear:; min-height:;height:;min-width:;width:;");
-				$('#mygraph').attr("style","float:;padding-right:;clear:;");
-				$('#jumpNext').remove();
-				$('#jumpPrevious').remove();
-				$('#mysubdivision').attr("style","float:;clear:;min-width:;width:;");
-				$('#myinfo').insertBefore('#mygraph');
-				$('#mysubdivision').insertAfter('#mygraph');
+				mytextTitleElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
+				mytextContentElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
+				myinfoElem.attr("style","float:;clear:; min-height:;height:;min-width:;width:;");
+				mygraphElem.attr("style","float:;padding-right:;clear:;");
+				jumpNextElem.remove();
+				jumpPreviousElem.remove();
+				mysubdivisionElem.attr("style","float:;clear:;min-width:;width:;");
+				myinfoElem.insertBefore('#mygraph');
+				mysubdivisionElem.insertAfter('#mygraph');
 			}
 
-//			svgElement.style["width"]= w;
-			svgElement.style["height"] = h;
+//			graphElem.style["width"]= w;
+			graphElem.style["height"] = h;
 
-			svgimgIN.setAttributeNS(null,'x',$('#graph').width()-27);
-			svgimgReset.setAttributeNS(null,'x',$('#graph').width()-27);
-			svgimgOUT.setAttributeNS(null,'x',$('body').width()-w/2-150);
-			svgimgResetFS.setAttributeNS(null,'x',$('body').width()-w/2-150);
+			svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
+			svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
+			svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
+			svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
 			if(detectmob()){
 				svgimgIN.setAttributeNS(null,'height','50');
-				svgimgIN.setAttributeNS(null,'width','50');				
+				svgimgIN.setAttributeNS(null,'width','50');
 
 				svgimgReset.setAttributeNS(null,'height','50');
 				svgimgReset.setAttributeNS(null,'width','50');
 				svgimgReset.setAttributeNS(null,'y','55');
 
-				svgimgIN.setAttributeNS(null,'x',$('#graph').width()-85);
-				svgimgReset.setAttributeNS(null,'x',$('#graph').width()-85);
-				svgimgOUT.setAttributeNS(null,'x',$('body').width()-50);
-				svgimgResetFS.setAttributeNS(null,'x',$('body').width()-50);			
+				svgimgIN.setAttributeNS(null,'x',graphElem.width()-85);
+				svgimgReset.setAttributeNS(null,'x',graphElem.width()-85);
+				svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-50);
+				svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-50);
 			}
-			else if($(window).width()<=755){
-				svgimgIN.setAttributeNS(null,'x',$('#graph').width()-75);
-				svgimgReset.setAttributeNS(null,'x',$('#graph').width()-75);
+			else if(windowElem.width()<=755){
+				svgimgIN.setAttributeNS(null,'x',graphElem.width()-75);
+				svgimgReset.setAttributeNS(null,'x',graphElem.width()-75);
 			}
-			else if ($(window).width()>755){
+			else if (windowElem.width()>755){
 				svgimgIN.setAttributeNS(null,'height','22');
-				svgimgIN.setAttributeNS(null,'width','22');				
+				svgimgIN.setAttributeNS(null,'width','22');
 
 				svgimgReset.setAttributeNS(null,'height','22');
 				svgimgReset.setAttributeNS(null,'width','22');
 				svgimgReset.setAttributeNS(null,'y','35');
 
-				svgimgIN.setAttributeNS(null,'x',$('#graph').width()-27);
-				svgimgReset.setAttributeNS(null,'x',$('#graph').width()-27);
-				svgimgOUT.setAttributeNS(null,'x',$('body').width()-w/2-150);
-				svgimgResetFS.setAttributeNS(null,'x',$('body').width()-w/2-150);	
+				svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
+				svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
+				svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
+				svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
 			}
 
 			loadingText
@@ -488,7 +534,7 @@
 
 
 /*ATTENTION: the below is required and is fired only in Chrome, Safari etc. That is because in Mozilla and other browsers the event for fullscreenchange holds forever when being in fullscreen, while with -webkit used in chrome and safari the event holds for one second*/
-		   if (isSvgFullscreen) {			
+		   if (isSvgFullscreen) {
 				// you have just ENTERED full screen video
 			/* move svg to center */
 				vis.style("background-color","white");
@@ -510,13 +556,13 @@
 			/* color change is animated infinite times of 3sec each one */
 				vis.style("animation","dragmove 3s infinite")
 				.style("-webkit-animation","dragmove 3s infinite")
-				.style("cursor","move");						
+				.style("cursor","move");
 				zoom_type = 2;
 			}
 			else{
 			/* color change is animated infinite times of 3sec each one */
 				vis.style("animation","zoomoutmove 3s infinite")
-				.style("-webkit-animation","zoomoutmove 3s infinite");						
+				.style("-webkit-animation","zoomoutmove 3s infinite");
 				zoom_type = 3;
 			}
 
@@ -528,32 +574,32 @@
         }
     // the below 2 lines go with debounce function
     // }, 100);
-    // window.addEventListener('resize', myEfficientFn);
+    // windowElem.addEventListener('resize', myEfficientFn);
 
 		style = document.createElement('style');
 		style.type = 'text/css';
-		document.getElementsByTagName('head')[0].appendChild(style);
+		headElem[0].appendChild(style);
 
-		if(detectmob() || $(window).width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
-			w = $(window).width();//800,
-			h = $(window).width();//800,
-			$('#mytext-title').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-			$('#mytext-content').attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-			$('#myinfo').attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
-			
-			if($('#jumpPrevious').length == 0)
-				$('#myinfo').prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
-			$('#jumpPrevious').on("click",function(){window.location = "#mygraph"});
+		if(detectmob() || windowElem.width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
+			w = windowElem.width();//800,
+			h = windowElem.width();//800,
+			mytextTitleElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+			mytextContentElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+			myinfoElem.attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
 
-			$('#mygraph').attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
-			
-			if($('#jumpNext').length == 0)
-				$('#mygraph').prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
-			$('#jumpNext').on("click",function(){window.location = "#myinfo"});
-			
-			$('#mysubdivision').attr("style","float:left;clear:left;min-width:20%;width:100%;");
-			$('#mygraph').insertBefore('#myinfo');
-			$('#mysubdivision').insertAfter('#myinfo');
+			if(jumpPreviousElem.length == 0)
+				myinfoElem.prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
+			jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
+
+			mygraphElem.attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
+
+			if(jumpNextElem.length == 0)
+				mygraphElem.prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
+			jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
+
+			mysubdivisionElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
+			mygraphElem.insertBefore('#myinfo');
+			mysubdivisionElem.insertAfter('#myinfo');
 
 		}
 
@@ -587,54 +633,54 @@
 		search = d3.select("#search");
 		focused = false;
 
-		$("#thr1").val("> "+$.percentage(similarityThr,1)+" %");
-		$("#thr2").val("> "+$.percentage(nodeConnectionsThr,1)+" %");
-		$("#thr3").val("> "+$.percentage(linkThr,1)+" %");
-		$("#thr4").val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
+		thr1Elem.val("> "+$.percentage(similarityThr,1)+" %");
+		thr2Elem.val("> "+$.percentage(nodeConnectionsThr,1)+" %");
+		thr3Elem.val("> "+$.percentage(linkThr,1)+" %");
+		thr4Elem.val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
 
-		$("#thr1").focus(function(){
-			$("#thr1").val($.percentage(similarityThr,1));
+		thr1Elem.focus(function(){
+			thr1Elem.val($.percentage(similarityThr,1));
 		});
-		$("#thr1").change(function(){
+		thr1Elem.change(function(){
 			console.log("similarityThr="+similarityThr);
-			similarityThr = $("#thr1").val()/100;			
+			similarityThr = thr1Elem.val()/100;
 			console.log("similarityThr="+similarityThr);
 			browseTick();
-			$("#thr1").val("> "+$.percentage(similarityThr,1)+" %");
+			thr1Elem.val("> "+$.percentage(similarityThr,1)+" %");
 		});
 
-		$("#thr2").focus(function(){
-			$("#thr2").val($.percentage(nodeConnectionsThr,1));
+		thr2Elem.focus(function(){
+			thr2Elem.val($.percentage(nodeConnectionsThr,1));
 		});
-		$("#thr2").change(function(){
+		thr2Elem.change(function(){
 			console.log("nodeConnectionsThr="+nodeConnectionsThr);
-			nodeConnectionsThr = $("#thr2").val()/100;			
+			nodeConnectionsThr = thr2Elem.val()/100;
 			console.log("nodeConnectionsThr="+nodeConnectionsThr);
 			browseTick();
-			$("#thr2").val("> "+$.percentage(nodeConnectionsThr,1)+" %");
+			thr2Elem.val("> "+$.percentage(nodeConnectionsThr,1)+" %");
 		});
 
-		$("#thr3").focus(function(){
-			$("#thr3").val($.percentage(linkThr,1));
+		thr3Elem.focus(function(){
+			thr3Elem.val($.percentage(linkThr,1));
 		});
-		$("#thr3").change(function(){
+		thr3Elem.change(function(){
 			console.log("linkThr="+linkThr);
-			linkThr = $("#thr3").val()/100;			
+			linkThr = thr3Elem.val()/100;
 			console.log("linkThr="+linkThr);
-			$("#thr3").val("> "+$.percentage(linkThr,1)+" %");
+			thr3Elem.val("> "+$.percentage(linkThr,1)+" %");
 		});
-		$("#thr3").attr('disabled',true);
+		thr3Elem.attr('disabled',true);
 
-		$("#thr4").focus(function(){
-			$("#thr4").val($.percentage(maxNodeConnectionsThr,1));
+		thr4Elem.focus(function(){
+			thr4Elem.val($.percentage(maxNodeConnectionsThr,1));
 		});
-		$("#thr4").change(function(){
+		thr4Elem.change(function(){
 			console.log("maxNodeConnectionsThr="+maxNodeConnectionsThr);
-			maxNodeConnectionsThr = $("#thr4").val()/100;			
+			maxNodeConnectionsThr = thr4Elem.val()/100;
 			console.log("maxNodeConnectionsThr="+maxNodeConnectionsThr);
-			$("#thr4").val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
+			thr4Elem.val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
 		});
-		$("#thr4").attr('disabled',true);
+		thr4Elem.attr('disabled',true);
 
 
         /* semantic zooming and panning */
@@ -649,7 +695,7 @@
 
 		document.documentElement.addEventListener('mozfullscreenerror', errorHandler, false);
 
-	/* moveToFront function to handle the svg */ 
+	/* moveToFront function to handle the svg */
 		d3.selection.prototype.moveToFront = function() {
 			return this.each(function(){
 				this.parentNode.appendChild(this);
@@ -657,24 +703,24 @@
 		};
 
 
-		$(window).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function (e) {
+		windowElem.on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function (e) {
             if (!isSvgFullscreen) {
                 // you have just ENTERED full screen video
                 vis.style("background-color","white");
 
             /* move svg to center */
-                // translation is not working in webkit fullscreen, so we manually set a padding left in 1/4. thats because previously the #graph has the window.width/2 size and it is centered (e.g. 1/4+1/2+1/4), so now that the graph has the window size we want the svg to be translated where it was previously, so 1/4 of the window size
+                // translation is not working in webkit fullscreen, so we manually set a padding left in 1/4. thats because previously the #graph has the windowElem.width/2 size and it is centered (e.g. 1/4+1/2+1/4), so now that the graph has the windowElem size we want the svg to be translated where it was previously, so 1/4 of the windowElem size
                 if('WebkitAppearance' in document.documentElement.style){			// do only in webkit //var isWebkit = 'WebkitAppearance' in document.documentElement.style
-                    vis.style("padding-left",$(window).width()/4);
+                    vis.style("padding-left",windowElem.width()/4);
                     console.log("fullscreen webkit translate");		// the padding left caused problems in mozilla and other browsers... no it is ok and we leave the below
                 }
-                vis.attr("transform","translate(" + $(window).width()/4 + ")");
+                vis.attr("transform","translate(" + windowElem.width()/4 + ")");
 
                 isSvgFullscreen = true;
-                $('fullscreen_enter').attr('visibility', 'hidden');
-                $('fullscreen_exit').attr('visibility', 'visible');
+                fullscreenEnterElem.attr('visibility', 'hidden');
+                fullscreenExitElem.attr('visibility', 'visible');
                 svgimgIN.setAttributeNS(null, 'visibility', 'hidden');
-                console.log("body"+$(window).width());
+                console.log("body"+windowElem.width());
                 svgimgOUT.setAttributeNS(null, 'visibility', 'visible');
                 svgimgReset.setAttributeNS(null,'visibility','hidden');
                 svgimgResetFS.setAttributeNS(null,'visibility','visible');
@@ -687,8 +733,8 @@
 
             /* move svg back to initial position */
                 vis.attr("transform","translate(" + 0 + ")");
-                $('fullscreen_enter').attr('visibility', 'visible');
-                $('fullscreen_exit').attr('visibility', 'hidden');
+                fullscreenEnterElem.attr('visibility', 'visible');
+                fullscreenExitElem.attr('visibility', 'hidden');
 
                 vis.style("position","");
                 vis.style("width","100%");
@@ -705,7 +751,7 @@
            }
 		});
 
-		if ($(window).width() < 755)
+		if (windowElem.width() < 755)
 			charge *= 1.5;
 
 		force = self.force = d3.layout.force()
@@ -715,20 +761,20 @@
 			.linkStrength(function(d) {
 				return d.value;
 			})
-			.charge( charge*(($(window).width()*w*0.3)/(755*755))) // according to http://jsfiddle.net/cSn6w/8/
+			.charge( charge*((windowElem.width()*w*0.3)/(755*755))) // according to http://jsfiddle.net/cSn6w/8/
 			.gravity(gravity)
 			.size([w, h])
 			.on("tick", initialTick);
-			
 
 
-	
+
+
 // Na tsekarw me to Enter ti tha anoigei. An  leitourgei swsta
-		$(document).keydown(function(e) {
-			//itan 13 
+		documentElem.keydown(function(e) {
+			//itan 13
 			if (e.keyCode == 14 && selectedLabelIndex !== null) {
 				openLink()(labels[selectedLabelIndex]);
-				return false;			
+				return false;
 			}
 			else if (e.keyCode == 38 || e.keyCode == 40 && selectedLabelIndex !== null) {	// up and down buttom
 				if (e.keyCode == 38)
@@ -767,7 +813,7 @@
 ***************************************************************************/
 
 /**** DRAGGING FUNCTIONS ****/
-		function dragstarted(d){ 
+		function dragstarted(d){
 			d3.event.sourceEvent.stopPropagation();
 			d3.select(this).classed("dragging", true);
 			force.stop(); //stop ticks while dragging
@@ -775,12 +821,12 @@
 
 		function dragged(d){
 			if (d.fixed) return; //root is fixed
-			
+
 			//get mouse coordinates relative to the visualization
 			//coordinate system:
 			var mouse = d3.mouse(vis.node());
-			d.x = (mouse[0] - translation[0])/scaleFactor; 
-			d.y = (mouse[1] - translation[1])/scaleFactor; 
+			d.x = (mouse[0] - translation[0])/scaleFactor;
+			d.y = (mouse[1] - translation[1])/scaleFactor;
 			browseTick();//re-position this node and any links
 		}
 
@@ -814,17 +860,17 @@
 			/* color change is animated infinite times of 3sec each one */
 				vis.style("animation","dragmove 3s infinite")
 				.style("-webkit-animation","dragmove 3s infinite")
-				.style("cursor","move");						
+				.style("cursor","move");
 				zoom_type = 2;
 			}
 			else{
 			/* color change is animated infinite times of 3sec each one */
 				vis.style("animation","zoomoutmove 3s infinite")
-				.style("-webkit-animation","zoomoutmove 3s infinite");						
+				.style("-webkit-animation","zoomoutmove 3s infinite");
 				zoom_type = 3;
 			}
-			previous_scale = scaleFactor; 
-			
+			previous_scale = scaleFactor;
+
 			browseTick(); // update positions
 		}
 
@@ -842,7 +888,7 @@
 				/* continue with amimating the border for 2 times more*/
 					.style("animation","dragmove 3s 2")
 					.style("-webkit-animation","dragmove 3s 2")
-					.style("cursor","pointer");					
+					.style("cursor","pointer");
 			}
 			else{
 			vis
@@ -863,41 +909,41 @@
 
 		function svgfullscreen()
 		{
-			//console.log("z-index before:"+$("#graph").zIndex())
-			if (!svgElement.fullscreenElement && !svgElement.mozFullScreenElement && !svgElement.webkitFullscreenElement) {  // current working methods
-				if (svgElement.requestFullscreen) {
-					svgElement.requestFullscreen();
+			//console.log("z-index before:"+graphElem.zIndex())
+			if (!graphElem.fullscreenElement && !graphElem.mozFullScreenElement && !graphElem.webkitFullscreenElement) {  // current working methods
+				if (graphElem.requestFullscreen) {
+					graphElem.requestFullscreen();
 				}
-				else if (svgElement.mozRequestFullScreen) {
-					svgElement.mozRequestFullScreen();
+				else if (graphElem.mozRequestFullScreen) {
+					graphElem.mozRequestFullScreen();
 				}
-				else if (svgElement.webkitRequestFullscreen) {
+				else if (graphElem.webkitRequestFullscreen) {
 					vis.style("position","absolute");
 					vis.style("width","100%");
 					vis.style("top","0");
 					vis.style("background-color","white");
-					svgElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+					graphElem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
 				}
-				else if (svgElement.msRequestFullscreen) {
-					svgElement.msRequestFullscreen();
+				else if (graphElem.msRequestFullscreen) {
+					graphElem.msRequestFullscreen();
 				}
 			}
 			else {
-				if (svgElement.cancelFullScreen) {
-					svgElement.cancelFullScreen();
+				if (graphElem.cancelFullScreen) {
+					graphElem.cancelFullScreen();
 				}
-				else if (svgElement.mozCancelFullScreen) {
-					svgElement.mozCancelFullScreen();
+				else if (graphElem.mozCancelFullScreen) {
+					graphElem.mozCancelFullScreen();
 				}
-				else if (svgElement.webkitCancelFullScreen) {
+				else if (graphElem.webkitCancelFullScreen) {
 					vis.style("position","");
 					vis.style("width","100%");
 					vis.style("top","");
 					vis.style("background-color","none");
-					svgElement.webkitCancelFullScreen();
+					graphElem.webkitCancelFullScreen();
 				}
-				else if (svgElement.msCancelFullscreen) {
-					svgElement.msCancelFullscreen();
+				else if (graphElem.msCancelFullscreen) {
+					graphElem.msCancelFullscreen();
 				}
 			}
 		}
@@ -905,15 +951,15 @@
 
 		function svgfullscreenExit()
 		{
-			if (svgElement.fullscreenElement || svgElement.mozFullScreenElement || svgElement.webkitFullscreenElement) {  // current working methods
-				if (svgElement.requestFullscreen) {
-					svgElement.requestFullscreen();
+			if (graphElem.fullscreenElement || graphElem.mozFullScreenElement || graphElem.webkitFullscreenElement) {  // current working methods
+				if (graphElem.requestFullscreen) {
+					graphElem.requestFullscreen();
 				}
-				else if (svgElement.mozRequestFullScreen) {
-					svgElement.mozRequestFullScreen();
+				else if (graphElem.mozRequestFullScreen) {
+					graphElem.mozRequestFullScreen();
 				}
-				else if (svgElement.webkitRequestFullscreen) {
-					svgElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); 		//Element.ALLOW_KEYBOARD_INPUT
+				else if (graphElem.webkitRequestFullscreen) {
+					graphElem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); 		//Element.ALLOW_KEYBOARD_INPUT
 				}
 			}
 			else {
@@ -1044,15 +1090,15 @@
 
         function graphHandler(mynode, opacity) {
             // show again window from the top
-            $(window).scrollTop(0);
+            windowElem.scrollTop(0);
 
             mytext.selectAll(".nodetext").remove();
 
             // all grants must be unchecked
-            $("#grants").multiselect("uncheckAll");
-            $("#boost_btn").show();
+            grantsElem.multiselect("uncheckAll");
+            boostBtnElem.show();
 
-            // $( "#classifiedNodes" ).empty();			//clear anything included in child nodes
+            // classifiedNodesElem.empty();			//clear anything included in child nodes
             numOfClassifiedNodes = 0;								// similar nodes found initialization
 
             labels = [];
@@ -1131,9 +1177,9 @@
                         len;
                     /* maybe use: tfidf algorithm to find discriminative topics and words */
                     if (mynode == o) {
-                        $("#mytext-title").empty();
-                        $("#mytext-title").show();
-                        $("#mytext-content").show();
+                        mytextTitleElem.empty();
+                        mytextTitleElem.show();
+                        mytextContentElem.show();
                         mytextTitle.append("div").append("ul")
                             .attr("class", "pagination active")
                             .attr("data-toggle", "tooltip")
@@ -1162,16 +1208,16 @@
                         }
                     }
                     else {
-                        $("#tags").val("");
-                        $( "#classifiedNodesHeader" ).html("Similar <?php echo $node_name;?>s based on TA-XINets inference:&nbsp;");
-                        $("#classifiedNodesHeader").show();
+                        tagsElem.val("");
+                        classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on TA-XINets inference:&nbsp;");
+                        classifiedNodesHeaderElem.show();
 
 
                         var classifiedNodes = "";
                         classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
                         numOfClassifiedNodes++;
-                        $("#classifiedNodes").find("div").find("ul").append(classifiedNodes);
-                        $("#classifiedNodes").show();
+                        classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
+                        classifiedNodesElem.show();
                     }
                     /* move circle elements above all others within the same grouping */
 //                    vis.selectAll(".circle").moveToFront();
@@ -1224,23 +1270,23 @@
             showtype(fade_out, types);
 			//mytext.selectAll(".nodetext").remove();
 			$(".nodetext").remove();
-			$("#classifiedNodes").find("div").find("ul").empty();
+			classifiedNodesElem.find("div").find("ul").empty();
 
-			$("#boost_btn").hide();
+			boostBtnElem.hide();
 
-			$("#classifiedNodesHeader").hide();
-			$("#tags").val("");
-			$("#classifiedNodes").hide();
+			classifiedNodesHeaderElem.hide();
+			tagsElem.val("");
+			classifiedNodesElem.hide();
 
-			$("#filter1").hide();
-			$("#filter2").hide();
-			$("#mytext-title").empty();
-			$("#mytext-content").empty();
+			filter1Elem.hide();
+			filter2Elem.hide();
+			mytextTitleElem.empty();
+			mytextContentElem.empty();
 
-			$("#upButton").hide();
-			$("#downButton").hide();
+			upButtonElem.hide();
+			downButtonElem.hide();
 
-			$("#filters").val("opt0");
+			filtersElem.val("opt0");
 		}
 
 	/* collide */
@@ -1287,7 +1333,7 @@
 		function openLink() {
 			return function(d) {
 				var url = d.slug;
-				window.open(url)
+				windowElem.open(url)
 			}
 		}
 
@@ -1300,88 +1346,86 @@
             counter=0;						//(re)-initialize counter to zero
             listLength = 10;
 
-            $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+            classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
             counter+=listLength;
 
-            $("#upButton").hide();
+            upButtonElem.hide();
 
-            if($("#classifiedNodes").find("div").find("ul").find("li:last").css('display') == 'inline')
-                $("#downButton").hide();
+            if(classifiedNodesElem.find("div").find("ul").find("li:last").css('display') == 'inline')
+                downButtonElem.hide();
             else
-                $("#downButton").show();
+                downButtonElem.show();
 
-            $('#downButton').on("click",function(){
+            downButtonElem.on("click",function(){
                 if ((counter+listLength)<numOfClassifiedNodes){
-                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
-                    $("#upButton").show();
-                    $("#downButton").show();
+                    classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+                    upButtonElem.show();
+                    downButtonElem.show();
                     counter+=listLength;
                 }
                 else {
-                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, numOfClassifiedNodes).show();
-                    $("#upButton").show();
-                    $("#downButton").hide();
+                    classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, numOfClassifiedNodes).show();
+                    upButtonElem.show();
+                    downButtonElem.hide();
                 }
             });
 
 
-            $('#upButton').on("click",function(){
+            upButtonElem.on("click",function(){
                 if (counter-listLength>0){
-                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
-                    $("#upButton").show();
-                    $("#downButton").show();
+                    classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
+                    upButtonElem.show();
+                    downButtonElem.show();
                     counter-=listLength;
                 }
                 else{
                     counter=0;
-                    $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
-                    $("#upButton").hide();
-                    $("#downButton").show();
+                    classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+                    upButtonElem.hide();
+                    downButtonElem.show();
                     counter+=listLength;
                 }
             });
 
             //for mobile
-            $('#classifiedNodes')
+            classifiedNodesElem
                 .on("swipeup",function(){
                     if ((counter+listLength)<numOfClassifiedNodes){
-                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
-                        $("#upButton").show();
-                        $("#downButton").show();
+                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+                        upButtonElem.show();
+                        downButtonElem.show();
                         counter+=listLength;
                     }
                     else {
-                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, numOfClassifiedNodes).show();
-                        $("#upButton").show();
-                        $("#downButton").hide();
+                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, numOfClassifiedNodes).show();
+                        upButtonElem.show();
+                        downButtonElem.hide();
                     }
                 })
                 .on("swipedown",function(){
                     if (counter-listLength>0){
-                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
-                        $("#upButton").show();
-                        $("#downButton").show();
+                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
+                        upButtonElem.show();
+                        downButtonElem.show();
                         counter-=listLength;
                     }
                     else{
                         counter=0;
-                        $("#classifiedNodes").find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
-                        $("#upButton").hide();
-                        $("#downButton").show();
+                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+                        upButtonElem.hide();
+                        downButtonElem.show();
                         counter+=listLength;
                     }
                 });
 
-            $("#classifiedNodes").find("div").find("ul").find("li").find("a")
+            classifiedNodesElem.find("div").find("ul").find("li").find("a")
                 .on("click",function(){
                     // for centering the node w/2 and h/3
-                    // zoomer.scale(2)
-                    // zoomer.event(vis);
-                    var dcx = (w/2-parseInt(vis.select("#circle-node-"+this.id).attr("cx")*zoomer.scale()));
-                    var dcy = (h/3-parseInt(vis.select("#circle-node-"+this.id).attr("cy")*zoomer.scale()));
-                    vis.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoomer.scale() + ")");
-
                     var clickednodeid = this.id;
+                    var dcx = (w/2-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cx")));
+                    var dcy = (h/3-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cy")));
+                    translation = [dcx,dcy];
+                    vis.attr("transform", "translate("+ translation  + ")");
 
                     $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
                         return classNames.replace('shadow', '');
@@ -1399,7 +1443,8 @@
                     $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
                         return classNames.replace('shadow', '');
                     });
-                })
+                });
+
         }
 
 /**** TICK FUNCTIONS ****/
@@ -1467,30 +1512,30 @@
 			svgimgIN.setAttributeNS(null,'height','22');
 			svgimgIN.setAttributeNS(null,'width','22');
 			svgimgIN.setAttributeNS('http://www.w3.org/1999/xlink','href', '../../../images/fullscreen_alt.png');
-			svgimgIN.setAttributeNS(null,'x',$('#graph').width()-27);
+			svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
 			svgimgIN.setAttributeNS(null,'y','5');
 			svgimgIN.setAttributeNS(null, 'visibility', 'visible');
 			if(detectmob()){
 				svgimgIN.setAttributeNS(null,'height','50');
 				svgimgIN.setAttributeNS(null,'width','50');				
-				svgimgIN.setAttributeNS(null,'x',$('#graph').width()-85);
+				svgimgIN.setAttributeNS(null,'x',graphElem.width()-85);
 				svgimgIN.setAttributeNS(null,'y','5');
 			}
-			else if($(window).width()<=755){
-				svgimgIN.setAttributeNS(null,'x',$('#graph').width()-75);
+			else if(windowElem.width()<=755){
+				svgimgIN.setAttributeNS(null,'x',graphElem.width()-75);
 			}
 
 
-			$('#graph').append(svgimgIN)
+			graphElem.append(svgimgIN)
 				.on("mouseover", svgimgIN.setAttributeNS(null,'fill-opacity',0.7))
 				.on("mouseout", svgimgIN.setAttributeNS(null,'fill-opacity',0.7));
 			svgimgIN
 				.addEventListener("click", function(){
-					if(!detectmob() || $(window).width()<=755){						
-						$("#mytext-title").detach().prependTo("#foreignObject");
-						$("#mytext-content").detach().prependTo("#mytext-title");
+					if(!detectmob() || windowElem.width()<=755){
+						mytextTitleElem.detach().prependTo("#foreignObject");
+						mytextContentElem.detach().prependTo("#mytext-title");
 					}
-					$("#mytext-content").find("div").show();
+					mytextContentElem.find("div").show();
 					svgfullscreen()
 				});
 			
@@ -1498,28 +1543,28 @@
 			svgimgOUT.setAttributeNS(null,'height','30');
 			svgimgOUT.setAttributeNS(null,'width','30');
 			svgimgOUT.setAttributeNS('http://www.w3.org/1999/xlink','href', '../../../images/fullscreen_exit_alt.png');
-			svgimgOUT.setAttributeNS(null,'x',$('body').width()-w/2-20);
+			svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-20);
 			svgimgOUT.setAttributeNS(null,'y','50');
 			svgimgOUT.setAttributeNS(null, 'visibility', 'hidden');
 			if(detectmob()){
 				svgimgOUT.setAttributeNS(null,'height','50');
 				svgimgOUT.setAttributeNS(null,'width','50');				
 			}
-			else if($(window).width()<=755){	//to fullscreen sto kinito einai diaforetiko
+			else if(windowElem.width()<=755){	//to fullscreen sto kinito einai diaforetiko
 				svgimgOUT.setAttributeNS(null,'height','40');
 				svgimgOUT.setAttributeNS(null,'width','40');				
-				svgimgOUT.setAttributeNS(null,'x',$('body').width()-w/2-30);
+				svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-30);
 				svgimgOUT.setAttributeNS(null,'y','60');
 			}
-			$('svg').append(svgimgOUT)
+			graphElem.append(svgimgOUT)
 				.on("mouseover", svgimgOUT.setAttributeNS(null,'fill-opacity',0.7))
 				.on("mouseout", svgimgOUT.setAttributeNS(null,'fill-opacity',0.7));
 			svgimgOUT
 				.addEventListener("click", function(){
 					svgfullscreenExit();
-					if(!detectmob() || $(window).width()<=755){
-						$("#mytext-title").detach().prependTo("#myinfo");
-						$("#mytext-content").detach().prependTo("#mytext-title")						
+					if(!detectmob() || windowElem.width()<=755){
+						mytextTitleElem.detach().prependTo("#myinfo");
+						mytextContentElem.detach().prependTo("#mytext-title")						
 					}									// do only if not a mobile
 					console.log("web2")						
 				});
@@ -1528,20 +1573,20 @@
 			svgimgReset.setAttributeNS(null,'height','22');
 			svgimgReset.setAttributeNS(null,'width','22');
 			svgimgReset.setAttributeNS('http://www.w3.org/1999/xlink','href', '../../../images/reload.png');
-			svgimgReset.setAttributeNS(null,'x',$('#graph').width()-27);
+			svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
 			svgimgReset.setAttributeNS(null,'y','35');
 			svgimgReset.setAttributeNS(null, 'visibility', 'visible');
 			if(detectmob()){
 				svgimgReset.setAttributeNS(null,'height','50');
 				svgimgReset.setAttributeNS(null,'width','50');				
-				svgimgReset.setAttributeNS(null,'x',$('#graph').width()-85);
+				svgimgReset.setAttributeNS(null,'x',graphElem.width()-85);
 				svgimgReset.setAttributeNS(null,'y','55');
 			}
-			else if($(window).width()<=755){
-				svgimgReset.setAttributeNS(null,'x',$('#graph').width()-75);
+			else if(windowElem.width()<=755){
+				svgimgReset.setAttributeNS(null,'x',graphElem.width()-75);
 			}
 
-			$('svg').append(svgimgReset)
+			graphElem.append(svgimgReset)
 				.on("mouseover", svgimgReset.setAttributeNS(null,'fill-opacity',0.7))
 				.on("mouseout", svgimgReset.setAttributeNS(null,'fill-opacity',0.7));
 			svgimgReset
@@ -1551,20 +1596,20 @@
 			svgimgResetFS.setAttributeNS(null,'height','30');
 			svgimgResetFS.setAttributeNS(null,'width','30');
 			svgimgResetFS.setAttributeNS('http://www.w3.org/1999/xlink','href', '../../../images/reload.png');
-			svgimgResetFS.setAttributeNS(null,'x',$('body').width()-w/2-20);
+			svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-20);
 			svgimgResetFS.setAttributeNS(null,'y','90');
 			svgimgResetFS.setAttributeNS(null, 'visibility', 'hidden');
 			if(detectmob()){
 				svgimgOUT.setAttributeNS(null,'height','50');
 				svgimgOUT.setAttributeNS(null,'width','50');				
 			}
-			else if($(window).width()<=755){
+			else if(windowElem.width()<=755){
 				svgimgResetFS.setAttributeNS(null,'height','40');
 				svgimgResetFS.setAttributeNS(null,'width','40');				
-				svgimgResetFS.setAttributeNS(null,'x',$('body').width()-w/2-30);
+				svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-30);
 				svgimgResetFS.setAttributeNS(null,'y','110');
 			}
-			$('svg').append(svgimgResetFS)
+            graphElem.append(svgimgResetFS)
 				.on("mouseover", svgimgResetFS.setAttributeNS(null,'fill-opacity',0.7))
 				.on("mouseout", svgimgResetFS.setAttributeNS(null,'fill-opacity',0.7));
 			svgimgResetFS
@@ -1575,8 +1620,8 @@
 		function findTopicLabels(){
 //NMP 
 	/* The following code is executed only when the ajaxCall has loaded all the Topics */
-		// $( document ).ajaxComplete(function() { 	// if "ajaxComplete" the code is executed every time one of the ajaxCalls is completed 
-		// $(document).bind("topicsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
+		// documentElem.ajaxComplete(function() { 	// if "ajaxComplete" the code is executed every time one of the ajaxCalls is completed
+		// documentElem.bind("topicsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
 
 			k = 0,
 			n = nodes.length,
@@ -1711,7 +1756,7 @@
 
 				includeIcons();
 
-//				$(document).trigger("graphDone");	// must be executed after graph's loading 
+//				documentElem.trigger("graphDone");	// must be executed after graph's loading 
 				vis.select(".loading").remove();
 				nodeCircles
 					.transition()
@@ -1740,7 +1785,7 @@
 
 				findTopicLabels();
 
-				$(document).trigger("labelsDone");	// must be executed after graph's loading 
+				documentElem.trigger("labelsDone");	// must be executed after graph's loading 
 
 
 				/* after creating the labels we put them in nodeLabels variable */
@@ -1821,7 +1866,7 @@
 //			 	success: function(resp){
 //			 		spinner.stop();
 //			 		myresponse = JSON.parse(resp);
-//			 		//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+//			 		//documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
 //			 		topics1 = myresponse.topicsNoSort;
 //			 		topics2 = myresponse.topics;
 //			 		grants = myresponse.grants;
@@ -1843,7 +1888,7 @@
 				success: function(resp){
 					spinner.stop();
 					myresponse = JSON.parse(resp);
-					//$(document).bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+					//documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
 					topics1 = myresponse.topicsNoSort;
 					topics2 = myresponse.topics;
 					grants = myresponse.grants;
@@ -2192,13 +2237,13 @@
 				.attr("data-placement","bottom")
 				.attr("title",function(d) {return d.desc;})
 				.on("click",function(d,i){
-					$("#mytext-title").empty();
-					$("#mytext-title").show();
-					$("#mytext-content").empty();
-					$("#mytext-content").show();
-                    $("#classifiedNodesHeader").hide();
-                    $("#classifiedNodes").hide();
-                    $("#classifiedNodes").find("div").find("ul").empty();   //clear anything included in child nodes
+					mytextTitleElem.empty();
+					mytextTitleElem.show();
+					mytextContentElem.empty();
+					mytextContentElem.show();
+                    classifiedNodesHeaderElem.hide();
+                    classifiedNodesElem.hide();
+                    classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
 
 					if($(this).hasClass("active_row")){
 						$(this).removeClass("active_row");
@@ -2227,8 +2272,8 @@
 					var collection = null;
 					if($(".active_row").length == 0){
 						collection = $(".legend_row");
-						$("#mytext-content").empty();
-						$("#mytext-title").empty();
+						mytextContentElem.empty();
+						mytextTitleElem.empty();
 					}
 					else
 						collection = $(".active_row");
@@ -2244,8 +2289,8 @@
 					showtype(fade_out, types);
 
                     if($(".active_row").length != 0){
-                        $("#classifiedNodesHeader").html("Similar <?php echo $node_name;?>s based on area classification:&nbsp;");
-                        $("#classifiedNodesHeader").show();
+                        classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on area classification:&nbsp;");
+                        classifiedNodesHeaderElem.show();
 
                         var classifiedNodes = "";
                         numOfClassifiedNodes=0;
@@ -2269,7 +2314,7 @@
                                 .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
                         }
                         else{
-                            $("#mytext-title").empty();
+                            mytextTitleElem.empty();
                             mytextTitle.append("div").append("ul")
                                 .attr("class", "pagination active")
                                 .attr("data-toggle", "tooltip")
@@ -2279,9 +2324,9 @@
                                 .append("li").append("a").attr("class", "btn-primary active").html($(".active_row").length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
                         }
 
-                        $("#classifiedNodes").find("div").find("ul").append(classifiedNodes);
+                        classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
                         classifiedNodeButtons();
-                        $("#classifiedNodes").show();
+                        classifiedNodesElem.show();
                     }
                 });
 				//.style("width","140px");
@@ -2347,7 +2392,7 @@
 							for (var i = 0; i < subdConnections.length; i++) {
 								if (subdConnections[i] == d.name){
 									var str = "";
-									str += "<td colspan='4'><div class='table table-condensed table-striped'><div class='table-row-group' style='overflow-y:scroll;height:"+$(window).height()/4+"'><div class='row'><div class='cell' style='border-top:solid'>Area </div><div class='cell' style='border-top:solid'>Relations</div></div>";
+									str += "<td colspan='4'><div class='table table-condensed table-striped'><div class='table-row-group' style='overflow-y:scroll;height:"+windowElem.height()/4+"'><div class='row'><div class='cell' style='border-top:solid'>Area </div><div class='cell' style='border-top:solid'>Relations</div></div>";
 
 									for (var j = 0; j < subdConnections.length; j++) {
 										subdConnections.forEach(function(z){
@@ -2450,8 +2495,8 @@
 
 
 				//refreshes the inner options
-				$("#grants").multiselect("refresh");
-				$("#grants").multiselect().multiselectfilter({
+				grantsElem.multiselect("refresh");
+				grantsElem.multiselect().multiselectfilter({
 				/*	http://www.erichynds.com/examples/jquery-ui-multiselect-widget/demos/#filter	*/
 					filter: function(event, matches){
 						if( !matches.length ){
@@ -2462,10 +2507,10 @@
 
 
 //hard code....
-				$("#category1").on("click", function (){
-					if ($("#category1").hasClass("activeCategory")){
-						$("#category1").find("a").attr("style","background-color:#fff;color:#1f77b4");
-						$("#category1").attr("class","");
+				category1Elem.on("click", function (){
+					if (category1Elem.hasClass("activeCategory")){
+						category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
+						category1Elem.attr("class","");
 
 						var types = [];
 						 $(".circle").each(function(){
@@ -2475,11 +2520,11 @@
 						showtype(fade_out, types);
 					}
 					else{
-						$("#category2").find("a").attr("style","background-color:#fff;color:#ff7f0e");
-						$("#category3").find("a").attr("style","background-color:#fff;color:#2ca02c");
-						$("#categories").find("ul").find("li").attr("class","");
-						$("#category1").attr("class","activeCategory");
-						$("#category1").find("a").attr("style","background-color:#ddd;color:#1f77b4");
+						category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
+						category3Elem.find("a").attr("style","background-color:#fff;color:#2ca02c");
+						categoriesElem.find("ul").find("li").attr("class","");
+						category1Elem.attr("class","activeCategory");
+						category1Elem.find("a").attr("style","background-color:#ddd;color:#1f77b4");
 
 						var collection = null;
 						if($(".activeCategory").length == 0){
@@ -2501,10 +2546,10 @@
 						mytext.selectAll(".nodetext").remove();
 					}
 				});
-				$("#category2").on("click", function (){
-					if ($("#category2").hasClass("activeCategory")){
-						$("#category2").find("a").attr("style","background-color:#fff;color:#ff7f0e");
-						$("#category2").attr("class","");
+				category2Elem.on("click", function (){
+					if (category2Elem.hasClass("activeCategory")){
+						category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
+						category2Elem.attr("class","");
 
 						var types = [];
 						 $(".circle").each(function(){
@@ -2515,11 +2560,11 @@
 						showtype(fade_out, types);
 					}
 					else{
-						$("#category1").find("a").attr("style","background-color:#fff;color:#1f77b4");
-						$("#category3").find("a").attr("style","background-color:#fff;color:#2ca02c");
-						$("#categories").find("ul").find("li").attr("class","");
-						$("#category2").attr("class","activeCategory");
-						$("#category2").find("a").attr("style","background-color:#ddd;color:#ff7f0e");
+						category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
+						category3Elem.find("a").attr("style","background-color:#fff;color:#2ca02c");
+						categoriesElem.find("ul").find("li").attr("class","");
+						category2Elem.attr("class","activeCategory");
+						category2Elem.find("a").attr("style","background-color:#ddd;color:#ff7f0e");
 
 						var collection = null;
 						if($(".activeCategory").length == 0){
@@ -2541,10 +2586,10 @@
 						mytext.selectAll(".nodetext").remove();
 					}
 				});
-				$("#category3").on("click", function (){
-					if ($("#category3").hasClass("activeCategory")){
-						$("#category3").find("a").attr("style","background-color:#fff;color:#2ca02c");
-						$("#category3").attr("class","");
+				category3Elem.on("click", function (){
+					if (category3Elem.hasClass("activeCategory")){
+						category3Elem.find("a").attr("style","background-color:#fff;color:#2ca02c");
+						category3Elem.attr("class","");
 
 						var types = [];
 						 $(".circle").each(function(){
@@ -2555,11 +2600,11 @@
 						showtype(fade_out, types);
 					}
 					else{
-						$("#category1").find("a").attr("style","background-color:#fff;color:#1f77b4");
-						$("#category2").find("a").attr("style","background-color:#fff;color:#ff7f0e");
-						$("#categories").find("ul").find("li").attr("class","");
-						$("#category3").attr("class","activeCategory");
-						$("#category3").find("a").attr("style","background-color:#ddd;color:#2ca02c");
+						category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
+						category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
+						categoriesElem.find("ul").find("li").attr("class","");
+						category3Elem.attr("class","activeCategory");
+						category3Elem.find("a").attr("style","background-color:#ddd;color:#2ca02c");
 
 
 						var collection = null;
@@ -2583,11 +2628,11 @@
 					}
 				});
 
-				$("#experiments").on("click", function (e,d){
+				experimentsElem.on("click", function (e,d){
 					// finds the click event and refreshes before the beforeclose event.
 					var myval = $(this).find("option:selected").val();						
 				});
-				$("#experiments").on("change", function (e,d){
+				experimentsElem.on("change", function (e,d){
 					var myval = $(this).find("option:selected").val();
 
 					if(myval != experimentName){
@@ -2610,16 +2655,16 @@
 
 						experimentName = myval;
 
-						$("#myTab").hide();
+						myTabElem.hide();
 
 						// spinner added again
-						$("#legend").empty();
-						$("#graph").empty();
+						legendElem.empty();
+						graphElem.empty();
 
-						$("svg:text").empty();
+						svgTextElem.empty();
 
-						$("#chorddiv").empty();
-						$("#chord2div").empty();
+						chorddivElem.empty();
+						chorddivElem.empty();
 
 						spinner = new Spinner(opts).spin(target);
 
@@ -2645,7 +2690,7 @@
 						subdBiConnectionsNum = [];
 						nodesToFade = [];
 
-						$("#grants").multiselect();
+						grantsElem.multiselect();
 
 						similarityThr = <?php echo $similarityThr ;?>;
 						nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
@@ -2660,18 +2705,19 @@
 if (/^FET*/.test(experimentName)){
 	nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
 	expsimilarity = 0.45;
-	$("#categories").hide();
+	categoriesElem.hide();
 }
 else if (/^HEALTH*/.test(experimentName)){
 	expsimilarity = 0.45;
-	$("#categories").hide();
+	categoriesElem.hide();
 }
 else if (/^Full*/.test(experimentName)){
 	expsimilarity = 0.6;
-	$("#categories").hide();
+	categoriesElem.hide();
 }
 
-						ajaxCall(myval,expsimilarity);			 		$("#mygraph-container").attr("style","position:fixed;width:"+8*w/7);
+						ajaxCall(myval,expsimilarity);			 		
+                        mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
 
 // hard code for the Brusseles ... to be moved ... paizei rolo kai i othoni einia ftiagmena gia 13-15
 if (/^FET*/.test(experimentName)){
@@ -2680,7 +2726,7 @@ if (/^FET*/.test(experimentName)){
 	window['force']['charge'](charge);
 	window['force']['gravity'](gravity);
 	force.start();
-	$("#categories").show();
+	categoriesElem.show();
 }
 else if (/^HEALTH*/.test(experimentName)){
 	gravity = 7;
@@ -2719,41 +2765,41 @@ else if (/^Full*/.test(experimentName)){
 				});
 
 
-				$("#filters").on("click", function (e,d){
+				filtersElem.on("click", function (e,d){
 					// finds the click event and refreshes before the change event.
 					var myval = $(this).find("option:selected").val();						
 				});
-				$("#filters").on("change", function (e,d){
+				filtersElem.on("change", function (e,d){
 					// var myval = $(this).find("option:selected").val();
 					if($(this).find("option:selected").is("#opt1")){
-						 $("#filter1").show();
-						 $("#filter2").hide()
+						 filter1Elem.show();
+						 filter2Elem.hide()
 					}
 					else if($(this).find("option:selected").is("#opt2")){
-						 $("#filter1").hide();
-						 $("#filter2").show()
+						 filter1Elem.hide();
+						 filter2Elem.show()
 					}
 					else{
-						 $("#filter1").hide();
-						 $("#filter2").hide()
+						 filter1Elem.hide();
+						 filter2Elem.hide()
 					}
 				});
 
 //http://www.erichynds.com/blog/jquery-ui-multiselect-widget
-				$("#grants").bind("multiselectcheckall", function(event, matches){
+				grantsElem.bind("multiselectcheckall", function(event, matches){
 					reset();					
 					selectnodeCircles = nodeCircles;
 					selectnodeLabels = nodeLabels
 				});
 
-				$("#grants").bind("multiselectuncheckall", function(event, matches){
+				grantsElem.bind("multiselectuncheckall", function(event, matches){
 					reset();
 					selectnodeCircles = nodeCircles;
 					selectnodeLabels = nodeLabels
 				});
 
 
-				$("#grantsGroup1").multiselect({
+				grantsGroup1Elem.multiselect({
 					optgrouptoggle: function(event, ui){
 						for (var i=0;i<ui.inputs.length;i++)
 						{
@@ -2792,9 +2838,9 @@ else if (/^Full*/.test(experimentName)){
 					}
 				});
 	
-				$("#grants").multiselect("refresh");
+				grantsElem.multiselect("refresh");
 
-				$("#grantsGroup2").bind("multiselectoptgrouptoggle", function(event, ui){
+				grantsGroup2Elem.bind("multiselectoptgrouptoggle", function(event, ui){
 					for (var i=0;i<ui.inputs.length;i++)
 					{
 						nodesToFade.push(ui.inputs[i].value);
@@ -2829,7 +2875,7 @@ else if (/^Full*/.test(experimentName)){
 				});
 
 
-				$("#grants").bind("multiselectclick", function(event, matches){
+				grantsElem.bind("multiselectclick", function(event, matches){
 					//if unchecked 
 					if (!matches.checked){
 						nodes.filter(function(e){
@@ -2838,7 +2884,7 @@ else if (/^Full*/.test(experimentName)){
 						});
 					}
 
-					var array_of_checked_values = $("#grants").multiselect("getChecked").map(function(){
+					var array_of_checked_values = grantsElem.multiselect("getChecked").map(function(){
 						return this.value;    
 					}).get();
 
@@ -2865,10 +2911,10 @@ else if (/^Full*/.test(experimentName)){
 			});
 
 
-			$("#myTab").show();
-			$("#experiment_btn").show();
+			myTabElem.show();
+			experimentBtnElem.show();
 			
-			$("#experiment_btn").on("click", function(){
+			experimentBtnElem.on("click", function(){
 
 				d3.select("#experiments").selectAll("option")
 					.each(function(d){
@@ -2894,13 +2940,13 @@ else if (/^Full*/.test(experimentName)){
 			});
 
 
-			$("#boost_btn").on("click", function(){
+			boostBtnElem.on("click", function(){
 			console.log("btn clicked");
 				topicstemp = topics1;
 				topics1 = topics2;
 				topics2 = topicstemp;
 
-				$("mytext-content").hide();
+				mytextContentElem.hide();
 				findTopicLabels();
 
 				clickGraph(clickedNode,0.1);
@@ -2908,13 +2954,13 @@ else if (/^Full*/.test(experimentName)){
 				console.log("btn changed");
 				if (topicsFlag){
 					topicsFlag = false;
-					$("#boost_btn").find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-remove");
+					boostBtnElem.find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-remove");
 				}
 				else{
 					topicsFlag = true;
-					$("#boost_btn").find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-ok");
+					boostBtnElem.find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-ok");
 				}	
-				$("mytext-content").show();
+				mytextContentElem.show();
 
 			});
 
@@ -3378,7 +3424,7 @@ function createChord(type){
 			var availableTags = [];
 			var availableLabels = [];			
 
-			$(document).bind("labelsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
+			$(document).bind("labelsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
 //				for (i=0 ; i<mywords.length ; i++){
 //					availableLabels.push(svgSortedTopicWords[i].item);
 // 3 words from labels on graph
@@ -3433,9 +3479,9 @@ function createChord(type){
                     var classifiedNodes = "";
 					var searchResultNodes = [];				//initialize every time in topic word search
 
-					$("#mytext-title").hide();
-                    $("#classifiedNodesHeader").html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
-					$("#classifiedNodesHeader").show();
+					mytextTitleElem.hide();
+                    classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
+					classifiedNodesHeaderElem.show();
 
 
                     for (i=0 ; i<availableTags.length ; i++){
@@ -3454,11 +3500,11 @@ function createChord(type){
 						}
 					}
 
-                    $("#classifiedNodes").find("div").find("ul").append(classifiedNodes);
-                    $("#classifiedNodes").show();
+                    classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
+                    classifiedNodesElem.show();
 
-                    $("#mytext-content").hide();
-                    $("#boost_btn").hide();
+                    mytextContentElem.hide();
+                    boostBtnElem.hide();
 
 
 
@@ -3474,12 +3520,12 @@ function createChord(type){
 
 				}
 
-				$( "#tags" ).autocomplete({
+				tagsElem.autocomplete({
 					source: unique(availableLabels),
 					minLength: 2,
 
 					select: function( event, ui ) {
-                        $("#classifiedNodes").find("div").find("ul").empty();   //clear anything included in child nodes
+                        classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
 						log( ui.item ?
 							ui.item.label :
 							"Nothing selected, input was " + this.value);
@@ -3488,7 +3534,7 @@ function createChord(type){
 
 					}
 				});
-			});		
+			});
 		});
 	});
 

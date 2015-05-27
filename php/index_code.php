@@ -3115,9 +3115,9 @@ var u =0;
 
 
 
-////////////////////////////////////////////////////////////////////
-/**** FILE CREATION FUNCTIONS AND CHORD GRAPH ELEMENTS CREATION****/
-////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/**** FILE CREATION FUNCTIONS AND CHORD GRAPH ELEMENTS CREATION ****/
+/////////////////////////////////////////////////////////////////////
 
 		/* test function is similar to fade function*/
 		function createJsonFile(){
@@ -3227,189 +3227,270 @@ var u =0;
 ///////////////////////////////////////
 
 
-function createChord(type){
-	var chord_width = w + <?php echo $chord_width ;?>,
-		chord_height = h + <?php echo $chord_height ;?>,
-		wordWidth = <?php echo $wordWidth ;?>,
-		wordHeight = <?php echo $wordHeight ;?>,
-		wordPadding = <?php echo $wordPadding ;?>,
-		groupPadding = <?php echo $groupPadding ;?>,
-		chord_innerRadius = Math.min(chord_width, chord_height) * .41,
-		chord_outerRadius = chord_innerRadius * 1.1,
-		chord_r1 = chord_height / 2,
-		chord_r0 = chord_r1 - wordPadding;	
-	 	 
-	var chord_arc = d3.svg.arc()
-	.innerRadius(chord_innerRadius)
-	.outerRadius(chord_outerRadius);
-	 
-	var chord_layout = d3.layout.chord()
-	.padding(groupPadding)
-	.sortSubgroups(d3.descending)
-	.sortChords(d3.ascending);
-	 
-	var chord_path = d3.svg.chord()
-	.radius(chord_innerRadius);
-		 
-	if (type == 1){
-		var chord_svg = d3.select("#chorddiv")
-			//.style("width", w)
-			.style("height", h)
-			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-			.style("preserveAspectRatio", "xMidYMid meet")
-			.style("border-style","solid")
-			.style("cursor","pointer")
-			.style("border-color","snow")
-			.append("svg:svg")
-			.attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
-			.attr("height", chord_height+wordHeight)
-			.append("svg:g")
-			.attr("class", "chord_circle")
-			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
-	}
-	else {	
-		var chord_svg = d3.select("#chord2div")
-			//.style("width", w)
-			.style("height", h)
-			.style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-			.style("preserveAspectRatio", "xMidYMid meet")
-			.style("border-style","solid")
-			.style("cursor","pointer")
-			.style("border-color","snow")
-			.append("svg:svg")
-			.attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
-			.attr("height", chord_height+wordHeight)
-			.append("svg:g")
-			.attr("class", "chord_circle")
-			.attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")"); 
-	}
+        function createChord(type){
+            var chord_width = w + <?php echo $chord_width ;?>,
+                chord_height = h + <?php echo $chord_height ;?>,
+                wordWidth = <?php echo $wordWidth ;?>,
+                wordHeight = <?php echo $wordHeight ;?>,
+                wordPadding = <?php echo $wordPadding ;?>,
+                groupPadding = <?php echo $groupPadding ;?>,
+                chord_innerRadius = Math.min(chord_width, chord_height) * .41,
+                chord_outerRadius = chord_innerRadius * 1.1,
+                chord_r1 = chord_height / 2,
+                chord_r0 = chord_r1 - wordPadding;
+
+            var chord_arc = d3.svg.arc()
+            .innerRadius(chord_innerRadius)
+            .outerRadius(chord_outerRadius);
+
+            var chord_layout = d3.layout.chord()
+            .padding(groupPadding)
+            .sortSubgroups(d3.descending)
+            .sortChords(d3.ascending);
+
+            var chord_path = d3.svg.chord()
+            .radius(chord_innerRadius);
+
+            if (type == 1){
+                var chord_svg = d3.select("#chorddiv")
+                    //.style("width", w)
+                    .style("height", h)
+                    .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+                    .style("preserveAspectRatio", "xMidYMid meet")
+                    .style("border-style","solid")
+                    .style("cursor","pointer")
+                    .style("border-color","snow")
+                    .append("svg:svg")
+                    .attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
+                    .attr("height", chord_height+wordHeight)
+                    .append("svg:g")
+                    .attr("class", "chord_circle")
+                    .attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")");
+            }
+            else {
+                var chord_svg = d3.select("#chord2div")
+                    //.style("width", w)
+                    .style("height", h)
+                    .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+                    .style("preserveAspectRatio", "xMidYMid meet")
+                    .style("border-style","solid")
+                    .style("cursor","pointer")
+                    .style("border-color","snow")
+                    .append("svg:svg")
+                    .attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
+                    .attr("height", chord_height+wordHeight)
+                    .append("svg:g")
+                    .attr("class", "chord_circle")
+                    .attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")");
+            }
 
 
 
 
-	chord_svg.append("circle")
-	.attr("r", chord_outerRadius);
-	 
+            chord_svg.append("circle")
+            .attr("r", chord_outerRadius);
 
 
 
-	if (type == 1){
-		chord_layout.matrix(subdBiConnectionsNum);
-	}
-	else{				
-		chord_layout.matrix(subdBiConnectionsNumCross);
-	}
-	mytextsubdivisions = subdivisionsChord; 
-	// Add a group per neighborhood.
-	chord_group = chord_svg.selectAll(".group")
-		.data(chord_layout.groups)
-		.enter().append("svg:g")
-		.attr("class", function(d, i) { return "group "+subdivisionsChord[i].name; })
-		.on("mouseover", chord_mouseover)
-		.on("mouseout", chord_mouseout);
-		//.on("click",chord_click);
-	 
-	// Add a mouseover title.
-	 chord_group.append("title").text(function(d, i) {
-		// var str = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-		// var strCross = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-		// return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
-		if (type == 1){
-			return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relations + " <?php echo $node_name;?> relations directed to all areas";
-		}
-		else{
-			return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relationsCross + " <?php echo $node_name;?> relations directed only to other areas";
-		}
-	 });
- 
-	// Add the group arc.
-	var chord_groupPath = chord_group.append("path")
-		.attr("id", function(d, i) { return "group" + i; })
-		.attr("d", chord_arc)
-		.style("fill", function(d, i) { return subdivisionsChord[i].color; });
- 
-	// Add a text label.
-	var chord_groupText = chord_group.append("svg:text")
-		.each(function(d) { 
-			d.angle = ((d.startAngle + d.endAngle) / 2)+0.03; })
-		.attr("x", 6)
-		.attr("dy", 15)
-		.attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-		.attr("transform", function(d) {
-			return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-				+ "translate(" + chord_r0 + ")"		
-				+ (d.angle > Math.PI ? "rotate(180)" : "");
-		})
-		.text(function(d, i) { return subdivisionsChord[i].name; });
- 
-	// Add the chords.
-	chord_chord = chord_svg.selectAll(".chord")
-		.data(chord_layout.chords)
-		.enter().append("path")
-		.attr("class", function(d, i) { return "chord "+subdivisionsChord[d.source.index].name; })
-		.style("fill", function(d) { return subdivisionsChord[d.source.index].color; })
-		.attr("d", chord_path);
-		
-	// Add an elaborate mouseover title for each chord.
-	 chord_chord
-	 	.append("title")
-	 	.text(function(d) {
-			percentageSum = d.source.value+d.target.value;
 
-			if (type == 1){
-
-				return subdivisionsChord[d.source.index].name
-				 + " ↔ " + subdivisionsChord[d.target.index].name 				
-				 + ": " + percentageSum
-				 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-				 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-				 + ")" ; // &harr; the name of the arrow
-	 		}
-	 		else{
-
-				return subdivisionsChord[d.source.index].name
-				 + " ↔ " + subdivisionsChord[d.target.index].name 				
-				 + ": " + percentageSum
-				 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relationsCross)
-				 +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relationsCross)
-				 + ")" ; // &harr; the name of the arrow
-
-	 		}
-/*					if(subdivisionsChord[d.source.index].name != subdivisionsChord[d.target.index].name){
-				return subdivisionsChord[d.source.index].name
-				 + " → " + subdivisionsChord[d.target.index].name
-				 + ": " + d.source.value
-				 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-				 + ")\n" + subdivisionsChord[d.target.index].name
-				 + " → " + subdivisionsChord[d.source.index].name
-				 + ": " + d.target.value
-				+ " (" + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-				 + ")" ;
-			}
-			else{						
-				return subdivisionsChord[d.source.index].name
-			 + " → " + subdivisionsChord[d.target.index].name
-			 + ": " + d.source.value
-			 + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-			 + ")" ;
-			}
-*/
-	 });
-
-	function chord_mouseover(d, i) {
-		chord_chord.classed("fade", function(p) {
-			return p.source.index != i
-			&& p.target.index != i;
-		});
-	}
+            if (type == 1){
+                chord_layout.matrix(subdBiConnectionsNum);
+            }
+            else{
+                chord_layout.matrix(subdBiConnectionsNumCross);
+            }
+            mytextsubdivisions = subdivisionsChord;
+            // Add a group per neighborhood.
+            chord_group = chord_svg.selectAll(".group")
+                .data(chord_layout.groups)
+                .enter().append("svg:g")
+                .attr("class", function(d, i) { return "group "+subdivisionsChord[i].name; })
+                .on("mouseover", chord_mouseover)
+                .on("mouseout", chord_mouseout)
+                .on("click",chord_click);
 
 
-	function chord_mouseout(d, i) {
-		chord_chord.classed("fade", function(p) {
-			return 0;
-		});
-	}
-}
+                    // Add a mouseover title.
+             chord_group.append("title").text(function(d, i) {
+                // var str = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
+                // var strCross = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
+                // return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
+                if (type == 1){
+                    return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relations + " <?php echo $node_name;?> relations directed to all areas";
+                }
+                else{
+                    return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relationsCross + " <?php echo $node_name;?> relations directed only to other areas";
+                }
+             });
+
+            // Add the group arc.
+            var chord_groupPath = chord_group.append("path")
+                .attr("id", function(d, i) { return "group" + i; })
+                .attr("d", chord_arc)
+                .style("fill", function(d, i) { return subdivisionsChord[i].color; });
+
+            // Add a text label.
+            var chord_groupText = chord_group.append("svg:text")
+                .each(function(d) {
+                    d.angle = ((d.startAngle + d.endAngle) / 2)+0.03; })
+                .attr("x", 6)
+                .attr("dy", 15)
+                .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+                .attr("transform", function(d) {
+                    return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                        + "translate(" + chord_r0 + ")"
+                        + (d.angle > Math.PI ? "rotate(180)" : "");
+                })
+                .text(function(d, i) { return subdivisionsChord[i].name; });
+
+            // Add the chords.
+            chord_chord = chord_svg.selectAll(".chord")
+                .data(chord_layout.chords)
+                .enter().append("path")
+                .attr("class", function(d, i) { return "chord "+subdivisionsChord[d.source.index].name+" chord-source-" + d.source.index+" chord-target-" + d.target.index; })
+                .style("fill", function(d) { return subdivisionsChord[d.source.index].color; })
+                .attr("d", chord_path);
+
+            // Add an elaborate mouseover title for each chord.
+            chord_chord
+                .append("title")
+                .text(function(d) {
+                    percentageSum = d.source.value+d.target.value;
+
+                    if (type == 1){
+
+                        return subdivisionsChord[d.source.index].name
+                         + " ↔ " + subdivisionsChord[d.target.index].name
+                         + ": " + percentageSum
+                         + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
+                         +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
+                         + ")" ; // &harr; the name of the arrow
+                    }
+                    else{
+
+                        return subdivisionsChord[d.source.index].name
+                         + " ↔ " + subdivisionsChord[d.target.index].name
+                         + ": " + percentageSum
+                         + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relationsCross)
+                         +" ↔ " + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relationsCross)
+                         + ")" ; // &harr; the name of the arrow
+
+                    }
+        /*					if(subdivisionsChord[d.source.index].name != subdivisionsChord[d.target.index].name){
+                        return subdivisionsChord[d.source.index].name
+                         + " → " + subdivisionsChord[d.target.index].name
+                         + ": " + d.source.value
+                         + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
+                         + ")\n" + subdivisionsChord[d.target.index].name
+                         + " → " + subdivisionsChord[d.source.index].name
+                         + ": " + d.target.value
+                        + " (" + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
+                         + ")" ;
+                    }
+                    else{
+                        return subdivisionsChord[d.source.index].name
+                     + " → " + subdivisionsChord[d.target.index].name
+                     + ": " + d.source.value
+                     + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
+                     + ")" ;
+                    }
+        */
+                });
+
+            function chord_mouseover(d, i) {
+                chord_chord.classed("fade", function(p) {
+                    return p.source.index != i
+                    && p.target.index != i;
+                });
+            }
+
+
+            function chord_mouseout(d, i) {
+                chord_chord.classed("fade", function(p) {
+                    return 0;
+                });
+            }
+
+            function chord_click(d,i) {
+                console.log(d.chordHighlighted)
+                if (d.chordHighlighted){
+//                    chord_chord.classed("fade", function(p) {
+//                        return p.source.index != i
+//                            && p.target.index != i;
+//                    });
+                    d3.selectAll(".chord")
+                        .style("opacity", function (d) {
+                            return 0.1
+                    });
+                    d3.selectAll(".chord-source-" + d.index)
+                        .classed("active", function(p) {
+                            if (d3.selectAll(".chord-target-" + d.index).classed("active"))
+                                return true;
+                            else
+                                return false;
+                        });
+                    d3.selectAll(".chord-target-" + d.index)
+                        .classed("active", function(p) {
+                            if (d3.selectAll(".chord-source-" + d.index).classed("active"))
+                                return true;
+                            else
+                                return false;
+                        });
+                    d3.selectAll(".active")
+                        .style("opacity", function (d) {
+                            return 1;
+                        });
+                    d3.selectAll(".chord-source-" + d.index)
+                        .classed("active", function(p) {
+                            return false;
+                        });
+                    d3.selectAll(".chord-target-" + d.index)
+                        .classed("active", function(p) {
+                            return false;
+                        });
+
+                }
+                else{
+                    d3.selectAll(".chord")
+                        .style("opacity", function (d) {
+                            return 0.1
+                    });
+                    d3.selectAll(".chord-source-" + d.index)
+                        .classed("active", function(p) {
+                            return true;
+                        });
+                    d3.selectAll(".chord-target-" + d.index)
+                        .classed("active", function(p) {
+                            return true;
+                        });
+                    d3.selectAll(".active")
+                        .style("opacity", function (d) {
+                            return 1;
+                        });
+                }
+                d.chordHighlighted = d.chordHighlighted ? false : true;
+//                if ($(this).hasClass("active_row")) {
+//                    $(this).removeClass("active_row");
+//                    $(this).addClass("inactive");
+//                    if ($(".active_row").length == 0) {
+//                        $(".inactive").each(function () {
+//                            $(this).removeClass("inactive");
+//                        });
+//                    }
+//                }
+//                else {
+//                    $(this).addClass("active_row");
+//                    $(this).removeClass("inactive");
+//                    if ($(".active_row").length == 1) {
+//                        var cur = this;
+//                        $(".legend_row").each(function () {
+//                            if (this != cur)
+//                                $(this).addClass("inactive");
+//                        });
+//                    }
+//                }
+            }
+        }
 
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////

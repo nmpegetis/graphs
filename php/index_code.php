@@ -319,6 +319,7 @@
 			chord_formatPercent = d3.format(".1%"),
 			percentageSum = 0,
 			clickedNode = 0,
+            clickedChord = 0,
             target = document.getElementById('graphdiv'),
             opts = {
                 lines: 17,              // The number of lines to draw
@@ -3398,97 +3399,63 @@ var u =0;
                 });
 
             function chord_mouseover(d, i) {
-                chord_chord.classed("fade", function(p) {
-                    return p.source.index != i
-                    && p.target.index != i;
-                });
+                if (!clickedChord) {
+                    chordHandler(d, i);
+                }
+
+//                if (!clickedChord) {
+//                chord_chord.classed("fade", function(p) {
+//                    return p.source.index != i
+//                    && p.target.index != i;
+//                });
             }
 
 
             function chord_mouseout(d, i) {
-                chord_chord.classed("fade", function(p) {
-                    return 0;
-                });
+                if (!clickedChord) {
+                    chordHandler(d, i);
+                }
+//                if (!clickedChord) {
+//                chord_chord.classed("fade", function(p) {
+//                    return 0;
+//                });
             }
 
-            function chord_click(d,i) {
-                console.log(d.chordHighlighted)
-                if (d.chordHighlighted){
-//                    chord_chord.classed("fade", function(p) {
-//                        return p.source.index != i
-//                            && p.target.index != i;
-//                    });
-                    d3.selectAll(".chord")
-                        .style("opacity", function (d) {
-                            return 0.1
-                    });
-                    d3.selectAll(".chord-source-" + d.index)
-                        .classed("active", function(p) {
-                            if (d3.selectAll(".chord-target-" + d.index).classed("active"))
-                                return true;
-                            else
-                                return false;
-                        });
-                    d3.selectAll(".chord-target-" + d.index)
-                        .classed("active", function(p) {
-                            if (d3.selectAll(".chord-source-" + d.index).classed("active"))
-                                return true;
-                            else
-                                return false;
-                        });
-                    d3.selectAll(".active")
-                        .style("opacity", function (d) {
-                            return 1;
-                        });
-                    d3.selectAll(".chord-source-" + d.index)
-                        .classed("active", function(p) {
-                            return false;
-                        });
-                    d3.selectAll(".chord-target-" + d.index)
-                        .classed("active", function(p) {
-                            return false;
-                        });
 
+            function chord_click(d,i) {
+//todo check if it can do better
+                chordHandler(d,i);
+                chordHandler(d,i);
+                clickedChord = !clickedChord;
+            }
+
+            function chordHandler(d,i) {
+                var chordSource = d3.selectAll(".chord-source-" + i);
+                var chordTarget = d3.selectAll(".chord-target-" + i);
+
+                // toggle clicked -- to 2o classed apo katw eprepe na einai activeChord alla mas endiaferei na einai to idio me to activeSource gi auto ebala to idio kai den ebala to ! giati allakse sto amesws proigoumeno classed
+//todo exei sfalma otan kanei click sto teleutaio chord
+                chordSource.classed("activeSource", !chordSource.classed("activeSource")).classed("activeChord",chordSource.classed("activeSource"));
+                chordTarget.classed("activeTarget", !chordTarget.classed("activeTarget")).classed("activeChord",chordTarget.classed("activeTarget"));
+
+                var activeSourceChords = d3.selectAll(".activeSource");
+                var activeTargetChords = d3.selectAll(".activeTarget");
+
+                // check if still active from other class
+                if(!activeSourceChords.empty()) activeSourceChords.classed("activeChord",true);
+                if(!activeTargetChords.empty()) activeTargetChords.classed("activeChord",true);
+
+                var activeChords = d3.selectAll(".activeChord");
+                var allChords = d3.selectAll(".chord");
+
+                // check if all inactive or not
+                if (!activeChords.empty()){
+                    allChords.style("opacity", "0.1");
+                    activeChords.style("opacity", "1");
                 }
                 else{
-                    d3.selectAll(".chord")
-                        .style("opacity", function (d) {
-                            return 0.1
-                    });
-                    d3.selectAll(".chord-source-" + d.index)
-                        .classed("active", function(p) {
-                            return true;
-                        });
-                    d3.selectAll(".chord-target-" + d.index)
-                        .classed("active", function(p) {
-                            return true;
-                        });
-                    d3.selectAll(".active")
-                        .style("opacity", function (d) {
-                            return 1;
-                        });
+                    allChords.style("opacity", "1");
                 }
-                d.chordHighlighted = d.chordHighlighted ? false : true;
-//                if ($(this).hasClass("active_row")) {
-//                    $(this).removeClass("active_row");
-//                    $(this).addClass("inactive");
-//                    if ($(".active_row").length == 0) {
-//                        $(".inactive").each(function () {
-//                            $(this).removeClass("inactive");
-//                        });
-//                    }
-//                }
-//                else {
-//                    $(this).addClass("active_row");
-//                    $(this).removeClass("inactive");
-//                    if ($(".active_row").length == 1) {
-//                        var cur = this;
-//                        $(".legend_row").each(function () {
-//                            if (this != cur)
-//                                $(this).addClass("inactive");
-//                        });
-//                    }
-//                }
             }
         }
 

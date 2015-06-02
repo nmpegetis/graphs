@@ -315,11 +315,11 @@
 			subdBiConnectionsNum = [],
 			nodesToFade = [],
             node_hash = [],
-            mytextsubdivisions = [],
 			chord_formatPercent = d3.format(".1%"),
 			percentageSum = 0,
 			clickedNode = 0,
             clickedChord = 0,
+            rows,
             target = document.getElementById('graphdiv'),
             opts = {
                 lines: 17,              // The number of lines to draw
@@ -2225,7 +2225,7 @@
 			createCSVFile();
 
 
-			var rows;
+            rows = null;
 			rows = legend.selectAll("tr")
 				.data(legend_data);
 			rows
@@ -2237,100 +2237,10 @@
 				.attr("data-toggle","tooltip")
 				.attr("data-placement","bottom")
 				.attr("title",function(d) {return d.desc;})
-				.on("click",function(d,i){
-					mytextTitleElem.empty();
-					mytextTitleElem.show();
-					mytextContentElem.empty();
-					mytextContentElem.show();
-                    classifiedNodesHeaderElem.hide();
-                    classifiedNodesElem.hide();
-                    classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
-
-					if($(this).hasClass("active_row")){
-						$(this).removeClass("active_row");
-						$(this).addClass("inactive");
-						if($(".active_row").length==0){
-							$(".inactive").each(function(){
-								$(this).removeClass("inactive");
-							});
-						}
-					}
-					else{
-						$(this).addClass("active_row");
-						$(this).removeClass("inactive");
-						if($(".active_row").length==1){
-							var cur = this;
-							$(".legend_row").each(function(){
-								if(this != cur)
-									$(this).addClass("inactive");
-							});
-						}
-					}
-
-					//find all types to show
-
-					var types = [];
-					var collection = null;
-					if($(".active_row").length == 0){
-						collection = $(".legend_row");
-						mytextContentElem.empty();
-						mytextTitleElem.empty();
-					}
-					else
-						collection = $(".active_row");
-
-					collection.each(function(col_index,col_elem){
-						$(".circle").each(function(cir_index,cir_elem){
-							if ( cir_elem.classList[1] == $($(col_elem).find("td").get(0)).find("div").html()){
-					 			types.push(parseInt(cir_elem.classList[2]));
-							}
-						});
-					});
-
-					showtype(fade_out, types);
-
-                    if($(".active_row").length != 0){
-                        classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on area classification:&nbsp;");
-                        classifiedNodesHeaderElem.show();
-
-                        var classifiedNodes = "";
-                        numOfClassifiedNodes=0;
-
-                        var o;
-                        $.each(types,function(i,obj){
-                            o = $.grep(nodes, function(o) { return o.index == obj })[0];
-                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
-                            numOfClassifiedNodes++;
-
-                        });
-
-
-                        if($(".active_row").length == 1) {
-                            mytextTitle.append("div").append("ul")
-                                .attr("class", "pagination active")
-                                .attr("data-toggle","tooltip")
-                                .attr("data-placement","right")
-                                .attr("title","...more about subdivision and link...")
-//						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
-                                .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
-                        }
-                        else{
-                            mytextTitleElem.empty();
-                            mytextTitle.append("div").append("ul")
-                                .attr("class", "pagination active")
-                                .attr("data-toggle", "tooltip")
-                                .attr("data-placement", "right")
-                                .attr("title", "...more about subdivision and link...")
-                                //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
-                                .append("li").append("a").attr("class", "btn-primary active").html($(".active_row").length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
-                        }
-
-                        classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
-                        classifiedNodeButtons();
-                        classifiedNodesElem.show();
-                    }
-                });
-				//.style("width","140px");
+				//.on("click",chord_click(d,i));
+                .on("click",legendHandler);
+//                .on("click",chordHandler);
+  				//.style("width","140px");
 
 			rows.append("td")
 				.append("div")
@@ -2403,17 +2313,17 @@
 													percentageSum = subdBiConnectionsNum[i][j]+subdBiConnectionsNum[j][i];
 													if (percentageSum > 0){
 														str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
-														 // + "<div class='cell' style='border-top:solid "+mytextsubdivisions[i].color+";'>"
+														 // + "<div class='cell' style='border-top:solid "+subdivisionsChord[i].color+";'>"
 														 // + subdBiConnectionsNum[i][j]
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/mytextsubdivisions[i].relations)
+														 // + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/subdivisionsChord[i].relations)
 														 // + ")</div>"
-														 // + "<div class='cell' style='color:"+mytextsubdivisions[j].color+";border-left:solid "+mytextsubdivisions[i].color+";border-top:solid "+mytextsubdivisions[i].color+";'>" 
+														 // + "<div class='cell' style='color:"+subdivisionsChord[j].color+";border-left:solid "+subdivisionsChord[i].color+";border-top:solid "+subdivisionsChord[i].color+";'>"
 														 // + subdBiConnectionsNum[j][i]
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
+														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/subdivisionsChord[j].relations)
 														 // + ")</div></div>" ;
 														 + "<div class='cell' style='color:"+rgb2hex(clrArray[j])+";'>" 
 														 + percentageSum
-														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/mytextsubdivisions[j].relations)
+														 // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/subdivisionsChord[j].relations)
 														 // + ")</div></div>" ;
 														 + "</div></div>" ;
 													}
@@ -3112,7 +3022,100 @@ var u =0;
 
 		}
 
+        function legendHandler(d,i){
+            chordHandler(d3.selectAll(".chord").selectAll("."+ d.name), i);
+            mytextTitleElem.empty();
+            mytextTitleElem.show();
+            mytextContentElem.empty();
+            mytextContentElem.show();
+            classifiedNodesHeaderElem.hide();
+            classifiedNodesElem.hide();
+            classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
 
+            if($(this).hasClass("active_row")){
+                $(this).removeClass("active_row");
+                $(this).addClass("inactive");
+                if($(".active_row").length==0){
+                    $(".inactive").each(function(){
+                        $(this).removeClass("inactive");
+                    });
+                }
+            }
+            else{
+                $(this).addClass("active_row");
+                $(this).removeClass("inactive");
+                if($(".active_row").length==1){
+                    var cur = this;
+                    $(".legend_row").each(function(){
+                        if(this != cur)
+                            $(this).addClass("inactive");
+                    });
+                }
+            }
+
+            //find all types to show
+
+            var types = [];
+            var collection = null;
+            if($(".active_row").length == 0){
+                collection = $(".legend_row");
+                mytextContentElem.empty();
+                mytextTitleElem.empty();
+            }
+            else
+                collection = $(".active_row");
+
+            collection.each(function(col_index,col_elem){
+                $(".circle").each(function(cir_index,cir_elem){
+                    if ( cir_elem.classList[1] == $($(col_elem).find("td").get(0)).find("div").html()){
+                        types.push(parseInt(cir_elem.classList[2]));
+                    }
+                });
+            });
+
+            showtype(fade_out, types);
+
+            if($(".active_row").length != 0){
+                classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on area classification:&nbsp;");
+                classifiedNodesHeaderElem.show();
+
+                var classifiedNodes = "";
+                numOfClassifiedNodes=0;
+
+                var o;
+                $.each(types,function(i,obj){
+                    o = $.grep(nodes, function(o) { return o.index == obj })[0];
+                    classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+                    numOfClassifiedNodes++;
+
+                });
+
+
+                if($(".active_row").length == 1) {
+                    mytextTitle.append("div").append("ul")
+                        .attr("class", "pagination active")
+                        .attr("data-toggle","tooltip")
+                        .attr("data-placement","right")
+                        .attr("title","...more about subdivision and link...")
+//						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
+                        .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                }
+                else{
+                    mytextTitleElem.empty();
+                    mytextTitle.append("div").append("ul")
+                        .attr("class", "pagination active")
+                        .attr("data-toggle", "tooltip")
+                        .attr("data-placement", "right")
+                        .attr("title", "...more about subdivision and link...")
+                        //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
+                        .append("li").append("a").attr("class", "btn-primary active").html($(".active_row").length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                }
+
+                classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
+                classifiedNodeButtons();
+                classifiedNodesElem.show();
+            }
+        }
 
 
 
@@ -3218,7 +3221,12 @@ var u =0;
 				string += "\n"+subdConnections[i]+","+rgb2hex(clrArray[i])+","+subdConnectionsNum[i]+","+relations[i]+","+relationsCross[i];
 				subdivisionsChord[i] = {name: subdConnections[i], color:rgb2hex(clrArray[i]), projects:subdConnectionsNum[i], relations:relations[i], relationsCross:relationsCross[i]};
 			}
-		}
+
+            // SORT: In order to be also in chords with the same sorting the chord graph, according to projectNum and not relation Num
+            subdivisionsChord.sort(function (a, b) {
+                return b.projects - a.projects
+            });
+        }
 
 
 
@@ -3300,7 +3308,7 @@ var u =0;
             else{
                 chord_layout.matrix(subdBiConnectionsNumCross);
             }
-            mytextsubdivisions = subdivisionsChord;
+
             // Add a group per neighborhood.
             chord_group = chord_svg.selectAll(".group")
                 .data(chord_layout.groups)
@@ -3313,9 +3321,6 @@ var u =0;
 
                     // Add a mouseover title.
              chord_group.append("title").text(function(d, i) {
-                // var str = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-                // var strCross = d.name + ":<br/>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + mytextsubdivisions[i].relations + "</em> <?php echo $node_name;?> relations in other areas";
-                // return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + parseInt(d.value) + " <?php echo $node_name;?> relations in other areas";
                 if (type == 1){
                     return subdivisionsChord[i].name + ":\n\t" + subdivisionsChord[i].projects + " <?php echo $node_name;?>s\n\t" + subdivisionsChord[i].relations + " <?php echo $node_name;?> relations directed to all areas";
                 }
@@ -3398,64 +3403,73 @@ var u =0;
         */
                 });
 
-            function chord_mouseover(d, i) {
-                if (!clickedChord) {
-                    chordHandler(d, i);
-                }
+        }
+
+
+        function chord_mouseover(d, i) {
+            if (!clickedChord) {
+                chordHandler(d, i);
+                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(legendHandler);
+            }
 
 //                if (!clickedChord) {
 //                chord_chord.classed("fade", function(p) {
 //                    return p.source.index != i
 //                    && p.target.index != i;
 //                });
+        }
+
+
+        function chord_mouseout(d, i) {
+            if (!clickedChord) {
+                chordHandler(d, i);
+                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(legendHandler);
             }
-
-
-            function chord_mouseout(d, i) {
-                if (!clickedChord) {
-                    chordHandler(d, i);
-                }
 //                if (!clickedChord) {
 //                chord_chord.classed("fade", function(p) {
 //                    return 0;
 //                });
-            }
+        }
 
 
-            function chord_click(d,i) {
+        function chord_click(d,i) {
 //todo check if it can do better
-                chordHandler(d,i);
-                chordHandler(d,i);
-                clickedChord = !clickedChord;
-            }
+            chordHandler(d,i);
+            d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(legendHandler);
+            chordHandler(d,i);
 
-            function chordHandler(d,i) {
-                var chordSource = d3.selectAll(".chord-source-" + i);
-                var chordTarget = d3.selectAll(".chord-target-" + i);
+            // below for the legend row on the right and the left classified nodes
+            d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(legendHandler);
+            clickedChord = !clickedChord;
+        }
 
-                // toggle clicked -- to 2o classed apo katw eprepe na einai activeChord alla mas endiaferei na einai to idio me to activeSource gi auto ebala to idio kai den ebala to ! giati allakse sto amesws proigoumeno classed
+        function chordHandler(d,i) {
+            console.log(d)
+            var chordSource = d3.selectAll(".chord-source-" + i);
+            var chordTarget = d3.selectAll(".chord-target-" + i);
+
+            // toggle clicked -- to 2o classed apo katw eprepe na einai activeChord alla mas endiaferei na einai to idio me to activeSource gi auto ebala to idio kai den ebala to ! giati allakse sto amesws proigoumeno classed
 //todo exei sfalma otan kanei click sto teleutaio chord
-                chordSource.classed("activeSource", !chordSource.classed("activeSource")).classed("activeChord",chordSource.classed("activeSource"));
-                chordTarget.classed("activeTarget", !chordTarget.classed("activeTarget")).classed("activeChord",chordTarget.classed("activeTarget"));
+            chordSource.classed("activeSource", !chordSource.classed("activeSource")).classed("activeChord",chordSource.classed("activeSource"));
+            chordTarget.classed("activeTarget", !chordTarget.classed("activeTarget")).classed("activeChord",chordTarget.classed("activeTarget"));
 
-                var activeSourceChords = d3.selectAll(".activeSource");
-                var activeTargetChords = d3.selectAll(".activeTarget");
+            var activeSourceChords = d3.selectAll(".activeSource");
+            var activeTargetChords = d3.selectAll(".activeTarget");
 
-                // check if still active from other class
-                if(!activeSourceChords.empty()) activeSourceChords.classed("activeChord",true);
-                if(!activeTargetChords.empty()) activeTargetChords.classed("activeChord",true);
+            // check if still active from other class
+            if(!activeSourceChords.empty()) activeSourceChords.classed("activeChord",true);
+            if(!activeTargetChords.empty()) activeTargetChords.classed("activeChord",true);
 
-                var activeChords = d3.selectAll(".activeChord");
-                var allChords = d3.selectAll(".chord");
+            var activeChords = d3.selectAll(".activeChord");
+            var allChords = d3.selectAll(".chord");
 
-                // check if all inactive or not
-                if (!activeChords.empty()){
-                    allChords.style("opacity", "0.1");
-                    activeChords.style("opacity", "1");
-                }
-                else{
-                    allChords.style("opacity", "1");
-                }
+            // check if all inactive or not
+            if (!activeChords.empty()){
+                allChords.style("opacity", "0.1");
+                activeChords.style("opacity", "1");
+            }
+            else{
+                allChords.style("opacity", "1");
             }
         }
 

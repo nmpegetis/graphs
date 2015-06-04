@@ -206,6 +206,8 @@
             svgTextElem = $("svg:text"),
             chorddivElem = $("#chorddiv"),
             chord2divElem = $("#chord2div"),
+            trenddivElem = $("#trenddiv"),
+            trend2divElem = $("#trend2div"),
             grantsGroup1Elem = $("#grantsGroup1"),
             grantsGroup2Elem = $("#grantsGroup2");
 
@@ -1069,16 +1071,19 @@
 
 		function fadeGraph(opacity) {
 			return function(d, i) {
-				if($(this).css("fill-opacity") < normal)
-					return false;
 
-                // addClass for svg to place yellow shoadow
-                $(this).attr('class', function(index, classNames) {
-                    return classNames + ' shadow';
-                });
+                if($(".active_row").length == 0) {
+                    // addClass for svg to place yellow shoadow
+                    $(this).attr('class', function(index, classNames) {
+                        return classNames + ' shadow';
+                    });
 
-                graphHandler(d,opacity);
+                    console.log("fade")
+                    if ($(this).css("fill-opacity") < normal)
+                        return false;
 
+                    graphHandler(d, opacity);
+                }
             }
 		}
 
@@ -1086,7 +1091,18 @@
 		function clickGraph(mynode, opacity){
             graphHandler(mynode,opacity);
 			clickedNode = mynode;
-		}
+
+            if($(".active_row").length!=0){
+//                $(".legend_row").each(function(){
+//                    $(this).removeClass("inactive");
+//                    $(this).removeClass(".active_row");
+//                });
+                d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
+
+                d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
+
+            }
+        }
 
 
         function graphHandler(mynode, opacity) {
@@ -2575,7 +2591,10 @@
 						svgTextElem.empty();
 
 						chorddivElem.empty();
-						chorddivElem.empty();
+						chord2divElem.empty();
+
+                        trenddivElem.empty();
+                        trend2divElem.empty();
 
 						spinner = new Spinner(opts).spin(target);
 
@@ -2878,6 +2897,8 @@ else if (/^Full*/.test(experimentName)){
 
 			createChord(1);
 			createChord(2);
+            createTrends(1);
+            createTrends(2);
 
 		}
 
@@ -2960,11 +2981,13 @@ var u =0;
 				})
 				.on("mouseover", fadeGraph(fade_out))
 				.on("mouseout", function(d, i) {
-                    reset();
+                    if($(".active_row").length == 0) {
+                        reset();
 
-                    $(this).attr('class', function(index, classNames) {
-                        return classNames.replace('shadow', '');
-                    });
+                        $(this).attr('class', function (index, classNames) {
+                            return classNames.replace('shadow', '');
+                        });
+                    }
 				})
 				.on("click", function(d,i){
                     $(this).attr('class', function(index, classNames) {
@@ -2976,12 +2999,13 @@ var u =0;
 						focused = '';
 						nodeCircles.on("mouseover", fadeGraph(fade_out))
 							.on("mouseout", function(d, i) {
-                                reset();
+                                if($(".active_row").length == 0) {
+                                    reset();
 
-                                $(this).attr('class', function(index, classNames) {
-                                    return classNames.replace('shadow', '');
-                                });
-
+                                    $(this).attr('class', function (index, classNames) {
+                                        return classNames.replace('shadow', '');
+                                    });
+                                }
                             });
 
 						reset();
@@ -3032,9 +3056,9 @@ var u =0;
             classifiedNodesElem.hide();
             classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
 
-            if($(this).hasClass("active_row")){
-                $(this).removeClass("active_row");
-                $(this).addClass("inactive");
+            if($("#legend_row"+ d.name).hasClass("active_row")){
+                $("#legend_row"+ d.name).removeClass("active_row");
+                $("#legend_row"+ d.name).addClass("inactive");
                 if($(".active_row").length==0){
                     $(".inactive").each(function(){
                         $(this).removeClass("inactive");
@@ -3042,18 +3066,23 @@ var u =0;
                 }
             }
             else{
-                $(this).addClass("active_row");
-                $(this).removeClass("inactive");
+                $("#legend_row"+ d.name).addClass("active_row");
                 if($(".active_row").length==1){
-                    var cur = this;
+                    var cur = $("#legend_row"+ d.name);
                     $(".legend_row").each(function(){
                         if(this != cur)
                             $(this).addClass("inactive");
+                        else
+                            console.log("den mpika")
+
                     });
                 }
             }
+            $(".active_row").each(function() {
+                $(this).removeClass("inactive");
+            });
 
-            //find all types to show
+                //find all types to show
 
             var types = [];
             var collection = null;
@@ -3408,8 +3437,8 @@ var u =0;
 
         function chord_mouseover(d, i) {
             if (!clickedChord) {
-                chordHandler(d, i);
-                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(legendHandler);
+                //chordHandler(d, i);
+                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(function(o,j){legendHandler(o,i)});
             }
 
 //                if (!clickedChord) {
@@ -3422,8 +3451,8 @@ var u =0;
 
         function chord_mouseout(d, i) {
             if (!clickedChord) {
-                chordHandler(d, i);
-                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(legendHandler);
+                //chordHandler(d, i);
+                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(function(o,j){legendHandler(o,i)});
             }
 //                if (!clickedChord) {
 //                chord_chord.classed("fade", function(p) {
@@ -3434,17 +3463,16 @@ var u =0;
 
         function chord_click(d,i) {
 //todo check if it can do better
-            chordHandler(d,i);
-            d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(legendHandler);
-            chordHandler(d,i);
-
-            // below for the legend row on the right and the left classified nodes
-            d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(legendHandler);
+            //chordHandler(d,i);
+            d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(function(o,j){legendHandler(o,i)});
+//            chordHandler(d,i);
+//
+//            // below for the legend row on the right and the left classified nodes
+            d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(function(o,j){legendHandler(o,i)});
             clickedChord = !clickedChord;
         }
 
         function chordHandler(d,i) {
-            console.log(d)
             var chordSource = d3.selectAll(".chord-source-" + i);
             var chordTarget = d3.selectAll(".chord-target-" + i);
 
@@ -3471,6 +3499,185 @@ var u =0;
             else{
                 allChords.style("opacity", "1");
             }
+        }
+
+        function createTrends(type) {
+//            var margin = {top: 20, right: 55, bottom: 30, left: 40},
+//                width  = 1000 - margin.left - margin.right,
+//                height = 700  - margin.top  - margin.bottom;
+            var margin = {top: 20, right: 55, bottom: 30, left: 40},
+                width  = w,
+                height = 3*h/4;
+
+            var x = d3.scale.ordinal()
+                .rangeRoundBands([0, width], .1);
+
+            var y = d3.scale.linear()
+                .rangeRound([height, 0]);
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
+
+            var stack = d3.layout.stack()
+                .offset("wiggle")
+                .values(function (d) { return d.values; })
+                .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+                .y(function (d) { return d.value; });
+
+            var area = d3.svg.area()
+                .interpolate("cardinal")
+                .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+                .y0(function (d) { return y(d.y0); })
+                .y1(function (d) { return y(d.y0 + d.y); });
+
+            // var color = d3.scale.ordinal()
+            //     .range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
+            var color = d3.scale.ordinal()
+    //          .range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
+                .range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
+
+
+            var trend_svg = d3.select("#trenddiv")
+                .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+                .style("preserveAspectRatio", "xMidYMid meet")
+                .style("cursor","pointer")
+                .append("svg:svg")
+                .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
+                .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.csv("data/trends-journal_1990-2011.csv", function (error, data) {
+
+                var labelVar = 'quarter';
+                var varNames = d3.keys(data[0])
+                    .filter(function (key) { return key !== labelVar;});
+                color.domain(varNames);
+
+                var seriesArr = [], series = {};
+                varNames.forEach(function (name) {
+                    series[name] = {name: name, values:[]};
+                    seriesArr.push(series[name]);
+                });
+
+                data.forEach(function (d) {
+                    varNames.map(function (name) {
+                        series[name].values.push({name: name, label: d[labelVar], value: +d[name]});
+                    });
+                });
+
+                x.domain(data.map(function (d) { return d.quarter; }));
+
+                stack(seriesArr);
+
+                y.domain([0, d3.max(seriesArr, function (c) {
+                    return d3.max(c.values, function (d) { return d.y0 + d.y; });
+                })]);
+
+                trend_svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+
+                trend_svg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Weight");
+
+                var selection = trend_svg.selectAll(".series")
+                    .data(seriesArr)
+                    .enter().append("g")
+                    .attr("class", "series");
+
+                selection.append("path")
+                    .attr("class", "streamPath")
+                    .attr("d", function (d) { return area(d.values); })
+                    .style("fill", function (d) { return color(d.name); })
+                    .style("stroke", "grey");
+
+                var points = trend_svg.selectAll(".seriesPoints")
+                    .data(seriesArr)
+                    .enter().append("g")
+                    .attr("class", "seriesPoints");
+
+                points.selectAll(".point")
+                    .data(function (d) { return d.values; })
+                    .enter().append("circle")
+                    .attr("class", "point")
+                    .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
+                    .attr("cy", function (d) { return y(d.y0 + d.y); })
+                    .attr("r", "1.5px")
+                    .style("fill",function (d) { return color(d.name); })
+                    .on("mouseover", function (d) { showPopover.call(this, d); })
+                    .on("mouseout",  function (d) { removePopovers(); })
+
+//                var legend = trend_svg.selectAll(".legend")
+//                    .data(varNames.slice().reverse())
+//                    .enter().append("g")
+//                    .attr("class", "legend")
+//                    .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
+//
+//                // legend.append("rect")
+//                //     .attr("x", width - 10)
+//                //     .attr("width", 10)
+//                //     .attr("height", 10)
+//                //     .style("fill", color)
+//                //     .style("stroke", "grey");
+//
+//                // legend.append("text")
+//                //     .attr("x", width - 12)
+//                //     .attr("y", 6)
+//                //     .attr("dy", ".35em")
+//                //     .style("text-anchor", "end")
+//                //     .text(function (d) { return d; });
+//                legend.append("rect")
+//                    .attr("x", width-30)    // gia na mpoun aristera
+//                    .attr("width", 10)
+//                    .attr("height", 10)
+//                    .style("fill", color)
+//                    .style("stroke", "grey");
+//
+//                legend.append("text")
+//                    .attr("x", width-10)
+//                    .attr("y", 6)
+//                    .attr("dy", ".35em")
+//                    //.append("textpath") // using "end", the entire text disappears
+//                    .style("text-anchor", "start")
+//                    .text(function (d) { return d; });
+//    //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
+//    //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+
+                function removePopovers () {
+                    $('.popover').each(function() {
+                        $(this).remove();
+                    });
+                }
+
+                function showPopover (d) {
+                    $(this).popover({
+                        title: d.name,
+                        placement: 'auto top',
+                        container: 'body',
+                        trigger: 'manual',
+                        html : true,
+                        content: function() {
+                            return "Year: " + d.label +
+                                "<br/>Width: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }
+                    });
+                    $(this).popover('show')
+                }
+
+            });
         }
 
 /////////////////////////////////////////////////////
@@ -3757,6 +3964,13 @@ var u =0;
 									<li><a data-toggle="tab" data-target="#chord2div">Crossdisciplinary Connectivity</a></li>
 								</ul>
 							</li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
+                                    <li><a data-toggle="tab" data-target="#trenddiv">Trends 1</a></li>
+                                    <li><a data-toggle="tab" data-target="#trend2div">Trends 2</a></li>
+                                </ul>
+                            </li>
 						</ul>
 					</div>
 					<div class="tab-content" id="myTabContent">
@@ -3771,6 +3985,10 @@ var u =0;
 						</div>
 						<div id="chord2div" class="tab-pane">
 						</div>
+                        <div id="trenddiv" class="tab-pane" >
+                        </div>
+                        <div id="trend2div" class="tab-pane">
+                        </div>
 					</div>
 				</div>
 			</div>			

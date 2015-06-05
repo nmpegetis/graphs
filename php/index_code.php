@@ -1073,12 +1073,11 @@
 			return function(d, i) {
 
                 if($(".active_row").length == 0) {
-                    // addClass for svg to place yellow shoadow
+                    // addClass for svg to place yellow shadow
                     $(this).attr('class', function(index, classNames) {
                         return classNames + ' shadow';
                     });
 
-                    console.log("fade")
                     if ($(this).css("fill-opacity") < normal)
                         return false;
 
@@ -1093,14 +1092,8 @@
 			clickedNode = mynode;
 
             if($(".active_row").length!=0){
-//                $(".legend_row").each(function(){
-//                    $(this).removeClass("inactive");
-//                    $(this).removeClass(".active_row");
-//                });
                 d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
-
                 d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
-
             }
         }
 
@@ -1373,7 +1366,10 @@
             else
                 downButtonElem.show();
 
-            downButtonElem.on("click",function(){
+            downButtonElem.unbind().click(function(){
+                console.log("D")
+                console.log(counter)
+
                 if ((counter+listLength)<numOfClassifiedNodes){
                     classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
                     upButtonElem.show();
@@ -1385,10 +1381,15 @@
                     upButtonElem.show();
                     downButtonElem.hide();
                 }
+                console.log(counter)
+
             });
 
 
-            upButtonElem.on("click",function(){
+            upButtonElem.unbind().click(function(){
+                console.log("U")
+                console.log(counter)
+
                 if (counter-listLength>0){
                     classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
                     upButtonElem.show();
@@ -1402,11 +1403,13 @@
                     downButtonElem.show();
                     counter+=listLength;
                 }
+                console.log(counter)
+
             });
 
             //for mobile
             classifiedNodesElem
-                .on("swipeup",function(){
+                .one("swipeup",function(){
                     if ((counter+listLength)<numOfClassifiedNodes){
                         classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
                         upButtonElem.show();

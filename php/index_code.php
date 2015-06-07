@@ -204,6 +204,7 @@
             graphElem = $("#graph"),
             legendElem = $("#legend"),
             svgTextElem = $("svg:text"),
+            graphdivElem = $("#graphdiv"),
             chorddivElem = $("#chorddiv"),
             chord2divElem = $("#chord2div"),
             trenddivElem = $("#trenddiv"),
@@ -1367,8 +1368,6 @@
                 downButtonElem.show();
 
             downButtonElem.unbind().click(function(){
-                console.log("D")
-                console.log(counter)
 
                 if ((counter+listLength)<numOfClassifiedNodes){
                     classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
@@ -1387,8 +1386,6 @@
 
 
             upButtonElem.unbind().click(function(){
-                console.log("U")
-                console.log(counter)
 
                 if (counter-listLength>0){
                     classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
@@ -1453,6 +1450,12 @@
 
                     clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
                     clickGraph(clickedNode,0.1);
+
+                    // return the view to the F-D graph when click
+                    myTabElem.find("li.active").removeClass("active");
+                    myTabElem.find("li:first").addClass("active");
+                    chorddivElem.removeClass("active");
+                    graphdivElem.addClass("active");
                 })
                 .on("mouseover",function(){
                     $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
@@ -3928,11 +3931,6 @@ var u =0;
 				<div>
 					<h5 id="classifiedNodesHeader" style="cursor:pointer"><span id="exitclassifiedNodesHeader"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
 				</div>
-
-<!--                // TODO Similar --><?php //echo $node_name;?><!--s based on --><?php //echo $node_areaName;?><!-- classification:&nbsp; -->
-<!--                <div class="nav-wrap" id="areaNodes" style="cursor:pointer">-->
-<!--                </div>-->
-
 				<div class="nav-wrap" id="classifiedNodes" style="cursor:pointer">
 					<div><button id="upButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 10</span></button>
                         <ul class="pagination pagination-sm">
@@ -3978,11 +3976,22 @@ var u =0;
 					</div>
 					<div class="tab-content" id="myTabContent">
 						<div id="graphdiv" class="tab-pane active in">
-							<svg id="graph" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
-							<!-- used to add the mytext here when in fullscreen -->
-							<foreignobject id="foreignObject" width="100%" max-width="100%" >
-							</foreignobject>
-							</svg>
+                            <svg id="graph" style="width:95%;" xmlns="http://www.w3.org/2000/svg">
+                                <!-- used to add the mytext here when in fullscreen -->
+                                <foreignobject id="foreignObject" width="100%" max-width="100%" >
+                                </foreignobject>
+                                                            <ul class="nav navbar-right nav-pills nav-stacked" width="5%">
+                                                                <li><a href="#a" data-toggle="tab">1</a></li>
+                                                                <li><a href="#b" data-toggle="tab">2</a></li>
+                                                                <li><a href="#c" data-toggle="tab">3</a></li>
+                                                            </ul>
+                            </svg>
+
+<!--                            <ul class="nav navbar-right nav-pills nav-stacked col-md-3">-->
+<!--                                <li><a href="#a" data-toggle="tab">1</a></li>-->
+<!--                                <li><a href="#b" data-toggle="tab">2</a></li>-->
+<!--                                <li><a href="#c" data-toggle="tab">3</a></li>-->
+<!--                            </ul>-->
 						</div>
 						<div id="chorddiv" class="tab-pane">
 						</div>
@@ -3993,7 +4002,8 @@ var u =0;
                         <div id="trend2div" class="tab-pane">
                         </div>
 					</div>
-				</div>
+
+                </div>
 			</div>			
 			<div class="col-md-3" id="mysubdivision" style="overflow:auto;">
 				<table class="table table-condensed table-striped">

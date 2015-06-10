@@ -24,7 +24,7 @@
 	<link rel="stylesheet" type="text/css" href="../../../slider/css/slider.css" />
 	<link rel="stylesheet" type="text/css" href="../../../slider/less/slider.less" />
 	<!-- <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.3/themes/flick/jquery-ui.css" /> -->
-
+<!--    <link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" />-->
 
 	<style>
 
@@ -102,7 +102,6 @@
         }
 	</style>
 
-	<!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
 
 	<!-- Latest compiled and minified JavaScript -->
 	 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
@@ -111,7 +110,10 @@
 	<!-- // <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
 	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
 
+    <!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
 	<script src="../../../js/d3.v3.min.js"></script>
+
+<!--    <script src="../../../bootstrap/js/bootstrap-multiselect.js"></script>-->
 
 	<!-- Latest compiled and minified JavaScript -->
 	<!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.js"></script> -->
@@ -129,11 +131,18 @@
 	<!-- // <script type="text/javascript" src="http://fgnass.github.io/spin.js/spin.min.js"></script> -->
 	<script type="text/javascript" src="../../../js/spin.min.js"></script>
 
-	<script type="text/javascript" src="../../../select/jquery.multiselect.min.js"></script>
-	<script type="text/javascript" src="../../../select/jquery.multiselect.filter.js"></script>
-	<script type="text/javascript" src="../../../slider/js/bootstrap-slider.js"></script>
+<!--	<script type="text/javascript" src="../../../select/jquery.multiselect.min.js"></script>-->
+<!--	<script type="text/javascript" src="../../../select/jquery.multiselect.filter.js"></script>-->
 
-	<script>
+
+        <script type="text/javascript" src="../../../slider/js/bootstrap-slider.js"></script>
+
+
+        <!-- Include the plugin's CSS and JS: -->
+        <script type="text/javascript" src="../../../bootstrap/js/bootstrap-multiselect.js"></script>
+        <link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" type="text/css"/>
+
+        <script>
 		// use below to change layout in mobile devices
 		function detectmob() { 
 		 return navigator.userAgent.match(/Android/i)
@@ -386,12 +395,63 @@
 
 
 
-		$(function(){
-			grantsElem.multiselect({
-			   noneSelectedText: "<?php echo $node_name;?>s"
-			});
-		});
+//		$(function(){
+//			grantsElem.multiselect({
+//			   noneSelectedText: "<?php //echo $node_name;?>//s"
+//			});
+//		});
 
+		$(function(){
+            grantsElem.multiselect({
+                maxHeight: 200,
+                buttonWidth: '200px',
+                buttonContainer: '<div class="btn-group" id="example-selectedClass-container"></div>',
+                nonSelectedText: 'Check an option!',
+                selectedClass: 'multiselect-selected',
+                includeSelectAllOption: true,
+                enableClickableOptGroups: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                selectAllText: 'All',
+                optionLabel: function(element) {
+                    return $(element).html() + '(' + $(element).val() + ')';
+                },
+                buttonText: function(options, select) {
+                    if (options.length === 0) {
+                        return 'No option selected ...';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 options selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function() {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                },
+                onSelectAll: function() {
+                    alert('onSelectAll triggered.');
+                },
+                onChange: function(option, checked) {
+                    if (checked) {
+                        clickedNode = option;
+                        clickGraph(clickedNode,fade_out);
+
+                    }
+                    else {
+                        clickedNode = option;
+                        clickGraph(clickedNode,fade_out);
+                    }
+                }
+            });
+		});
 
     // pass configuration with parameters
 		experimentDescription = "";
@@ -1106,7 +1166,13 @@
             mytext.selectAll(".nodetext").remove();
 
             // all grants must be unchecked
-            grantsElem.multiselect("uncheckAll");
+//            grantsElem.multiselect("uncheckAll");
+//            grantsElem.multiselect("deselectAll",false);
+//            reset();
+//                selectnodeCircles = nodeCircles;
+//                selectnodeLabels = nodeLabels
+  //          });
+
             boostBtnElem.show();
 
             // classifiedNodesElem.empty();			//clear anything included in child nodes
@@ -1298,7 +1364,9 @@
 			downButtonElem.hide();
 
 			filtersElem.val("opt0");
-		}
+            grantsElem.multiselect("deselectAll",false);
+
+        }
 
 	/* collide */
 		function collide(nodeCircles) {
@@ -1777,7 +1845,7 @@
 
 			if (e.alpha < 0.04) {
 
-				includeIcons();
+//				includeIcons();
 
 //				documentElem.trigger("graphDone");	// must be executed after graph's loading 
 				vis.select(".loading").remove();
@@ -2429,14 +2497,14 @@
 
 				//refreshes the inner options
 				grantsElem.multiselect("refresh");
-				grantsElem.multiselect().multiselectfilter({
-				/*	http://www.erichynds.com/examples/jquery-ui-multiselect-widget/demos/#filter	*/
-					filter: function(event, matches){
-						if( !matches.length ){
-							// do something
-						}
-					}
-				});
+//				grantsElem.multiselect().multiselectfilter({
+//				/*	http://www.erichynds.com/examples/jquery-ui-multiselect-widget/demos/#filter	*/
+//					filter: function(event, matches){
+//						if( !matches.length ){
+//							// do something
+//						}
+//					}
+//				});
 
 
 //hard code....
@@ -2722,17 +2790,17 @@ else if (/^Full*/.test(experimentName)){
 				});
 
 //http://www.erichynds.com/blog/jquery-ui-multiselect-widget
-				grantsElem.bind("multiselectcheckall", function(event, matches){
-					reset();					
-					selectnodeCircles = nodeCircles;
-					selectnodeLabels = nodeLabels
-				});
+//				grantsElem.bind("multiselectcheckall", function(event, matches){
+//					reset();
+//					selectnodeCircles = nodeCircles;
+//					selectnodeLabels = nodeLabels
+//				});
 
-				grantsElem.bind("multiselectuncheckall", function(event, matches){
-					reset();
-					selectnodeCircles = nodeCircles;
-					selectnodeLabels = nodeLabels
-				});
+//				grantsElem.bind("multiselectuncheckall", function(event, matches){
+//					reset();
+//					selectnodeCircles = nodeCircles;
+//					selectnodeLabels = nodeLabels
+//				});
 
 
 				grantsGroup1Elem.multiselect({
@@ -2810,40 +2878,40 @@ else if (/^Full*/.test(experimentName)){
 
 				});
 
-
-				grantsElem.bind("multiselectclick", function(event, matches){
-					//if unchecked 
-					if (!matches.checked){
-						nodes.filter(function(e){
-							selectnodeCircles = nodeCircles;
-							selectnodeLabels = nodeLabels
-						});
-					}
-
-					var array_of_checked_values = grantsElem.multiselect("getChecked").map(function(){
-						return this.value;    
-					}).get();
-
-					for(var i=0;i<nodes.length;i++){
-						if(include(array_of_checked_values,nodes[i].name)){
-							clickedNode = nodes[i];
-							clickGraph(nodes[i],fade_out);
-							selectnodeCircles = selectnodeCircles.filter(function(element) {
-									if(nodes[i].name != element.name)
-										return 1;
-									else
-										return 0;
-							});
-
-							selectnodeLabels = selectnodeLabels.filter(function(element) {
-									if(nodes[i].name != element.name)
-										return 1;
-									else
-										return 0;
-							});
-						}
-					}
-				});
+//
+//				grantsElem.bind("multiselectclick", function(event, matches){
+//					//if unchecked
+//					if (!matches.checked){
+//						nodes.filter(function(e){
+//							selectnodeCircles = nodeCircles;
+//							selectnodeLabels = nodeLabels
+//						});
+//					}
+//
+//					var array_of_checked_values = grantsElem.multiselect("getChecked").map(function(){
+//						return this.value;
+//					}).get();
+//
+//					for(var i=0;i<nodes.length;i++){
+//						if(include(array_of_checked_values,nodes[i].name)){
+//							clickedNode = nodes[i];
+//							clickGraph(nodes[i],fade_out);
+//							selectnodeCircles = selectnodeCircles.filter(function(element) {
+//									if(nodes[i].name != element.name)
+//										return 1;
+//									else
+//										return 0;
+//							});
+//
+//							selectnodeLabels = selectnodeLabels.filter(function(element) {
+//									if(nodes[i].name != element.name)
+//										return 1;
+//									else
+//										return 0;
+//							});
+//						}
+//					}
+//				});
 			});
 
 
@@ -3858,12 +3926,25 @@ var u =0;
 							</select>
 						</li>
 						<li id="filter1" style="padding-left:10px">
-							<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
+<!--							<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">-->
+                            <select id="grants" multiple="multiple" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
 								<optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
 								</optgroup>
 								<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
 								</optgroup>
 							</select>
+<!--                            <select id="example" multiple="multiple">-->
+<!--                                <optgroup id="grantsGroup12" label="--><?php //echo $node_groupName1 ;?><!--">-->
+<!--                                    <option value="cheese">Cheese</option>-->
+<!--                                    <option value="tomatoes">Tomatoes</option>-->
+<!--                                    <option value="mozarella">Mozzarella</option>-->
+<!--                                </optgroup>-->
+<!--                                <optgroup id="grantsGroup13" label="--><?php //echo $node_groupName1 ;?><!--">-->
+<!--                                    <option value="mushrooms">Mushrooms</option>-->
+<!--                                    <option value="pepperoni">Pepperoni</option>-->
+<!--                                    <option value="onions">Onions</option>-->
+<!--                                </optgroup>-->
+<!--                            </select>-->
 						</li>
 						<li  id="filter2" style="padding-left:10px;width:inherit">
 						<input id="tags" class="ui-corner-all"  placeholder="input a topic word..." >
@@ -3976,17 +4057,11 @@ var u =0;
 					</div>
 					<div class="tab-content" id="myTabContent">
 						<div id="graphdiv" class="tab-pane active in">
-                            <svg id="graph" style="width:95%;" xmlns="http://www.w3.org/2000/svg">
+                            <svg id="graph" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
                                 <!-- used to add the mytext here when in fullscreen -->
                                 <foreignobject id="foreignObject" width="100%" max-width="100%" >
                                 </foreignobject>
-                                                            <ul class="nav navbar-right nav-pills nav-stacked" width="5%">
-                                                                <li><a href="#a" data-toggle="tab">1</a></li>
-                                                                <li><a href="#b" data-toggle="tab">2</a></li>
-                                                                <li><a href="#c" data-toggle="tab">3</a></li>
-                                                            </ul>
                             </svg>
-
 <!--                            <ul class="nav navbar-right nav-pills nav-stacked col-md-3">-->
 <!--                                <li><a href="#a" data-toggle="tab">1</a></li>-->
 <!--                                <li><a href="#b" data-toggle="tab">2</a></li>-->

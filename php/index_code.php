@@ -2602,10 +2602,6 @@
 						subdBiConnectionsNum = [];
 						nodesToFade = [];
 
-                        //todo: maybe needed again the below
-						//grantsElem.multiselect();
-                        loadNodeList();
-
 						similarityThr = <?php echo $similarityThr ;?>;
 						nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
 						if (/^FET*/.test(experimentName))
@@ -2632,6 +2628,9 @@ else if (/^Full*/.test(experimentName)){
 
 						ajaxCall(myval,expsimilarity);			 		
                         mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
+                        //todo: maybe needed again the below
+                        //grantsElem.multiselect();
+                        loadNodeList();
 
 // hard code for the Brusseles ... to be moved ... paizei rolo kai i othoni einia ftiagmena gia 13-15
 if (/^FET*/.test(experimentName)){

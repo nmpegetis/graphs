@@ -2794,8 +2794,8 @@ else if (/^Full*/.test(experimentName)){
 //					return d.index;
 //				})
 //				.text(function(d){return d.name});
-
             $(function(){
+                grantsElem.multiselect('rebuild');
                 grantsElem.multiselect({
                     maxHeight: 200,
                     buttonWidth: '200px',

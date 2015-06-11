@@ -2408,6 +2408,45 @@
 
 
             loadNodeList();
+            grantsElem.multiselect({
+                maxHeight: 200,
+                buttonWidth: '200px',
+                buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
+                nonSelectedText: 'Select some <?php echo $node_name;?>s',
+                selectedClass: 'multiselect-selected',
+//                    includeSelectAllOption: true,
+                enableClickableOptGroups: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+//                    selectAllText: 'All',
+                optionLabel: function(element) {
+                    return $(element).html() + '(' + $(element).val() + ')';
+                },
+                onChange: function(option, checked) {
+                    var clickednodeid = option.val();
+                    clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
+                    var selectedOptions = grantsElem.find("option:selected");
+                    var allOptions = grantsElem.find("option");
+
+                    classifiedNodesHandler(selectedOptions, allOptions);
+                    grantsElem.multiselect("refresh");
+
+                }
+            });
+
+            $(".multiselect-clear-filter").on('click', function() {
+                grantsElem.multiselect('deselectAll', false);
+                var allOptions = grantsElem.find("option");
+                var selectedOptions = grantsElem.find("option:selected");
+                classifiedNodesHandler(selectedOptions, allOptions);
+                grantsElem.multiselect("refresh");
+
+            });
+
+            $(".multiselect-container")
+                // .attr("style","max-width:300px;max-height:300px;")
+                .find("li").find("a").find("label")
+                .attr("style","overflow:hidden;text-overflow:ellipsis;");
 
 
 			$(function(){
@@ -2625,13 +2664,13 @@ else if (/^Full*/.test(experimentName)){
 	expsimilarity = 0.6;
 	categoriesElem.hide();
 }
-//                        grantsElem.multiselect('rebuild');
 
 						ajaxCall(myval,expsimilarity);			 		
                         mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                         //todo: maybe needed again the below
                         //grantsElem.multiselect();
                         loadNodeList();
+                        grantsElem.multiselect('rebuild');
 
 // hard code for the Brusseles ... to be moved ... paizei rolo kai i othoni einia ftiagmena gia 13-15
 if (/^FET*/.test(experimentName)){
@@ -2768,7 +2807,7 @@ else if (/^Full*/.test(experimentName)){
 
         function loadNodeList(){
             // empty for re-initializing grantsList
-            $("#filter1").find("div").empty();
+//            $("#filter1").find("div").empty();
 
             grantslist1
                 .selectAll("option")
@@ -2795,45 +2834,6 @@ else if (/^Full*/.test(experimentName)){
 //					return d.index;
 //				})
 //				.text(function(d){return d.name});
-            grantsElem.multiselect({
-                    maxHeight: 200,
-                    buttonWidth: '200px',
-                    buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
-                    nonSelectedText: 'Select some <?php echo $node_name;?>s',
-                    selectedClass: 'multiselect-selected',
-//                    includeSelectAllOption: true,
-                    enableClickableOptGroups: true,
-                    enableFiltering: true,
-                    enableCaseInsensitiveFiltering: true,
-//                    selectAllText: 'All',
-                    optionLabel: function(element) {
-                        return $(element).html() + '(' + $(element).val() + ')';
-                    },
-                    onChange: function(option, checked) {
-                        var clickednodeid = option.val();
-                        clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
-                        var selectedOptions = grantsElem.find("option:selected");
-                        var allOptions = grantsElem.find("option");
-
-                        classifiedNodesHandler(selectedOptions, allOptions);
-                        grantsElem.multiselect("refresh");
-
-                    }
-                });
-
-                $(".multiselect-clear-filter").on('click', function() {
-                    grantsElem.multiselect('deselectAll', false);
-                    var allOptions = grantsElem.find("option");
-                    var selectedOptions = grantsElem.find("option:selected");
-                    classifiedNodesHandler(selectedOptions, allOptions);
-                    grantsElem.multiselect("refresh");
-
-                });
-
-                $(".multiselect-container")
-                    // .attr("style","max-width:300px;max-height:300px;")
-                    .find("li").find("a").find("label")
-                    .attr("style","overflow:hidden;text-overflow:ellipsis;")
         }
 
 	/* update ? */

@@ -100,6 +100,13 @@
             -webkit-filter: drop-shadow( 0px 0px 10px yellow);
             filter: drop-shadow( 0px 0px 10px yellow ); /* Same syntax as box-shadow */
         }
+
+        .btn{
+            padding: 4px 12px;
+        }
+        .multiselect-clear-filter{
+            padding: 7px 12px;
+        }
 	</style>
 
 
@@ -392,14 +399,6 @@
 		$(function () {
 			popoverElem.popover()
 		});
-
-
-
-//		$(function(){
-//			grantsElem.multiselect({
-//			   noneSelectedText: "<?php //echo $node_name;?>//s"
-//			});
-//		});
 
 
     // pass configuration with parameters
@@ -1115,12 +1114,7 @@
             mytext.selectAll(".nodetext").remove();
 
             // all grants must be unchecked
-//            grantsElem.multiselect("uncheckAll");
 //            grantsElem.multiselect("deselectAll",false);
-//            reset();
-//                selectnodeCircles = nodeCircles;
-//                selectnodeLabels = nodeLabels
-  //          });
 
             boostBtnElem.show();
 
@@ -2402,6 +2396,7 @@
 							.text("Loading");
 
 
+
 			explist.selectAll("option")
 				.data(experiments)
 				.enter()
@@ -2412,144 +2407,13 @@
 				.text(function(d){return d.id});
 
 
+            loadNodeList();
 
-			grantslist1
-				.selectAll("option")
-				.data(nodes.filter(function(d) { if(d.FET!="NONFET") return 1; else return 0;}))
-				.enter()
-				.append("option")
-				.attr("value",function(d){return d.index;})
-                .attr("title",function(d){return d.name;})
-				.attr("id",function(d){
-//					console.log("d.index="+d.index+"   d.name="+d.name);
-					return d.index;
-				})
-				.text(function(d){return d.name});
-
-//			grantslist2
-//				.selectAll("option")
-//				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
-//				.enter()
-//				.append("option")
-//                .attr("value",function(d){return d.index;})
-//                .attr("title",function(d){return d.name;})
-//				.attr("id",function(d){
-////					console.log("d.index="+d.index+"   d.name="+d.name);
-//					return d.index;
-//				})
-//				.text(function(d){return d.name});
-
-            $(function(){
-                grantsElem.multiselect({
-                    maxHeight: 200,
-                    buttonWidth: '200px',
-                    buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
-                    nonSelectedText: 'Select some <?php echo $node_name;?>s',
-                    selectedClass: 'multiselect-selected',
-//                    includeSelectAllOption: true,
-                    enableClickableOptGroups: true,
-                    enableFiltering: true,
-                    enableCaseInsensitiveFiltering: true,
-//                    selectAllText: 'All',
-                    optionLabel: function(element) {
-                        return $(element).html() + '(' + $(element).val() + ')';
-                    },
-//                    buttonText: function(options, select) {
-//                        if (options.length === 0) {
-//                            return 'No <?php //echo $node_name;?>//s selected ...';
-//                        }
-////                        else if (options.length > 3) {
-////                            return 'More than 3 <?php ////echo $node_name;?>////s selected!';
-////                        }
-//                        else {
-//                            var labels = [];
-//                            options.each(function() {
-//                                if ($(this).attr('label') !== undefined) {
-//                                    labels.push($(this).attr('label'));
-//                                }
-//                                else {
-//                                    labels.push($(this).html());
-//                                }
-//                            });
-//                            return labels.join(', ') + '';
-//                        }
-//                    },
-//                    onSelectAll: function() {
-//                        alert('onSelectAll triggered.');
-//                    },
-                    onChange: function(option, checked) {
-//                        if (checked) {
-                            var clickednodeid = option.val();
-                            clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
-                            var selectedOptions = $("#grants option:selected");
-                            var allOptions = $("#grants option");
-                            console.log(selectedOptions)
-                            console.log(allOptions)
-
-                            classifiedNodesHandler(selectedOptions, allOptions);
-
-//                            clickGraph(clickedNode,fade_out);
-//                            var dcx = (w/2-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cx")));
-//                            var dcy = (h/3-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cy")));
-//                            translation = [dcx,dcy];
-//                            vis.attr("transform", "translate("+ translation  + ")");
-//
-//                            $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
-//                                return classNames.replace('shadow', '');
-//                            });
-//                            $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
-//                                return classNames + ' shadow';
-//                            });
-//
-//                        }
-//                        else {
-//                            $( "#circle-node-"+option.val()).attr('class', function(index, classNames) {
-//                                return classNames.replace('shadow', '');
-//                            });
-////                            reset();
-//                        }
-                    }
-                });
-
-                $(".multiselect-clear-filter").on('click', function() {
-                    grantsElem.multiselect('deselectAll', false);
-                    var allOptions = $("#grants option");
-                    var selectedOptions = $("#grants option:selected");
-                    classifiedNodesHandler(selectedOptions, allOptions);
-//                    mytextTitleElem.empty();
-//                    mytextTitleElem.show();
-//                    mytextContentElem.empty();
-//                    mytextContentElem.show();
-//                    classifiedNodesHeaderElem.hide();
-//                    classifiedNodesElem.hide();
-//                    classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
-
-                })
-
-                $(".multiselect-container")
-                   // .attr("style","max-width:300px;max-height:300px;")
-                    .find("li").find("a").find("label")
-                        .attr("style","overflow:hidden;text-overflow:ellipsis;")
-            });
-
-//
-//            selectnodeCircles = nodeCircles;
-//			selectnodeLabels = nodeLabels;
 
 			$(function(){
 
-
 				//refreshes the inner options
 				grantsElem.multiselect("refresh");
-//				grantsElem.multiselect().multiselectfilter({
-//				/*	http://www.erichynds.com/examples/jquery-ui-multiselect-widget/demos/#filter	*/
-//					filter: function(event, matches){
-//						if( !matches.length ){
-//							// do something
-//						}
-//					}
-//				});
-
 
 //hard code....
 				category1Elem.on("click", function (){
@@ -2738,7 +2602,9 @@
 						subdBiConnectionsNum = [];
 						nodesToFade = [];
 
+                        //todo: maybe needed again the below
 						//grantsElem.multiselect();
+                        loadNodeList();
 
 						similarityThr = <?php echo $similarityThr ;?>;
 						nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
@@ -2833,129 +2699,9 @@ else if (/^Full*/.test(experimentName)){
 					}
 				});
 
-//http://www.erichynds.com/blog/jquery-ui-multiselect-widget
-//				grantsElem.bind("multiselectcheckall", function(event, matches){
-//					reset();
-//					selectnodeCircles = nodeCircles;
-//					selectnodeLabels = nodeLabels
-//				});
 
-//				grantsElem.bind("multiselectuncheckall", function(event, matches){
-//					reset();
-//					selectnodeCircles = nodeCircles;
-//					selectnodeLabels = nodeLabels
-//				});
-
-
-//				grantsGroup1Elem.multiselect({
-//					optgrouptoggle: function(event, ui){
-//						for (var i=0;i<ui.inputs.length;i++)
-//						{
-//							nodesToFade.push(ui.inputs[i].value);
-//	//						console.log("inputs"+i+":"+ui.inputs[i].value)
-//                        }
-//                        if (ui.checked){
-//							nodeCircles
-//								.filter(function(d) {
-//									if(include(nodesToFade,d.name)){
-//										return 1;
-//									}
-//									else{
-//										return 0;
-//									}
-//								})
-//								.style("fill-opacity", fade_out)
-//								.style("stroke-opacity", fade_out);
-//						}
-//						else{
-//							nodeCircles
-//								.filter(function(d) {
-//									if(include(nodesToFade,d.name)){
-//										return 1;
-//									}
-//									else{
-//										return 0;
-//									}
-//								})
-//								.style("fill-opacity", normal)
-//								.style("stroke-opacity", normal);
-//						}
-//
-//						$(this).find("option:selected").click();
-//						nodesToFade.empty();
-//					}
-//				});
-	
 				grantsElem.multiselect("refresh");
 
-//				grantsGroup2Elem.bind("multiselectoptgrouptoggle", function(event, ui){
-//					for (var i=0;i<ui.inputs.length;i++)
-//					{
-//						nodesToFade.push(ui.inputs[i].value);
-//                    }
-//                    if (ui.checked)
-//							nodeCircles
-//								.filter(function(d) {
-//									if(include(nodesToFade,d.name)){
-//										return 0;
-//									}
-//									else{
-//										return 1;
-//									}
-//								})
-//								.style("fill-opacity", fade_out)
-//								.style("stroke-opacity", fade_out);
-//						else
-//							nodeCircles
-//								.filter(function(d) {
-//									if(include(nodesToFade,d.name)){
-//										return 0;
-//									}
-//									else{
-//										return 1;
-//									}
-//								})
-//								.style("fill-opacity", normal)
-//								.style("stroke-opacity", normal);
-//
-//														nodesToFade.empty();
-//
-//				});
-
-//
-//				grantsElem.bind("multiselectclick", function(event, matches){
-//					//if unchecked
-//					if (!matches.checked){
-//						nodes.filter(function(e){
-//							selectnodeCircles = nodeCircles;
-//							selectnodeLabels = nodeLabels
-//						});
-//					}
-//
-//					var array_of_checked_values = grantsElem.multiselect("getChecked").map(function(){
-//						return this.value;
-//					}).get();
-//
-//					for(var i=0;i<nodes.length;i++){
-//						if(include(array_of_checked_values,nodes[i].name)){
-//							clickedNode = nodes[i];
-//							clickGraph(nodes[i],fade_out);
-//							selectnodeCircles = selectnodeCircles.filter(function(element) {
-//									if(nodes[i].name != element.name)
-//										return 1;
-//									else
-//										return 0;
-//							});
-//
-//							selectnodeLabels = selectnodeLabels.filter(function(element) {
-//									if(nodes[i].name != element.name)
-//										return 1;
-//									else
-//										return 0;
-//							});
-//						}
-//					}
-//				});
 			});
 
 
@@ -3020,6 +2766,78 @@ else if (/^Full*/.test(experimentName)){
 
 		}
 
+        function loadNodeList(){
+            // empty for re-initializing grantsList
+            grantsElem.find("option").empty();
+
+            grantslist1
+                .selectAll("option")
+                .data(nodes.filter(function(d) { if(d.FET!="NONFET") return 1; else return 0;}))
+                .enter()
+                .append("option")
+                .attr("value",function(d){return d.index;})
+                .attr("title",function(d){return d.name;})
+                .attr("id",function(d){
+//					console.log("d.index="+d.index+"   d.name="+d.name);
+                    return d.index;
+                })
+                .text(function(d){return d.name});
+
+//			grantslist2
+//				.selectAll("option")
+//				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
+//				.enter()
+//				.append("option")
+//                .attr("value",function(d){return d.index;})
+//                .attr("title",function(d){return d.name;})
+//				.attr("id",function(d){
+////					console.log("d.index="+d.index+"   d.name="+d.name);
+//					return d.index;
+//				})
+//				.text(function(d){return d.name});
+
+            $(function(){
+                grantsElem.multiselect({
+                    maxHeight: 200,
+                    buttonWidth: '200px',
+                    buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
+                    nonSelectedText: 'Select some <?php echo $node_name;?>s',
+                    selectedClass: 'multiselect-selected',
+//                    includeSelectAllOption: true,
+                    enableClickableOptGroups: true,
+                    enableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+//                    selectAllText: 'All',
+                    optionLabel: function(element) {
+                        return $(element).html() + '(' + $(element).val() + ')';
+                    },
+                    onChange: function(option, checked) {
+                        var clickednodeid = option.val();
+                        clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
+                        var selectedOptions = grantsElem.find("option:selected");
+                        var allOptions = grantsElem.find("option");
+
+                        classifiedNodesHandler(selectedOptions, allOptions);
+                        grantsElem.multiselect("refresh");
+
+                    }
+                });
+
+                $(".multiselect-clear-filter").on('click', function() {
+                    grantsElem.multiselect('deselectAll', false);
+                    var allOptions = grantsElem.find("option");
+                    var selectedOptions = grantsElem.find("option:selected");
+                    classifiedNodesHandler(selectedOptions, allOptions);
+                    grantsElem.multiselect("refresh");
+
+                });
+
+                $(".multiselect-container")
+                    // .attr("style","max-width:300px;max-height:300px;")
+                    .find("li").find("a").find("label")
+                    .attr("style","overflow:hidden;text-overflow:ellipsis;")
+            });
+        }
 
 	/* update ? */
 		function update() {
@@ -3209,6 +3027,7 @@ var u =0;
             //find all types to show
             var types = [];
             var collection = null;
+            var isNodeFilter = 0;
             if(list.length == 0){
                 collection = alllist;
                 mytextContentElem.empty();
@@ -3217,61 +3036,87 @@ var u =0;
             else
                 collection = list;
 
+
             collection.each(function(col_index,col_elem){
                 //todo ta apo katw na ta balw se lista kai na kalw tin classifiednodeshandler() kai na min stelnw olo to object <pou apotelei lista> opote stin klisi na min exw to if else apo katw
                 $(".circle").each(function(cir_index,cir_elem){
                     if ( cir_elem.classList[1] == $($(col_elem).find("td").get(0)).find("div").html()){
                         types.push(parseInt(cir_elem.classList[2]));
+//todo na to kanw me kalutero tropo, oxi etsi biastika to apokatw boolean flag
+                        isNodeFilter = 0;
                     }
                     else if ( cir_elem.classList[2] == $(col_elem).val()) {
                         types.push(parseInt(cir_elem.classList[2]));
+                        isNodeFilter = 1;
                     }
                 });
             });
 
             showtype(fade_out, types);
 
-            if(list.length != 0){
-                classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on area classification:&nbsp;");
-                classifiedNodesHeaderElem.show();
+            if(isNodeFilter){
+                if(list.length != 0){
+                    classifiedNodesHeaderElem.html("Selected <?php echo $node_name;?>s with filtering:&nbsp;");
+                    classifiedNodesHeaderElem.show();
 
-                var classifiedNodes = "";
-                numOfClassifiedNodes=0;
+                    var classifiedNodes = "";
+                    numOfClassifiedNodes=0;
 
-                var o;
-                $.each(types,function(i,obj){
-                    o = $.grep(nodes, function(o) { return o.index == obj })[0];
-                    classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
-                    numOfClassifiedNodes++;
+                    var o;
+                    $.each(types,function(i,obj){
+                        o = $.grep(nodes, function(o) { return o.index == obj })[0];
+                        classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+                        numOfClassifiedNodes++;
 
-                });
+                    });
 
-
-                if(list.length == 1) {
-                    mytextTitle.append("div").append("ul")
-                        .attr("class", "pagination active")
-                        .attr("data-toggle","tooltip")
-                        .attr("data-placement","right")
-                        .attr("title","...more about subdivision and link...")
-        //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
-                        .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                    classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
+                    classifiedNodeButtons();
+                    classifiedNodesElem.show();
                 }
-                else{
-                    mytextTitleElem.empty();
-                    mytextTitle.append("div").append("ul")
-                        .attr("class", "pagination active")
-                        .attr("data-toggle", "tooltip")
-                        .attr("data-placement", "right")
-                        .attr("title", "...more about subdivision and link...")
-                        //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
-                        .append("li").append("a").attr("class", "btn-primary active").html(list.length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
-                }
-
-                classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
-                classifiedNodeButtons();
-                classifiedNodesElem.show();
             }
+            else {
+                if(list.length != 0){
+                    classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on area classification:&nbsp;");
+                    classifiedNodesHeaderElem.show();
 
+                    var classifiedNodes = "";
+                    numOfClassifiedNodes=0;
+
+                    var o;
+                    $.each(types,function(i,obj){
+                        o = $.grep(nodes, function(o) { return o.index == obj })[0];
+                        classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+                        numOfClassifiedNodes++;
+
+                    });
+
+
+                    if(list.length == 1) {
+                        mytextTitle.append("div").append("ul")
+                            .attr("class", "pagination active")
+                            .attr("data-toggle","tooltip")
+                            .attr("data-placement","right")
+                            .attr("title","...more about subdivision and link...")
+            //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
+                            .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                    }
+                    else{
+                        mytextTitleElem.empty();
+                        mytextTitle.append("div").append("ul")
+                            .attr("class", "pagination active")
+                            .attr("data-toggle", "tooltip")
+                            .attr("data-placement", "right")
+                            .attr("title", "...more about subdivision and link...")
+                            //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
+                            .append("li").append("a").attr("class", "btn-primary active").html(list.length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                    }
+
+                    classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
+                    classifiedNodeButtons();
+                    classifiedNodesElem.show();
+                }
+            }
         }
 
 /////////////////////////////////////////////////////////////////////

@@ -2807,7 +2807,7 @@ else if (/^Full*/.test(experimentName)){
 
         function loadNodeList(){
             // empty for re-initializing grantsList
-//            $("#filter1").find("div").empty();
+            $("#filter1").find("div").find("ul").empty();
 
             grantslist1
                 .selectAll("option")

@@ -2626,7 +2626,6 @@ else if (/^Full*/.test(experimentName)){
 	categoriesElem.hide();
 }
 //                        grantsElem.multiselect('rebuild');
-                        grantsElem.multiselect('destroy');
 
 						ajaxCall(myval,expsimilarity);			 		
                         mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
@@ -2796,8 +2795,7 @@ else if (/^Full*/.test(experimentName)){
 //					return d.index;
 //				})
 //				.text(function(d){return d.name});
-            grantsElem.multiselect('rebuild')
-            grantsElem.unbind().multiselect({
+            grantsElem.multiselect({
                     maxHeight: 200,
                     buttonWidth: '200px',
                     buttonContainer: '<div class="btn-group" id="grantsButton"></div>',

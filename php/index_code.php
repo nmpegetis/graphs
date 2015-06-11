@@ -2669,8 +2669,8 @@ else if (/^Full*/.test(experimentName)){
                         mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                         //todo: maybe needed again the below
                         //grantsElem.multiselect();
+                        grantsElem.multiselect('destroy');
                         loadNodeList();
-                        grantsElem.multiselect('rebuild');
                         grantsElem.multiselect({
                             maxHeight: 200,
                             buttonWidth: '200px',

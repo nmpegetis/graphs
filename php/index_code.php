@@ -2625,6 +2625,8 @@ else if (/^Full*/.test(experimentName)){
 	expsimilarity = 0.6;
 	categoriesElem.hide();
 }
+//                        grantsElem.multiselect('rebuild');
+                        grantsElem.multiselect('destroy');
 
 						ajaxCall(myval,expsimilarity);			 		
                         mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
@@ -2795,7 +2797,6 @@ else if (/^Full*/.test(experimentName)){
 //				})
 //				.text(function(d){return d.name});
             $(function(){
-                grantsElem.multiselect('rebuild');
                 grantsElem.multiselect({
                     maxHeight: 200,
                     buttonWidth: '200px',

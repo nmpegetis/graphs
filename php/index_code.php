@@ -2796,7 +2796,7 @@ else if (/^Full*/.test(experimentName)){
 //					return d.index;
 //				})
 //				.text(function(d){return d.name});
-                grantsElem.multiselect({
+                grantsElem.unbind().multiselect({
                     maxHeight: 200,
                     buttonWidth: '200px',
                     buttonContainer: '<div class="btn-group" id="grantsButton"></div>',

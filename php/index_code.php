@@ -2807,7 +2807,7 @@ else if (/^Full*/.test(experimentName)){
 
         function loadNodeList(){
             // empty for re-initializing grantsList
-            grantsElem.find("optgroup").find("option").empty();
+            grantsElem.find("optgroup").empty();
           //  $("#filter1").find("div").find("ul").empty();
 
             grantslist1
@@ -2823,18 +2823,18 @@ else if (/^Full*/.test(experimentName)){
                 })
                 .text(function(d){return d.name});
 
-//			grantslist2
-//				.selectAll("option")
-//				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
-//				.enter()
-//				.append("option")
-//                .attr("value",function(d){return d.index;})
-//                .attr("title",function(d){return d.name;})
-//				.attr("id",function(d){
-////					console.log("d.index="+d.index+"   d.name="+d.name);
-//					return d.index;
-//				})
-//				.text(function(d){return d.name});
+			grantslist2
+				.selectAll("option")
+				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
+				.enter()
+				.append("option")
+                .attr("value",function(d){return d.index;})
+                .attr("title",function(d){return d.name;})
+				.attr("id",function(d){
+//					console.log("d.index="+d.index+"   d.name="+d.name);
+					return d.index;
+				})
+				.text(function(d){return d.name});
         }
 
 	/* update ? */

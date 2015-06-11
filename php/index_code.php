@@ -401,57 +401,6 @@
 //			});
 //		});
 
-		$(function(){
-            grantsElem.multiselect({
-                maxHeight: 200,
-                buttonWidth: '200px',
-                buttonContainer: '<div class="btn-group" id="example-selectedClass-container"></div>',
-                nonSelectedText: 'Check an option!',
-                selectedClass: 'multiselect-selected',
-                includeSelectAllOption: true,
-                enableClickableOptGroups: true,
-                enableFiltering: true,
-                enableCaseInsensitiveFiltering: true,
-                selectAllText: 'All',
-                optionLabel: function(element) {
-                    return $(element).html() + '(' + $(element).val() + ')';
-                },
-                buttonText: function(options, select) {
-                    if (options.length === 0) {
-                        return 'No option selected ...';
-                    }
-                    else if (options.length > 3) {
-                        return 'More than 3 options selected!';
-                    }
-                    else {
-                        var labels = [];
-                        options.each(function() {
-                            if ($(this).attr('label') !== undefined) {
-                                labels.push($(this).attr('label'));
-                            }
-                            else {
-                                labels.push($(this).html());
-                            }
-                        });
-                        return labels.join(', ') + '';
-                    }
-                },
-                onSelectAll: function() {
-                    alert('onSelectAll triggered.');
-                },
-                onChange: function(option, checked) {
-                    if (checked) {
-                        clickedNode = option;
-                        clickGraph(clickedNode,fade_out);
-
-                    }
-                    else {
-                        clickedNode = option;
-                        clickGraph(clickedNode,fade_out);
-                    }
-                }
-            });
-		});
 
     // pass configuration with parameters
 		experimentDescription = "";
@@ -2469,28 +2418,123 @@
 				.data(nodes.filter(function(d) { if(d.FET!="NONFET") return 1; else return 0;}))
 				.enter()
 				.append("option")
-				.attr("value",function(d){return d.name;})
+				.attr("value",function(d){return d.index;})
+                .attr("title",function(d){return d.name;})
 				.attr("id",function(d){
-				//	console.log("d.index="+d.index+"   d.name="+d.name);
+//					console.log("d.index="+d.index+"   d.name="+d.name);
 					return d.index;
 				})
 				.text(function(d){return d.name});
 
-			grantslist2
-				.selectAll("option")
-				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
-				.enter()
-				.append("option")
-				.attr("value",function(d){return d.name;})
-				.attr("id",function(d){
-				//	console.log("d.index="+d.index+"   d.name="+d.name);
-					return d.index;
-				})
-				.text(function(d){return d.name});
+//			grantslist2
+//				.selectAll("option")
+//				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
+//				.enter()
+//				.append("option")
+//                .attr("value",function(d){return d.index;})
+//                .attr("title",function(d){return d.name;})
+//				.attr("id",function(d){
+////					console.log("d.index="+d.index+"   d.name="+d.name);
+//					return d.index;
+//				})
+//				.text(function(d){return d.name});
 
+            $(function(){
+                grantsElem.multiselect({
+                    maxHeight: 200,
+                    buttonWidth: '200px',
+                    buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
+                    nonSelectedText: 'Select some <?php echo $node_name;?>s',
+                    selectedClass: 'multiselect-selected',
+//                    includeSelectAllOption: true,
+                    enableClickableOptGroups: true,
+                    enableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+//                    selectAllText: 'All',
+                    optionLabel: function(element) {
+                        return $(element).html() + '(' + $(element).val() + ')';
+                    },
+//                    buttonText: function(options, select) {
+//                        if (options.length === 0) {
+//                            return 'No <?php //echo $node_name;?>//s selected ...';
+//                        }
+////                        else if (options.length > 3) {
+////                            return 'More than 3 <?php ////echo $node_name;?>////s selected!';
+////                        }
+//                        else {
+//                            var labels = [];
+//                            options.each(function() {
+//                                if ($(this).attr('label') !== undefined) {
+//                                    labels.push($(this).attr('label'));
+//                                }
+//                                else {
+//                                    labels.push($(this).html());
+//                                }
+//                            });
+//                            return labels.join(', ') + '';
+//                        }
+//                    },
+//                    onSelectAll: function() {
+//                        alert('onSelectAll triggered.');
+//                    },
+                    onChange: function(option, checked) {
+//                        if (checked) {
+                            var clickednodeid = option.val();
+                            clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
+                            var selectedOptions = $("#grants option:selected");
+                            var allOptions = $("#grants option");
+                            console.log(selectedOptions)
+                            console.log(allOptions)
 
-			selectnodeCircles = nodeCircles;
-			selectnodeLabels = nodeLabels;
+                            classifiedNodesHandler(selectedOptions, allOptions);
+
+//                            clickGraph(clickedNode,fade_out);
+//                            var dcx = (w/2-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cx")));
+//                            var dcy = (h/3-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cy")));
+//                            translation = [dcx,dcy];
+//                            vis.attr("transform", "translate("+ translation  + ")");
+//
+//                            $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
+//                                return classNames.replace('shadow', '');
+//                            });
+//                            $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
+//                                return classNames + ' shadow';
+//                            });
+//
+//                        }
+//                        else {
+//                            $( "#circle-node-"+option.val()).attr('class', function(index, classNames) {
+//                                return classNames.replace('shadow', '');
+//                            });
+////                            reset();
+//                        }
+                    }
+                });
+
+                $(".multiselect-clear-filter").on('click', function() {
+                    grantsElem.multiselect('deselectAll', false);
+                    var allOptions = $("#grants option");
+                    var selectedOptions = $("#grants option:selected");
+                    classifiedNodesHandler(selectedOptions, allOptions);
+//                    mytextTitleElem.empty();
+//                    mytextTitleElem.show();
+//                    mytextContentElem.empty();
+//                    mytextContentElem.show();
+//                    classifiedNodesHeaderElem.hide();
+//                    classifiedNodesElem.hide();
+//                    classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
+
+                })
+
+                $(".multiselect-container")
+                   // .attr("style","max-width:300px;max-height:300px;")
+                    .find("li").find("a").find("label")
+                        .attr("style","overflow:hidden;text-overflow:ellipsis;")
+            });
+
+//
+//            selectnodeCircles = nodeCircles;
+//			selectnodeLabels = nodeLabels;
 
 			$(function(){
 
@@ -2694,7 +2738,7 @@
 						subdBiConnectionsNum = [];
 						nodesToFade = [];
 
-						grantsElem.multiselect();
+						//grantsElem.multiselect();
 
 						similarityThr = <?php echo $similarityThr ;?>;
 						nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
@@ -2803,80 +2847,80 @@ else if (/^Full*/.test(experimentName)){
 //				});
 
 
-				grantsGroup1Elem.multiselect({
-					optgrouptoggle: function(event, ui){
-						for (var i=0;i<ui.inputs.length;i++)
-						{
-							nodesToFade.push(ui.inputs[i].value);
-	//						console.log("inputs"+i+":"+ui.inputs[i].value)
-                        }
-                        if (ui.checked){
-							nodeCircles
-								.filter(function(d) {
-									if(include(nodesToFade,d.name)){			
-										return 1;
-									}
-									else{
-										return 0;			
-									}
-								})
-								.style("fill-opacity", fade_out)
-								.style("stroke-opacity", fade_out);
-						}
-						else{
-							nodeCircles
-								.filter(function(d) {
-									if(include(nodesToFade,d.name)){			
-										return 1;
-									}
-									else{
-										return 0;			
-									}
-								})
-								.style("fill-opacity", normal)
-								.style("stroke-opacity", normal);
-						}
-
-						$(this).find("option:selected").click();
-						nodesToFade.empty();
-					}
-				});
+//				grantsGroup1Elem.multiselect({
+//					optgrouptoggle: function(event, ui){
+//						for (var i=0;i<ui.inputs.length;i++)
+//						{
+//							nodesToFade.push(ui.inputs[i].value);
+//	//						console.log("inputs"+i+":"+ui.inputs[i].value)
+//                        }
+//                        if (ui.checked){
+//							nodeCircles
+//								.filter(function(d) {
+//									if(include(nodesToFade,d.name)){
+//										return 1;
+//									}
+//									else{
+//										return 0;
+//									}
+//								})
+//								.style("fill-opacity", fade_out)
+//								.style("stroke-opacity", fade_out);
+//						}
+//						else{
+//							nodeCircles
+//								.filter(function(d) {
+//									if(include(nodesToFade,d.name)){
+//										return 1;
+//									}
+//									else{
+//										return 0;
+//									}
+//								})
+//								.style("fill-opacity", normal)
+//								.style("stroke-opacity", normal);
+//						}
+//
+//						$(this).find("option:selected").click();
+//						nodesToFade.empty();
+//					}
+//				});
 	
 				grantsElem.multiselect("refresh");
 
-				grantsGroup2Elem.bind("multiselectoptgrouptoggle", function(event, ui){
-					for (var i=0;i<ui.inputs.length;i++)
-					{
-						nodesToFade.push(ui.inputs[i].value);
-                    }
-                    if (ui.checked)
-							nodeCircles
-								.filter(function(d) {
-									if(include(nodesToFade,d.name)){			
-										return 0;
-									}
-									else{
-										return 1;			
-									}
-								})
-								.style("fill-opacity", fade_out)
-								.style("stroke-opacity", fade_out);
-						else
-							nodeCircles
-								.filter(function(d) {
-									if(include(nodesToFade,d.name)){			
-										return 0;
-									}
-									else{
-										return 1;			
-									}
-								})
-								.style("fill-opacity", normal)
-								.style("stroke-opacity", normal);
-
-														nodesToFade.empty();
-
-				});
+//				grantsGroup2Elem.bind("multiselectoptgrouptoggle", function(event, ui){
+//					for (var i=0;i<ui.inputs.length;i++)
+//					{
+//						nodesToFade.push(ui.inputs[i].value);
+//                    }
+//                    if (ui.checked)
+//							nodeCircles
+//								.filter(function(d) {
+//									if(include(nodesToFade,d.name)){
+//										return 0;
+//									}
+//									else{
+//										return 1;
+//									}
+//								})
+//								.style("fill-opacity", fade_out)
+//								.style("stroke-opacity", fade_out);
+//						else
+//							nodeCircles
+//								.filter(function(d) {
+//									if(include(nodesToFade,d.name)){
+//										return 0;
+//									}
+//									else{
+//										return 1;
+//									}
+//								})
+//								.style("fill-opacity", normal)
+//								.style("stroke-opacity", normal);
+//
+//														nodesToFade.empty();
+//
+//				});
 
 //
 //				grantsElem.bind("multiselectclick", function(event, matches){
@@ -3122,13 +3166,6 @@ var u =0;
 
         function legendHandler(d,i){
             chordHandler(d3.selectAll(".chord").selectAll("."+ d.name), i);
-            mytextTitleElem.empty();
-            mytextTitleElem.show();
-            mytextContentElem.empty();
-            mytextContentElem.show();
-            classifiedNodesHeaderElem.hide();
-            classifiedNodesElem.hide();
-            classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
 
             if($("#legend_row"+ d.name).hasClass("active_row")){
                 $("#legend_row"+ d.name).removeClass("active_row");
@@ -3156,21 +3193,37 @@ var u =0;
                 $(this).removeClass("inactive");
             });
 
-                //find all types to show
+            classifiedNodesHandler($(".active_row"),$(".legend_row"));
+        }
 
+        function classifiedNodesHandler(list, alllist){
+            mytextTitleElem.empty();
+            mytextTitleElem.show();
+            mytextContentElem.empty();
+            mytextContentElem.show();
+            classifiedNodesHeaderElem.hide();
+            classifiedNodesElem.hide();
+            classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
+            boostBtnElem.hide();
+
+            //find all types to show
             var types = [];
             var collection = null;
-            if($(".active_row").length == 0){
-                collection = $(".legend_row");
+            if(list.length == 0){
+                collection = alllist;
                 mytextContentElem.empty();
                 mytextTitleElem.empty();
             }
             else
-                collection = $(".active_row");
+                collection = list;
 
             collection.each(function(col_index,col_elem){
+                //todo ta apo katw na ta balw se lista kai na kalw tin classifiednodeshandler() kai na min stelnw olo to object <pou apotelei lista> opote stin klisi na min exw to if else apo katw
                 $(".circle").each(function(cir_index,cir_elem){
                     if ( cir_elem.classList[1] == $($(col_elem).find("td").get(0)).find("div").html()){
+                        types.push(parseInt(cir_elem.classList[2]));
+                    }
+                    else if ( cir_elem.classList[2] == $(col_elem).val()) {
                         types.push(parseInt(cir_elem.classList[2]));
                     }
                 });
@@ -3178,7 +3231,7 @@ var u =0;
 
             showtype(fade_out, types);
 
-            if($(".active_row").length != 0){
+            if(list.length != 0){
                 classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on area classification:&nbsp;");
                 classifiedNodesHeaderElem.show();
 
@@ -3194,13 +3247,13 @@ var u =0;
                 });
 
 
-                if($(".active_row").length == 1) {
+                if(list.length == 1) {
                     mytextTitle.append("div").append("ul")
                         .attr("class", "pagination active")
                         .attr("data-toggle","tooltip")
                         .attr("data-placement","right")
                         .attr("title","...more about subdivision and link...")
-//						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
+        //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
                         .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
                 }
                 else{
@@ -3211,16 +3264,15 @@ var u =0;
                         .attr("data-placement", "right")
                         .attr("title", "...more about subdivision and link...")
                         //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
-                        .append("li").append("a").attr("class", "btn-primary active").html($(".active_row").length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                        .append("li").append("a").attr("class", "btn-primary active").html(list.length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
                 }
 
                 classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
                 classifiedNodeButtons();
                 classifiedNodesElem.show();
             }
+
         }
-
-
 
 /////////////////////////////////////////////////////////////////////
 /**** FILE CREATION FUNCTIONS AND CHORD GRAPH ELEMENTS CREATION ****/
@@ -3933,7 +3985,7 @@ var u =0;
 								<optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
 								</optgroup>
 							</select>
-<!--                            <select id="example" multiple="multiple">-->
+                            <!--                            <select id="example" multiple="multiple">-->
 <!--                                <optgroup id="grantsGroup12" label="--><?php //echo $node_groupName1 ;?><!--">-->
 <!--                                    <option value="cheese">Cheese</option>-->
 <!--                                    <option value="tomatoes">Tomatoes</option>-->

@@ -2796,7 +2796,6 @@ else if (/^Full*/.test(experimentName)){
 //					return d.index;
 //				})
 //				.text(function(d){return d.name});
-            $(function(){
                 grantsElem.multiselect({
                     maxHeight: 200,
                     buttonWidth: '200px',
@@ -2836,7 +2835,6 @@ else if (/^Full*/.test(experimentName)){
                     // .attr("style","max-width:300px;max-height:300px;")
                     .find("li").find("a").find("label")
                     .attr("style","overflow:hidden;text-overflow:ellipsis;")
-            });
         }
 
 	/* update ? */

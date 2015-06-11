@@ -2664,52 +2664,15 @@ else if (/^Full*/.test(experimentName)){
 	expsimilarity = 0.6;
 	categoriesElem.hide();
 }
+                        // empty for re-initializing grantsList
+                        grantsElem.find("optgroup").empty();
 
 						ajaxCall(myval,expsimilarity);			 		
                         mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                         //todo: maybe needed again the below
                         //grantsElem.multiselect();
-                        grantsElem.multiselect('destroy');
                         loadNodeList();
-                        grantsElem.multiselect({
-                            maxHeight: 200,
-                            buttonWidth: '200px',
-                            buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
-                            nonSelectedText: 'Select some <?php echo $node_name;?>s',
-                            selectedClass: 'multiselect-selected',
-//                    includeSelectAllOption: true,
-                            enableClickableOptGroups: true,
-                            enableFiltering: true,
-                            enableCaseInsensitiveFiltering: true,
-//                    selectAllText: 'All',
-                            optionLabel: function(element) {
-                                return $(element).html() + '(' + $(element).val() + ')';
-                            },
-                            onChange: function(option, checked) {
-                                var clickednodeid = option.val();
-                                clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
-                                var selectedOptions = grantsElem.find("option:selected");
-                                var allOptions = grantsElem.find("option");
-
-                                classifiedNodesHandler(selectedOptions, allOptions);
-                                grantsElem.multiselect("refresh");
-
-                            }
-                        });
-
-                        $(".multiselect-clear-filter").on('click', function() {
-                            grantsElem.multiselect('deselectAll', false);
-                            var allOptions = grantsElem.find("option");
-                            var selectedOptions = grantsElem.find("option:selected");
-                            classifiedNodesHandler(selectedOptions, allOptions);
-                            grantsElem.multiselect("refresh");
-
-                        });
-
-                        $(".multiselect-container")
-                            // .attr("style","max-width:300px;max-height:300px;")
-                            .find("li").find("a").find("label")
-                            .attr("style","overflow:hidden;text-overflow:ellipsis;");
+                        grantsElem.multiselect('rebuild');
 
 
 
@@ -2847,9 +2810,6 @@ else if (/^Full*/.test(experimentName)){
 		}
 
         function loadNodeList(){
-            // empty for re-initializing grantsList
-            grantsElem.find("optgroup").empty();
-          //  $("#filter1").find("div").find("ul").empty();
 
             grantslist1
                 .selectAll("option")

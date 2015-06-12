@@ -2849,6 +2849,10 @@ else if (/^Full*/.test(experimentName)){
 
         function loadNodeList(){
 
+            grantsElem = null;
+            grantsGroup1Elem = null;
+            grantsGroup2Elem = null;
+
             grantslist1
                 .selectAll("option")
                 .data(nodes.filter(function(d) { if(d.FET!="NONFET") return 1; else return 0;}))
@@ -2876,6 +2880,8 @@ else if (/^Full*/.test(experimentName)){
 				.text(function(d){return d.name});
 
             grantsElem = $("#grants")
+            grantsGroup1Elem = $("#grantsGroup1")
+            grantsGroup2Elem = $("#grantsGroup2");
         }
 
 	/* update ? */

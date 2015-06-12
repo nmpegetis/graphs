@@ -220,6 +220,7 @@
                 chord2divElem = $("#chord2div"),
                 trenddivElem = $("#trenddiv"),
                 trend2divElem = $("#trend2div"),
+                trend3divElem = $("#trend3div"),
                 grantsGroup1Elem = $("#grantsGroup1"),
                 grantsGroup2Elem = $("#grantsGroup2");
 
@@ -4081,8 +4082,9 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
-                            <li><a data-toggle="tab" data-target="#trenddiv">Trends 1</a></li>
-                            <li><a data-toggle="tab" data-target="#trend2div">Trends 2</a></li>
+                            <li><a data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                            <li><a data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-journal.html" target="_blank">Trends 2  <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                            <li><a data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-communication.html" target="_blank">Trends 3  <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
                         </ul>
                     </li>
                 </ul>

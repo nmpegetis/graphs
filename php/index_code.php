@@ -2852,7 +2852,7 @@ else if (/^Full*/.test(experimentName)){
             grantsElem = null;
             grantsGroup1Elem = null;
             grantsGroup2Elem = null;
-
+grantsElem.multiselect('destroy')
             grantslist1
                 .selectAll("option")
                 .data(nodes.filter(function(d) { if(d.FET!="NONFET") return 1; else return 0;}))

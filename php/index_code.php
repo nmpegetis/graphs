@@ -1979,8 +1979,54 @@
                         }
                     });
                 }
+                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") {
+//                else if(getUrlParameter('ex') == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.6" && getUrlParameter('g') == "7" && getUrlParameter('s') == "-400") {
+                    console.log("call ACM_250T_1000IT_0IIT_100B_4M_cos categories")
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: "../../../jsonACMCategories.php",
+                        data: "s=" + expsimilarity + "&ex=" + experiment,
+                        success: function (resp) {
+                            spinner.stop();
+                            myresponse = JSON.parse(resp);
+                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                            topics1 = myresponse.topicsNoSort;
+                            topics2 = myresponse.topics;
+                            grants = myresponse.grants;
+                            experiments = myresponse.expers;
+                            renderpage(myresponse.resp);
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
+                        }
+                    });
+                }
+                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") {
+//                else if(getUrlParameter('ex') == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.6" && getUrlParameter('g') == "7" && getUrlParameter('s') == "-400") {
+                    console.log("call ACM_250T_1000IT_0IIT_100B_4M_cos Authors")
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: "../../../jsonACMAuthors.php",
+                        data: "s=" + expsimilarity + "&ex=" + experiment,
+                        success: function (resp) {
+                            spinner.stop();
+                            myresponse = JSON.parse(resp);
+                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                            topics1 = myresponse.topicsNoSort;
+                            topics2 = myresponse.topics;
+                            grants = myresponse.grants;
+                            experiments = myresponse.expers;
+                            renderpage(myresponse.resp);
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
+                        }
+                    });
+                }
                 else {
-                    console.log("call FETGrants_100T_1200IT_0IIT_150B_4M_cos")
+                    console.log("call dbfront")
                     $.ajax({
                         type: "GET",
                         async: true,

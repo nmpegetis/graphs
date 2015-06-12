@@ -1887,26 +1887,120 @@
 
             /**** DB CONNECTION FUNCTIONS ****/
             function ajaxCall(experiment,expsimilarity){
-                $.ajax({
-                    type: "GET",
-                    async: true,
-                    url: "./dbfront.php",
-                    data:"s="+expsimilarity+"&ex="+experiment,
-                    success: function(resp){
-                        spinner.stop();
-                        myresponse = JSON.parse(resp);
-                        //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-                        topics1 = myresponse.topicsNoSort;
-                        topics2 = myresponse.topics;
-                        grants = myresponse.grants;
-                        experiments = myresponse.expers;
-                        renderpage(myresponse.resp);
-                    },
-                    error: function(e){
-                        alert('Error: ' + JSON.stringify(e));
-                    }
-                });
-
+                if(experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") {
+//                if(getUrlParameter('ex') == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.45" && getUrlParameter('g') == "1" && getUrlParameter('s') == "-1100") {
+                    console.log("call FETGrants_80T_1200IT_0IIT_150B_4M_cos")
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: "../../../jsonReviewFET80T.php",
+                        data: "s=" + expsimilarity + "&ex=" + experiment,
+                        success: function (resp) {
+                            spinner.stop();
+                            myresponse = JSON.parse(resp);
+                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                            topics1 = myresponse.topicsNoSort;
+                            topics2 = myresponse.topics;
+                            grants = myresponse.grants;
+                            experiments = myresponse.expers;
+                            renderpage(myresponse.resp);
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
+                        }
+                    });
+                }
+                else if(experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") {
+//                else if(getUrlParameter('ex') == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.45" && getUrlParameter('g') == "1" && getUrlParameter('s') == "-1100") {
+                    console.log("call FETGrants_100T_1200IT_0IIT_150B_4M_cos")
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: "../../../jsonReviewFET100T.php",
+                        data: "s=" + expsimilarity + "&ex=" + experiment,
+                        success: function (resp) {
+                            spinner.stop();
+                            myresponse = JSON.parse(resp);
+                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                            topics1 = myresponse.topicsNoSort;
+                            topics2 = myresponse.topics;
+                            grants = myresponse.grants;
+                            experiments = myresponse.expers;
+                            renderpage(myresponse.resp);
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
+                        }
+                    });
+                }
+                else if(experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") {
+//                else if(getUrlParameter('ex') == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && getUrlParameter('s') == "0.45" && getUrlParameter('g') == "3" && getUrlParameter('s') == "-1100") {
+                    console.log("call HEALTHTender_200T_1000IT_0IIT_100B_5M_cos")
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: "../../../jsonReviewHEALTH200T.php",
+                        data: "s=" + expsimilarity + "&ex=" + experiment,
+                        success: function (resp) {
+                            spinner.stop();
+                            myresponse = JSON.parse(resp);
+                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                            topics1 = myresponse.topicsNoSort;
+                            topics2 = myresponse.topics;
+                            grants = myresponse.grants;
+                            experiments = myresponse.expers;
+                            renderpage(myresponse.resp);
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
+                        }
+                    });
+                }
+                else if(experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") {
+//                else if(getUrlParameter('ex') == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.6" && getUrlParameter('g') == "7" && getUrlParameter('s') == "-400") {
+                    console.log("call FullGrants_300T_1200IT_0IIT_150B_4M_cos")
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: "../../../jsonReviewFull300T.php",
+                        data: "s=" + expsimilarity + "&ex=" + experiment,
+                        success: function (resp) {
+                            spinner.stop();
+                            myresponse = JSON.parse(resp);
+                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                            topics1 = myresponse.topicsNoSort;
+                            topics2 = myresponse.topics;
+                            grants = myresponse.grants;
+                            experiments = myresponse.expers;
+                            renderpage(myresponse.resp);
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
+                        }
+                    });
+                }
+                else {
+                    console.log("call FETGrants_100T_1200IT_0IIT_150B_4M_cos")
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: "./dbfront.php",
+                        data: "s=" + expsimilarity + "&ex=" + experiment,
+                        success: function (resp) {
+                            spinner.stop();
+                            myresponse = JSON.parse(resp);
+                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                            topics1 = myresponse.topicsNoSort;
+                            topics2 = myresponse.topics;
+                            grants = myresponse.grants;
+                            experiments = myresponse.expers;
+                            renderpage(myresponse.resp);
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
+                        }
+                    });
+                }
 // THE BELOW FOR LOCALHOST TESTING
 
 //			$.ajax({

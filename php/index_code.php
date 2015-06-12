@@ -9,18 +9,18 @@
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
     <!-- Optional theme -->
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
-    <link rel="stylesheet" href="../../../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../../css/bootstrap-theme.min.css">
-
-
-    <link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.css" />
-    <link rel="stylesheet" type="text/css" href="../../../select/jquery.multiselect.filter.css" />
-
-    <link rel="stylesheet" type="text/css" href="../../../css/style2.css" />
     <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.css" />
     <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.min.css" />
     <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.css" />
+    <link rel="stylesheet" href="../../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../css/bootstrap-theme.min.css">
+
+
+    <!-- Include the plugin's CSS and JS: -->
+    <link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" type="text/css"/>
+
+    <link rel="stylesheet" type="text/css" href="../../../css/style2.css" />
     <link rel="stylesheet" type="text/css" href="../../../slider/css/slider.css" />
     <link rel="stylesheet" type="text/css" href="../../../slider/less/slider.less" />
     <!-- <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.3/themes/flick/jquery-ui.css" /> -->
@@ -127,9 +127,10 @@
     <!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.min.js"></script> -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
 
-    <script src="../../../js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../js/jquery-ui.min.js"></script>
+    <script src="../../../js/bootstrap.min.js"></script>
 
+    <script type="text/javascript" src="../../../bootstrap/js/bootstrap-multiselect.js"></script>
 
     <script type="text/javascript" src="../../../utils.js"></script>
 
@@ -138,16 +139,10 @@
     <!-- // <script type="text/javascript" src="http://fgnass.github.io/spin.js/spin.min.js"></script> -->
     <script type="text/javascript" src="../../../js/spin.min.js"></script>
 
-    <!--	<script type="text/javascript" src="../../../select/jquery.multiselect.min.js"></script>-->
-    <!--	<script type="text/javascript" src="../../../select/jquery.multiselect.filter.js"></script>-->
-
 
     <script type="text/javascript" src="../../../slider/js/bootstrap-slider.js"></script>
 
 
-    <!-- Include the plugin's CSS and JS: -->
-    <script type="text/javascript" src="../../../bootstrap/js/bootstrap-multiselect.js"></script>
-    <link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" type="text/css"/>
 
     <script>
         // use below to change layout in mobile devices

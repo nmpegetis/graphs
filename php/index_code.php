@@ -2672,6 +2672,7 @@ else if (/^Full*/.test(experimentName)){
                         //todo: maybe needed again the below
                         //grantsElem.multiselect();
                         loadNodeList();
+                        grantsElem.multiselect('refresh');
                         grantsElem.multiselect('rebuild');
 
 
@@ -2836,6 +2837,9 @@ else if (/^Full*/.test(experimentName)){
 					return d.index;
 				})
 				.text(function(d){return d.name});
+
+            grantsElem.find("#grantsGroup1").append(grantslist1.selectAll("option"))
+            grantsElem.find("#grantsGroup2").append(grantslist2.selectAll("option"))
         }
 
 	/* update ? */

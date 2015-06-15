@@ -51,8 +51,10 @@
         /*.navbar-default .naxbar-xs .navbar-collapse .navbar {min-height:20px !important; max-height:20px !important}*/
         .navbar-brand {padding: 5px 10px 5px 15px }
         .btn-xs {padding:0px 0px 0px 10px;}
-        #experiments, #filters {padding: 5px 5px;}
-        .input-group, .input-group-addon, .form-control, #experiments, #filters {min-height:30px !important; max-height:30px !important}
+        #experiments, #filters {margin-top: 5px}
+        #experiment_btn{padding: 0px; padding-left: 5px; max-height:30px;}
+        .input-group, .input-group-addon, .form-control, #experiments, #filters {min-height:25px !important; max-height:25px !important}
+        .multiselect-search {min-height:30px !important; max-height:30px !important;}
         .chord_circle circle {
             fill: none;
             pointer-events: all;
@@ -107,6 +109,16 @@
         .multiselect-clear-filter{
             padding: 7px 12px;
         }
+
+        .form-control {
+            font-size: 10px
+        }
+
+        .input-group-addon{
+            font-size: 10px;
+            font-weight: 500
+        }
+
     </style>
 
 
@@ -123,7 +135,7 @@
     <!--    <script src="../../../bootstrap/js/bootstrap-multiselect.js"></script>-->
 
     <!-- Latest compiled and minified JavaScript -->
-    <!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.js"></script> -->
+    <!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.js"></script> --> 
     <!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.min.js"></script> -->
 <!--    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>-->
 
@@ -221,8 +233,8 @@
                 trenddivElem = $("#trenddiv"),
                 trend2divElem = $("#trend2div"),
                 trend3divElem = $("#trend3div"),
-                grantsGroup1Elem = $("#grantsGroup1"),
-                grantsGroup2Elem = $("#grantsGroup2");
+                grantsGroup1Elem,
+                grantsGroup2Elem;
 
 
             /* globals */
@@ -335,6 +347,10 @@
                 clickedNode = 0,
                 clickedChord = 0,
                 rows,
+                grantsListHtml,
+                fetOpenNum = 0,
+                fetProactiveNum = 0,
+                fetFlagshipNum = 0,
                 target = document.getElementById('graphdiv'),
                 opts = {
                     lines: 17,              // The number of lines to draw
@@ -369,6 +385,7 @@
                 classifiedNodesElem.hide();
             });
 
+            $("#opt0").attr("selected",true)
             filter1Elem.hide();
             filter2Elem.hide();
 
@@ -631,12 +648,18 @@
             /* ranges will be set later based on the size of the SVG */
 
 
+/*                        <optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
+                        </optgroup>
+                        <optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
+                        </optgroup>
+                grantsGroup1Elem = $("#grantsGroup1");
+                grantsGroup2Elem = $("#grantsGroup2");
+*/
+
 
             legend = d3.select("#legend");
             mytextTitle = d3.select("#mytext-title");
             mytext = d3.select("#mytext-content");
-            grantslist1 = d3.select("#grantsGroup1");
-            grantslist2 = d3.select("#grantsGroup2");
             explist = d3.select("#experiments");
             search = d3.select("#search");
             focused = false;
@@ -1049,7 +1072,8 @@
 
                 nodeCircles
                     .style("fill-opacity", function(o) {
-                        if (types.indexOf(o.index) === -1)return opacity;
+                        
+                        if (types.indexOf(o.index) === -1){console.log(types);return opacity;}
                         return normal;
                     })
                     .style("stroke-opacity", function(o) {
@@ -2142,16 +2166,19 @@
                                     style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; background-color:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
                                     /* styling for results in autocomplete search */
                                     style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
+                                    fetOpenNum ++;
                                 }
                                 else if (response[j].category1_1 == "FETProactive"){
                                     style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; background-color:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
                                     /* styling for results in autocomplete search */
                                     style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
+                                    fetProactiveNum ++;
                                 }
                                 else if (response[j].category1_1 == "FETFlagship"){
                                     style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; background-color:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
                                     /* styling for results in autocomplete search */
                                     style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
+                                    fetFlagshipNum ++;
                                 }
                                 else {
                                     console.log("error: "+response[j].category1_3)
@@ -2249,16 +2276,19 @@
                                     style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; background-color:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
                                     /* styling for results in autocomplete search */
                                     style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
+                                    fetOpenNum ++;
                                 }
                                 else if (response[j].category2_1 == "FETProactive"){
                                     style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; background-color:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
                                     /* styling for results in autocomplete search */
                                     style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
+                                    fetProactiveNum ++;
                                 }
                                 else if (response[j].category2_1 == "FETFlagship"){
                                     style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; background-color:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
                                     /* styling for results in autocomplete search */
                                     style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
+                                    fetFlagshipNum ++;
                                 }
                                 else {
                                     console.log("error: "+response[j].category2_1)
@@ -2378,8 +2408,11 @@
                         maxNodeConnections = nodeConnections[j];
                 }
                 console.log("maxNodeConnections = "+ maxNodeConnections);
-
-
+                category1Elem.find("a").find("span").html(fetOpenNum)
+                category2Elem.find("a").find("span").html(fetProactiveNum)
+                category3Elem.find("a").find("span").html(fetFlagshipNum)
+                                    
+                                     
                 for(var i=0;i<legend_data.length;i++){
                     if(legend_data[i].pr > max_proj)
                         max_proj = legend_data[i].pr;
@@ -2392,7 +2425,6 @@
 
                 createJsonFile();
                 createCSVFile();
-
 
                 rows = null;
                 rows = legend.selectAll("tr")
@@ -2542,8 +2574,55 @@
                     .attr("selected",function(d){if(d.id == experimentName) return "selected";})
                     .text(function(d){return d.id});
 
-
                 loadNodeList();
+
+                $(function(){
+                    //                grantsElem.multiselect('rebuild')
+                    if ($("#grantsButton").length > 0){
+                        grantsElem.multiselect('rebuild')
+                    }
+                    else
+                        grantsElem.multiselect({
+                            maxHeight: 200,
+                            buttonWidth: '200px',
+                            buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
+                            nonSelectedText: 'Select some <?php echo $node_name;?>s',
+                            selectedClass: 'multiselect-selected',
+    //                    includeSelectAllOption: true,
+                            enableClickableOptGroups: true,
+                            enableFiltering: true,
+                            enableCaseInsensitiveFiltering: true,
+    //                    selectAllText: 'All',
+                            optionLabel: function(element) {
+                                return $(element).html() + '(' + $(element).val() + ')';
+                            },
+                            onChange: function(option, checked) {
+                                var clickednodeid = option.val();
+                                clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
+                                var selectedOptions = grantsElem.find("option:selected");
+                                var allOptions = grantsElem.find("option");
+
+                                classifiedNodesHandler(selectedOptions, allOptions);
+                                grantsElem.multiselect("refresh");
+
+                            }
+                        });
+
+                    $(".multiselect-clear-filter").on('click', function() {
+                        grantsElem.multiselect('deselectAll', false);
+                        var allOptions = grantsElem.find("option");
+                        var selectedOptions = grantsElem.find("option:selected");
+                        classifiedNodesHandler(selectedOptions, allOptions);
+                        grantsElem.multiselect("refresh");
+
+                    });
+
+                    $(".multiselect-container")
+                        // .attr("style","max-width:300px;max-height:300px;")
+                        .find("li").find("a").find("label")
+                        .attr("style","overflow:hidden;text-overflow:ellipsis;")
+                });
+
 
 
                 $(function(){
@@ -2559,7 +2638,7 @@
 
                             var types = [];
                             $(".circle").each(function(){
-                                types.push(this.classList[2]);
+                                types.push(parseInt(this.classList[2]));
                             });
 
                             showtype(fade_out, types);
@@ -2584,7 +2663,7 @@
                             var types = [];
                             collection.each(function(){
                                 //						types.push($(this).attr("class"));2ca02c
-                                types.push(this.classList[2]);
+                                types.push(parseInt(this.classList[2]));
                             });
 
                             showtype(fade_out, types);
@@ -2599,7 +2678,7 @@
                             var types = [];
                             $(".circle").each(function(){
                                 //						types.push($(this).attr("class"));
-                                types.push(this.classList[2]);
+                                types.push(parseInt(this.classList[2]));
                             });
 
                             showtype(fade_out, types);
@@ -2624,7 +2703,7 @@
                             var types = [];
                             collection.each(function(){
                                 //						types.push($(this).attr("class"));
-                                types.push(this.classList[2]);
+                                types.push(parseInt(this.classList[2]));
                             });
 
                             showtype(fade_out, types);
@@ -2639,7 +2718,7 @@
                             var types = [];
                             $(".circle").each(function(){
                                 //						types.push($(this).attr("class"));
-                                types.push(this.classList[2]);
+                                types.push(parseInt(this.classList[2]));
                             });
 
                             showtype(fade_out, types);
@@ -2665,7 +2744,7 @@
                             var types = [];
                             collection.each(function(){
                                 //						types.push($(this).attr("class"));
-                                types.push(this.classList[2]);
+                                types.push(parseInt(this.classList[2]));
                             });
 
                             showtype(fade_out, types);
@@ -2737,10 +2816,12 @@
                             subdBiConnections = [];
                             subdBiConnectionsNum = [];
                             nodesToFade = [];
+                            fetOpenNum = 0;
+                            fetProactiveNum = 0;
+                            fetFlagshipNum = 0;
 
                             //todo: maybe needed again the below
                             //grantsElem.multiselect();
-                            loadNodeList();
 
                             similarityThr = <?php echo $similarityThr ;?>;
                             nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
@@ -2897,82 +2978,62 @@
 
                 createChord(1);
                 createChord(2);
-                createTrends(1);
-                createTrends(2);
+//                createTrends(1);
+  //              createTrends(2);
 
             }
 
             function loadNodeList(){
                 // empty for re-initializing grantsList
-                grantsElem.find("option").empty();
+//                grantsElem.find("option").empty();
+/*                grantslist1
+                    .selectAll("option")
+                    .remove()
+
+                grantslist2
+                    .selectAll("option")
+                    .remove()
+
+                $("#grants > optgroup").empty()
+*/
+                grantsElem.empty();
+                grantsElem.append("<optgroup id=\"grantsGroup1\" label=\"<?php echo $node_groupName1 ;?>\"><optgroup id=\"grantsGroup2\" label=\"<?php echo $node_groupName2 ;?>\">")
+                grantsGroup1Elem = $("#grantsGroup1");
+//                grantsGroup2Elem = $("#grantsGroup2");
+                grantslist1 = d3.select("#grantsGroup1");
+//                grantslist2 = d3.select("#grantsGroup2");
 
                 grantslist1
                     .selectAll("option")
-                    .data(nodes.filter(function(d) { if(d.FET!="NONFET") return 1; else return 0;}))
+//                    .data(nodes.filter(function(d) { if(d.FET!="NONFET") return 1; else return 0;}))
+                    .data(nodes)
                     .enter()
                     .append("option")
                     .attr("value",function(d){return d.index;})
                     .attr("title",function(d){return d.name;})
                     .attr("id",function(d){
-//					console.log("d.index="+d.index+"   d.name="+d.name);
+					//console.log("d.index="+d.index+"   d.name="+d.name);
                         return d.index;
                     })
                     .text(function(d){return d.name});
+    //                var a = $("#filter1 > select").html()
+                
+                grantsListHtml = grantsElem.html();
+                grantsElem.append(grantsListHtml)
 
-//			grantslist2
-//				.selectAll("option")
-//				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
-//				.enter()
-//				.append("option")
-//                .attr("value",function(d){return d.index;})
-//                .attr("title",function(d){return d.name;})
-//				.attr("id",function(d){
-////					console.log("d.index="+d.index+"   d.name="+d.name);
-//					return d.index;
-//				})
-//				.text(function(d){return d.name});
-
-                $(function(){
-                    grantsElem.multiselect({
-                        maxHeight: 200,
-                        buttonWidth: '200px',
-                        buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
-                        nonSelectedText: 'Select some <?php echo $node_name;?>s',
-                        selectedClass: 'multiselect-selected',
-//                    includeSelectAllOption: true,
-                        enableClickableOptGroups: true,
-                        enableFiltering: true,
-                        enableCaseInsensitiveFiltering: true,
-//                    selectAllText: 'All',
-                        optionLabel: function(element) {
-                            return $(element).html() + '(' + $(element).val() + ')';
-                        },
-                        onChange: function(option, checked) {
-                            var clickednodeid = option.val();
-                            clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
-                            var selectedOptions = grantsElem.find("option:selected");
-                            var allOptions = grantsElem.find("option");
-
-                            classifiedNodesHandler(selectedOptions, allOptions);
-                            grantsElem.multiselect("refresh");
-
-                        }
-                    });
-
-                    $(".multiselect-clear-filter").on('click', function() {
-                        grantsElem.multiselect('deselectAll', false);
-                        var allOptions = grantsElem.find("option");
-                        var selectedOptions = grantsElem.find("option:selected");
-                        classifiedNodesHandler(selectedOptions, allOptions);
-                        grantsElem.multiselect("refresh");
-
-                    });
-
-                    $(".multiselect-container")
-                        // .attr("style","max-width:300px;max-height:300px;")
-                        .find("li").find("a").find("label")
-                        .attr("style","overflow:hidden;text-overflow:ellipsis;")
-                });
+/*			grantslist2
+				.selectAll("option")
+				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
+				.enter()
+				.append("option")
+                .attr("value",function(d){return d.index;})
+                .attr("title",function(d){return d.name;})
+				.attr("id",function(d){
+					console.log("d.index="+d.index+"   d.name="+d.name);
+					return d.index;
+				})
+				.text(function(d){return d.name});
+*/
             }
 
             /* update ? */
@@ -3925,7 +3986,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#headmenu">
-                <a class="navbar-brand" href="http://astero.di.uoa.gr/graphs/">
+                <a class="navbar-brand" href="../../../">
                     <span class="sr-only">Home</span>
                 </a>
                 <!-- 					        <span class="icon-bar"></span>
@@ -3933,7 +3994,7 @@
 						<span class="icon-bar"></span>
 						-->
             </button>
-            <a class="navbar-brand" href="http://astero.di.uoa.gr/graphs/">
+            <a class="navbar-brand" href="../../../">
                 <span class="glyphicon glyphicon-home"></span>
             </a>
         </div>
@@ -3961,10 +4022,6 @@
                 <li id="filter1" style="padding-left:10px">
                     <!--							<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">-->
                     <select id="grants" multiple="multiple" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
-                        <optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
-                        </optgroup>
-                        <optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
-                        </optgroup>
                     </select>
                     <!--                            <select id="example" multiple="multiple">-->
                     <!--                                <optgroup id="grantsGroup12" label="--><?php //echo $node_groupName1 ;?><!--">-->
@@ -3987,19 +4044,22 @@
 
 
 
-            <ul class="nav navbar-nav navbar-right divider-vertical">
+            <ul class="nav navbar-nav navbar-right" style="padding-right:10px">
                 <li>
                     <!-- Zoom Level:  -->
 
-                    <div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds in Zoom Level. S for Similarity threshold. C for Connectivity threshold">
-                        <span class="input-group-addon">S</span>
-                        <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr1"  style="width:75px">
-                        <span class="input-group-addon">C</span>
-                        <input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr2"  style="width:75px">
+                    <div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds in Zoom Level. ZLS and ZLC for Zooming Label Similarity and Zooming Label Connectivity thresholds, defining the zoom level in which the label should appear.\n ALS and ALC for Appearance Label Similarity and Appearance Label Connectivity, defining whether a node should be labeled or not at all">
+                        <span class="input-group-addon">ZLS</span>
+                        <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr1"  style="width:60px">
+                        <span class="input-group-addon">ZLC</span>
+                        <input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr2"  style="width:60px">
+                        <span class="input-group-addon">ALS</span>
+                        <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr3" style="width:60px">
+                        <span class="input-group-addon">ALC</span>
+                        <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr4"  style="width:60px">
                     </div>
                 </li>
-                <li style="padding-left:10px">
-                    <!-- Labels: -->
+<!---                <li style="padding-left:10px">
                     <div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds for all shown labels on the graph. S for Similarity threshold. C for Connectivity threshold">
                         <span class="input-group-addon">S</span>
                         <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr3" style="width:75px">
@@ -4007,7 +4067,7 @@
                         <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr4"  style="width:75px">
                     </div>
                 </li>
-
+-->
                 <!-- 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
 							<ul class="dropdown-menu" role="menu">

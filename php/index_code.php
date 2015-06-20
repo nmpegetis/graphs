@@ -47,14 +47,14 @@
 
         /*decrease height of navbar*/
         .navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;}
-        .navbar {min-height:35px !important; max-height:35px !important}
+        .navbar, #dropdownThresholds, .container-fluid{min-height:35px !important; max-height:35px !important}
         /*.navbar-default .naxbar-xs .navbar-collapse .navbar {min-height:20px !important; max-height:20px !important}*/
         .navbar-brand {padding: 5px 10px 5px 15px }
         .btn-xs {padding:0px 0px 0px 10px;}
         #experiments, #filters {margin-top: 5px}
         #experiment_btn{padding: 0px; padding-left: 5px; max-height:30px;}
         .input-group, .input-group-addon, .form-control, #experiments, #filters {min-height:25px !important; max-height:25px !important}
-        .multiselect-search {min-height:30px !important; max-height:30px !important;}
+        .multiselect-search, .multiselect-clear-filter {min-height:30px !important; max-height:30px !important;}
         .chord_circle circle {
             fill: none;
             pointer-events: all;
@@ -106,9 +106,9 @@
         .btn{
             padding: 4px 12px;
         }
-        .multiselect-clear-filter{
-            padding: 7px 12px;
-        }
+        /*.multiselect-clear-filter{*/
+            /*padding: 7px 12px;*/
+        /*}*/
 
         .form-control {
             font-size: 10px
@@ -118,6 +118,10 @@
             font-size: 10px;
             font-weight: 500
         }
+        .tooltip-inner{
+            max-width: 100%; /* Max Width of the popover (depending on the container!) */
+        }
+        .dropdown-menu { padding: 5px;}
 
     </style>
 
@@ -199,7 +203,7 @@
                 tagsElem = $("#tags"),
                 upButtonElem = $("#upButton"),
                 downButtonElem = $("#downButton"),
-                exitclassifiedNodesHederElem = $("#exitclassifiedNodesHeader"),
+                exitclassifiedNodesHeaderElem = $("#exitclassifiedNodesHeader"),
                 filter1Elem = $("#filter1"),
                 filter2Elem = $("#filter2"),
                 myTabElem = $("#myTab"),
@@ -218,6 +222,7 @@
                 thr2Elem = $("#thr2"),
                 thr3Elem = $("#thr3"),
                 thr4Elem = $("#thr4"),
+                thr5Elem = $("#thr5"),
                 grantsElem = $("#grants"),
                 category1Elem = $("#category1"),
                 category2Elem = $("#category2"),
@@ -233,124 +238,65 @@
                 trenddivElem = $("#trenddiv"),
                 trend2divElem = $("#trend2div"),
                 trend3divElem = $("#trend3div"),
+                dropdownThresholdsElem = $("#dropdownThresholds"),
                 grantsGroup1Elem,
                 grantsGroup2Elem;
+
+            // d3 Selections
+            var vis = d3.select("#graph"),
+                legend = d3.select("#legend"),
+                mytextTitle = d3.select("#mytext-title"),
+                mytext = d3.select("#mytext-content"),
+                explist = d3.select("#experiments"),
+                search = d3.select("#search"),
+                nodeCircles, linkLines, grantslist1, grantslist2, rows;
 
 
             /* globals */
             var style,
+                svgimgIN, svgimgOUT, svgimgReset, svgimgResetFS,
+
+            // sizes, zooming, scaling, translating and colors
                 fade_out = <?php echo $fade_out ;?>,
                 strong = <?php echo $strong ;?>,
                 normal = <?php echo $normal ;?>,
-                svgimgIN,
-                svgimgOUT,
-                svgimgReset,
-                svgimgResetFS,
-                prev_w,
                 w = windowElem.width()/2,//800,
                 h = windowElem.width()/2,//800,
-                loading,
-                linkLines,
-                linkedByIndex = {},
-                nodeCircles,
-                text,
-                labels = [],
-                links = [],						// includes all the links among the nodes
-                nodes = [],						// includes all the nodes
-                subdivisionsChord = [], 		// before its contents were in a csv file
-                chord_group,
-                chord_chord,
-                selectedLabelIndex = null,
-                scaleFactor = 1,
-                translation = [0,0],
-                vis,
-                xScale,
-                yScale,
-                legend,
-                mytext,
-                mytextTitle,
-                grantslist1,
-                grantslist2,
-                explist,
-                search,
-                focused,
-                grants,
+                prev_w, scaleFactor, translation, xScale, yScale, previous_scale, zoom_type, fontsizeVar, smallestFontVar, gravity, charge, clrArray, flagForTranformation,
+                isSvgFullscreen,	            // catch switching in and out full screen
+
+            // text and labels
+                loading, text, selectedLabelIndex, labels, nodeLabels, selectnodeLabels, labeled, topicWords, topicsFlag, labelIsOnGraph, svgSortedTopicWords,
                 topics1,				//initially the sorted topics
                 topics2,				//initially the unsortd topics
                 topicstemp,				//the swapper between the above two
-                topicsFlag = false,
-                experiments,
-                experimentName,
-                experimentDescription,
-                legend_data = [],
-                max_proj = 0,
-                nodeConnections = [],
-                maxNodeConnections = 0,
-                nodesInGroup = [],
-                labeled = [],
-                labelIsOnGraph = {},
-                topicWords = [],
-                svgSortedTopicWords = [],
-            /* stores all the labels in a map of keys=nodes, values=labels of node*/
-            // possibly to be appended in future with more labels ue to zooming
-                nodeLabels = {},
-                selectnodeLabels = {},
-                previous_scale = 1,
-                zoom_type = 1,
-                zoomer,
-                force,
-                myresponse,
-                fontsize,
-                k,
-                n,
-                topicsMap = {},
-                discriminativeTopic = {},
-                discriminativeTopicWeight = {},
-                discriminativeWord = {},
-                discriminativeWordCounts = {},
-                topicsGroupPerNode,
-                neighborNode,
-                neighborTopicsGroupPerNode,
-                neighborLen,
-                len,
-                topicPerTopicsGroup,
-                weightPerTopicsGroup,
-                i,j,nl,
-                mywords,
-                wlen,
-                label = {},
-                fontsizeVar = <?php echo $fontsizeVar ;?>,
-                smallestFontVar = <?php echo $smallestFontVar ;?>,
-                expsimilarity = <?php echo $expsimilarity ;?>,
-                similarityThr = <?php echo $similarityThr ;?>,
-                nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>,
-                maxNodeConnectionsThr = <?php echo $maxNodeConnectionsThr ;?>,
-                linkThr = <?php echo $linkThr ;?>,
-                gravity = <?php echo $gravity ;?>,
-                charge = <?php echo $charge ;?>,
-                listLength = 10,
-                counter = 0,
-                numOfClassifiedNodes = 0,				            //classifiedNodes found
-                flagForTranformation = 0,
-                isSvgFullscreen = false,	            // catch switching in and out full screen
-                clrArray = [],
-                relations = [],
-                relationsCross = [],					// for the cross disciplinary areas
-                subdConnections = [],
-                subdBiConnections = [],
-                subdConnectionsNum = [],
-                subdBiConnectionsNum = [],
-                nodesToFade = [],
-                node_hash = [],
+                zoomer, fontsize, topicsMap, discriminativeTopic, discriminativeTopicWeight, discriminativeWord, discriminativeWordCounts, topicsGroupPerNode, neighborTopicsGroupPerNode, neighborLen, len, topicPerTopicsGroup, weightPerTopicsGroup,i,j,nl,mywords, wlen, label,
+            // links
+                links,						// includes all the links among the nodes
+                linkedByIndex, similarityThr, linkThr,
+
+            // nodes
+                nodes,						// includes all the nodes
+                nodeConnections, maxNodeConnections, nodesToFade, nodesInGroup, neighborNode, focused, nodeConnectionsThr, maxNodeConnectionsThr, node_hash, clickedNode, max_proj,
+                numOfClassifiedNodes,				            //classifiedNodes found
+
+            // categories
+                legend_data, subdConnections, subdBiConnections, subdConnectionsNum, subdBiConnectionsNum, fetOpenNum, fetProactiveNum, fetFlagshipNum, relations,
+                relationsCross,					// for the cross disciplinary areas
+
+            // experiments
+                experiments, experimentName, experimentDescription,
+
+            // chord
+                subdivisionsChord, 		// before its contents were in a csv file
+                chord_group, chord_chord, clickedChord, percentageSum,
+
+            //grants
+                grantsListHtml, listLength, grants,
+
+                force, myresponse, k, n, counter,
+                expsimilarity,
                 chord_formatPercent = d3.format(".1%"),
-                percentageSum = 0,
-                clickedNode = 0,
-                clickedChord = 0,
-                rows,
-                grantsListHtml,
-                fetOpenNum = 0,
-                fetProactiveNum = 0,
-                fetFlagshipNum = 0,
                 target = document.getElementById('graphdiv'),
                 opts = {
                     lines: 17,              // The number of lines to draw
@@ -369,32 +315,8 @@
                     zIndex: 2e9,            // The z-index (defaults to 2000000000)
                     top: '50%',             // Top position relative to parent
                     left: '50%'             // Left position relative to parent
-                };
-
-            var spinner = new Spinner(opts).spin(target);
-
-            classifiedNodesHeaderElem.hide();
-            classifiedNodesElem.hide();
-            tagsElem.val("");					// when refreshing page placeholder in topic search is shown
-
-            upButtonElem.hide();
-            downButtonElem.hide();
-
-            exitclassifiedNodesHederElem.click(function(){
-                classifiedNodesHeaderElem.hide();
-                classifiedNodesElem.hide();
-            });
-
-            $("#opt0").attr("selected",true)
-            filter1Elem.hide();
-            filter2Elem.hide();
-
-
-            // hide until json data have been loaded from server
-            myTabElem.hide();
-            experimentBtnElem.hide();
-            boostBtnElem.hide();
-            categoriesElem.hide();
+                },
+                spinner;
 
 
             // function creation jquery percentage
@@ -404,235 +326,34 @@
                 }
             });
 
+            dropdownThresholdsElem.on("click", function () {
+                $(this).parent().toggleClass('open');
+            });
+            bodyElem.on("click", function (e) {
+                if (!dropdownThresholdsElem.is(e.target) && dropdownThresholdsElem.has(e.target).length === 0 && $('.open').has(e.target).length === 0)
+                    dropdownThresholdsElem.parent().attr("class","dropdown");
+            });
+
 
             // initialization of tooltips and popover
             $(function () {
-                tooltipElem.tooltip()
+                tooltipElem.tooltip({
+                    container: 'body'
+                })
             });
             $(function () {
                 popoverElem.popover()
             });
 
-
-            // pass configuration with parameters
-            experimentDescription = "";
-            if((experimentName = getUrlParameter('ex')) == null){
-                experimentName = '<?php echo $experimentName ;?>';
-                experimentDescription = "<?php echo $experimentDescription ;?>";
-            }
-
-            // hard code for meeting in Brusseles.. to be moved
-            if (/^FET*/.test(experimentName)){
-                categoriesElem.show();
-                nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
-                expsimilarity = 0.45;
-                gravity = 1;
-                charge = -1100;
-            }
-            else if (/^HEALTH*/.test(experimentName)){
-                expsimilarity = 0.45;
-                gravity = 3;
-                charge = -1100;
-                categoriesElem.hide();
-            }
-            else if (/^Full*/.test(experimentName)){
-                expsimilarity = 0.6;
-                gravity = 7;
-                charge = -400;
-                categoriesElem.hide();
-            }
-
-            if((expsimilarity = getUrlParameter('s')) == null){
-                expsimilarity = <?php echo $expsimilarity ;?>;
-            }
-
-            if((gravity = getUrlParameter('g')) == null){
-                gravity = <?php echo $gravity ;?>;
-            }
-
-            if((charge = getUrlParameter('c')) == null){
-                charge = <?php echo $charge ;?>;
-            }
-
+            initializeExperimentPage();
+            loadThresholdsFromUrlParameters();  //only when changing the parameters on url and refreshing
             ajaxCall(experimentName,expsimilarity);
             mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
-
-            /* window resizing */
-            // check:
-            // http://davidwalsh.name/javascript-debounce-function
-            // http://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac
-
-
-            var doit;
-            windowElem.onresize = function(){
-                clearTimeout(doit);
-                doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
-            };
-            // the below lines can be used instead of above
-            // function debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}}
-            // var myEfficientFn = debounce(function() {
-
-            function onResize() {
-                prev_w = w;
-                w = windowElem.width()/2,
-                    h = windowElem.width()/2,
-
-                    mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
-
-                if(detectmob() || windowElem.width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
-                    w = windowElem.width();
-                    h = windowElem.width();
-                    mytextTitleElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-                    mytextContentElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-                    myinfoElem.attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
-
-                    if(jumpPreviousElem.length == 0)
-                        myinfoElem.prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
-                    jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
-
-                    mygraphElem.attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
-
-                    if(jumpNextElem.length == 0)
-                        mygraphElem.prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
-                    jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
-
-                    mysubdivisionElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
-                    mygraphElem.insertBefore('#myinfo');
-                    mysubdivisionElem.insertAfter('#myinfo');
-                    flagForTranformation = 1;
-                }
-                else if (windowElem.width()>755 && flagForTranformation==1){
-                    flagForTranformation = 0;
-                    mytextTitleElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
-                    mytextContentElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
-                    myinfoElem.attr("style","float:;clear:; min-height:;height:;min-width:;width:;");
-                    mygraphElem.attr("style","float:;padding-right:;clear:;");
-                    jumpNextElem.remove();
-                    jumpPreviousElem.remove();
-                    mysubdivisionElem.attr("style","float:;clear:;min-width:;width:;");
-                    myinfoElem.insertBefore('#mygraph');
-                    mysubdivisionElem.insertAfter('#mygraph');
-                }
-
-//			graphElem.style["width"]= w;
-                graphElem.style["height"] = h;
-
-                svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
-                svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
-                svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
-                svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
-                if(detectmob()){
-                    svgimgIN.setAttributeNS(null,'height','50');
-                    svgimgIN.setAttributeNS(null,'width','50');
-
-                    svgimgReset.setAttributeNS(null,'height','50');
-                    svgimgReset.setAttributeNS(null,'width','50');
-                    svgimgReset.setAttributeNS(null,'y','55');
-
-                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-85);
-                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-85);
-                    svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-50);
-                    svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-50);
-                }
-                else if(windowElem.width()<=755){
-                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-75);
-                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-75);
-                }
-                else if (windowElem.width()>755){
-                    svgimgIN.setAttributeNS(null,'height','22');
-                    svgimgIN.setAttributeNS(null,'width','22');
-
-                    svgimgReset.setAttributeNS(null,'height','22');
-                    svgimgReset.setAttributeNS(null,'width','22');
-                    svgimgReset.setAttributeNS(null,'y','35');
-
-                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
-                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
-                    svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
-                    svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
-                }
-
-                loadingText
-                    .style("font-size",w/20)
-                    .attr("x", (w / 2) - (w/7)) // pou einai to miso tou loading
-                    .attr("y", h / 2);
-
-
-                /*ATTENTION: the below is required and is fired only in Chrome, Safari etc. That is because in Mozilla and other browsers the event for fullscreenchange holds forever when being in fullscreen, while with -webkit used in chrome and safari the event holds for one second*/
-                if (isSvgFullscreen) {
-                    // you have just ENTERED full screen video
-                    /* move svg to center */
-                    vis.style("background-color","white");
-                    vis.style("width","100%");
-                    vis.style("height","100%");
-                    vis.style("position","fixed");
-                }
-
-
-                // semantic zooming
-                scaleFactor = w/prev_w;
-                if (previous_scale < scaleFactor){
-                    /* color change is animated infinite times of 3sec each one */
-                    vis.style("animation","zoominmove 3s infinite")
-                        .style("-webkit-animation","zoominmove 3s infinite");
-                    zoom_type = 1;
-                }
-                else if (previous_scale == scaleFactor){
-                    /* color change is animated infinite times of 3sec each one */
-                    vis.style("animation","dragmove 3s infinite")
-                        .style("-webkit-animation","dragmove 3s infinite")
-                        .style("cursor","move");
-                    zoom_type = 2;
-                }
-                else{
-                    /* color change is animated infinite times of 3sec each one */
-                    vis.style("animation","zoomoutmove 3s infinite")
-                        .style("-webkit-animation","zoomoutmove 3s infinite");
-                    zoom_type = 3;
-                }
-
-                previous_scale = scaleFactor;
-
-                browseTick();
-
-                prev_w = w;
-            }
-            // the below 2 lines go with debounce function
-            // }, 100);
-            // windowElem.addEventListener('resize', myEfficientFn);
-
-            style = document.createElement('style');
-            style.type = 'text/css';
-            headElem[0].appendChild(style);
-
-            if(detectmob() || windowElem.width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
-                w = windowElem.width();//800,
-                h = windowElem.width();//800,
-                mytextTitleElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-                mytextContentElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-                myinfoElem.attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
-
-                if(jumpPreviousElem.length == 0)
-                    myinfoElem.prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
-                jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
-
-                mygraphElem.attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
-
-                if(jumpNextElem.length == 0)
-                    mygraphElem.prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
-                jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
-
-                mysubdivisionElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
-                mygraphElem.insertBefore('#myinfo');
-                mysubdivisionElem.insertAfter('#myinfo');
-
-            }
-
+            checkToChangeLayout();
 
             /* event handlers */
-            vis = d3.select("#graph")
+            vis.style("height", h)
                 // .style("width", w)
-                .style("height", h)
                 .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
                 .style("preserveAspectRatio", "xMidYMid meet")
                 .style("border-style","solid")
@@ -640,43 +361,26 @@
                 .style("border-color","#f6f6f6");
 
 
-            /*** Create scales to handle zoom coordinates ***/
-            xScale = d3.scale.linear()
-                .domain([0,w]);
-            yScale = d3.scale.linear()
-                .domain([0,h]);
+            /* Create scales to handle zoom coordinates */
+            xScale = d3.scale.linear().domain([0,w]);
+            yScale = d3.scale.linear().domain([0,h]);
             /* ranges will be set later based on the size of the SVG */
 
 
-/*                        <optgroup id="grantsGroup1" label="<?php echo $node_groupName1 ;?>">
-                        </optgroup>
-                        <optgroup id="grantsGroup2" label="<?php echo $node_groupName2 ;?>">
-                        </optgroup>
-                grantsGroup1Elem = $("#grantsGroup1");
-                grantsGroup2Elem = $("#grantsGroup2");
-*/
-
-
-            legend = d3.select("#legend");
-            mytextTitle = d3.select("#mytext-title");
-            mytext = d3.select("#mytext-content");
-            explist = d3.select("#experiments");
-            search = d3.select("#search");
             focused = false;
 
             thr1Elem.val("> "+$.percentage(similarityThr,1)+" %");
             thr2Elem.val("> "+$.percentage(nodeConnectionsThr,1)+" %");
             thr3Elem.val("> "+$.percentage(linkThr,1)+" %");
             thr4Elem.val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
+            thr5Elem.val("> "+$.percentage(expsimilarity,1)+" %");
 
             thr1Elem.focus(function(){
                 thr1Elem.val($.percentage(similarityThr,1));
             });
             thr1Elem.change(function(){
-                console.log("similarityThr="+similarityThr);
                 similarityThr = thr1Elem.val()/100;
-                console.log("similarityThr="+similarityThr);
-                browseTick();
+                browseTick(false);
                 thr1Elem.val("> "+$.percentage(similarityThr,1)+" %");
             });
 
@@ -684,10 +388,8 @@
                 thr2Elem.val($.percentage(nodeConnectionsThr,1));
             });
             thr2Elem.change(function(){
-                console.log("nodeConnectionsThr="+nodeConnectionsThr);
                 nodeConnectionsThr = thr2Elem.val()/100;
-                console.log("nodeConnectionsThr="+nodeConnectionsThr);
-                browseTick();
+                browseTick(false);
                 thr2Elem.val("> "+$.percentage(nodeConnectionsThr,1)+" %");
             });
 
@@ -695,23 +397,58 @@
                 thr3Elem.val($.percentage(linkThr,1));
             });
             thr3Elem.change(function(){
-                console.log("linkThr="+linkThr);
                 linkThr = thr3Elem.val()/100;
-                console.log("linkThr="+linkThr);
+                browseTick(true);
                 thr3Elem.val("> "+$.percentage(linkThr,1)+" %");
             });
-            thr3Elem.attr('disabled',true);
+//            thr3Elem.attr('disabled',true);
 
             thr4Elem.focus(function(){
                 thr4Elem.val($.percentage(maxNodeConnectionsThr,1));
             });
             thr4Elem.change(function(){
-                console.log("maxNodeConnectionsThr="+maxNodeConnectionsThr);
                 maxNodeConnectionsThr = thr4Elem.val()/100;
-                console.log("maxNodeConnectionsThr="+maxNodeConnectionsThr);
+                browseTick(true);
                 thr4Elem.val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
             });
-            thr4Elem.attr('disabled',true);
+//            thr4Elem.attr('disabled',true);
+            thr5Elem.focus(function(){
+                thr5Elem.val($.percentage(expsimilarity,1));
+            });
+            thr5Elem.change(function(){
+                console.log("maxNodeConnectionsThr="+expsimilarity);
+                expsimilarity = thr5Elem.val()/100;
+                console.log("maxNodeConnectionsThr="+expsimilarity);
+                initializeExperimentPage();
+                if ((expsimilarity = thr5Elem.val()*0.01) > 1 || expsimilarity < 0) initializeExperimentPage();
+                console.log(expsimilarity)
+                ajaxCall(experimentName,expsimilarity);
+                mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
+                thr5Elem.val("> "+$.percentage(expsimilarity,1)+" %");
+            });
+//            thr5Elem.attr('disabled',true);
+
+
+            exitclassifiedNodesHeaderElem.click(function(){
+                classifiedNodesHeaderElem.hide();
+                classifiedNodesElem.hide();
+            });
+
+            /* window resizing */
+            // check:
+            // http://davidwalsh.name/javascript-debounce-function
+            // http://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac
+            // the above lines can be used instead of below
+            // function debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}}
+            var doit;
+            windowElem.onresize = function(){
+                clearTimeout(doit);
+                doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
+            };
+
+            style = document.createElement('style');
+            style.type = 'text/css';
+            headElem[0].appendChild(style);
 
 
             /* semantic zooming and panning */
@@ -858,7 +595,7 @@
                 var mouse = d3.mouse(vis.node());
                 d.x = (mouse[0] - translation[0])/scaleFactor;
                 d.y = (mouse[1] - translation[1])/scaleFactor;
-                browseTick();//re-position this node and any links
+                browseTick(false);//re-position this node and any links
             }
 
             function dragended(d){
@@ -902,7 +639,7 @@
                 }
                 previous_scale = scaleFactor;
 
-                browseTick(); // update positions
+                browseTick(false); // update positions
             }
 
             /* function used for stopping border coloring*/
@@ -1502,11 +1239,11 @@
             }
 
             /**** TICK FUNCTIONS ****/
-            function browseTick() {
+            function browseTick(firsttime) {
                 nodeCircles
                     /* transition animates the elements selected. In browsing we don't need it */
-                    // .transition()
-                    // .duration(1000)
+                    .transition()
+                    .duration(1000)
                     .attr("cx", function(d) {
                         /* http://stackoverflow.com/questions/21344340/sematic-zooming-of-force-directed-graph-in-d3 */
                         return translation[0] + scaleFactor*d.x;
@@ -1514,8 +1251,12 @@
                     .attr("cy", function(d) {
                         return translation[1] + scaleFactor*d.y;
                     });
+
+
                 linkLines
-                    /* transition animates the elements selected. In browsing we don't need it */
+                /* transition animates the elements selected. In browsing we don't need it */
+                    .transition()
+                    .duration(1000)
                     .attr("x1", function(d) {
                         return translation[0] + scaleFactor*d.source.x;
                     })
@@ -1529,17 +1270,50 @@
                         return translation[1] + scaleFactor*d.target.y;
                     });
 
+                if (firsttime) {
+                    findTopicLabels();
+                    loadLabels();
+                }
+
+                /* after creating the labels we put them in nodeLabels variable */
+
+                fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;
+
 
                 nodeLabels
+                    .attr("class", function(d) {
+                        return "labels " + d.color
+                    })
+//                        .attr("x", function(d) {
+//                            return (d.x+7);
+//                        })
+//                        .attr("y", function(d) {
+//                            return (d.y-7);
+//                        })
                     .attr("x",function (d){
                         return (translation[0] + scaleFactor*d.x+7)
                     })
                     .attr("y",function (d){
                         return (translation[1] + scaleFactor*d.y-7)
                     })
+//				.text(function(d){return d.index;});
                     .text(function(d) {
-//					return d.index;
+
                         if (labeled[d.index]){
+                            if (firsttime) {
+                                label[d.index] = "";
+                                // console.log("topicWords printed on graph:");
+                                for (i = 0; i < svgSortedTopicWords.length; i++) {
+                                    if (svgSortedTopicWords[i].key == d.index) {
+                                        if (!labelIsOnGraph[svgSortedTopicWords[i].item]) {
+                                            label[d.index] = svgSortedTopicWords[i].item;
+                                            // console.log("svgSortedTopicWords["+i+"].key="+svgSortedTopicWords[i].key+" label="+label);
+                                            labelIsOnGraph[label[d.index]] = true;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
 
                             if((links[d.index].value>similarityThr-(0.2*previous_scale)) && (nodeConnections[d.index] > (nodeConnectionsThr/Math.sqrt(previous_scale))*maxNodeConnections)){
                                 return label[d.index];
@@ -1550,14 +1324,17 @@
                         }
                     });
 
-                fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;
+
+
                 vis.selectAll(".labels")
                     .style("font-size",fontsize+"px");
 
+
                 /* move circle elements above all others within the same grouping */
-//			vis.selectAll(".circle").moveToFront();
+                //			vis.selectAll(".circle").moveToFront();
                 vis.selectAll(".labels").moveToFront();
-            }
+
+            };
 
 
             function includeIcons() {
@@ -1678,12 +1455,12 @@
                 // documentElem.bind("topicsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
 
                 k = 0,
-                    n = nodes.length,
-                    topicsMap = {},
-                    discriminativeTopic = {},
-                    discriminativeTopicWeight = {},
-                    discriminativeWord = {},
-                    discriminativeWordCounts = {};
+                n = nodes.length,
+                topicsMap = {},
+                discriminativeTopic = {},
+                discriminativeTopicWeight = {},
+                discriminativeWord = {},
+                discriminativeWordCounts = {};
 
 
                 /* maybe use: tfidf algorithm to find discriminative topics and words */
@@ -1801,7 +1578,119 @@
                 // console.log("Sorted Topics' words")
                 //for (i=0 ; i<svgSortedTopicWords.length ; i++)
                 // console.log("key="+svgSortedTopicWords[i].key+" item="+svgSortedTopicWords[i].item+" value="+svgSortedTopicWords[i].value)
+                console.log(0)
             }
+
+
+            function loadLabels(){
+                var availableTags = [];
+                var availableLabels = [];
+
+                k = 0,
+                n = nodes.length,
+                str = "";
+
+                while (++k < n) {
+                    topicsGroupPerNode = grants[nodes[k].id];
+                    if(topics1 != null){
+                        len = topicsGroupPerNode.length;
+                        for(var i=0;i<len;i++){
+                            var mywords;
+                            if (topicsFlag){
+                                mywords = topics1[topicsGroupPerNode[i].topic];
+                            }
+                            else{
+                                mywords = topics2[topicsGroupPerNode[i].topic];
+                            }
+
+                            var wlen = mywords.length;
+
+                            str = "";
+                            for(var j=0;j<wlen-1;j++){
+                                str += mywords[j].item+",";
+                            }
+                            str += mywords[j].item;
+
+                            availableLabels.push(str);
+                            //console.log("my= "+nodes[k].index+" "+nodes[k].value)
+                            availableTags.push({item:str, index:nodes[k].index, name:nodes[k].name, color:nodes[k].color, value:nodes[k].value});
+                        }
+                    }
+                }
+
+
+                /* remove duplicates */
+                function unique(list) {
+                    var result = [];
+                    $.each(list, function(i, e) {
+                        if ($.inArray(e, result) == -1) result.push(e);
+                    });
+                    return result;
+                }
+
+
+                /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
+                function log( message ) {
+                    var classifiedNodes = "";
+                    var searchResultNodes = [];				//initialize every time in topic word search
+
+                    mytextTitleElem.hide();
+                    classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
+                    classifiedNodesHeaderElem.show();
+
+
+                    for (i=0 ; i<availableTags.length ; i++){
+                        if (message==availableTags[i].item){
+                            classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
+
+                            searchResultNodes.push(availableTags[i].index);	//node results in topic word search
+
+                            $('#'+availableTags[i].index).hover(function(){
+                                $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                                $(this).css("opacity","0.5");
+                            },function(){
+                                $(this).css("opacity","initial");
+                                $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                            });
+                        }
+                    }
+
+                    classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
+                    classifiedNodesElem.show();
+
+                    mytextContentElem.hide();
+                    boostBtnElem.hide();
+
+
+
+///initialize
+                    var types = [];
+                    $(".circle").each(function(){
+                        types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
+
+                    });
+                    showtype(fade_out, types);
+///find what to show
+                    showtype(fade_out, searchResultNodes);
+
+                }
+
+                tagsElem.autocomplete({
+                    source: unique(availableLabels),
+                    minLength: 2,
+
+                    select: function( event, ui ) {
+                        classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
+                        log( ui.item ?
+                            ui.item.label :
+                        "Nothing selected, input was " + this.value);
+
+                        classifiedNodeButtons();
+
+                    }
+                });
+            }
+
 
             function initialTick(e) {
                 // do not render initialization frames because they are slow and distracting 
@@ -1810,85 +1699,10 @@
 
 //				includeIcons();
 
-//				documentElem.trigger("graphDone");	// must be executed after graph's loading 
+
                     vis.select(".loading").remove();
-                    nodeCircles
-                        .transition()
-                        .duration(1000)
-                        .attr("cx", function(d) {
-                            return translation[0] + scaleFactor*d.x;
-                        })
-                        .attr("cy", function(d) {
-                            return translation[1] + scaleFactor*d.y;
-                        });
-                    linkLines
-                        .transition()
-                        .duration(1000)
-                        .attr("x1", function(d) {
-                            return translation[0] + scaleFactor*d.source.x;
-                        })
-                        .attr("y1", function(d) {
-                            return translation[1] + scaleFactor*d.source.y;
-                        })
-                        .attr("x2", function(d) {
-                            return translation[0] + scaleFactor*d.target.x;
-                        })
-                        .attr("y2", function(d) {
-                            return translation[1] + scaleFactor*d.target.y;
-                        });
 
-                    findTopicLabels();
-
-                    documentElem.trigger("labelsDone");	// must be executed after graph's loading 
-
-
-                    /* after creating the labels we put them in nodeLabels variable */
-
-                    fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;
-
-                    nodeLabels
-                        .attr("class", function(d) {
-                            return "labels " + d.color
-                        })
-                        .attr("x", function(d) {
-                            return (d.x+7);
-                        })
-                        .attr("y", function(d) {
-                            return (d.y-7);
-                        })
-//				.text(function(d){return d.index;});
-                        .text(function(d) {
-
-                            if (labeled[d.index]){
-                                label[d.index] = "";
-                                // console.log("topicWords printed on graph:");
-                                for (i=0 ; i<svgSortedTopicWords.length ; i++){
-                                    if (svgSortedTopicWords[i].key == d.index){
-                                        if (!labelIsOnGraph[svgSortedTopicWords[i].item]){
-                                            label[d.index] = svgSortedTopicWords[i].item;
-                                            // console.log("svgSortedTopicWords["+i+"].key="+svgSortedTopicWords[i].key+" label="+label);
-                                            labelIsOnGraph[label[d.index]] = true;
-                                        }
-                                        break;
-                                    }
-                                }
-
-                                if((links[d.index].value>similarityThr-(0.2*previous_scale)) && (nodeConnections[d.index] > (nodeConnectionsThr/Math.sqrt(previous_scale))*maxNodeConnections)){
-                                    return label[d.index];
-                                }
-                                else{
-                                    return "";
-                                }
-                            }
-                        });
-                    vis.selectAll(".labels")
-                        .style("font-size",fontsize+"px");
-
-
-                    /* move circle elements above all others within the same grouping */
-                    //			vis.selectAll(".circle").moveToFront();
-                    vis.selectAll(".labels").moveToFront();
-
+                    browseTick(true);
 
                     force.stop()
                 }
@@ -2779,74 +2593,7 @@
 
                             experimentName = myval;
 
-                            myTabElem.hide();
-
-                            // spinner added again
-                            legendElem.empty();
-                            graphElem.empty();
-
-                            svgTextElem.empty();
-
-                            chorddivElem.empty();
-                            chord2divElem.empty();
-
-                            trenddivElem.empty();
-                            trend2divElem.empty();
-
-                            spinner = new Spinner(opts).spin(target);
-
-                            nodeConnections = [];
-                            maxNodeConnections = 0;
-                            labeled = [];
-                            topicWords = [];
-                            topics1 = [];
-                            topics2 = [];
-                            topicstemp = [];
-                            topicsFlag = false;
-                            grants = [];
-                            myresponse = [];
-                            nodes = [];
-                            links = [];
-                            labels = [];
-
-                            subdConnections = [];
-                            subdConnectionsNum = [];
-                            relations = [];
-                            relationsCross = [];
-                            subdBiConnections = [];
-                            subdBiConnectionsNum = [];
-                            nodesToFade = [];
-                            fetOpenNum = 0;
-                            fetProactiveNum = 0;
-                            fetFlagshipNum = 0;
-
-                            //todo: maybe needed again the below
-                            //grantsElem.multiselect();
-
-                            similarityThr = <?php echo $similarityThr ;?>;
-                            nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
-                            if (/^FET*/.test(experimentName))
-                                nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3,
-
-                                    maxNodeConnectionsThr = <?php echo $maxNodeConnectionsThr ;?>;
-                            linkThr = <?php echo $linkThr ;?>;
-
-
-// hard code for the Brusseles ... to be moved
-                            if (/^FET*/.test(experimentName)){
-                                nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
-                                expsimilarity = 0.45;
-                                categoriesElem.hide();
-                            }
-                            else if (/^HEALTH*/.test(experimentName)){
-                                expsimilarity = 0.45;
-                                categoriesElem.hide();
-                            }
-                            else if (/^Full*/.test(experimentName)){
-                                expsimilarity = 0.6;
-                                categoriesElem.hide();
-                            }
-
+                            initializeExperimentPage();
                             ajaxCall(myval,expsimilarity);
                             mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
 
@@ -2958,7 +2705,9 @@
                     topics2 = topicstemp;
 
                     mytextContentElem.hide();
-                    findTopicLabels();
+//                    findTopicLabels();
+//                    loadLabels();
+                    browseTick(true);
 
                     clickGraph(clickedNode,0.1);
 
@@ -2981,6 +2730,139 @@
 //                createTrends(1);
   //              createTrends(2);
 
+            }
+
+            function initializeExperimentPage(){
+                // hide until json data have been loaded from server
+                myTabElem.hide();
+                classifiedNodesHeaderElem.hide();
+                classifiedNodesElem.hide();
+                tagsElem.val("");					// when refreshing page placeholder in topic search is shown
+                upButtonElem.hide();
+                downButtonElem.hide();
+                filter1Elem.hide();
+                filter2Elem.hide();
+                $("#opt0").attr("selected",true);
+                boostBtnElem.hide();
+                experimentBtnElem.hide();
+
+                legendElem.empty();
+                graphElem.empty();
+
+                svgTextElem.empty();
+
+                chorddivElem.empty();
+                chord2divElem.empty();
+
+                trenddivElem.empty();
+                trend2divElem.empty();
+
+                linkedByIndex = {},
+                nodeConnections = [],
+                maxNodeConnections = 0,
+                labeled = [],
+                topicWords = [],
+                topics1 = [],
+                topics2 = [],
+                topicstemp = [],
+                topicsFlag = false,
+                grants = [],
+                myresponse = [],
+                nodes = [],
+                links = [],
+                labels = [],
+                selectedLabelIndex = null,
+                scaleFactor = 1,
+                translation = [0,0],
+                legend_data = [],
+                max_proj = 0,
+                nodesInGroup = [],
+                labelIsOnGraph = {},
+                svgSortedTopicWords = [],
+                subdivisionsChord = [],
+                nodeLabels = {},
+                selectnodeLabels = {},
+                previous_scale = 1,
+                zoom_type = 1,
+                topicsMap = {},
+                discriminativeTopic = {},
+                discriminativeTopicWeight = {},
+                discriminativeWord = {},
+                discriminativeWordCounts = {},
+                label = {},
+                listLength = 10,
+                counter = 0,
+                numOfClassifiedNodes = 0,
+                flagForTranformation = 0,
+                isSvgFullscreen = false,
+                clrArray = [],
+                relations,
+                relationsCross,
+                node_hash = [],
+                percentageSum = 0,
+                clickedNode = 0,
+                clickedChord = 0,
+                subdConnections = [],
+                subdConnectionsNum = [],
+                relations = [],
+                relationsCross = [],
+                subdBiConnections = [],
+                subdBiConnectionsNum = [],
+                nodesToFade = [],
+                fetOpenNum = 0,
+                fetProactiveNum = 0,
+                fetFlagshipNum = 0,
+                fontsizeVar = <?php echo $fontsizeVar ;?>,
+                smallestFontVar = <?php echo $smallestFontVar ;?>,
+                similarityThr = <?php echo $similarityThr ;?>,
+                maxNodeConnectionsThr = <?php echo $maxNodeConnectionsThr ;?>,
+                linkThr = <?php echo $linkThr ;?>,
+                gravity = <?php echo $gravity ;?>,
+                charge = <?php echo $charge ;?>,
+                expsimilarity = <?php echo $expsimilarity ;?>,
+                nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
+                if (/^FET*/.test(experimentName)){
+                    categoriesElem.show();
+                    nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
+                    expsimilarity = 0.45;
+                    gravity = 1;
+                    charge = -1100;
+                }
+                else if (/^HEALTH*/.test(experimentName)){
+                    expsimilarity = 0.45;
+                    gravity = 3;
+                    charge = -1100;
+                    categoriesElem.hide();
+                }
+                else if (/^Full*/.test(experimentName)){
+                    expsimilarity = 0.6;
+                    gravity = 7;
+                    charge = -400;
+                    categoriesElem.hide();
+                }
+
+                spinner = new Spinner(opts).spin(target);
+            }
+
+            function loadThresholdsFromUrlParameters(){
+                // pass configuration with parameters
+                experimentDescription = "";
+                if((experimentName = getUrlParameter('ex')) == null){
+                    experimentName = '<?php echo $experimentName ;?>';
+                    experimentDescription = "<?php echo $experimentDescription ;?>";
+                }
+
+                if((expsimilarity = getUrlParameter('s')) == null){
+                    expsimilarity = <?php echo $expsimilarity ;?>;
+                }
+
+                if((gravity = getUrlParameter('g')) == null){
+                    gravity = <?php echo $gravity ;?>;
+                }
+
+                if((charge = getUrlParameter('c')) == null){
+                    charge = <?php echo $charge ;?>;
+                }
             }
 
             function loadNodeList(){
@@ -3848,131 +3730,158 @@
                 });
             }
 
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
+
+            function onResize() {
+                prev_w = w;
+                w = windowElem.width()/2,
+                    h = windowElem.width()/2,
+                    mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
+
+                if(detectmob() || windowElem.width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
+                    w = windowElem.width();
+                    h = windowElem.width();
+                    mytextTitleElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+                    mytextContentElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+                    myinfoElem.attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
+
+                    if(jumpPreviousElem.length == 0)
+                        myinfoElem.prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
+                    jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
+
+                    mygraphElem.attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
+
+                    if(jumpNextElem.length == 0)
+                        mygraphElem.prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
+                    jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
+
+                    mysubdivisionElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
+                    mygraphElem.insertBefore('#myinfo');
+                    mysubdivisionElem.insertAfter('#myinfo');
+                    flagForTranformation = 1;
+                }
+                else if (windowElem.width()>755 && flagForTranformation==1){
+                    flagForTranformation = 0;
+                    mytextTitleElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
+                    mytextContentElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
+                    myinfoElem.attr("style","float:;clear:; min-height:;height:;min-width:;width:;");
+                    mygraphElem.attr("style","float:;padding-right:;clear:;");
+                    jumpNextElem.remove();
+                    jumpPreviousElem.remove();
+                    mysubdivisionElem.attr("style","float:;clear:;min-width:;width:;");
+                    myinfoElem.insertBefore('#mygraph');
+                    mysubdivisionElem.insertAfter('#mygraph');
+                }
+
+//			graphElem.style["width"]= w;
+                graphElem.style["height"] = h;
+
+                svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
+                svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
+                svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
+                svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
+                if(detectmob()){
+                    svgimgIN.setAttributeNS(null,'height','50');
+                    svgimgIN.setAttributeNS(null,'width','50');
+
+                    svgimgReset.setAttributeNS(null,'height','50');
+                    svgimgReset.setAttributeNS(null,'width','50');
+                    svgimgReset.setAttributeNS(null,'y','55');
+
+                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-85);
+                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-85);
+                    svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-50);
+                    svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-50);
+                }
+                else if(windowElem.width()<=755){
+                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-75);
+                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-75);
+                }
+                else if (windowElem.width()>755){
+                    svgimgIN.setAttributeNS(null,'height','22');
+                    svgimgIN.setAttributeNS(null,'width','22');
+
+                    svgimgReset.setAttributeNS(null,'height','22');
+                    svgimgReset.setAttributeNS(null,'width','22');
+                    svgimgReset.setAttributeNS(null,'y','35');
+
+                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
+                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
+                    svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
+                    svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
+                }
+
+                loadingText
+                    .style("font-size",w/20)
+                    .attr("x", (w / 2) - (w/7)) // pou einai to miso tou loading
+                    .attr("y", h / 2);
 
 
-            /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
-            $(function() {
+                /*ATTENTION: the below is required and is fired only in Chrome, Safari etc. That is because in Mozilla and other browsers the event for fullscreenchange holds forever when being in fullscreen, while with -webkit used in chrome and safari the event holds for one second*/
+                if (isSvgFullscreen) {
+                    // you have just ENTERED full screen video
+                    /* move svg to center */
+                    vis.style("background-color","white");
+                    vis.style("width","100%");
+                    vis.style("height","100%");
+                    vis.style("position","fixed");
+                }
 
 
-                var availableTags = [];
-                var availableLabels = [];
+                // semantic zooming
+                scaleFactor = w/prev_w;
+                if (previous_scale < scaleFactor){
+                    /* color change is animated infinite times of 3sec each one */
+                    vis.style("animation","zoominmove 3s infinite")
+                        .style("-webkit-animation","zoominmove 3s infinite");
+                    zoom_type = 1;
+                }
+                else if (previous_scale == scaleFactor){
+                    /* color change is animated infinite times of 3sec each one */
+                    vis.style("animation","dragmove 3s infinite")
+                        .style("-webkit-animation","dragmove 3s infinite")
+                        .style("cursor","move");
+                    zoom_type = 2;
+                }
+                else{
+                    /* color change is animated infinite times of 3sec each one */
+                    vis.style("animation","zoomoutmove 3s infinite")
+                        .style("-webkit-animation","zoomoutmove 3s infinite");
+                    zoom_type = 3;
+                }
 
-                $(document).bind("labelsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-//				for (i=0 ; i<mywords.length ; i++){
-//					availableLabels.push(svgSortedTopicWords[i].item);
-// 3 words from labels on graph
-//					availableTags.push({item:svgSortedTopicWords[i].item, id:svgSortedTopicWords[i].key, value:svgSortedTopicWords[i].value});
-// all words from all topics 
-//					availableTags.push({item:mywords[i].item, value:mywords[i].value});
+                previous_scale = scaleFactor;
 
-                    k = 0,
-                        n = nodes.length,
-                        str = "";
-                    while (++k < n) {
-                        topicsGroupPerNode = grants[nodes[k].id];
-                        if(topics1 != null){
-                            len = topicsGroupPerNode.length;
-                            for(var i=0;i<len;i++){
-                                var mywords;
-                                if (topicsFlag){
-                                    mywords = topics1[topicsGroupPerNode[i].topic];
-                                }
-                                else{
-                                    mywords = topics2[topicsGroupPerNode[i].topic];
-                                }
+                browseTick(false);
 
-                                var wlen = mywords.length;
+                prev_w = w;
+            }
 
-                                str = "";
-                                for(var j=0;j<wlen-1;j++){
-                                    str += mywords[j].item+",";
-                                }
-                                str += mywords[j].item;
+            function checkToChangeLayout(){
+                if(detectmob() || windowElem.width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
+                    w = windowElem.width();//800,
+                    h = windowElem.width();//800,
+                    mytextTitleElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+                    mytextContentElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
+                    myinfoElem.attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
 
-                                availableLabels.push(str);
-                                //console.log("my= "+nodes[k].index+" "+nodes[k].value)
-                                availableTags.push({item:str, index:nodes[k].index, name:nodes[k].name, color:nodes[k].color, value:nodes[k].value});
-                            }
-                        }
-                    }
+                    if(jumpPreviousElem.length == 0)
+                        myinfoElem.prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
+                    jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
 
+                    mygraphElem.attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
 
-                    /* remove duplicates */
-                    function unique(list) {
-                        var result = [];
-                        $.each(list, function(i, e) {
-                            if ($.inArray(e, result) == -1) result.push(e);
-                        });
-                        return result;
-                    }
+                    if(jumpNextElem.length == 0)
+                        mygraphElem.prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
+                    jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
 
+                    mysubdivisionElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
+                    mygraphElem.insertBefore('#myinfo');
+                    mysubdivisionElem.insertAfter('#myinfo');
 
-
-                    function log( message ) {
-                        var classifiedNodes = "";
-                        var searchResultNodes = [];				//initialize every time in topic word search
-
-                        mytextTitleElem.hide();
-                        classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
-                        classifiedNodesHeaderElem.show();
+                }
+            }
 
 
-                        for (i=0 ; i<availableTags.length ; i++){
-                            if (message==availableTags[i].item){
-                                classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
-
-                                searchResultNodes.push(availableTags[i].index);	//node results in topic word search
-
-                                $('#'+availableTags[i].index).hover(function(){
-                                    $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-                                    $(this).css("opacity","0.5");
-                                },function(){
-                                    $(this).css("opacity","initial");
-                                    $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-                                });
-                            }
-                        }
-
-                        classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
-                        classifiedNodesElem.show();
-
-                        mytextContentElem.hide();
-                        boostBtnElem.hide();
-
-
-
-///initialize
-                        var types = [];
-                        $(".circle").each(function(){
-                            types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
-
-                        });
-                        showtype(fade_out, types);
-///find what to show
-                        showtype(fade_out, searchResultNodes);
-
-                    }
-
-                    tagsElem.autocomplete({
-                        source: unique(availableLabels),
-                        minLength: 2,
-
-                        select: function( event, ui ) {
-                            classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
-                            log( ui.item ?
-                                ui.item.label :
-                            "Nothing selected, input was " + this.value);
-
-                            classifiedNodeButtons();
-
-                        }
-                    });
-                });
-            });
         });
 
     </script>
@@ -4023,18 +3932,6 @@
                     <!--							<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">-->
                     <select id="grants" multiple="multiple" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
                     </select>
-                    <!--                            <select id="example" multiple="multiple">-->
-                    <!--                                <optgroup id="grantsGroup12" label="--><?php //echo $node_groupName1 ;?><!--">-->
-                    <!--                                    <option value="cheese">Cheese</option>-->
-                    <!--                                    <option value="tomatoes">Tomatoes</option>-->
-                    <!--                                    <option value="mozarella">Mozzarella</option>-->
-                    <!--                                </optgroup>-->
-                    <!--                                <optgroup id="grantsGroup13" label="--><?php //echo $node_groupName1 ;?><!--">-->
-                    <!--                                    <option value="mushrooms">Mushrooms</option>-->
-                    <!--                                    <option value="pepperoni">Pepperoni</option>-->
-                    <!--                                    <option value="onions">Onions</option>-->
-                    <!--                                </optgroup>-->
-                    <!--                            </select>-->
                 </li>
                 <li  id="filter2" style="padding-left:10px;width:inherit">
                     <input id="tags" class="ui-corner-all"  placeholder="input a topic word..." >
@@ -4045,35 +3942,53 @@
 
 
             <ul class="nav navbar-nav navbar-right" style="padding-right:10px">
-                <li>
-                    <!-- Zoom Level:  -->
+<!--                <li>-->
+<!--                    <!-- Zoom Level:  -->
+<!---->
+<!--                    <div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<div width='1400'><b>Labeling thresholds in Zoom Level.</b><br/>ZLS and ZLC for Zooming Label Similarity and Zooming Label Connectivity thresholds, defining the zoom level in which the label should appear.<br/><br/><b>Labeling thresholds for Graph Appearance.</b><br/>ALS and ALC for Appearance Label Similarity and Appearance Label Connectivity, defining whether a node should be labeled or not at all.<br/><br/><b>Experiment thresholds for DB Nodes Loaded.</b><br/>ENS for Experiment Node Similarity, defining the threshold applied on the database for the nodes that will be retrieved</div>">-->
+<!--                        <span class="input-group-addon">ZLS</span>-->
+<!--                        <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 50"  style="width:60px">-->
+<!--                        <span class="input-group-addon">ZLC</span>-->
+<!--                        <input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 20"  style="width:60px">-->
+<!--                        <span class="input-group-addon">ALS</span>-->
+<!--                        <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 45" style="width:60px">-->
+<!--                        <span class="input-group-addon">ALC</span>-->
+<!--                        <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 15"  style="width:60px">-->
+<!--                        <span class="input-group-addon">ENS</span>-->
+<!--                        <input type="text" id="thr5" class="form-control" aria-label="experiment similarity threshold(percentage)" maxlength="9" placeholder="e.g. 65"  style="width:60px">-->
+<!--                        <span class="input-group-addon">GRA</span>-->
+<!--                        <input type="text" id="thr6" class="form-control" aria-label="Force Directed Graph Gravity" maxlength="9" placeholder="e.g. 2"  style="width:60px">-->
+<!--                        <span class="input-group-addon">CHA</span>-->
+<!--                        <input type="text" id="thr7" class="form-control" aria-label="Force Directed Graph Charge" maxlength="9" placeholder="e.g. -1100"  style="width:60px">-->
+<!--                    </div>-->
+<!--                </li>-->
+				<li class="dropdown" data-placement="bottom" data-html="true" data-title="Thresholds" title="Experiment Threshold Configuration">
+<!--                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Experiment Thresholds<span class="caret"></span></a>-->
+                    <a href="#" id="dropdownThresholds" class="dropdown-toggle" role="button" aria-expanded="true">Experiment Thresholds<span class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li>
+                            <div class="input-group">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ZLS for Zooming Label Similarity</b><br/>Defines the amplitude spectrum for the zoom levels in which the label should appear based on <?php echo $node_name ;?> Similarity.">ZLS</span>
+                                <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 50"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for no amplitude spectrum, <b>100</b> for biggest amplitude spectrum">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ZLC for Zooming Label Connectivity</b><br/>Defines amplitude spectrum for the zoom levels in which the label should appear based on <?php echo $node_name ;?> Connectivity.">ZLC</span>
+                                <input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 20"  style="width:60px">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ALS for Appearance Label Similarity</b><br/>Defines the <?php echo $node_name ;?> Similarity threshold over which a <?php echo $node_name ;?> should be labeled on graph.">ALS</span>
+                                <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 45" style="width:60px">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ALC for Appearance Label Connectivity</b><br/>Defines the <?php echo $node_name ;?> Connectivity threshold over which a <?php echo $node_name ;?> should be labeled on graph.">ALC</span>
+                                <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 15"  style="width:60px">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ENS for Experiment Node Similarity</b><br/>Defines the experiment threshold over which a <?php echo $node_name ;?> is loaded on graph from the database retrieval.">ENS</span>
+                                <input type="text" id="thr5" class="form-control" aria-label="experiment similarity threshold(percentage)" maxlength="9" placeholder="e.g. 65"  style="width:60px">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>GRA for Graph Gravity</b><br/>Defines the Tractive Force of each node to the other nodes. Like a proton.">GRA</span>
+                                <input type="text" id="thr6" class="form-control" aria-label="Force Directed Graph Gravity" maxlength="9" placeholder="e.g. 2"  style="width:60px">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>CHA for Graph Charge</b><br/>Defines the Repulvive Charge of each node to the other nodes. Like an electron.">CHA</span>
+                                <input type="text" id="thr7" class="form-control" aria-label="Force Directed Graph Charge" maxlength="9" placeholder="e.g. -1100"  style="width:60px">
+                            </div>
 
-                    <div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds in Zoom Level. ZLS and ZLC for Zooming Label Similarity and Zooming Label Connectivity thresholds, defining the zoom level in which the label should appear.\n ALS and ALC for Appearance Label Similarity and Appearance Label Connectivity, defining whether a node should be labeled or not at all">
-                        <span class="input-group-addon">ZLS</span>
-                        <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr1"  style="width:60px">
-                        <span class="input-group-addon">ZLC</span>
-                        <input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr2"  style="width:60px">
-                        <span class="input-group-addon">ALS</span>
-                        <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr3" style="width:60px">
-                        <span class="input-group-addon">ALC</span>
-                        <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr4"  style="width:60px">
-                    </div>
+                        </li>
+                    </ul>
                 </li>
-<!---                <li style="padding-left:10px">
-                    <div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-title="Thresholds" title="Labeling thresholds for all shown labels on the graph. S for Similarity threshold. C for Connectivity threshold">
-                        <span class="input-group-addon">S</span>
-                        <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="thr3" style="width:75px">
-                        <span class="input-group-addon">C</span>
-                        <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="thr4"  style="width:75px">
-                    </div>
-                </li>
--->
-                <!-- 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
-							<ul class="dropdown-menu" role="menu">
-							</ul>
-						</li>
- -->					</ul>
+
+            </ul>
         </div><!-- /.navbar-collapse -->
     </div>
 </nav>

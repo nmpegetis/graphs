@@ -223,6 +223,8 @@
                 thr3Elem = $("#thr3"),
                 thr4Elem = $("#thr4"),
                 thr5Elem = $("#thr5"),
+                thr6Elem = $("#thr6"),
+                thr7Elem = $("#thr7"),
                 grantsElem = $("#grants"),
                 category1Elem = $("#category1"),
                 category2Elem = $("#category2"),
@@ -374,6 +376,8 @@
             thr3Elem.val("> "+$.percentage(linkThr,1)+" %");
             thr4Elem.val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
             thr5Elem.val("> "+$.percentage(expsimilarity,1)+" %");
+            thr6Elem.val(gravity);
+            thr7Elem.val(charge);
 
             thr1Elem.focus(function(){
                 thr1Elem.val($.percentage(similarityThr,1));
@@ -416,9 +420,9 @@
                 thr5Elem.val($.percentage(expsimilarity,1));
             });
             thr5Elem.change(function(){
-                console.log("maxNodeConnectionsThr="+expsimilarity);
+                console.log("expsimilarity="+expsimilarity);
                 expsimilarity = thr5Elem.val()/100;
-                console.log("maxNodeConnectionsThr="+expsimilarity);
+                console.log("expsimilarity="+expsimilarity);
                 initializeExperimentPage();
                 if ((expsimilarity = thr5Elem.val()*0.01) > 1 || expsimilarity < 0) initializeExperimentPage();
                 console.log(expsimilarity)
@@ -428,6 +432,35 @@
             });
 //            thr5Elem.attr('disabled',true);
 
+            thr6Elem.focus(function(){
+                console.log("gravity init="+gravity);
+                thr6Elem.val(gravity);
+            });
+            thr6Elem.change(function(){
+                console.log("gravity="+gravity);
+                gravity = thr6Elem.val();
+                console.log("gravity="+gravity);
+                window['force']['charge'](charge);
+                window['force']['gravity'](gravity);
+                force.start();
+                thr6Elem.val(gravity);
+            });
+
+
+            thr7Elem.focus(function(){
+                console.log("charge init="+gravity);
+                thr7Elem.val(charge);
+            });
+            thr7Elem.change(function(){
+                console.log("charge="+charge);
+                charge = thr7Elem.val();
+                console.log("maxNodeConnectionsThr="+charge);
+                window['force']['charge'](charge);
+                window['force']['gravity'](gravity);
+                force.start();
+//                mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
+                thr7Elem.val(charge);
+            });
 
             exitclassifiedNodesHeaderElem.click(function(){
                 classifiedNodesHeaderElem.hide();
@@ -810,7 +843,7 @@
                 nodeCircles
                     .style("fill-opacity", function(o) {
                         
-                        if (types.indexOf(o.index) === -1){console.log(types);return opacity;}
+                        if (types.indexOf(o.index) === -1)return opacity;
                         return normal;
                     })
                     .style("stroke-opacity", function(o) {
@@ -854,6 +887,7 @@
 
 
             function clickGraph(mynode, opacity){
+
                 graphHandler(mynode,opacity);
                 clickedNode = mynode;
 
@@ -865,17 +899,14 @@
 
 
             function graphHandler(mynode, opacity) {
+                reset();
                 // show again window from the top
                 windowElem.scrollTop(0);
 
                 mytext.selectAll(".nodetext").remove();
 
-                // all grants must be unchecked
-//            grantsElem.multiselect("deselectAll",false);
-
                 boostBtnElem.show();
 
-                // classifiedNodesElem.empty();			//clear anything included in child nodes
                 numOfClassifiedNodes = 0;								// similar nodes found initialization
 
                 labels = [];
@@ -962,7 +993,7 @@
                                 .attr("data-toggle", "tooltip")
                                 .attr("data-placement", "right")
                                 .attr("title", "...more about project and link...")
-                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
+                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
                             var str = "";
                             topicsGroupPerNode = grants[o.id];
                             if (topics1 != null) {
@@ -1065,7 +1096,6 @@
 
                 filtersElem.val("opt0");
                 grantsElem.multiselect("deselectAll",false);
-
             }
 
             /* collide */
@@ -1218,6 +1248,36 @@
 
                         clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
                         clickGraph(clickedNode,0.1);
+
+                        // return the view to the F-D graph when click
+                        myTabElem.find("li.active").removeClass("active");
+                        myTabElem.find("li:first").addClass("active");
+                        chorddivElem.removeClass("active");
+                        graphdivElem.addClass("active");
+                    })
+                    .on("mouseover",function(){
+                        $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
+                            return classNames + ' shadow';
+                        });
+                    })
+                    .on("mouseout",function(){
+                        $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
+                            return classNames.replace('shadow', '');
+                        });
+                    });
+
+                mytextTitleElem.find("div").find("ul").find("li").find("a")
+                    .on("click",function(){
+                        // for centering the node w/2 and h/3
+                        var clickednodeid = this.id;
+                        var dcx = (w/2-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cx")));
+                        var dcy = (h/3-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cy")));
+                        translation = [dcx,dcy];
+                        vis.attr("transform", "translate("+ translation  + ")");
+
+                        $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
+                            return classNames.replace('shadow', '');
+                        });
 
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
@@ -2391,7 +2451,6 @@
                 loadNodeList();
 
                 $(function(){
-                    //                grantsElem.multiselect('rebuild')
                     if ($("#grantsButton").length > 0){
                         grantsElem.multiselect('rebuild')
                     }
@@ -2415,7 +2474,8 @@
                                 clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
                                 var selectedOptions = grantsElem.find("option:selected");
                                 var allOptions = grantsElem.find("option");
-
+//                                $(":checkbox[value=" + $(this).val() + "]").attr('checked', true)
+                                console.log(selectedOptions)
                                 classifiedNodesHandler(selectedOptions, allOptions);
                                 grantsElem.multiselect("refresh");
 
@@ -2435,6 +2495,9 @@
                         // .attr("style","max-width:300px;max-height:300px;")
                         .find("li").find("a").find("label")
                         .attr("style","overflow:hidden;text-overflow:ellipsis;")
+
+                    grantsElem.multiselect("refresh");
+
                 });
 
 
@@ -2480,6 +2543,7 @@
                                 types.push(parseInt(this.classList[2]));
                             });
 
+                            classifiedNodesHandler(collection,$(".circle"));
                             showtype(fade_out, types);
                             mytext.selectAll(".nodetext").remove();
                         }
@@ -2520,6 +2584,7 @@
                                 types.push(parseInt(this.classList[2]));
                             });
 
+                            classifiedNodesHandler(collection,$(".circle"));
                             showtype(fade_out, types);
                             mytext.selectAll(".nodetext").remove();
                         }
@@ -2561,6 +2626,7 @@
                                 types.push(parseInt(this.classList[2]));
                             });
 
+                            classifiedNodesHandler(collection,$(".circle"));
                             showtype(fade_out, types);
                             mytext.selectAll(".nodetext").remove();
                         }
@@ -2585,8 +2651,8 @@
                                             expsimilarity = <?php echo $expsimilarity ;?>;
                                         }
                                         console.log("experimentName:"+d.id);
-                                        console.log("experimentDescription:"+d.desc);
-                                        console.log("expsimilarity:"+d.initialSimilarity)
+//                                        console.log("experimentDescription:"+d.desc);
+  //                                      console.log("expsimilarity:"+d.initialSimilarity)
                                     }
                                     return d.id;
                                 });
@@ -2633,8 +2699,8 @@
                                             expsimilarity = <?php echo $expsimilarity ;?>;
                                         }
                                         console.log("new experimentName:"+d.id);
-                                        console.log("new experimentDescription:"+d.desc);
-                                        console.log("new expsimilarity:"+d.initialSimilarity)
+//                                        console.log("new experimentDescription:"+d.desc);
+  //                                      console.log("new expsimilarity:"+d.initialSimilarity)
                                     }
                                     return d.id;
                                 });
@@ -2672,10 +2738,13 @@
                 myTabElem.show();
                 experimentBtnElem.show();
 
-                experimentBtnElem.on("click", function(){
+                experimentBtnElem.unbind().on("click", function(){
 
                     d3.select("#experiments").selectAll("option")
                         .each(function(d){
+                            console.log("experimentName:"+d.id);
+                            console.log("experimentDescription:"+d.desc);
+                            console.log("expsimilarity:"+d.initialSimilarity)
                             if(experimentName == d.id){
 
                                 experimentName = d.id;
@@ -2683,9 +2752,9 @@
                                 if((expsimilarity = d.initialSimilarity) == null){
                                     expsimilarity = <?php echo $expsimilarity ;?>;
                                 }
-                                console.log("experimentName:"+d.id);
-                                console.log("experimentDescription:"+d.desc);
-                                console.log("expsimilarity:"+d.initialSimilarity)
+//                                console.log("experimentName:"+d.id);
+//                                console.log("experimentDescription:"+d.desc);
+//                                console.log("expsimilarity:"+d.initialSimilarity)
                             }
                         });
 
@@ -2698,7 +2767,7 @@
                 });
 
 
-                boostBtnElem.on("click", function(){
+                boostBtnElem.unbind().on("click", function(){
                     console.log("btn clicked");
                     topicstemp = topics1;
                     topics1 = topics2;
@@ -2708,8 +2777,6 @@
 //                    findTopicLabels();
 //                    loadLabels();
                     browseTick(true);
-
-                    clickGraph(clickedNode,0.1);
 
                     console.log("btn changed");
                     if (topicsFlag){
@@ -2745,7 +2812,8 @@
                 $("#opt0").attr("selected",true);
                 boostBtnElem.hide();
                 experimentBtnElem.hide();
-
+                mytextTitleElem.hide();
+                mytextContentElem.hide();
                 legendElem.empty();
                 graphElem.empty();
 
@@ -3030,6 +3098,7 @@
                             });
                         }
                         else{
+                         //   reset();
                             focused = d.name;
                             clickedNode = d;
                             clickGraph(d,fade_out);
@@ -3128,6 +3197,13 @@
                             types.push(parseInt(cir_elem.classList[2]));
                             isNodeFilter = 1;
                         }
+                        else if ( cir_elem.classList[2] == col_elem.classList[2]) {
+                            types.push(parseInt(cir_elem.classList[2]));
+                            isNodeFilter = 1;
+                        }
+                        else{
+//                            console.log(cir_elem.classList[2]);
+                        }
                     });
                 });
 
@@ -3176,7 +3252,7 @@
                                 .attr("class", "pagination active")
                                 .attr("data-toggle","tooltip")
                                 .attr("data-placement","right")
-                                .attr("title","...more about subdivision and link...")
+                                .attr("title", o.area+" description")
                                 //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
                                 .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
                         }
@@ -3186,7 +3262,7 @@
                                 .attr("class", "pagination active")
                                 .attr("data-toggle", "tooltip")
                                 .attr("data-placement", "right")
-                                .attr("title", "...more about subdivision and link...")
+                                .attr("title", "more than one categories selected")
                                 //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
                                 .append("li").append("a").attr("class", "btn-primary active").html(list.length + " <?php echo $node_areaName;?> selected:<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
                         }
@@ -3913,23 +3989,23 @@
                     <select id="experiments" data-toggle="tooltip" data-placement="bottom" title="Select an experiment of <?php echo $title ;?>, <?php echo $subtitle ;?> Research Analytics"></select>
                 </li>
                 <li>
-                    <button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Experiment Description" data-toggle="tooltip" data-placement="bottom" data-content="asdfasdf">
+                    <button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="Experiment Description">
+<!--                        <button id="experiment_btn" class="btn btn-link btn-xs" role="button" data-container="body" data-trigger="focus" data-title="Experiment Description" data-toggle="tooltip" data-placement="bottom" data-content="asdfasdf">-->
                         <span  class="navbar-brand glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                         <span class="sr-only">Experiment Description</span>
                     </button>
                 </li>
             </ul>
-            <ul class="nav navbar-nav" data-toggle="tooltip" data-placement="bottom" title="Select an option of filtering  <?php echo $node_name ;?> elements">
+            <ul class="nav navbar-nav">
                 <li>
                     Filter by:
-                    <select id="filters">
+                    <select id="filters" data-toggle="tooltip" data-placement="bottom" title="Select an option of filtering  <?php echo $node_name ;?> elements">
                         <option id="opt0"></option>
-                        <option id="opt1"><?php echo $node_name."s" ;?></option>
-                        <option id="opt2">Topic word search</option>
+                        <option id="opt1" data-toggle="tooltip" data-placement="right" title="Filter by searching or clicking one or multiple  <?php echo $node_name ;?>s"><?php echo $node_name."s" ;?></option>
+                        <option id="opt2" data-toggle="tooltip" data-placement="right" title="Filter by finding a bag of topic words">Topic word search</option>
                     </select>
                 </li>
                 <li id="filter1" style="padding-left:10px">
-                    <!--							<select id="grants" multiple="multiple" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">-->
                     <select id="grants" multiple="multiple" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
                     </select>
                 </li>
@@ -3942,48 +4018,26 @@
 
 
             <ul class="nav navbar-nav navbar-right" style="padding-right:10px">
-<!--                <li>-->
-<!--                    <!-- Zoom Level:  -->
-<!---->
-<!--                    <div class="input-group vcenter" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<div width='1400'><b>Labeling thresholds in Zoom Level.</b><br/>ZLS and ZLC for Zooming Label Similarity and Zooming Label Connectivity thresholds, defining the zoom level in which the label should appear.<br/><br/><b>Labeling thresholds for Graph Appearance.</b><br/>ALS and ALC for Appearance Label Similarity and Appearance Label Connectivity, defining whether a node should be labeled or not at all.<br/><br/><b>Experiment thresholds for DB Nodes Loaded.</b><br/>ENS for Experiment Node Similarity, defining the threshold applied on the database for the nodes that will be retrieved</div>">-->
-<!--                        <span class="input-group-addon">ZLS</span>-->
-<!--                        <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 50"  style="width:60px">-->
-<!--                        <span class="input-group-addon">ZLC</span>-->
-<!--                        <input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 20"  style="width:60px">-->
-<!--                        <span class="input-group-addon">ALS</span>-->
-<!--                        <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 45" style="width:60px">-->
-<!--                        <span class="input-group-addon">ALC</span>-->
-<!--                        <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 15"  style="width:60px">-->
-<!--                        <span class="input-group-addon">ENS</span>-->
-<!--                        <input type="text" id="thr5" class="form-control" aria-label="experiment similarity threshold(percentage)" maxlength="9" placeholder="e.g. 65"  style="width:60px">-->
-<!--                        <span class="input-group-addon">GRA</span>-->
-<!--                        <input type="text" id="thr6" class="form-control" aria-label="Force Directed Graph Gravity" maxlength="9" placeholder="e.g. 2"  style="width:60px">-->
-<!--                        <span class="input-group-addon">CHA</span>-->
-<!--                        <input type="text" id="thr7" class="form-control" aria-label="Force Directed Graph Charge" maxlength="9" placeholder="e.g. -1100"  style="width:60px">-->
-<!--                    </div>-->
-<!--                </li>-->
 				<li class="dropdown" data-placement="bottom" data-html="true" data-title="Thresholds" title="Experiment Threshold Configuration">
-<!--                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Experiment Thresholds<span class="caret"></span></a>-->
                     <a href="#" id="dropdownThresholds" class="dropdown-toggle" role="button" aria-expanded="true">Experiment Thresholds<span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li>
                             <div class="input-group">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ZLS for Zooming Label Similarity</b><br/>Defines the amplitude spectrum for the zoom levels in which the label should appear based on <?php echo $node_name ;?> Similarity.">ZLS</span>
-                                <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 50"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for no amplitude spectrum, <b>100</b> for biggest amplitude spectrum">
+                                <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 50"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for ALL shown in zoom level x1, <b>100</b> for ALL shown in next zoom levels x5,x10,x15,etc">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ZLC for Zooming Label Connectivity</b><br/>Defines amplitude spectrum for the zoom levels in which the label should appear based on <?php echo $node_name ;?> Connectivity.">ZLC</span>
-                                <input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 20"  style="width:60px">
+                                <input type="text" id="thr2" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 20"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for ALL labels shown in zoom level x1, <b>100</b> for ALL labels shown in next zoom levels x5,x10,x15,etc">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ALS for Appearance Label Similarity</b><br/>Defines the <?php echo $node_name ;?> Similarity threshold over which a <?php echo $node_name ;?> should be labeled on graph.">ALS</span>
-                                <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 45" style="width:60px">
+                                <input type="text" id="thr3" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 45" style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for ALL <?php echo $node_name ;?>s to be labeled, <b>100</b> for NONE of the <?php echo $node_name ;?>s to be labeled">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ALC for Appearance Label Connectivity</b><br/>Defines the <?php echo $node_name ;?> Connectivity threshold over which a <?php echo $node_name ;?> should be labeled on graph.">ALC</span>
-                                <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 15"  style="width:60px">
+                                <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 15" style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for ALL <?php echo $node_name ;?>s to be labeled, <b>100</b> for NONE of the <?php echo $node_name ;?>s to be labeled">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ENS for Experiment Node Similarity</b><br/>Defines the experiment threshold over which a <?php echo $node_name ;?> is loaded on graph from the database retrieval.">ENS</span>
-                                <input type="text" id="thr5" class="form-control" aria-label="experiment similarity threshold(percentage)" maxlength="9" placeholder="e.g. 65"  style="width:60px">
-                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>GRA for Graph Gravity</b><br/>Defines the Tractive Force of each node to the other nodes. Like a proton.">GRA</span>
-                                <input type="text" id="thr6" class="form-control" aria-label="Force Directed Graph Gravity" maxlength="9" placeholder="e.g. 2"  style="width:60px">
-                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>CHA for Graph Charge</b><br/>Defines the Repulvive Charge of each node to the other nodes. Like an electron.">CHA</span>
-                                <input type="text" id="thr7" class="form-control" aria-label="Force Directed Graph Charge" maxlength="9" placeholder="e.g. -1100"  style="width:60px">
+                                <input type="text" id="thr5" class="form-control" aria-label="experiment similarity threshold(percentage)" maxlength="9" placeholder="e.g. 65"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for ALL <?php echo $node_name ;?>s to be retrieved from the database, <b>100</b> for NONE of the <?php echo $node_name ;?>s to be retrieved.">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>GRA for Graph Gravity</b><br/>Defines the Tractive Force of each <?php echo $node_name ;?> to the other <?php echo $node_name ;?>s. Like a proton.">GRA</span>
+                                <input type="text" id="thr6" class="form-control" aria-label="Force Directed Graph Gravity" maxlength="9" placeholder="e.g. 2"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for SMALL Tractive Force among <?php echo $node_name ;?>s, <b> > 10</b> for BIG Tractive Force among <?php echo $node_name ;?>s">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>CHA for Graph Charge</b><br/>Defines the Repulvive Charge of each <?php echo $node_name ;?> to the other <?php echo $node_name ;?>s. Like an electron.">CHA</span>
+                                <input type="text" id="thr7" class="form-control" aria-label="Force Directed Graph Charge" maxlength="9" placeholder="e.g. -1100"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for SMALL Repulvive Charge among <?php echo $node_name ;?>s, <b> < -10000</b> for BIG Repulvive Charge among <?php echo $node_name ;?>s">
                             </div>
-
                         </li>
                     </ul>
                 </li>
@@ -4008,9 +4062,9 @@
     </div>
     <div class="col-md-4" style="padding:0px;float:right;width:auto;margin:-30px 0 -10px" id="categories">
         <ul class="pagination pagination-sm"  style="padding:0px;cursor:pointer">
-            <li class="" id="category1"><a class="" style="color:#1f77b4" id="">FET Open <span class="badge badge-info" style="background-color:#1f77b4">o</span></a></li>
-            <li class="" id="category2"><a class="" id="" style="color:#ff7f0e">FET Proactive <span class="badge badge-info" style="background-color:#ff7f0e">o</span></a></li>
-            <li class="" id="category3"><a class="" id="" style="color:#2ca02c">FET Flagships <span class="badge badge-info" style="background-color:#2ca02c">o</span></a></li>
+            <li class="" id="category1"><a class="" style="color:#1f77b4" id="">FET Open <span class="badge badge-info" style="background-color:#1f77b4">0</span></a></li>
+            <li class="" id="category2"><a class="" id="" style="color:#ff7f0e">FET Proactive <span class="badge badge-info" style="background-color:#ff7f0e">0</span></a></li>
+            <li class="" id="category3"><a class="" id="" style="color:#2ca02c">FET Flagships <span class="badge badge-info" style="background-color:#2ca02c">0</span></a></li>
         </ul>
     </div>
 </div>

@@ -903,8 +903,6 @@
                 // show again window from the top
                 windowElem.scrollTop(0);
 
-                mytext.selectAll(".nodetext").remove();
-
                 boostBtnElem.show();
 
                 numOfClassifiedNodes = 0;								// similar nodes found initialization
@@ -971,8 +969,21 @@
 
                 selectedLabelIndex = 0;
 
+                mytextHandler(mynode,opacity);
+
+                classifiedNodeButtons();
+
+                fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;
+
+                vis.selectAll(".labels")
+                    .style("font-size",fontsize+"px");
+
+            }
+            function mytextHandler (mynode,opacity){
+                mytext.selectAll(".nodetext").remove();
+
                 mytext.selectAll("div.nodetext")
-                    .data([selectedLabelData].concat(labels))
+                    .data([mynode].concat(labels))
                     .enter()
                     .append("div")
                     .attr("class", function (o) {
@@ -1032,13 +1043,6 @@
                         vis.selectAll(".labels").moveToFront();
                         return str;
                     });
-
-                classifiedNodeButtons();
-
-                fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;
-
-                vis.selectAll(".labels")
-                    .style("font-size",fontsize+"px");
 
             }
 
@@ -1247,7 +1251,7 @@
                         });
 
                         clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
-                        clickGraph(clickedNode,0.1);
+                        clickGraph(clickedNode,fade_out);
 
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
@@ -1785,190 +1789,37 @@
 
 
             /**** DB CONNECTION FUNCTIONS ****/
+
             function ajaxCall(experiment,expsimilarity){
-                if(experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") {
-//                if(getUrlParameter('ex') == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.45" && getUrlParameter('g') == "1" && getUrlParameter('s') == "-1100") {
-                    console.log("call FETGrants_80T_1200IT_0IIT_150B_4M_cos")
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        url: "../../../jsonReviewFET80T.php",
-                        data: "s=" + expsimilarity + "&ex=" + experiment,
-                        success: function (resp) {
-                            spinner.stop();
-                            myresponse = JSON.parse(resp);
-                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-                            topics1 = myresponse.topicsNoSort;
-                            topics2 = myresponse.topics;
-                            grants = myresponse.grants;
-                            experiments = myresponse.expers;
-                            renderpage(myresponse.resp);
-                        },
-                        error: function (e) {
-                            alert('Error: ' + JSON.stringify(e));
-                        }
-                    });
-                }
-                else if(experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") {
-//                else if(getUrlParameter('ex') == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.45" && getUrlParameter('g') == "1" && getUrlParameter('s') == "-1100") {
-                    console.log("call FETGrants_100T_1200IT_0IIT_150B_4M_cos")
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        url: "../../../jsonReviewFET100T.php",
-                        data: "s=" + expsimilarity + "&ex=" + experiment,
-                        success: function (resp) {
-                            spinner.stop();
-                            myresponse = JSON.parse(resp);
-                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-                            topics1 = myresponse.topicsNoSort;
-                            topics2 = myresponse.topics;
-                            grants = myresponse.grants;
-                            experiments = myresponse.expers;
-                            renderpage(myresponse.resp);
-                        },
-                        error: function (e) {
-                            alert('Error: ' + JSON.stringify(e));
-                        }
-                    });
-                }
-                else if(experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") {
-//                else if(getUrlParameter('ex') == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && getUrlParameter('s') == "0.45" && getUrlParameter('g') == "3" && getUrlParameter('s') == "-1100") {
-                    console.log("call HEALTHTender_200T_1000IT_0IIT_100B_5M_cos")
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        url: "../../../jsonReviewHEALTH200T.php",
-                        data: "s=" + expsimilarity + "&ex=" + experiment,
-                        success: function (resp) {
-                            spinner.stop();
-                            myresponse = JSON.parse(resp);
-                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-                            topics1 = myresponse.topicsNoSort;
-                            topics2 = myresponse.topics;
-                            grants = myresponse.grants;
-                            experiments = myresponse.expers;
-                            renderpage(myresponse.resp);
-                        },
-                        error: function (e) {
-                            alert('Error: ' + JSON.stringify(e));
-                        }
-                    });
-                }
-                else if(experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") {
-//                else if(getUrlParameter('ex') == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.6" && getUrlParameter('g') == "7" && getUrlParameter('s') == "-400") {
-                    console.log("call FullGrants_300T_1200IT_0IIT_150B_4M_cos")
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        url: "../../../jsonReviewFull300T.php",
-                        data: "s=" + expsimilarity + "&ex=" + experiment,
-                        success: function (resp) {
-                            spinner.stop();
-                            myresponse = JSON.parse(resp);
-                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-                            topics1 = myresponse.topicsNoSort;
-                            topics2 = myresponse.topics;
-                            grants = myresponse.grants;
-                            experiments = myresponse.expers;
-                            renderpage(myresponse.resp);
-                        },
-                        error: function (e) {
-                            alert('Error: ' + JSON.stringify(e));
-                        }
-                    });
-                }
-                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") {
-//                else if(getUrlParameter('ex') == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.6" && getUrlParameter('g') == "7" && getUrlParameter('s') == "-400") {
-                    console.log("call ACM_250T_1000IT_0IIT_100B_4M_cos categories")
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        url: "../../../jsonACMCategories.php",
-                        data: "s=" + expsimilarity + "&ex=" + experiment,
-                        success: function (resp) {
-                            spinner.stop();
-                            myresponse = JSON.parse(resp);
-                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-                            topics1 = myresponse.topicsNoSort;
-                            topics2 = myresponse.topics;
-                            grants = myresponse.grants;
-                            experiments = myresponse.expers;
-                            renderpage(myresponse.resp);
-                        },
-                        error: function (e) {
-                            alert('Error: ' + JSON.stringify(e));
-                        }
-                    });
-                }
-                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") {
-//                else if(getUrlParameter('ex') == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && getUrlParameter('s') == "0.6" && getUrlParameter('g') == "7" && getUrlParameter('s') == "-400") {
-                    console.log("call ACM_250T_1000IT_0IIT_100B_4M_cos Authors")
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        url: "../../../jsonACMAuthors.php",
-                        data: "s=" + expsimilarity + "&ex=" + experiment,
-                        success: function (resp) {
-                            spinner.stop();
-                            myresponse = JSON.parse(resp);
-                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-                            topics1 = myresponse.topicsNoSort;
-                            topics2 = myresponse.topics;
-                            grants = myresponse.grants;
-                            experiments = myresponse.expers;
-                            renderpage(myresponse.resp);
-                        },
-                        error: function (e) {
-                            alert('Error: ' + JSON.stringify(e));
-                        }
-                    });
-                }
-                else {
-                    console.log("call dbfront")
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        url: "./dbfront.php",
-                        data: "s=" + expsimilarity + "&ex=" + experiment,
-                        success: function (resp) {
-                            spinner.stop();
-                            myresponse = JSON.parse(resp);
-                            //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-                            topics1 = myresponse.topicsNoSort;
-                            topics2 = myresponse.topics;
-                            grants = myresponse.grants;
-                            experiments = myresponse.expers;
-                            renderpage(myresponse.resp);
-                        },
-                        error: function (e) {
-                            alert('Error: ' + JSON.stringify(e));
-                        }
-                    });
-                }
-// THE BELOW FOR LOCALHOST TESTING
-
-//			$.ajax({
-//				type: "GET",
-//				async: true,
-//				url: "../../../jsonACMCategories.php",
-//				data:"s="+expsimilarity+"&ex="+experiment,
-//				success: function(resp){
-//					spinner.stop();
-//					myresponse = JSON.parse(resp);
-//					//documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
-//					topics1 = myresponse.topicsNoSort;
-//					topics2 = myresponse.topics;
-//					grants = myresponse.grants;
-//					experiments = myresponse.expers;
-//					renderpage(myresponse.resp);
-//
-//				},
-//				error: function(e){
-//					alert('Error: ' + JSON.stringify(e));
-//				}
-//			});
-
+                if(experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFET80T.php");
+                else if(experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFET100T.php");
+                else if(experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewHEALTH200T.php");
+                else if(experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFull300T.php");
+                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMCategories.php");
+                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMAuthors.php");
+                else ajaxCallURL(experiment,expsimilarity,"./dbfront.php");
+            }
+            function ajaxCallURL(experiment,expsimilarity,url) {
+                console.log("call "+experiment);
+                $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: url,
+                    data: "s=" + expsimilarity + "&ex=" + experiment,
+                    success: function (resp) {
+                        spinner.stop();
+                        myresponse = JSON.parse(resp);
+                        //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                        topics1 = myresponse.topicsNoSort;
+                        topics2 = myresponse.topics;
+                        grants = myresponse.grants;
+                        experiments = myresponse.expers;
+                        renderpage(myresponse.resp);
+                    },
+                    error: function (e) {
+                        alert('Error: ' + JSON.stringify(e));
+                    }
+                });
             }
 
 
@@ -2454,24 +2305,27 @@
                     if ($("#grantsButton").length > 0){
                         grantsElem.multiselect('rebuild')
                     }
-                    else
+                    else {
                         grantsElem.multiselect({
                             maxHeight: 200,
                             buttonWidth: '200px',
                             buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
                             nonSelectedText: 'Select some <?php echo $node_name;?>s',
                             selectedClass: 'multiselect-selected',
-    //                    includeSelectAllOption: true,
+                            //                    includeSelectAllOption: true,
                             enableClickableOptGroups: true,
                             enableFiltering: true,
                             enableCaseInsensitiveFiltering: true,
-    //                    selectAllText: 'All',
-                            optionLabel: function(element) {
+                            //                    selectAllText: 'All',
+                            optionLabel: function (element) {
                                 return $(element).html() + '(' + $(element).val() + ')';
                             },
-                            onChange: function(option, checked) {
+                            onChange: function (option, checked) {
+                                //todo na ginetai kai centralize o grafos otan otan markarontai oi komboi, antistoixa kai sta cateogries kai subdivision legend clicking
                                 var clickednodeid = option.val();
-                                clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
+                                clickedNode = $.grep(nodes, function (obj) {
+                                    return obj.index == clickednodeid
+                                })[0];
                                 var selectedOptions = grantsElem.find("option:selected");
                                 var allOptions = grantsElem.find("option");
 //                                $(":checkbox[value=" + $(this).val() + "]").attr('checked', true)
@@ -2481,6 +2335,7 @@
 
                             }
                         });
+                    }
 
                     $(".multiselect-clear-filter").on('click', function() {
                         grantsElem.multiselect('deselectAll', false);
@@ -2488,26 +2343,17 @@
                         var selectedOptions = grantsElem.find("option:selected");
                         classifiedNodesHandler(selectedOptions, allOptions);
                         grantsElem.multiselect("refresh");
-
                     });
 
                     $(".multiselect-container")
                         // .attr("style","max-width:300px;max-height:300px;")
                         .find("li").find("a").find("label")
-                        .attr("style","overflow:hidden;text-overflow:ellipsis;")
+                        .attr("style","overflow:hidden;text-overflow:ellipsis;");
 
                     grantsElem.multiselect("refresh");
 
-                });
 
-
-
-                $(function(){
-
-                    //refreshes the inner options
-                    grantsElem.multiselect("refresh");
-
-//hard code....
+//todo hard code....
                     category1Elem.on("click", function (){
                         if (category1Elem.hasClass("activeCategory")){
                             category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
@@ -2737,48 +2583,37 @@
 
                 myTabElem.show();
                 experimentBtnElem.show();
-
                 experimentBtnElem.unbind().on("click", function(){
-
                     d3.select("#experiments").selectAll("option")
                         .each(function(d){
                             console.log("experimentName:"+d.id);
                             console.log("experimentDescription:"+d.desc);
-                            console.log("expsimilarity:"+d.initialSimilarity)
+                            console.log("expsimilarity:"+d.initialSimilarity);
                             if(experimentName == d.id){
-
-                                experimentName = d.id;
+//                                experimentName = d.id;
                                 experimentDescription = d.desc;
                                 if((expsimilarity = d.initialSimilarity) == null){
                                     expsimilarity = <?php echo $expsimilarity ;?>;
                                 }
-//                                console.log("experimentName:"+d.id);
-//                                console.log("experimentDescription:"+d.desc);
-//                                console.log("expsimilarity:"+d.initialSimilarity)
                             }
                         });
 
-
                     $(this).attr("data-title","Experiment Description");
-
                     $(this).attr("data-content",experimentDescription);
-
                     $(this).popover('toggle');
                 });
 
 
                 boostBtnElem.unbind().on("click", function(){
-                    console.log("btn clicked");
                     topicstemp = topics1;
                     topics1 = topics2;
                     topics2 = topicstemp;
 
                     mytextContentElem.hide();
-//                    findTopicLabels();
-//                    loadLabels();
                     browseTick(true);
+                    clickGraph(clickedNode,fade_out);   //clicking in order to reload node with new labels
 
-                    console.log("btn changed");
+
                     if (topicsFlag){
                         topicsFlag = false;
                         boostBtnElem.find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-remove");
@@ -2788,7 +2623,6 @@
                         boostBtnElem.find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-ok");
                     }
                     mytextContentElem.show();
-
                 });
 
 
@@ -2809,7 +2643,6 @@
                 downButtonElem.hide();
                 filter1Elem.hide();
                 filter2Elem.hide();
-                $("#opt0").attr("selected",true);
                 boostBtnElem.hide();
                 experimentBtnElem.hide();
                 mytextTitleElem.hide();
@@ -2824,6 +2657,8 @@
 
                 trenddivElem.empty();
                 trend2divElem.empty();
+
+                filtersElem.val("opt0");
 
                 linkedByIndex = {},
                 nodeConnections = [],
@@ -2935,17 +2770,7 @@
 
             function loadNodeList(){
                 // empty for re-initializing grantsList
-//                grantsElem.find("option").empty();
-/*                grantslist1
-                    .selectAll("option")
-                    .remove()
 
-                grantslist2
-                    .selectAll("option")
-                    .remove()
-
-                $("#grants > optgroup").empty()
-*/
                 grantsElem.empty();
                 grantsElem.append("<optgroup id=\"grantsGroup1\" label=\"<?php echo $node_groupName1 ;?>\"><optgroup id=\"grantsGroup2\" label=\"<?php echo $node_groupName2 ;?>\">")
                 grantsGroup1Elem = $("#grantsGroup1");
@@ -2969,6 +2794,7 @@
     //                var a = $("#filter1 > select").html()
                 
                 grantsListHtml = grantsElem.html();
+                grantsElem.empty();
                 grantsElem.append(grantsListHtml)
 
 /*			grantslist2

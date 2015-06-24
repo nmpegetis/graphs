@@ -9,10 +9,10 @@
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
     <!-- Optional theme -->
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
-    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.css" />
-    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.css" />
+<!--    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.min.css" />-->
+<!--    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.css" />-->
+<!--    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.min.css" />-->
+<!--    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.css" />-->
     <link rel="stylesheet" href="../../../css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../css/bootstrap-theme.min.css">
 
@@ -123,15 +123,44 @@
         }
         .dropdown-menu { padding: 5px;}
 
+
+/*jquery autocomplete to boostrap css*/
+        .ui-autocomplete {
+            position: absolute;
+            z-index: 1000;
+            cursor: default;
+            padding: 0;
+            margin-top: 2px;
+            list-style: none;
+            background-color: #ffffff;
+            border: 1px solid #ccc
+        -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .ui-autocomplete > li {
+            padding: 3px 20px;
+        }
+        .ui-autocomplete > li.ui-state-focus {
+            background-color: #DDD;
+        }
+        .ui-helper-hidden-accessible {
+            display: none;
+        }
     </style>
 
 
     <!-- Latest compiled and minified JavaScript -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
+<!--    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>-->
     <!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script> -->
+    <script type="text/javascript" src="../../../js/jquery-2.1.3.min.js"></script>
 
     <!-- // <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
-    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+<!--    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>-->
+    <script type="text/javascript" src="../../../js/jquery-ui.min.js"></script>
 
     <!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
     <script src="../../../js/d3.v3.min.js"></script>
@@ -296,7 +325,9 @@
             //grants
                 grantsListHtml, listLength, grants,
 
-                force, myresponse, k, n, counter,
+                force, myresponse, k, n, counter, availableTags,
+                availableLabels,
+
                 expsimilarity,
                 chord_formatPercent = d3.format(".1%"),
                 target = document.getElementById('graphdiv'),
@@ -1642,13 +1673,13 @@
                 // console.log("Sorted Topics' words")
                 //for (i=0 ; i<svgSortedTopicWords.length ; i++)
                 // console.log("key="+svgSortedTopicWords[i].key+" item="+svgSortedTopicWords[i].item+" value="+svgSortedTopicWords[i].value)
-                console.log(0)
+                console.log("findtopiclabels finished")
             }
 
 
             function loadLabels(){
-                var availableTags = [];
-                var availableLabels = [];
+                availableTags = [];
+                availableLabels = [];
 
                 k = 0,
                 n = nodes.length,
@@ -1660,12 +1691,23 @@
                         len = topicsGroupPerNode.length;
                         for(var i=0;i<len;i++){
                             var mywords;
-                            if (topicsFlag){
                                 mywords = topics1[topicsGroupPerNode[i].topic];
+
+                            var wlen = mywords.length;
+
+                            str = "";
+                            for(var j=0;j<wlen-1;j++){
+                                str += mywords[j].item+",";
                             }
-                            else{
+                            str += mywords[j].item;
+
+                            availableLabels.push(str);
+                            //console.log("my= "+nodes[k].index+" "+nodes[k].value)
+                            availableTags.push({item:str, index:nodes[k].index, name:nodes[k].name, color:nodes[k].color, value:nodes[k].value});
+                        }
+                        for(var i=0;i<len;i++){
+                            var mywords;
                                 mywords = topics2[topicsGroupPerNode[i].topic];
-                            }
 
                             var wlen = mywords.length;
 
@@ -1682,70 +1724,13 @@
                     }
                 }
 
-
-                /* remove duplicates */
-                function unique(list) {
-                    var result = [];
-                    $.each(list, function(i, e) {
-                        if ($.inArray(e, result) == -1) result.push(e);
-                    });
-                    return result;
-                }
-
-
-                /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
-                function log( message ) {
-                    var classifiedNodes = "";
-                    var searchResultNodes = [];				//initialize every time in topic word search
-
-                    mytextTitleElem.hide();
-                    classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
-                    classifiedNodesHeaderElem.show();
-
-
-                    for (i=0 ; i<availableTags.length ; i++){
-                        if (message==availableTags[i].item){
-                            classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
-
-                            searchResultNodes.push(availableTags[i].index);	//node results in topic word search
-
-                            $('#'+availableTags[i].index).hover(function(){
-                                $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-                                $(this).css("opacity","0.5");
-                            },function(){
-                                $(this).css("opacity","initial");
-                                $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-                            });
-                        }
-                    }
-
-                    classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
-                    classifiedNodesElem.show();
-
-                    mytextContentElem.hide();
-                    boostBtnElem.hide();
-
-
-
-///initialize
-                    var types = [];
-                    $(".circle").each(function(){
-                        types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
-
-                    });
-                    showtype(fade_out, types);
-///find what to show
-                    showtype(fade_out, searchResultNodes);
-
-                }
-
                 tagsElem.autocomplete({
                     source: unique(availableLabels),
                     minLength: 2,
 
                     select: function( event, ui ) {
                         classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
-                        log( ui.item ?
+                        autocompletelog( ui.item ?
                             ui.item.label :
                         "Nothing selected, input was " + this.value);
 
@@ -1754,6 +1739,74 @@
                     }
                 });
             }
+
+            /* remove duplicates */
+            function unique(list) {
+                var result = [];
+                $.each(list, function(i, e) {
+                    if ($.inArray(e, result) == -1) result.push(e);
+                });
+                return result;
+            }
+
+
+            /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
+            function autocompletelog( message ) {
+                var classifiedNodes = "";
+                var searchResultNodes = [];				//initialize every time in topic word search
+
+                mytextTitleElem.empty();
+                mytextTitle.append("div").append("ul")
+                    .attr("class", "pagination active")
+                    .attr("title","topic word search result")
+                    .append("li").append("a").attr("class", " ").html("Selected topic:<br/><em>" + message + "</em>");
+                mytextTitleElem.show();
+                tagsElem.attr("title",message);
+
+                classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
+                classifiedNodesHeaderElem.show();
+
+
+                for (i=0 ; i<availableTags.length ; i++){
+                    if (message==availableTags[i].item){
+                        classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
+
+                        searchResultNodes.push(availableTags[i].index);	//node results in topic word search
+
+                        $('#'+availableTags[i].index).hover(function(){
+                            $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                            $(this).css("opacity","0.5");
+                        },function(){
+                            $(this).css("opacity","initial");
+                            $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                        });
+                    }
+                }
+
+                classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
+                classifiedNodesElem.show();
+
+                mytextContentElem.hide();
+                boostBtnElem.hide();
+
+
+
+///initialize
+                var types = [];
+                $(".circle").each(function(){
+                    types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
+
+                });
+                showtype(fade_out, types);
+///find what to show
+                showtype(fade_out, searchResultNodes);
+                // not show links in this ocassion
+                linkLines.style("stroke-opacity", function (o) {
+                    return fade_out;
+                });
+
+            }
+
 
 
             function initialTick(e) {
@@ -2391,8 +2444,24 @@
 
                             classifiedNodesHandler(collection,$(".circle"));
                             showtype(fade_out, types);
+                            // not show links in this ocassion
+                            linkLines.style("stroke-opacity", function (o) {
+                                return fade_out;
+                            });
                             mytext.selectAll(".nodetext").remove();
                         }
+
+//remove all active and inactive from chord and legend
+                        if($(".active_row").length!=0){
+                            d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
+                            d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
+                        }
+                        // return the view to the F-D graph when click
+                        myTabElem.find("li.active").removeClass("active");
+                        myTabElem.find("li:first").addClass("active");
+                        chorddivElem.removeClass("active");
+                        graphdivElem.addClass("active");
+
                     });
                     category2Elem.on("click", function (){
                         if (category2Elem.hasClass("activeCategory")){
@@ -2432,8 +2501,23 @@
 
                             classifiedNodesHandler(collection,$(".circle"));
                             showtype(fade_out, types);
+                            // not show links in this ocassion
+                            linkLines.style("stroke-opacity", function (o) {
+                                return fade_out;
+                            });
                             mytext.selectAll(".nodetext").remove();
                         }
+//remove all active and inactive from chord and legend
+                        if($(".active_row").length!=0){
+                            d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
+                            d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
+                        }
+                        // return the view to the F-D graph when click
+                        myTabElem.find("li.active").removeClass("active");
+                        myTabElem.find("li:first").addClass("active");
+                        chorddivElem.removeClass("active");
+                        graphdivElem.addClass("active");
+
                     });
                     category3Elem.on("click", function (){
                         if (category3Elem.hasClass("activeCategory")){
@@ -2474,8 +2558,23 @@
 
                             classifiedNodesHandler(collection,$(".circle"));
                             showtype(fade_out, types);
+                            // not show links in this ocassion
+                            linkLines.style("stroke-opacity", function (o) {
+                                return fade_out;
+                            });
                             mytext.selectAll(".nodetext").remove();
                         }
+//remove all active and inactive from chord and legend
+                        if($(".active_row").length!=0){
+                            d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
+                            d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
+                        }
+                        // return the view to the F-D graph when click
+                        myTabElem.find("li.active").removeClass("active");
+                        myTabElem.find("li:first").addClass("active");
+                        chorddivElem.removeClass("active");
+                        graphdivElem.addClass("active");
+
                     });
 
                     experimentsElem.on("click", function (e,d){
@@ -2712,6 +2811,8 @@
                 subdBiConnections = [],
                 subdBiConnectionsNum = [],
                 nodesToFade = [],
+                availableTags = [],
+                availableLabels = [],
                 fetOpenNum = 0,
                 fetProactiveNum = 0,
                 fetFlagshipNum = 0,
@@ -2985,6 +3086,15 @@
                     $(this).removeClass("inactive");
                 });
 
+                // reset category clicking
+                category1Elem.attr("class","");
+                category2Elem.attr("class","");
+                category3Elem.attr("class","");
+                category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
+                category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
+                category3Elem.find("a").attr("style","background-color:#fff;color:#2ca02c");
+
+
                 classifiedNodesHandler($(".active_row"),$(".legend_row"));
             }
 
@@ -3034,6 +3144,10 @@
                 });
 
                 showtype(fade_out, types);
+                // not show links in this ocassion
+                linkLines.style("stroke-opacity", function (o) {
+                    return fade_out;
+                });
 
                 if(isNodeFilter){
                     if(list.length != 0){
@@ -3074,6 +3188,7 @@
 
 
                         if(list.length == 1) {
+                            mytextTitleElem.empty();
                             mytextTitle.append("div").append("ul")
                                 .attr("class", "pagination active")
                                 .attr("data-toggle","tooltip")
@@ -3822,7 +3937,7 @@
                     </button>
                 </li>
             </ul>
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav col-md-6">
                 <li>
                     Filter by:
                     <select id="filters" data-toggle="tooltip" data-placement="bottom" title="Select an option of filtering  <?php echo $node_name ;?> elements">
@@ -3836,7 +3951,7 @@
                     </select>
                 </li>
                 <li  id="filter2" style="padding-left:10px;width:inherit">
-                    <input id="tags" class="ui-corner-all"  placeholder="input a topic word..." >
+                    <input id="tags" class="ui-corner-all"  placeholder="input a topic word..." style="padding: 4px;width:100%">
                 </li>
             </ul>
 
@@ -3922,7 +4037,14 @@
         <div id="mytext-content" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml">
         </div>
     </div>
-    <div class="col-md-7" id="mygraph" style="padding-top:5px;">
+<!--    <div id="pills" style="padding-top:5px;width:10px;z-index:500;">-->
+<!--        <ul class="nav navbar-right nav-pills nav-stacked col-md-1">-->
+<!--            <li><a href="#a" data-toggle="tab">1</a></li>-->
+<!--            <li><a href="#b" data-toggle="tab">2</a></li>-->
+<!--            <li><a href="#c" data-toggle="tab">3</a></li>-->
+<!--        </ul>-->
+<!--    </div>-->
+    <div class="col-md-7" id="mygraph" style="padding:5px;">
         <div id="mygraph-container">
             <div style="padding-right:2%">
                 <ul class="nav navbar-nav nav-tabs navbar-right" id="myTab">
@@ -3951,11 +4073,6 @@
                         <foreignobject id="foreignObject" width="100%" max-width="100%" >
                         </foreignobject>
                     </svg>
-                    <!--                            <ul class="nav navbar-right nav-pills nav-stacked col-md-3">-->
-                    <!--                                <li><a href="#a" data-toggle="tab">1</a></li>-->
-                    <!--                                <li><a href="#b" data-toggle="tab">2</a></li>-->
-                    <!--                                <li><a href="#c" data-toggle="tab">3</a></li>-->
-                    <!--                            </ul>-->
                 </div>
                 <div id="chorddiv" class="tab-pane">
                 </div>

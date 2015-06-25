@@ -73,15 +73,21 @@
             display: none;
         }
 
-        .divider-vertical {
+        .divider-right {
             height: inherit;
-            padding: 0px 10px 0px 10px;
-            margin: 0px 9px;
-            border-left: 1px solid #020202;
+            padding: 0px 1px 0px 1px;
+            margin: 0px 6px;
             border-right: 1px solid #000000;
             max-height:35px !important
         }
 
+        .divider-left {
+            height: inherit;
+            padding: 0px 10px 0px 10px;
+            margin: 0px 9px;
+            border-left: 1px solid #020202;
+            max-height:35px !important
+        }
 
         /*chrome fix bug the below*/
         .input-group-addon, .input-group {
@@ -149,6 +155,18 @@
         }
         .ui-helper-hidden-accessible {
             display: none;
+        }
+
+        .glyphiconmystyle{
+            padding:0px 0px 0px 5px;
+        }
+        .mypills{
+            padding-bottom: 36px !important;padding-right:20px !important;
+        }
+        .navbar-brand{height:0px}
+
+        a {
+            outline: 0;
         }
     </style>
 
@@ -270,6 +288,10 @@
                 trend2divElem = $("#trend2div"),
                 trend3divElem = $("#trend3div"),
                 dropdownThresholdsElem = $("#dropdownThresholds"),
+                pillsElem = $("#pills"),
+                pill1Elem = $("#pill1"),
+                pill2Elem = $("#pill2"),
+                pill3Elem = $("#pill3"),
                 grantsGroup1Elem,
                 grantsGroup2Elem;
 
@@ -329,26 +351,9 @@
                 availableLabels,
 
                 expsimilarity,
-                chord_formatPercent = d3.format(".1%"),
-                target = document.getElementById('graphdiv'),
-                opts = {
-                    lines: 17,              // The number of lines to draw
-                    length: 20,             // The length of each line
-                    width: 10,              // The line thickness
-                    radius: 30,             // The radius of the inner circle
-                    corners: 1,             // Corner roundness (0..1)
-                    rotate: 0,              // The rotation offset
-                    direction: 1,           // 1: clockwise, -1: counterclockwise
-                    color: '#000',          // #rgb or #rrggbb or array of colors
-                    speed: 1,               // Rounds per second
-                    trail: 60,              // Afterglow percentage
-                    shadow: false,          // Whether to render a shadow
-                    hwaccel: false,         // Whether to use hardware acceleration
-                    className: 'spinner',   // The CSS class to assign to the spinner
-                    zIndex: 2e9,            // The z-index (defaults to 2000000000)
-                    top: '50%',             // Top position relative to parent
-                    left: '50%'             // Left position relative to parent
-                },
+                chord_formatPercent,
+                target,
+                opts,
                 spinner;
 
 
@@ -492,6 +497,28 @@
 //                mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                 thr7Elem.val(charge);
             });
+
+            pill1Elem.on("click",function(){
+                console.log(1);
+                svgfullscreen();
+                pill1Elem.removeClass("active");
+                pill1Elem.blur();
+            });
+
+            pill2Elem.unbind().on("click",function(){
+                pill2Elem.removeClass("active");
+                if(graphdivElem.hasClass("active")) graphReset();
+                else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
+                else console.log("else")
+
+                pill2Elem.blur();
+            });
+            pill3Elem.on("click",function(){
+                console.log(3);
+                pill3Elem.removeClass("active");
+                pill3Elem.blur();
+            });
+
 
             exitclassifiedNodesHeaderElem.click(function(){
                 classifiedNodesHeaderElem.hide();
@@ -808,62 +835,15 @@
             }
 
 
-            function svgReset()
-            {
-
+            function graphReset() {
                 scaleFactor = 1;
                 translation = [0,0];
                 previous_scale = 1;
                 zoomer.translate([0, 0]);
                 zoomer.scale(1);
                 console.log("scales", translation, scaleFactor);
+                browseTick(false);
 
-                nodeCircles
-                    .attr("cx", function(d) {
-                        /* http://stackoverflow.com/questions/21344340/sematic-zooming-of-force-directed-graph-in-d3 */
-                        return translation[0] + scaleFactor*d.x;
-                    })
-                    .attr("cy", function(d) {
-                        return translation[1] + scaleFactor*d.y;
-                    });
-
-                linkLines
-                    .attr("x1", function(d) {
-                        return translation[0] + scaleFactor*d.source.x;
-                    })
-                    .attr("y1", function(d) {
-                        return translation[1] + scaleFactor*d.source.y;
-                    })
-                    .attr("x2", function(d) {
-                        return translation[0] + scaleFactor*d.target.x;
-                    })
-                    .attr("y2", function(d) {
-                        return translation[1] + scaleFactor*d.target.y;
-                    });
-
-                nodeLabels
-                    .attr("x",function (d){
-                        return (translation[0] + scaleFactor*d.x+7)
-                    })
-                    .attr("y",function (d){
-                        return (translation[1] + scaleFactor*d.y-7)
-                    })
-                    .text(function(d) {
-//					return d.index;
-                        if (labeled[d.index]){
-                            if ((links[d.index].value > similarityThr - (0.2 * previous_scale)) && (nodeConnections[d.index] > (nodeConnectionsThr / Math.sqrt(previous_scale)) * maxNodeConnections))
-                                return label[d.index];
-                            return "";
-                        }
-                    });
-
-                fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;
-                vis.selectAll(".labels")
-                    .style("font-size",fontsize+"px");
-
-                /* move circle elements above all others within the same grouping */
-//			vis.selectAll(".circle").moveToFront();
-                vis.selectAll(".labels").moveToFront();
             }
 
 
@@ -919,15 +899,19 @@
 
             function clickGraph(mynode, opacity){
 
+                chordReset();
                 graphHandler(mynode,opacity);
                 clickedNode = mynode;
+            }
+
+            function chordReset(){
+                reset();
 
                 if($(".active_row").length!=0){
                     d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
                     d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
                 }
             }
-
 
             function graphHandler(mynode, opacity) {
                 reset();
@@ -1419,8 +1403,6 @@
                         }
                     });
 
-
-
                 vis.selectAll(".labels")
                     .style("font-size",fontsize+"px");
 
@@ -1516,7 +1498,7 @@
                     .on("mouseover", svgimgReset.setAttributeNS(null,'fill-opacity',0.7))
                     .on("mouseout", svgimgReset.setAttributeNS(null,'fill-opacity',0.7));
                 svgimgReset
-                    .addEventListener("click",svgReset);
+                    .addEventListener("click",graphReset);
 
                 svgimgResetFS = document.createElementNS('http://www.w3.org/2000/svg','image');
                 svgimgResetFS.setAttributeNS(null,'height','30');
@@ -1539,7 +1521,7 @@
                     .on("mouseover", svgimgResetFS.setAttributeNS(null,'fill-opacity',0.7))
                     .on("mouseout", svgimgResetFS.setAttributeNS(null,'fill-opacity',0.7));
                 svgimgResetFS
-                    .addEventListener("click",svgReset);
+                    .addEventListener("click",graphReset);
             }
 
 
@@ -1879,6 +1861,8 @@
             /**** RENDERING FUNCTIONS ****/
             /* renderpage called from ajax */
             function renderpage(response){
+                pillsElem.show();
+
                 legend_data = [];
                 max_proj = 0;
                 var type_hash = [];
@@ -2408,16 +2392,12 @@
 
 //todo hard code....
                     category1Elem.on("click", function (){
+                        //remove all active and inactive from chord and legend
+                        chordReset();
+
                         if (category1Elem.hasClass("activeCategory")){
                             category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
                             category1Elem.attr("class","");
-
-                            var types = [];
-                            $(".circle").each(function(){
-                                types.push(parseInt(this.classList[2]));
-                            });
-
-                            showtype(fade_out, types);
                         }
                         else{
                             category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
@@ -2451,11 +2431,6 @@
                             mytext.selectAll(".nodetext").remove();
                         }
 
-//remove all active and inactive from chord and legend
-                        if($(".active_row").length!=0){
-                            d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
-                            d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
-                        }
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
                         myTabElem.find("li:first").addClass("active");
@@ -2464,17 +2439,12 @@
 
                     });
                     category2Elem.on("click", function (){
+                        //remove all active and inactive from chord and legend
+                        chordReset();
+
                         if (category2Elem.hasClass("activeCategory")){
                             category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
                             category2Elem.attr("class","");
-
-                            var types = [];
-                            $(".circle").each(function(){
-                                //						types.push($(this).attr("class"));
-                                types.push(parseInt(this.classList[2]));
-                            });
-
-                            showtype(fade_out, types);
                         }
                         else{
                             category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
@@ -2507,11 +2477,7 @@
                             });
                             mytext.selectAll(".nodetext").remove();
                         }
-//remove all active and inactive from chord and legend
-                        if($(".active_row").length!=0){
-                            d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
-                            d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
-                        }
+
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
                         myTabElem.find("li:first").addClass("active");
@@ -2520,17 +2486,12 @@
 
                     });
                     category3Elem.on("click", function (){
+                        //remove all active and inactive from chord and legend
+                        chordReset();
+
                         if (category3Elem.hasClass("activeCategory")){
                             category3Elem.find("a").attr("style","background-color:#fff;color:#2ca02c");
                             category3Elem.attr("class","");
-
-                            var types = [];
-                            $(".circle").each(function(){
-                                //						types.push($(this).attr("class"));
-                                types.push(parseInt(this.classList[2]));
-                            });
-
-                            showtype(fade_out, types);
                         }
                         else{
                             category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
@@ -2564,11 +2525,7 @@
                             });
                             mytext.selectAll(".nodetext").remove();
                         }
-//remove all active and inactive from chord and legend
-                        if($(".active_row").length!=0){
-                            d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
-                            d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
-                        }
+
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
                         myTabElem.find("li:first").addClass("active");
@@ -2746,6 +2703,8 @@
                 experimentBtnElem.hide();
                 mytextTitleElem.hide();
                 mytextContentElem.hide();
+                pillsElem.hide();
+
                 legendElem.empty();
                 graphElem.empty();
 
@@ -2844,6 +2803,27 @@
                     charge = -400;
                     categoriesElem.hide();
                 }
+
+                chord_formatPercent = d3.format(".1%"),
+                target = document.getElementById('graphdiv'),
+                opts = {
+                    lines: 17,              // The number of lines to draw
+                    length: 20,             // The length of each line
+                    width: 10,              // The line thickness
+                    radius: 30,             // The radius of the inner circle
+                    corners: 1,             // Corner roundness (0..1)
+                    rotate: 0,              // The rotation offset
+                    direction: 1,           // 1: clockwise, -1: counterclockwise
+                    color: '#000',          // #rgb or #rrggbb or array of colors
+                    speed: 1,               // Rounds per second
+                    trail: 60,              // Afterglow percentage
+                    shadow: false,          // Whether to render a shadow
+                    hwaccel: false,         // Whether to use hardware acceleration
+                    className: 'spinner',   // The CSS class to assign to the spinner
+                    zIndex: 2e9,            // The z-index (defaults to 2000000000)
+                    top: '50%',             // Top position relative to parent
+                    left: '50%'             // Left position relative to parent
+                };
 
                 spinner = new Spinner(opts).spin(target);
             }
@@ -3925,7 +3905,7 @@
             </a>
         </div>
         <div class="collapse navbar-collapse " id="headmenu">
-            <ul class="nav navbar-nav divider-vertical">
+            <ul class="nav navbar-nav divider-right divider-left">
                 <li>
                     <select id="experiments" data-toggle="tooltip" data-placement="bottom" title="Select an experiment of <?php echo $title ;?>, <?php echo $subtitle ;?> Research Analytics"></select>
                 </li>
@@ -4016,10 +3996,10 @@
             <h5 id="classifiedNodesHeader" style="cursor:pointer"><span id="exitclassifiedNodesHeader"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
         </div>
         <div class="nav-wrap" id="classifiedNodes" style="cursor:pointer">
-            <div><button id="upButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 10</span></button>
+            <div><button id="upButton" class="btn btn-primary btn-sm ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 10</span></button>
                 <ul class="pagination pagination-sm">
                 </ul>
-                <button id="downButton" class="btn btn-default btn-lg ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 10<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
+                <button id="downButton" class="btn btn-primary btn-sm ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 10<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
             </div>
         </div>
 
@@ -4037,53 +4017,58 @@
         <div id="mytext-content" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml">
         </div>
     </div>
-<!--    <div id="pills" style="padding-top:5px;width:10px;z-index:500;">-->
-<!--        <ul class="nav navbar-right nav-pills nav-stacked col-md-1">-->
-<!--            <li><a href="#a" data-toggle="tab">1</a></li>-->
-<!--            <li><a href="#b" data-toggle="tab">2</a></li>-->
-<!--            <li><a href="#c" data-toggle="tab">3</a></li>-->
-<!--        </ul>-->
-<!--    </div>-->
     <div class="col-md-7" id="mygraph" style="padding:5px;">
         <div id="mygraph-container">
-            <div style="padding-right:2%">
-                <ul class="nav navbar-nav nav-tabs navbar-right" id="myTab">
-                    <li class="active"><a data-toggle="tab" data-target="#graphdiv">Force-Directed Graph</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" id="chordmenu" data-toggle="dropdown" data-target="#">Chord<b class="caret"></b></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="chordmenu">
-                            <li><a data-toggle="tab" data-target="#chorddiv">Full connectivity</a></li>
-                            <li><a data-toggle="tab" data-target="#chord2div">Crossdisciplinary Connectivity</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
-                            <li><a data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                            <li><a data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-journal.html" target="_blank">Trends 2  <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                            <li><a data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-communication.html" target="_blank">Trends 3  <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                        </ul>
-                    </li>
-                </ul>
+            <div class="col-md-14" style="height:1px;">
+                <div class="col-md-12" style="padding-right:2%;">
+                    <ul class="nav navbar-nav nav-tabs navbar-right" id="myTab">
+                        <li class="active"><a data-toggle="tab" data-target="#graphdiv">Force-Directed Graph</a></li>
+<!--                        <li class="active"><a data-toggle="tab" data-target="#graphdiv">Force-Directed Graph <span class="divider-right"></span><span class="btn btn-xs glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span><span class="btn btn-xs glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" id="chordmenu" data-toggle="dropdown" data-target="#">Chord<b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="chordmenu">
+                                <li><a data-toggle="tab" data-target="#chorddiv">Full connectivity</a></li>
+                                <li><a data-toggle="tab" data-target="#chord2div">Crossdisciplinary Connectivity</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
+                                <li><a data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                                <li><a data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-journal.html" target="_blank">Trends 2  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                                <li><a data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-communication.html" target="_blank">Trends 3  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div id="graphdiv" class="tab-pane active in">
+                        <svg id="graph" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
+                            <!-- used to add the mytext here when in fullscreen -->
+                            <foreignobject id="foreignObject" width="100%" max-width="100%" >
+                            </foreignobject>
+                        </svg>
+                    </div>
+                    <div id="chorddiv" class="tab-pane">
+                    </div>
+                    <div id="chord2div" class="tab-pane">
+                    </div>
+                    <div id="trenddiv" class="tab-pane" >
+                    </div>
+                    <div id="trend2div" class="tab-pane">
+                    </div>
+                </div>
             </div>
-            <div class="tab-content" id="myTabContent">
-                <div id="graphdiv" class="tab-pane active in">
-                    <svg id="graph" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
-                        <!-- used to add the mytext here when in fullscreen -->
-                        <foreignobject id="foreignObject" width="100%" max-width="100%" >
-                        </foreignobject>
-                    </svg>
-                </div>
-                <div id="chorddiv" class="tab-pane">
-                </div>
-                <div id="chord2div" class="tab-pane">
-                </div>
-                <div id="trenddiv" class="tab-pane" >
-                </div>
-                <div id="trend2div" class="tab-pane">
+            <div class="col-md-12">
+                <div id="pills" class="col-md-1 nav navbar-right" style="padding-top:0px;">
+                    <ul class="nav navbar-right nav-pills nav-stacked">
+<!--                        <li id="pill1"><a class="mypills" href="#a" data-toggle="tab"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>-->
+                        <li id="pill1" class="disabled"><a class="mypills" href="#a"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>
+                        <li id="pill2"><a class="mypills" href="#b"><span class="navbar-brand btn glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>
+                        <li id="pill3" class="disabled"><a class="mypills" href="#c"><span class="navbar-brand btn glyphicon glyphicon-new-window glyphiconmystyle fullscreen" role="button" title="New Window Mode" aria-hidden="true"></span></a></li>
+                    </ul>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="col-md-3" id="mysubdivision" style="overflow:auto;">

@@ -281,9 +281,15 @@
                 graphElem = $("#graph"),
                 legendElem = $("#legend"),
                 svgTextElem = $("svg:text"),
+                graphmenu1Elem = $("#graphmenu1"),
                 graphdivElem = $("#graphdiv"),
+                chordmenu1Elem = $("#chordmenu1"),
+                chordmenu2Elem = $("#chordmenu2"),
                 chorddivElem = $("#chorddiv"),
                 chord2divElem = $("#chord2div"),
+                trendmenuElem = $("#trendmenu"),
+                trendmenu1Elem = $("#trendmenu1"),
+                trendmenu2Elem = $("#trendmenu2"),
                 trenddivElem = $("#trenddiv"),
                 trend2divElem = $("#trend2div"),
                 trend3divElem = $("#trend3div"),
@@ -383,6 +389,7 @@
                 popoverElem.popover()
             });
 
+            loadThresholdsFromUrlParameters();
             initializeExperimentPage();
             loadThresholdsFromUrlParameters();  //only when changing the parameters on url and refreshing
             ajaxCall(experimentName,expsimilarity);
@@ -498,8 +505,15 @@
                 thr7Elem.val(charge);
             });
 
+
+            graphmenu1Elem.on("click", function(){pill3Elem.addClass("disabled");});
+            chordmenu1Elem.on("click", function(){pill3Elem.addClass("disabled");});
+            chordmenu2Elem.on("click", function(){pill3Elem.addClass("disabled");});
+            trendmenu1Elem.on("click", function(){pill3Elem.removeClass("disabled");});
+            trendmenu2Elem.on("click", function(){pill3Elem.removeClass("disabled");});
+
+
             pill1Elem.on("click",function(){
-                console.log(1);
                 svgfullscreen();
                 pill1Elem.removeClass("active");
                 pill1Elem.blur();
@@ -509,13 +523,15 @@
                 pill2Elem.removeClass("active");
                 if(graphdivElem.hasClass("active")) graphReset();
                 else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
-                else console.log("else")
 
                 pill2Elem.blur();
             });
             pill3Elem.on("click",function(){
-                console.log(3);
                 pill3Elem.removeClass("active");
+
+                if(trenddivElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
+                else if(trend2divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
+
                 pill3Elem.blur();
             });
 
@@ -1789,7 +1805,9 @@
 
             }
 
-
+            function redirectUrl(url){
+                window.open(url, '_blank');
+            }
 
             function initialTick(e) {
                 // do not render initialization frames because they are slow and distracting 
@@ -2684,9 +2702,10 @@
 
                 createChord(1);
                 createChord(2);
-//                createTrends(1);
-  //              createTrends(2);
-
+                if (/^ACM*/.test(experimentName)) {
+                    createTrends(1);
+                    createTrends(2);
+                }
             }
 
             function initializeExperimentPage(){
@@ -2784,6 +2803,11 @@
                 charge = <?php echo $charge ;?>,
                 expsimilarity = <?php echo $expsimilarity ;?>,
                 nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
+
+                //the below 2 only for ACM
+                trendmenuElem.parent().hide();
+                pill3Elem.hide();
+
                 if (/^FET*/.test(experimentName)){
                     categoriesElem.show();
                     nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
@@ -2803,6 +2827,12 @@
                     charge = -400;
                     categoriesElem.hide();
                 }
+                else if (/^ACM*/.test(experimentName)){
+                    categoriesElem.hide();
+                    pill3Elem.show();
+                    trendmenuElem.parent().show();
+                }
+
 
                 chord_formatPercent = d3.format(".1%"),
                 target = document.getElementById('graphdiv'),
@@ -4022,21 +4052,21 @@
             <div class="col-md-14" style="height:1px;">
                 <div class="col-md-12" style="padding-right:2%;">
                     <ul class="nav navbar-nav nav-tabs navbar-right" id="myTab">
-                        <li class="active"><a data-toggle="tab" data-target="#graphdiv">Force-Directed Graph</a></li>
+                        <li class="active"><a id="graphmenu1"  data-toggle="tab" data-target="#graphdiv">Force-Directed Graph</a></li>
 <!--                        <li class="active"><a data-toggle="tab" data-target="#graphdiv">Force-Directed Graph <span class="divider-right"></span><span class="btn btn-xs glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span><span class="btn btn-xs glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>-->
                         <li class="dropdown">
                             <a class="dropdown-toggle" id="chordmenu" data-toggle="dropdown" data-target="#">Chord<b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="chordmenu">
-                                <li><a data-toggle="tab" data-target="#chorddiv">Full connectivity</a></li>
-                                <li><a data-toggle="tab" data-target="#chord2div">Crossdisciplinary Connectivity</a></li>
+                                <li><a id="chordmenu1" data-toggle="tab" data-target="#chorddiv">Full connectivity</a></li>
+                                <li><a id="chordmenu2" data-toggle="tab" data-target="#chord2div">Crossdisciplinary Connectivity</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
                             <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
-                                <li><a data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                                <li><a data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-journal.html" target="_blank">Trends 2  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                                <li><a data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-communication.html" target="_blank">Trends 3  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-journal.html" target="_blank">Trends 2  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-communication.html" target="_blank">Trends 3  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
                             </ul>
                         </li>
                     </ul>

@@ -1226,7 +1226,7 @@
                 nodeCircles
                     /* transition animates the elements selected. In browsing we don't need it */
                     .transition()
-                    .duration(1000)
+                    .duration(200)
                     .attr("cx", function(d) {
                         /* http://stackoverflow.com/questions/21344340/sematic-zooming-of-force-directed-graph-in-d3 */
                         return translation[0] + scaleFactor*d.x;
@@ -1239,7 +1239,7 @@
                 linkLines
                 /* transition animates the elements selected. In browsing we don't need it */
                     .transition()
-                    .duration(1000)
+                    .duration(200)
                     .attr("x1", function(d) {
                         return translation[0] + scaleFactor*d.source.x;
                     })
@@ -1264,6 +1264,8 @@
 
 
                 nodeLabels
+                    .transition()
+                    .duration(200)
                     .attr("class", function(d) {
                         return "labels " + d.color
                     })
@@ -3878,9 +3880,9 @@
                 <div id="pills" class="col-md-1 nav navbar-right" style="padding-top:0px;">
                     <ul class="nav navbar-right nav-pills nav-stacked">
 <!--                        <li id="pill1"><a class="mypills" href="#a" data-toggle="tab"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>-->
-                        <li id="pill1"><a class="mypills" href="#a"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>
-                        <li id="pill2"><a class="mypills" href="#b"><span class="navbar-brand btn glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>
-                        <li id="pill3" class="disabled"><a class="mypills" href="#c"><span class="navbar-brand btn glyphicon glyphicon-new-window glyphiconmystyle fullscreen" role="button" title="New Window Mode" aria-hidden="true"></span></a></li>
+                        <li id="pill1"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>
+                        <li id="pill2"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>
+                        <li id="pill3" class="disabled"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-new-window glyphiconmystyle fullscreen" role="button" title="New Window Mode" aria-hidden="true"></span></a></li>
                     </ul>
                 </div>
             </div>

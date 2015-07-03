@@ -1225,8 +1225,8 @@
             function browseTick(firsttime) {
                 nodeCircles
                     /* transition animates the elements selected. In browsing we don't need it */
-                    .transition()
-                    .duration(200)
+//                    .transition()
+//                    .duration(200)
                     .attr("cx", function(d) {
                         /* http://stackoverflow.com/questions/21344340/sematic-zooming-of-force-directed-graph-in-d3 */
                         return translation[0] + scaleFactor*d.x;
@@ -1238,8 +1238,8 @@
 
                 linkLines
                 /* transition animates the elements selected. In browsing we don't need it */
-                    .transition()
-                    .duration(200)
+//                    .transition()
+//                    .duration(200)
                     .attr("x1", function(d) {
                         return translation[0] + scaleFactor*d.source.x;
                     })
@@ -1264,8 +1264,8 @@
 
 
                 nodeLabels
-                    .transition()
-                    .duration(200)
+//                    .transition()
+//                    .duration(200)
                     .attr("class", function(d) {
                         return "labels " + d.color
                     })

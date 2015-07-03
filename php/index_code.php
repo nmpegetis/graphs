@@ -9,22 +9,15 @@
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
     <!-- Optional theme -->
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
-<!--    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.min.css" />-->
-<!--    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.structure.css" />-->
-<!--    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.min.css" />-->
-<!--    <link rel="stylesheet" type="text/css" href="../../../select/jquery-ui.theme.css" />-->
     <link rel="stylesheet" href="../../../css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../css/bootstrap-theme.min.css">
 
-
-    <!-- Include the plugin's CSS and JS: -->
     <link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" type="text/css"/>
 
     <link rel="stylesheet" type="text/css" href="../../../css/style2.css" />
     <link rel="stylesheet" type="text/css" href="../../../slider/css/slider.css" />
-    <link rel="stylesheet" type="text/css" href="../../../slider/less/slider.less" />
+<!--    <link rel="stylesheet" type="text/css" href="../../../slider/less/slider.less" />-->
     <!-- <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.3/themes/flick/jquery-ui.css" /> -->
-    <!--    <link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" />-->
 
     <style>
 
@@ -173,22 +166,16 @@
 
     <!-- Latest compiled and minified JavaScript -->
 <!--    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>-->
-    <!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script> -->
+<!-- // <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script> -->
     <script type="text/javascript" src="../../../js/jquery-2.1.3.min.js"></script>
 
-    <!-- // <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
+<!-- // <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
 <!--    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>-->
     <script type="text/javascript" src="../../../js/jquery-ui.min.js"></script>
 
-    <!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
+<!-- // <script src="http://d3js.org/d3.v3.min.js"></script> -->
     <script src="../../../js/d3.v3.min.js"></script>
 
-    <!--    <script src="../../../bootstrap/js/bootstrap-multiselect.js"></script>-->
-
-    <!-- Latest compiled and minified JavaScript -->
-    <!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.js"></script> --> 
-    <!-- // <script type="text/javascript" src="../../../js/jquery-2.1.3.min.js"></script> -->
-<!--    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>-->
 
 <!--    <script type="text/javascript" src="../../../js/jquery-ui.min.js"></script>-->
     <script src="../../../js/bootstrap.min.js"></script>
@@ -204,6 +191,7 @@
 
 
     <script type="text/javascript" src="../../../slider/js/bootstrap-slider.js"></script>
+    <script type="text/javascript" src="../../../js/fullscreen/jquery.fullscreen-min.js"></script>
 
 
 
@@ -243,8 +231,6 @@
                 headElem =$("head"),
                 tooltipElem = $('[data-toggle="tooltip"]'),
                 popoverElem = $('[data-toggle="popover"]'),
-                fullscreenEnterElem = $('fullscreen_enter'),
-                fullscreenExitElem = $('fullscreen_exit'),
                 classifiedNodesHeaderElem = $("#classifiedNodesHeader"),
                 classifiedNodesElem = $("#classifiedNodes"),
                 tagsElem = $("#tags"),
@@ -260,6 +246,7 @@
                 mygraphContainerElem = $("#mygraph-container"),
                 mytextTitleElem = $("#mytext-title"),
                 mytextContentElem = $("#mytext-content"),
+                mainElem = $("#main"),
                 myinfoElem = $("#myinfo"),
                 jumpPreviousElem = $("#jumpPrevious"),
                 mygraphElem = $("#mygraph"),
@@ -299,7 +286,12 @@
                 pill2Elem = $("#pill2"),
                 pill3Elem = $("#pill3"),
                 grantsGroup1Elem,
-                grantsGroup2Elem;
+                grantsGroup2Elem,
+                chordElem,
+                chord2Elem,
+                trendElem,
+                trend2Elem,
+                trend3Elem;
 
             // d3 Selections
             var vis = d3.select("#graph"),
@@ -313,7 +305,6 @@
 
             /* globals */
             var style,
-                svgimgIN, svgimgOUT, svgimgReset, svgimgResetFS,
 
             // sizes, zooming, scaling, translating and colors
                 fade_out = <?php echo $fade_out ;?>,
@@ -322,7 +313,6 @@
                 w = windowElem.width()/2,//800,
                 h = windowElem.width()/2,//800,
                 prev_w, scaleFactor, translation, xScale, yScale, previous_scale, zoom_type, fontsizeVar, smallestFontVar, gravity, charge, clrArray, flagForTranformation,
-                isSvgFullscreen,	            // catch switching in and out full screen
 
             // text and labels
                 loading, text, selectedLabelIndex, labels, nodeLabels, selectnodeLabels, labeled, topicWords, topicsFlag, labelIsOnGraph, svgSortedTopicWords,
@@ -360,7 +350,8 @@
                 chord_formatPercent,
                 target,
                 opts,
-                spinner;
+                spinner,
+                webkit;
 
 
             // function creation jquery percentage
@@ -395,6 +386,9 @@
             ajaxCall(experimentName,expsimilarity);
             mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
             checkToChangeLayout();
+            checkFullscreen();
+
+
 
             /* event handlers */
             vis.style("height", h)
@@ -514,9 +508,15 @@
 
 
             pill1Elem.on("click",function(){
-                svgfullscreen();
-                pill1Elem.removeClass("active");
-                pill1Elem.blur();
+                if($(document).fullScreen()) {
+                    svgfullscreenExit();
+                    pill1Elem.removeClass("active");
+                    pill1Elem.blur();
+                }
+                else {
+                    svgfullscreen();
+                    pill1Elem.addClass("active");
+                }
             });
 
             pill2Elem.unbind().on("click",function(){
@@ -540,6 +540,7 @@
                 classifiedNodesHeaderElem.hide();
                 classifiedNodesElem.hide();
             });
+
 
             /* window resizing */
             // check:
@@ -568,8 +569,6 @@
                 .on("zoomend", zoomend);
             vis.call(zoomer);
 
-            document.documentElement.addEventListener('mozfullscreenerror', errorHandler, false);
-
             /* moveToFront function to handle the svg */
             d3.selection.prototype.moveToFront = function() {
                 return this.each(function(){
@@ -577,54 +576,6 @@
                 });
             };
 
-
-            windowElem.on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function (e) {
-                if (!isSvgFullscreen) {
-                    // you have just ENTERED full screen video
-                    vis.style("background-color","white");
-
-                    /* move svg to center */
-                    // translation is not working in webkit fullscreen, so we manually set a padding left in 1/4. thats because previously the #graph has the windowElem.width/2 size and it is centered (e.g. 1/4+1/2+1/4), so now that the graph has the windowElem size we want the svg to be translated where it was previously, so 1/4 of the windowElem size
-                    if('WebkitAppearance' in document.documentElement.style){			// do only in webkit //var isWebkit = 'WebkitAppearance' in document.documentElement.style
-                        vis.style("padding-left",windowElem.width()/4);
-                        console.log("fullscreen webkit translate");		// the padding left caused problems in mozilla and other browsers... no it is ok and we leave the below
-                    }
-                    vis.attr("transform","translate(" + windowElem.width()/4 + ")");
-
-                    isSvgFullscreen = true;
-                    fullscreenEnterElem.attr('visibility', 'hidden');
-                    fullscreenExitElem.attr('visibility', 'visible');
-                    svgimgIN.setAttributeNS(null, 'visibility', 'hidden');
-                    console.log("body"+windowElem.width());
-                    svgimgOUT.setAttributeNS(null, 'visibility', 'visible');
-                    svgimgReset.setAttributeNS(null,'visibility','hidden');
-                    svgimgResetFS.setAttributeNS(null,'visibility','visible');
-                }
-                else {
-                    // you have just EXITED full screen video
-                    isSvgFullscreen = false;
-                    /* move svg to left */
-                    vis.style("background-color","none");
-
-                    /* move svg back to initial position */
-                    vis.attr("transform","translate(" + 0 + ")");
-                    fullscreenEnterElem.attr('visibility', 'visible');
-                    fullscreenExitElem.attr('visibility', 'hidden');
-
-                    vis.style("position","");
-                    vis.style("width","100%");
-                    vis.style("height","");
-                    vis.style("top","");
-                    vis.style("background-color","none");
-                    // the below is explained above
-                    vis.style("padding-left","");
-
-                    svgimgIN.setAttributeNS(null, 'visibility', 'visible');
-                    svgimgOUT.setAttributeNS(null, 'visibility', 'hidden');
-                    svgimgReset.setAttributeNS(null,'visibility','visible');
-                    svgimgResetFS.setAttributeNS(null,'visibility','hidden');
-                }
-            });
 
             if (windowElem.width() < 755)
                 charge *= 1.5;
@@ -776,78 +727,15 @@
 
 
             /**** FULLSCREEN AND RESIZING FUNCTIONS ****/
-            /* mozfullscreenerror event handler */
-            function errorHandler() {
-                alert('mozfullscreenerror');
+            function svgfullscreen() {
+                myinfoElem.detach().appendTo(mygraphContainerElem);
+                mygraphContainerElem.fullScreen(true);
             }
 
 
-            function svgfullscreen()
-            {
-                //console.log("z-index before:"+graphElem.zIndex())
-                if (!graphElem.fullscreenElement && !graphElem.mozFullScreenElement && !graphElem.webkitFullscreenElement) {  // current working methods
-                    if (graphElem.requestFullscreen) {
-                        graphElem.requestFullscreen();
-                    }
-                    else if (graphElem.mozRequestFullScreen) {
-                        graphElem.mozRequestFullScreen();
-                    }
-                    else if (graphElem.webkitRequestFullscreen) {
-                        vis.style("position","absolute");
-                        vis.style("width","100%");
-                        vis.style("top","0");
-                        vis.style("background-color","white");
-                        graphElem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                    }
-                    else if (graphElem.msRequestFullscreen) {
-                        graphElem.msRequestFullscreen();
-                    }
-                }
-                else {
-                    if (graphElem.cancelFullScreen) {
-                        graphElem.cancelFullScreen();
-                    }
-                    else if (graphElem.mozCancelFullScreen) {
-                        graphElem.mozCancelFullScreen();
-                    }
-                    else if (graphElem.webkitCancelFullScreen) {
-                        vis.style("position","");
-                        vis.style("width","100%");
-                        vis.style("top","");
-                        vis.style("background-color","none");
-                        graphElem.webkitCancelFullScreen();
-                    }
-                    else if (graphElem.msCancelFullscreen) {
-                        graphElem.msCancelFullscreen();
-                    }
-                }
-            }
-
-
-            function svgfullscreenExit()
-            {
-                if (graphElem.fullscreenElement || graphElem.mozFullScreenElement || graphElem.webkitFullscreenElement) {  // current working methods
-                    if (graphElem.requestFullscreen) {
-                        graphElem.requestFullscreen();
-                    }
-                    else if (graphElem.mozRequestFullScreen) {
-                        graphElem.mozRequestFullScreen();
-                    }
-                    else if (graphElem.webkitRequestFullscreen) {
-                        graphElem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); 		//Element.ALLOW_KEYBOARD_INPUT
-                    }
-                }
-                else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    } else if (document.mozCancelFullScreen) {
-                        document.mozCancelFullScreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    }
-                }
+            function svgfullscreenExit() {
+                myinfoElem.detach().prependTo(mainElem);
+                mygraphContainerElem.fullScreen(false);
             }
 
 
@@ -859,7 +747,6 @@
                 zoomer.scale(1);
                 console.log("scales", translation, scaleFactor);
                 browseTick(false);
-
             }
 
 
@@ -1035,6 +922,7 @@
                                 .attr("data-toggle", "tooltip")
                                 .attr("data-placement", "right")
                                 .attr("title", "...more about project and link...")
+                                .style("cursor","pointer")
                                 .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
                             var str = "";
                             topicsGroupPerNode = grants[o.id];
@@ -1430,117 +1318,6 @@
             };
 
 
-            function includeIcons() {
-                /* Create zoom icon on the top right corner of svg after loading graph */
-                svgimgIN = document.createElementNS('http://www.w3.org/2000/svg','image');
-                svgimgIN.setAttributeNS(null,'height','22');
-                svgimgIN.setAttributeNS(null,'width','22');
-                svgimgIN.setAttributeNS('http://www.w3.org/1999/xlink','href', '../../../images/fullscreen_alt.png');
-                svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
-                svgimgIN.setAttributeNS(null,'y','5');
-                svgimgIN.setAttributeNS(null, 'visibility', 'visible');
-                if(detectmob()){
-                    svgimgIN.setAttributeNS(null,'height','50');
-                    svgimgIN.setAttributeNS(null,'width','50');
-                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-85);
-                    svgimgIN.setAttributeNS(null,'y','5');
-                }
-                else if(windowElem.width()<=755){
-                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-75);
-                }
-
-
-                graphElem.append(svgimgIN)
-                    .on("mouseover", svgimgIN.setAttributeNS(null,'fill-opacity',0.7))
-                    .on("mouseout", svgimgIN.setAttributeNS(null,'fill-opacity',0.7));
-                svgimgIN
-                    .addEventListener("click", function(){
-                        if(!detectmob() || windowElem.width()<=755){
-                            mytextTitleElem.detach().prependTo("#foreignObject");
-                            mytextContentElem.detach().prependTo("#mytext-title");
-                        }
-                        mytextContentElem.find("div").show();
-                        svgfullscreen()
-                    });
-
-                svgimgOUT = document.createElementNS('http://www.w3.org/2000/svg','image');
-                svgimgOUT.setAttributeNS(null,'height','30');
-                svgimgOUT.setAttributeNS(null,'width','30');
-                svgimgOUT.setAttributeNS('http://www.w3.org/1999/xlink','href', '../../../images/fullscreen_exit_alt.png');
-                svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-20);
-                svgimgOUT.setAttributeNS(null,'y','50');
-                svgimgOUT.setAttributeNS(null, 'visibility', 'hidden');
-                if(detectmob()){
-                    svgimgOUT.setAttributeNS(null,'height','50');
-                    svgimgOUT.setAttributeNS(null,'width','50');
-                }
-                else if(windowElem.width()<=755){	//to fullscreen sto kinito einai diaforetiko
-                    svgimgOUT.setAttributeNS(null,'height','40');
-                    svgimgOUT.setAttributeNS(null,'width','40');
-                    svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-30);
-                    svgimgOUT.setAttributeNS(null,'y','60');
-                }
-                graphElem.append(svgimgOUT)
-                    .on("mouseover", svgimgOUT.setAttributeNS(null,'fill-opacity',0.7))
-                    .on("mouseout", svgimgOUT.setAttributeNS(null,'fill-opacity',0.7));
-                svgimgOUT
-                    .addEventListener("click", function(){
-                        svgfullscreenExit();
-                        if(!detectmob() || windowElem.width()<=755){
-                            mytextTitleElem.detach().prependTo("#myinfo");
-                            mytextContentElem.detach().prependTo("#mytext-title")
-                        }									// do only if not a mobile
-                        console.log("web2")
-                    });
-
-                svgimgReset = document.createElementNS('http://www.w3.org/2000/svg','image');
-                svgimgReset.setAttributeNS(null,'height','22');
-                svgimgReset.setAttributeNS(null,'width','22');
-                svgimgReset.setAttributeNS('http://www.w3.org/1999/xlink','href', '../../../images/reload.png');
-                svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
-                svgimgReset.setAttributeNS(null,'y','35');
-                svgimgReset.setAttributeNS(null, 'visibility', 'visible');
-                if(detectmob()){
-                    svgimgReset.setAttributeNS(null,'height','50');
-                    svgimgReset.setAttributeNS(null,'width','50');
-                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-85);
-                    svgimgReset.setAttributeNS(null,'y','55');
-                }
-                else if(windowElem.width()<=755){
-                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-75);
-                }
-
-                graphElem.append(svgimgReset)
-                    .on("mouseover", svgimgReset.setAttributeNS(null,'fill-opacity',0.7))
-                    .on("mouseout", svgimgReset.setAttributeNS(null,'fill-opacity',0.7));
-                svgimgReset
-                    .addEventListener("click",graphReset);
-
-                svgimgResetFS = document.createElementNS('http://www.w3.org/2000/svg','image');
-                svgimgResetFS.setAttributeNS(null,'height','30');
-                svgimgResetFS.setAttributeNS(null,'width','30');
-                svgimgResetFS.setAttributeNS('http://www.w3.org/1999/xlink','href', '../../../images/reload.png');
-                svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-20);
-                svgimgResetFS.setAttributeNS(null,'y','90');
-                svgimgResetFS.setAttributeNS(null, 'visibility', 'hidden');
-                if(detectmob()){
-                    svgimgOUT.setAttributeNS(null,'height','50');
-                    svgimgOUT.setAttributeNS(null,'width','50');
-                }
-                else if(windowElem.width()<=755){
-                    svgimgResetFS.setAttributeNS(null,'height','40');
-                    svgimgResetFS.setAttributeNS(null,'width','40');
-                    svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-30);
-                    svgimgResetFS.setAttributeNS(null,'y','110');
-                }
-                graphElem.append(svgimgResetFS)
-                    .on("mouseover", svgimgResetFS.setAttributeNS(null,'fill-opacity',0.7))
-                    .on("mouseout", svgimgResetFS.setAttributeNS(null,'fill-opacity',0.7));
-                svgimgResetFS
-                    .addEventListener("click",graphReset);
-            }
-
-
             function findTopicLabels(){
 //NMP 
                 /* The following code is executed only when the ajaxCall has loaded all the Topics */
@@ -1813,9 +1590,6 @@
                 // do not render initialization frames because they are slow and distracting 
 
                 if (e.alpha < 0.04) {
-
-//				includeIcons();
-
 
                     vis.select(".loading").remove();
 
@@ -2706,6 +2480,11 @@
                     createTrends(1);
                     createTrends(2);
                 }
+                chordElem = $("#chord");
+                chord2Elem = $("#chord2");
+                trendElem = $("#trend");
+                trend2Elem = $("#trend2");
+                trend3Elem = $("#trend3");
             }
 
             function initializeExperimentPage(){
@@ -2774,7 +2553,6 @@
                 counter = 0,
                 numOfClassifiedNodes = 0,
                 flagForTranformation = 0,
-                isSvgFullscreen = false,
                 clrArray = [],
                 relations,
                 relationsCross,
@@ -2804,7 +2582,15 @@
                 expsimilarity = <?php echo $expsimilarity ;?>,
                 nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
 
-                //the below 2 only for ACM
+                if (/chrome/.test(navigator.userAgent.toLowerCase())) webkit=1;
+                else if (/webkit/.test(navigator.userAgent.toLowerCase())) webkit=2;
+                else webkit=0;
+//                jQuery.browser = {};
+//                jQuery.browser.mozilla = /mozilla/.test(navigator.userAgent.toLowerCase()) && !/webkit/.test(navigator.userAgent.toLowerCase());
+//                jQuery.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
+//                jQuery.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
+//                jQuery.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
+                    //the below 2 only for ACM
                 trendmenuElem.parent().hide();
                 pill3Elem.hide();
 
@@ -3378,6 +3164,7 @@
                         .append("svg:svg")
                         .attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
                         .attr("height", chord_height+wordHeight)
+                        .attr("id", "chord")
                         .append("svg:g")
                         .attr("class", "chord_circle")
                         .attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")");
@@ -3394,6 +3181,7 @@
                         .append("svg:svg")
                         .attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
                         .attr("height", chord_height+wordHeight)
+                        .attr("id", "chord2")
                         .append("svg:g")
                         .attr("class", "chord_circle")
                         .attr("transform", "translate(" + (chord_width+wordWidth) / 2 + "," + (((chord_height+wordHeight) / 2)) + ")");
@@ -3626,6 +3414,7 @@
                     .append("svg:svg")
                     .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
                     .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
+                    .attr("id","trend")
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -3800,58 +3589,12 @@
                 }
 
 //			graphElem.style["width"]= w;
-                graphElem.style["height"] = h;
-
-                svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
-                svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
-                svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
-                svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
-                if(detectmob()){
-                    svgimgIN.setAttributeNS(null,'height','50');
-                    svgimgIN.setAttributeNS(null,'width','50');
-
-                    svgimgReset.setAttributeNS(null,'height','50');
-                    svgimgReset.setAttributeNS(null,'width','50');
-                    svgimgReset.setAttributeNS(null,'y','55');
-
-                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-85);
-                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-85);
-                    svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-50);
-                    svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-50);
-                }
-                else if(windowElem.width()<=755){
-                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-75);
-                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-75);
-                }
-                else if (windowElem.width()>755){
-                    svgimgIN.setAttributeNS(null,'height','22');
-                    svgimgIN.setAttributeNS(null,'width','22');
-
-                    svgimgReset.setAttributeNS(null,'height','22');
-                    svgimgReset.setAttributeNS(null,'width','22');
-                    svgimgReset.setAttributeNS(null,'y','35');
-
-                    svgimgIN.setAttributeNS(null,'x',graphElem.width()-27);
-                    svgimgReset.setAttributeNS(null,'x',graphElem.width()-27);
-                    svgimgOUT.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
-                    svgimgResetFS.setAttributeNS(null,'x',bodyElem.width()-w/2-150);
-                }
+                graphElem.attr("style","height:"+h);
 
                 loadingText
                     .style("font-size",w/20)
                     .attr("x", (w / 2) - (w/7)) // pou einai to miso tou loading
                     .attr("y", h / 2);
-
-
-                /*ATTENTION: the below is required and is fired only in Chrome, Safari etc. That is because in Mozilla and other browsers the event for fullscreenchange holds forever when being in fullscreen, while with -webkit used in chrome and safari the event holds for one second*/
-                if (isSvgFullscreen) {
-                    // you have just ENTERED full screen video
-                    /* move svg to center */
-                    vis.style("background-color","white");
-                    vis.style("width","100%");
-                    vis.style("height","100%");
-                    vis.style("position","fixed");
-                }
 
 
                 // semantic zooming
@@ -3908,7 +3651,49 @@
                 }
             }
 
+            function checkFullscreen() {
+                $(document).bind("fullscreenchange", function (e) {
+                    console.log("Full screen changed.");
+                    console.log($(document).fullScreen() ?
+                        "Full screen enabled" : "Full screen disabled");
 
+                    if($(document).fullScreen()){
+                        mygraphContainerElem.attr("style","width:100%;height:100%;top:0;background-color:none");
+
+                        /* move svg to center */// translation is not working in webkit fullscreen, so we manually set a padding left in 1/4. thats because previously the #graph has the windowElem.width/2 size and it is centered (e.g. 1/4+1/2+1/4), so now that the graph has the windowElem size we want the svg to be translated where it was previously, so 1/4 of the windowElem size
+                        if ( webkit == 1) vis.style("padding-left", windowElem.width() / 4);
+                        else vis.attr("transform","translate(" + windowElem.width()/4 + ")");
+
+                        chordElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                        chord2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+
+                        trendElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                        trend2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                        trend3Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                    }
+                    else{
+                        mygraphContainerElem.attr("style","width:100%;height:100%;top:0;background-color:none");
+
+                        /* move svg to left back to initial position */
+                        if ( webkit == 1) vis.style("padding-left", "");
+                        else vis.attr("transform","translate(" + 0 + ")");
+                        graphReset();
+
+                        chordElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                        chord2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+
+                        trendElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                        trend2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                        trend3Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                    }
+                });
+
+                $(document).bind("fullscreenerror", function (e) {
+                    alert('mozfullscreenerror');
+                    console.log("Full screen error.");
+                    console.log("Browser won't enter full screen mode for some reason.");
+                });
+            }
         });
 
     </script>
@@ -3973,7 +3758,7 @@
                     <a href="#" id="dropdownThresholds" class="dropdown-toggle" role="button" aria-expanded="true">Experiment Thresholds<span class="caret"></span></a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li>
-                            <div class="input-group">
+                            <div class="input-group" id="thresholds">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ZLS for Zooming Label Similarity</b><br/>Defines the amplitude spectrum for the zoom levels in which the label should appear based on <?php echo $node_name ;?> Similarity.">ZLS</span>
                                 <input type="text" id="thr1" class="form-control" aria-label="similarity threshold(percentage)" maxlength="9" placeholder="e.g. 50"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for ALL shown in zoom level x1, <b>100</b> for ALL shown in next zoom levels x5,x10,x15,etc">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ZLC for Zooming Label Connectivity</b><br/>Defines amplitude spectrum for the zoom levels in which the label should appear based on <?php echo $node_name ;?> Connectivity.">ZLC</span>
@@ -4019,7 +3804,7 @@
         </ul>
     </div>
 </div>
-<div class=" container-fluid">
+<div class=" container-fluid" id="main">
     <div class="col-md-2" id="myinfo">
         <div id="mytext-title" style="word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml"></div>
         <div>
@@ -4073,7 +3858,7 @@
                 </div>
                 <div class="tab-content" id="myTabContent">
                     <div id="graphdiv" class="tab-pane active in">
-                        <svg id="graph" style="width:100%;" xmlns="http://www.w3.org/2000/svg">
+                        <svg id="graph" style="width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
                             <!-- used to add the mytext here when in fullscreen -->
                             <foreignobject id="foreignObject" width="100%" max-width="100%" >
                             </foreignobject>
@@ -4093,7 +3878,7 @@
                 <div id="pills" class="col-md-1 nav navbar-right" style="padding-top:0px;">
                     <ul class="nav navbar-right nav-pills nav-stacked">
 <!--                        <li id="pill1"><a class="mypills" href="#a" data-toggle="tab"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>-->
-                        <li id="pill1" class="disabled"><a class="mypills" href="#a"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>
+                        <li id="pill1"><a class="mypills" href="#a"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>
                         <li id="pill2"><a class="mypills" href="#b"><span class="navbar-brand btn glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>
                         <li id="pill3" class="disabled"><a class="mypills" href="#c"><span class="navbar-brand btn glyphicon glyphicon-new-window glyphiconmystyle fullscreen" role="button" title="New Window Mode" aria-hidden="true"></span></a></li>
                     </ul>

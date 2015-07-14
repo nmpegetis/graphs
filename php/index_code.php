@@ -11,7 +11,7 @@
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
     <link rel="stylesheet" href="../../../css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../css/bootstrap-theme.min.css">
-
+    <link rel="stylesheet/less" href="../../../css/bootstrap-multiselect.less"/>
     <link rel="stylesheet" href="../../../bootstrap/css/bootstrap-multiselect.css" type="text/css"/>
 
     <link rel="stylesheet" type="text/css" href="../../../css/style2.css" />
@@ -161,6 +161,32 @@
         a {
             outline: 0;
         }
+
+/* trend ccs starts here */
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #121401;
+            stroke-width: 2px;
+            shape-rendering: crispEdges;
+        }
+        .point {
+            stroke: grey;
+            stroke-width: 3px;
+            opacity: 0;
+        }
+        .point:hover{
+            opacity: .5;
+        }
+
+        .active_trend{
+            opacity: 1;
+        }
+        .inactive_trend{
+            opacity: .1;
+        }
+/* trend ccs ends here */
+
     </style>
 
 
@@ -187,6 +213,7 @@
     <script type="text/javascript" src="../../../jquery.jswipe-0.1.2.js"></script>
 
     <!-- // <script type="text/javascript" src="http://fgnass.github.io/spin.js/spin.min.js"></script> -->
+    <script type="text/javascript" src="../../../js/less.min.js"></script>
     <script type="text/javascript" src="../../../js/spin.min.js"></script>
 
 
@@ -251,7 +278,7 @@
                 jumpPreviousElem = $("#jumpPrevious"),
                 mygraphElem = $("#mygraph"),
                 jumpNextElem = $("#jumpNext"),
-                mysubdivisionElem = $("#mysubdivision"),
+                legenddivElem = $("#legenddiv"),
                 thr1Elem = $("#thr1"),
                 thr2Elem = $("#thr2"),
                 thr3Elem = $("#thr3"),
@@ -277,9 +304,11 @@
                 trendmenuElem = $("#trendmenu"),
                 trendmenu1Elem = $("#trendmenu1"),
                 trendmenu2Elem = $("#trendmenu2"),
+                trendmenu3Elem = $("#trendmenu3"),
                 trenddivElem = $("#trenddiv"),
                 trend2divElem = $("#trend2div"),
                 trend3divElem = $("#trend3div"),
+                legend2divElem = $("#legend2div"),
                 dropdownThresholdsElem = $("#dropdownThresholds"),
                 pillsElem = $("#pills"),
                 pill1Elem = $("#pill1"),
@@ -287,11 +316,20 @@
                 pill3Elem = $("#pill3"),
                 grantsGroup1Elem,
                 grantsGroup2Elem,
-                chordElem,
-                chord2Elem,
-                trendElem,
-                trend2Elem,
-                trend3Elem;
+                chordElem = $("#chord"),
+                chord2Elem = $("#chord2"),
+                trendElem = $("#trend"),
+                trend2Elem = $("#trend2"),
+                trend3Elem = $("#trend3"),
+                trendCSV11,
+                trendCSV12,
+                trendCSV13,
+                trendCSV2,
+                trendlegend1Elem,
+                trendlegend2Elem,
+                trendlegend3Elem,
+                seriesElem,
+                streamPathElem;
 
             // d3 Selections
             var vis = d3.select("#graph"),
@@ -307,12 +345,8 @@
             var style,
 
             // sizes, zooming, scaling, translating and colors
-                fade_out = <?php echo $fade_out ;?>,
-                strong = <?php echo $strong ;?>,
-                normal = <?php echo $normal ;?>,
-                w = windowElem.width()/2,//800,
-                h = windowElem.width()/2,//800,
-                prev_w, scaleFactor, translation, xScale, yScale, previous_scale, zoom_type, fontsizeVar, smallestFontVar, gravity, charge, clrArray, flagForTranformation,
+                fade_out, strong, normal, w, h, prev_w, scaleFactor, translation, xScale, yScale, previous_scale, zoom_type, fontsizeVar, smallestFontVar, gravity, charge, clrArray, flagForTranformation,
+                clr20, clrEven, clrOdd, clr, clr2, clr3,
 
             // text and labels
                 loading, text, selectedLabelIndex, labels, nodeLabels, selectnodeLabels, labeled, topicWords, topicsFlag, labelIsOnGraph, svgSortedTopicWords,
@@ -338,10 +372,13 @@
 
             // chord
                 subdivisionsChord, 		// before its contents were in a csv file
-                chord_group, chord_chord, clickedChord, percentageSum,
+                chord_group, chord_chord, clickedChord, percentageSum, trendClicked,
 
             //grants
                 grantsListHtml, listLength, grants,
+
+            //trends
+                topicnames,
 
                 force, myresponse, k, n, counter, availableTags,
                 availableLabels,
@@ -380,12 +417,22 @@
                 popoverElem.popover()
             });
 
+            var doit;
+//            windowElem.on("resize",function(){
+//                clearTimeout(doit);
+//                doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
+//            });
+            windowElem.onresize = function(){
+                clearTimeout(doit);
+                doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
+            };
+
             loadThresholdsFromUrlParameters();
             initializeExperimentPage();
             loadThresholdsFromUrlParameters();  //only when changing the parameters on url and refreshing
             ajaxCall(experimentName,expsimilarity);
             mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
-            checkToChangeLayout();
+            resizeLayout();
             checkFullscreen();
 
 
@@ -500,29 +547,42 @@
             });
 
 
-            graphmenu1Elem.on("click", function(){pill3Elem.addClass("disabled");});
-            chordmenu1Elem.on("click", function(){pill3Elem.addClass("disabled");});
-            chordmenu2Elem.on("click", function(){pill3Elem.addClass("disabled");});
-            trendmenu1Elem.on("click", function(){pill3Elem.removeClass("disabled");});
-            trendmenu2Elem.on("click", function(){pill3Elem.removeClass("disabled");});
+            graphmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
+            chordmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
+            chordmenu2Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
+//            trendmenu1Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
+//            trendmenu2Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
+//            trendmenu3Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
+            trendmenu1Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");});
+            trendmenu2Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");});
+            trendmenu3Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");});
 
 
             pill1Elem.on("click",function(){
-                if($(document).fullScreen()) {
-                    svgfullscreenExit();
-                    pill1Elem.removeClass("active");
-                    pill1Elem.blur();
-                }
-                else {
-                    svgfullscreen();
-                    pill1Elem.addClass("active");
-                }
+//todo mallon to apo katw if telika den xreiazetai
+//                if(!(trenddivElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")))
+                    if($(document).fullScreen()) {
+                        svgfullscreenExit();
+                        pill1Elem.removeClass("active");
+                        pill1Elem.blur();
+                    }
+                    else {
+                        svgfullscreen();
+                        pill1Elem.addClass("active");
+                    }
             });
+
+//todo if fullscreen kai patithei to escape tote to apo katw
+//            svgfullscreenExit();
+//            pill1Elem.removeClass("active");
+//            pill1Elem.blur();
+
 
             pill2Elem.unbind().on("click",function(){
                 pill2Elem.removeClass("active");
                 if(graphdivElem.hasClass("active")) graphReset();
                 else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
+                else if (trenddivElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")) trendReset();
 
                 pill2Elem.blur();
             });
@@ -531,6 +591,7 @@
 
                 if(trenddivElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
                 else if(trend2divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
+                else if(trend3divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
 
                 pill3Elem.blur();
             });
@@ -548,11 +609,11 @@
             // http://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac
             // the above lines can be used instead of below
             // function debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}}
-            var doit;
-            windowElem.onresize = function(){
-                clearTimeout(doit);
-                doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
-            };
+//            var doit;
+//            windowElem.on("resize",function(){
+//                clearTimeout(doit);
+//                doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
+//            });
 
             style = document.createElement('style');
             style.type = 'text/css';
@@ -756,7 +817,7 @@
 
                 nodeCircles
                     .style("fill-opacity", function(o) {
-                        
+
                         if (types.indexOf(o.index) === -1)return opacity;
                         return normal;
                     })
@@ -1177,13 +1238,35 @@
                         myTabElem.find("li:first").addClass("active");
                         chorddivElem.removeClass("active");
                         graphdivElem.addClass("active");
+                        legenddivElem.show();
+                        legend2divElem.hide();
                     })
                     .on("mouseover",function(){
+                        if($(".active_trend").length>0){
+                            //in order to see the classifed nodes where do they belong
+                            legenddivElem.show();
+                            legend2divElem.hide();
+                        }
+
                         $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
                             return classNames + ' shadow';
                         });
                     })
                     .on("mouseout",function(){
+                        if($(".active_trend").length>0){
+                            //in order to see the classifed nodes where do they belong
+                            legenddivElem.hide();
+                            legend2divElem.show();
+                        }
+                        if(graphdivElem.hasClass("active")){
+                            //in order to see the classifed nodes where do they belong
+                            legenddivElem.show();
+                            legend2divElem.hide();
+                            pill1Elem.removeClass("disabled");
+                            pill3Elem.addClass("disabled");
+                            trenddivElem.removeClass("active");trend2divElem.removeClass("active");trend3divElem.removeClass("active");
+                        }
+
                         $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
                             return classNames.replace('shadow', '');
                         });
@@ -1321,10 +1404,10 @@
 
 
             function findTopicLabels(){
-//NMP 
+//NMP
                 /* The following code is executed only when the ajaxCall has loaded all the Topics */
                 // documentElem.ajaxComplete(function() { 	// if "ajaxComplete" the code is executed every time one of the ajaxCalls is completed
-                // documentElem.bind("topicsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics 
+                // documentElem.bind("topicsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
 
                 k = 0,
                 n = nodes.length,
@@ -1342,11 +1425,11 @@
                     /* temporarily we find if a node has high-connectivity (3/7 at least of the maximum node's connectivity) */
 //				if(links[nodes[k].index].value>0.75){
 
-                    if((nodeConnections[nodes[k].index] > maxNodeConnectionsThr*maxNodeConnections) && links[nodes[k].index]!==undefined && (links[nodes[k].index].value>linkThr)){		//afou maxNodeConnections=24 tha broume ta topics se omades toulaxiston twn 4 kai pou einai toulaxiston se kontini apostasi metaksu tous 
+                    if((nodeConnections[nodes[k].index] > maxNodeConnectionsThr*maxNodeConnections) && links[nodes[k].index]!==undefined && (links[nodes[k].index].value>linkThr)){		//afou maxNodeConnections=24 tha broume ta topics se omades toulaxiston twn 4 kai pou einai toulaxiston se kontini apostasi metaksu tous
 
                         topicsGroupPerNode = grants[nodes[k].id];
-                        /* in order to find the most discriminative topic we find all the topics in a group with high-connectivity and we find the topic with the max weight 
-                         if all the topics are unique. If they are not then in the topics that occur in the group more than one times we multiply the weight of the topic 
+                        /* in order to find the most discriminative topic we find all the topics in a group with high-connectivity and we find the topic with the max weight
+                         if all the topics are unique. If they are not then in the topics that occur in the group more than one times we multiply the weight of the topic
                          with the number occured in group and find the topic with the max weight again
                          */
                         /* algorithm steps */
@@ -1362,7 +1445,7 @@
                             topicPerTopicsGroup = topicsGroupPerNode[i].topic;
                             weightPerTopicsGroup = topicsGroupPerNode[i].weight;
                             /* Step 3: foreach of the node's topics get their 'discriminativity'-weight and how many times they reoccur in the other nodes of the node's group of nodes */
-                            // the below must each time be set to 1 not only at the beginning 
+                            // the below must each time be set to 1 not only at the beginning
                             topicsMap[topicPerTopicsGroup] = 1;
 
                             for (j=0; j<nodesInGroup[nodes[k].index].length ; j++) {
@@ -1388,7 +1471,7 @@
                     }
                 }
 
-                // mexri edw brika to pio discriminative topic me to opoio tha sunexisw st epomeno bima 
+                // mexri edw brika to pio discriminative topic me to opoio tha sunexisw st epomeno bima
 
                 k = 0;
                 var searchWords = "";
@@ -1445,7 +1528,7 @@
                 });
 
                 /* reverse the map in order to be in a descending sorting */
-                svgSortedTopicWords.reverse();	// done in another way... now it is not needed 
+                svgSortedTopicWords.reverse();	// done in another way... now it is not needed
 
                 // console.log("Sorted Topics' words")
                 //for (i=0 ; i<svgSortedTopicWords.length ; i++)
@@ -1589,7 +1672,7 @@
             }
 
             function initialTick(e) {
-                // do not render initialization frames because they are slow and distracting 
+                // do not render initialization frames because they are slow and distracting
 
                 if (e.alpha < 0.04) {
 
@@ -1602,7 +1685,7 @@
                 else {
 //				if (e.alpha < 0.015) {
                     if (e.alpha < 0.004) {
-                        var q = d3.geom.quadtree(nodes),				//ftiaxnei tous kombous se sxima quadtree 
+                        var q = d3.geom.quadtree(nodes),				//ftiaxnei tous kombous se sxima quadtree
                             i = 0,
                             n = nodes.length;
                         while (++i < n) {
@@ -1665,38 +1748,8 @@
                 var nodeCnt = 0;
                 var linkCnt = 0;
 
-                // because there in d3 there are 20 colors of 10 colors presented in two-shades each, we seperate them and rearrange them. We firstly put the light shades of colors to subdivisions with a lot of projects and them the strong shades to subdivisions with few projects in order to see them crearer.			
+                // because there in d3 there are 20 colors of 10 colors presented in two-shades each, we seperate them and rearrange them. We firstly put the light shades of colors to subdivisions with a lot of projects and them the strong shades to subdivisions with few projects in order to see them crearer.
                 var colorCnt = 0;
-
-                // color picking for each Category - up to 20 subdivisions
-//			var clr = d3.scale.category20().range();
-                /*			// color picking for each Category - up to 20 subdivisions
-                 var clr20 = d3.scale.category20().range();
-                 var clr0_9 = d3.scale.category10().range();
-                 var clr10_19 = clr20.filter( function(el) {
-                 return clr0_9.indexOf(el) < 0;
-                 });
-                 var clr = clr0_9.concat(clr10_19);
-                 */
-                var clr20 = d3.scale.category20().range();
-                var clrEven = [];
-                var clrOdd = [];
-                for (var i=0 ; i < clr20.length ; i++)
-                    if (i % 2){
-                        clrEven.push(clr20[i]);
-                    }
-                    else{
-                        clrOdd.push(clr20[i]);
-                    }
-
-                var clr= [];
-                for (var i=0 ; i < clrEven.length ; i++){
-                    clr.push(clrEven[i]);
-                    clr.push(clrOdd[i])
-                }
-
-                var clr2 = d3.scale.category20b().range();	//to be appended in the first clr (20 more colors)
-                $.merge(clr, clr2);					// add second array's elements to first 
 
                 for (var j = 0; j < response.length; j++) {
                     if (typeof node_hash[response[j].node1id]==="undefined"){
@@ -1967,8 +2020,8 @@
                 category1Elem.find("a").find("span").html(fetOpenNum)
                 category2Elem.find("a").find("span").html(fetProactiveNum)
                 category3Elem.find("a").find("span").html(fetFlagshipNum)
-                                    
-                                     
+
+
                 for(var i=0;i<legend_data.length;i++){
                     if(legend_data[i].pr > max_proj)
                         max_proj = legend_data[i].pr;
@@ -2126,7 +2179,7 @@
                     .enter()
                     .append("option")
                     .attr("value",function(d){return d.id;})
-// below code makes first experiment unselectable					
+// below code makes first experiment unselectable
                     .attr("selected",function(d){if(d.id == experimentName) return "selected";})
                     .text(function(d){return d.id});
 
@@ -2481,12 +2534,20 @@
                 if (/^ACM*/.test(experimentName)) {
                     createTrends(1);
                     createTrends(2);
+                    createTrends(3);
                 }
                 chordElem = $("#chord");
                 chord2Elem = $("#chord2");
                 trendElem = $("#trend");
                 trend2Elem = $("#trend2");
                 trend3Elem = $("#trend3");
+                trendlegend1Elem = $("#trendlegend1");
+                trendlegend2Elem = $("#trendlegend2");
+                trendlegend3Elem = $("#trendlegend3");
+                seriesElem = $(".series");
+                streamPathElem = $("path");
+                mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
+                resizeLayout();
             }
 
             function initializeExperimentPage(){
@@ -2504,6 +2565,7 @@
                 mytextTitleElem.hide();
                 mytextContentElem.hide();
                 pillsElem.hide();
+                legend2divElem.hide();
 
                 legendElem.empty();
                 graphElem.empty();
@@ -2562,6 +2624,7 @@
                 percentageSum = 0,
                 clickedNode = 0,
                 clickedChord = 0,
+                trendClicked = 0,
                 subdConnections = [],
                 subdConnectionsNum = [],
                 relations = [],
@@ -2582,7 +2645,30 @@
                 gravity = <?php echo $gravity ;?>,
                 charge = <?php echo $charge ;?>,
                 expsimilarity = <?php echo $expsimilarity ;?>,
-                nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>;
+                nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>,
+                fade_out = <?php echo $fade_out ;?>,
+                strong = <?php echo $strong ;?>,
+                normal = <?php echo $normal ;?>,
+                w = windowElem.width()/2,//800,
+                h = windowElem.width()/2,//800,
+
+                clr20 = d3.scale.category20().range(),
+                clrEven = [],
+                clrOdd = [];
+
+                for (var i=0 ; i < clr20.length ; i++)
+                    if (i % 2) clrEven.push(clr20[i]);
+                    else clrOdd.push(clr20[i]);
+                clr= [];
+                for (var i=0 ; i < clrEven.length ; i++){
+                    clr.push(clrEven[i]);
+                    clr.push(clrOdd[i])
+                }
+                clr2 = d3.scale.category20b().range();	//to be appended in the first clr (20 more colors)
+                $.merge(clr, clr2);					// add second array's elements to first
+                clr3 = d3.scale.category20c().range();	//to be appended in the first clr (20 more colors)
+                $.merge(clr, clr3);					// add second array's elements to first
+
 
                 if (/chrome/.test(navigator.userAgent.toLowerCase())) webkit=1;
                 else if (/webkit/.test(navigator.userAgent.toLowerCase())) webkit=2;
@@ -2595,6 +2681,11 @@
                     //the below 2 only for ACM
                 trendmenuElem.parent().hide();
                 pill3Elem.hide();
+
+                trendCSV11 = "crunchbase-quarters.csv",
+                trendCSV12 = "comminicationACM_pivot_1990-2011.csv",
+                trendCSV13 = "acm-sigmod-pivot-all-1976-2011.csv",
+                trendCSV2 = "weighted_topics2.csv";
 
                 if (/^FET*/.test(experimentName)){
                     categoriesElem.show();
@@ -2691,7 +2782,7 @@
                     })
                     .text(function(d){return d.name});
     //                var a = $("#filter1 > select").html()
-                
+
                 grantsListHtml = grantsElem.html();
                 grantsElem.empty();
                 grantsElem.append(grantsListHtml)
@@ -2743,7 +2834,7 @@
                 linkLines = vis.selectAll(".links")
                     .data(links);
                 var u =0;
-                linkLines.enter().append("svg:line")					//edw ftiaxnei tis akmes 
+                linkLines.enter().append("svg:line")					//edw ftiaxnei tis akmes
                     .attr("class", function(d) {
                         return "link " + d.target.color  + " " + d.target.index
                     })
@@ -2767,7 +2858,7 @@
 
                 linkLines.exit();
 
-                nodeCircles = vis.selectAll(".circle")				//i html klasi gia tous kombous 
+                nodeCircles = vis.selectAll(".circle")				//i html klasi gia tous kombous
                     .data(nodes);
 
                 nodeCircles.enter()									// edw ftiaxnei tous kombous sss
@@ -3405,199 +3496,370 @@
                 // var color = d3.scale.ordinal()
                 //     .range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
                 var color = d3.scale.ordinal()
-                    //          .range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
-                    .range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
+                              .range(clr);
+//                    .range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
 
 
-                var trend_svg = d3.select("#trenddiv")
-                    .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-                    .style("preserveAspectRatio", "xMidYMid meet")
-                    .style("cursor","pointer")
-                    .append("svg:svg")
-                    .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
-                    .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
-                    .attr("id","trend")
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                var trend_svg;
+                var trendCSV1;
 
-                d3.csv("data/trends-journal_1990-2011.csv", function (error, data) {
+                if (type == 1){
+                    trend_svg = d3.select("#trenddiv")
+                        .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+                        .style("preserveAspectRatio", "xMidYMid meet")
+                        .style("cursor","pointer")
+                        .append("svg:svg")
+                        .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
+                        .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
+                        .attr("id","trend")
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    trendCSV1 = trendCSV11;
+                }
+                else if (type == 2) {
+                    trend_svg = d3.select("#trend2div")
+                        .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+                        .style("preserveAspectRatio", "xMidYMid meet")
+                        .style("cursor","pointer")
+                        .append("svg:svg")
+                        .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
+                        .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
+                        .attr("id","trend")
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    trendCSV1 = trendCSV12;
+                }
+                else if (type == 3) {
+                    trend_svg = d3.select("#trend3div")
+                        .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+                        .style("preserveAspectRatio", "xMidYMid meet")
+                        .style("cursor","pointer")
+                        .append("svg:svg")
+                        .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
+                        .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
+                        .attr("id","trend")
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    trendCSV1 = trendCSV13;
+                }
 
-                    var labelVar = 'quarter';
-                    var varNames = d3.keys(data[0])
-                        .filter(function (key) { return key !== labelVar;});
-                    color.domain(varNames);
+                d3.csv("data/"+trendCSV1, function (error, data) {
+                    d3.csv("data/"+trendCSV2, function(error, topics) {
 
-                    var seriesArr = [], series = {};
-                    varNames.forEach(function (name) {
-                        series[name] = {name: name, values:[]};
-                        seriesArr.push(series[name]);
-                    });
+                        var labelVar = 'quarter';
+                        var varNames = d3.keys(data[0])
+                            .filter(function (key) { return key !== labelVar;});
+                        color.domain(varNames);
 
-                    data.forEach(function (d) {
-                        varNames.map(function (name) {
-                            series[name].values.push({name: name, label: d[labelVar], value: +d[name]});
+                        var seriesArr = [], series = {};
+                        varNames.forEach(function (name) {
+                            series[name] = {name: name, values:[]};
+                            seriesArr.push(series[name]);
                         });
-                    });
 
-                    x.domain(data.map(function (d) { return d.quarter; }));
 
-                    stack(seriesArr);
+                        var topic_hash = [];
+                        topicnames = [];
+                        var index = 0;
 
-                    y.domain([0, d3.max(seriesArr, function (c) {
-                        return d3.max(c.values, function (d) { return d.y0 + d.y; });
-                    })]);
+                        topics.forEach(function(d) {
 
-                    trend_svg.append("g")
-                        .attr("class", "x axis")
-                        .attr("transform", "translate(0," + height + ")")
-                        .call(xAxis);
+                            var nodeindex = topic_hash.indexOf(d.topicid);
+                            if(nodeindex != -1){
+                                var newname = topicnames[nodeindex].name;
+                                newname += "," + d.item;
+                                topicnames[nodeindex].name = newname;
+                            }
+                            else{
+                                topic_hash.push(d.topicid);
+    //            topicnames[topic_hash.length-1] = {};
+                                topicnames.push({index:index, id:d.topicid, name:d.item});
+                                index++;
+                            }
 
-                    trend_svg.append("g")
-                        .attr("class", "y axis")
-                        .call(yAxis)
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .attr("y", 6)
-                        .attr("dy", ".71em")
-                        .style("text-anchor", "end")
-                        .text("Weight");
+                        });
 
-                    var selection = trend_svg.selectAll(".series")
-                        .data(seriesArr)
-                        .enter().append("g")
-                        .attr("class", "series");
+                        data.forEach(function (d) {
+                            varNames.map(function (name) {
+                                series[name].values.push({name: name, label: d[labelVar], value: +d[name]});
+                            });
+                        });
 
-                    selection.append("path")
-                        .attr("class", "streamPath")
-                        .attr("d", function (d) { return area(d.values); })
-                        .style("fill", function (d) { return color(d.name); })
+                        x.domain(data.map(function (d) { return d.quarter; }));
+
+                        stack(seriesArr);
+
+                        y.domain([0, d3.max(seriesArr, function (c) {
+                            return d3.max(c.values, function (d) { return d.y0 + d.y; });
+                        })]);
+
+                        trend_svg.append("g")
+                            .attr("class", "x axis")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(xAxis);
+
+                        trend_svg.append("g")
+                            .attr("class", "y axis")
+                            .call(yAxis)
+                            .append("text")
+                            .attr("transform", "rotate(-90)")
+                            .attr("y", 6)
+                            .attr("dy", ".71em")
+                            .style("text-anchor", "end")
+                            .text("Weight");
+
+                        var selection = trend_svg.selectAll(".series")
+                            .data(seriesArr)
+                            .enter().append("g")
+                            .attr("id", function (d,i) { return "series"+type+"_"+i })
+                            .attr("class", "series");
+
+                        selection.append("path")
+                            .attr("class", "streamPath")
+                            .attr("d", function (d) { return area(d.values); })
+                            .attr("id", function (d,i) { return "streamPath"+i })
+                            .style("fill", function (d) { return color(d.name); })
+                            .style("stroke", "grey");
+
+                        var points = trend_svg.selectAll(".seriesPoints")
+                            .data(seriesArr)
+                            .enter().append("g")
+                            .attr("class", "seriesPoints");
+
+                        points.selectAll(".point")
+                            .data(function (d) { return d.values; })
+                            .enter().append("circle")
+                            .attr("class", "point")
+                            .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
+                            .attr("cy", function (d) { return y(d.y0 + d.y); })
+                            .attr("r", "9.5px")
+                            .style("fill",function (d) { return color(d.name); })
+                            .on("mouseover", function (d) { showPopover.call(this, d, type); })
+                            .on("mouseout",  function (d) { removePopovers(); })
+                            .on("click", function (d) { clickPopover.call(this, d, type); });
+
+                        var trendlegend = d3.select("#trendlegend"+type)
+    //                        .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+    //                        .style("preserveAspectRatio", "xMidYMid meet")
+                            .append("div")
+                            .append("svg")
+                            .attr("width",  2000) // gia na xwrane ta topic word bags
+                            .attr("height", 1000) // gia na xwrane ta top 50 topic words
+                            .style("cursor","pointer")
+    //                        .style("overflow-x","scroll")
+                            .selectAll(".trendlegend")
+//                            .data(varNames.slice().reverse())
+                            .data(varNames.slice().reverse())
+                            .enter().append("g")
+                            .attr("class", "trendlegend")
+                            .attr("transform", function (d, i) {return "translate(55," + i * 20 + ")"; });
+
+    //                var trendlegend = trend_svg.selectAll(".trendlegend")
+    //                    .data(varNames.slice().reverse())
+    //                    .enter().append("g")
+    //                    .attr("class", "trendlegend")
+    //                    .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
+
+                    trendlegend.append("rect")
+    //                    .attr("x", width-30)    // gia na mpoun aristera
+                        .attr("x", -30)    // gia na mpoun aristera
+                        .attr("width", 10)
+                        .attr("height", 10)
+                        .style("fill", color)
                         .style("stroke", "grey");
 
-                    var points = trend_svg.selectAll(".seriesPoints")
-                        .data(seriesArr)
-                        .enter().append("g")
-                        .attr("class", "seriesPoints");
-
-                    points.selectAll(".point")
-                        .data(function (d) { return d.values; })
-                        .enter().append("circle")
-                        .attr("class", "point")
-                        .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
-                        .attr("cy", function (d) { return y(d.y0 + d.y); })
-                        .attr("r", "1.5px")
-                        .style("fill",function (d) { return color(d.name); })
-                        .on("mouseover", function (d) { showPopover.call(this, d); })
-                        .on("mouseout",  function (d) { removePopovers(); })
-
-//                var legend = trend_svg.selectAll(".legend")
-//                    .data(varNames.slice().reverse())
-//                    .enter().append("g")
-//                    .attr("class", "legend")
-//                    .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
-//
-//                // legend.append("rect")
-//                //     .attr("x", width - 10)
-//                //     .attr("width", 10)
-//                //     .attr("height", 10)
-//                //     .style("fill", color)
-//                //     .style("stroke", "grey");
-//
-//                // legend.append("text")
-//                //     .attr("x", width - 12)
-//                //     .attr("y", 6)
-//                //     .attr("dy", ".35em")
-//                //     .style("text-anchor", "end")
-//                //     .text(function (d) { return d; });
-//                legend.append("rect")
-//                    .attr("x", width-30)    // gia na mpoun aristera
-//                    .attr("width", 10)
-//                    .attr("height", 10)
-//                    .style("fill", color)
-//                    .style("stroke", "grey");
-//
-//                legend.append("text")
-//                    .attr("x", width-10)
-//                    .attr("y", 6)
-//                    .attr("dy", ".35em")
-//                    //.append("textpath") // using "end", the entire text disappears
-//                    .style("text-anchor", "start")
-//                    .text(function (d) { return d; });
-//    //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
-//    //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
-
-                    function removePopovers () {
-                        $('.popover').each(function() {
-                            $(this).remove();
-                        });
-                    }
-
-                    function showPopover (d) {
-                        $(this).popover({
-                            title: d.name,
-                            placement: 'auto top',
-                            container: 'body',
-                            trigger: 'manual',
-                            html : true,
-                            content: function() {
-                                return "Year: " + d.label +
-                                    "<br/>Width: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }
-                        });
-                        $(this).popover('show')
-                    }
-
+                    trendlegend
+    //                    .append("div")
+    //                    .style("word-wrap","break-word")
+    //                    .style("word-break","break-all")
+    //                    .style("white-space","normal")
+                        .append("text")
+    //                    .attr("x", width-10)
+                        .attr("x", 0)
+                        .attr("y", 6)
+                        .attr("dy", ".35em")
+                        //.append("textpath") // using "end", the entire text disappears
+                        //todo: meta apo kapoio unclick otan menei ena na fainontai ta related nodes. na dw pou xanetai to label 0 sto teleutaio. na auksisw kai to width giati mallon den xwrane,ti einai to weight sti stili.. na balw ... sto titlo
+                        .style("text-anchor", "start")
+//                        .text(function (d) { return d; });
+        //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
+        //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+                        .text(function (d) {return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+                    });
                 });
             }
+
+            function trendReset(){
+                mytextTitleElem.hide();
+                classifiedNodesHeaderElem.hide();   //clear anything included in child nodes
+                classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
+                classifiedNodesElem.hide();
+                legenddivElem.hide();
+                legend2divElem.show();
+
+                $(".series").each(function () {
+                    $(this).attr("class", "series");
+                });
+            }
+
+            function removePopovers () {
+                $('.popover').each(function () {
+                    $(this).remove();
+                });
+            }
+
+            function showPopover (d, type) {
+
+                var tit = 0;
+                var titindex = 0;
+                var titname = 0;
+
+                topicnames.filter(function(o){
+                    if(d.name==o.id){
+                        tit=o.index+"."+o.name;
+                        titname = o.name;
+                        titindex= o.index;
+                    }
+                });
+                $(this).popover({
+                    //            title: d.name,
+                    // title: topicnames.forEach(function(o){if(d.name==o.id)console.log(o.index);return o.index;}),
+                    title: tit,
+                    placement: 'auto top',
+                    container: 'body',
+                    trigger: 'manual',
+                    html : true,
+                    content: function() {
+//                        if (!trendClicked) {
+                        if ($(".active_trend").length == 0) {
+                            topicnames.filter(function (o,i) {
+                                if (d.name == o.id) {
+
+                                    mytextTitleElem.empty();
+                                    mytextTitleElem.show();
+                                    mytextTitle.append("div").append("ul")
+                                        .attr("class", "pagination active")
+                                        .attr("data-toggle", "tooltip")
+                                        .attr("data-placement", "right")
+                                        .attr("title", "...more about project and link...")
+                                        .style("cursor", "pointer")
+//                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
+//                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
+                                        .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray").html("Selected topic: <br/>" + tit);
+                                    //}
+                                }
+                            });
+                        }
+
+                        return "Year: " + d.label +
+                                //"<br/>Journal: " + d.label +
+                            "<br/>Width: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }//ektupwnei to width
+                });
+                $(this).popover('show')
+            }
+
+            function clickPopover (d,type) {
+                var tit = 0;
+                var titindex = 0;
+                var titname = 0;
+                topicnames.filter(function (o,i) {
+                    if (d.name == o.id) {
+
+                        tit=o.index+"."+o.name;
+                        titname = o.name;
+                        titindex= o.index;
+
+                        if ($("#series" + type + "_" + i).attr("class") == "series active_trend") {
+                            $("#series" + type + "_" + i).attr("class", "series inactive_trend");
+                            if ($(".active_trend").length == 0) {
+                                $(".inactive_trend").each(function () {
+                                    $(this).attr("class", "series");
+                                });
+                                trendReset();
+                            }
+//                            else if ($(".active_trend").length == 1) {
+//                                mytextTitleElem.empty();
+//                                mytextTitleElem.show();
+//                                mytextTitle.append("div").append("ul")
+//                                    .attr("class", "pagination active")
+//                                    .attr("data-toggle", "tooltip")
+//                                    .attr("data-placement", "right")
+//                                    .attr("title", "...more about project and link...")
+//                                    .style("cursor", "pointer")
+//                                    //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
+//                                    //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
+//                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray").html("Selected topic: <br/>" + tit);
+//                                console.log($(".active_trend"));
+//                                autocompletelog(titname);
+//                            }
+                        }
+                        else {
+                            $("#series" + type + "_" + i).attr("class", "series active_trend");
+
+                            if ($(".active_trend").length == 1) {
+                                $(".series").each(function () {
+                                    $(this).attr("class", "series inactive_trend");
+                                });
+                                $("#series" + type + "_" + i).attr("class", "series active_trend");
+
+                                mytextTitleElem.empty();
+                                mytextTitleElem.show();
+                                mytextTitle.append("div").append("ul")
+                                    .attr("class", "pagination active")
+                                    .attr("data-toggle", "tooltip")
+                                    .attr("data-placement", "right")
+                                    .attr("title", "...more about project and link...")
+                                    .style("cursor", "pointer")
+                                    //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
+                                    //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
+                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray").html("Selected topic: <br/>" + tit);
+                                autocompletelog(titname);
+                                classifiedNodeButtons();
+
+                            }
+                            else if ($(".active_trend").length >= 1) {
+                                mytextTitleElem.hide();
+                                classifiedNodesHeaderElem.hide();   //clear anything included in child nodes
+                                classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
+                                classifiedNodesElem.hide();
+                                legenddivElem.hide();
+                                legend2divElem.show();
+                            }
+
+                            $(this).popover({
+                                //            title: d.name,
+                                // title: topicnames.forEach(function(o){if(d.name==o.id)console.log(o.index);return o.index;}),
+                                title: tit,
+                                placement: 'auto top',
+                                container: 'body',
+                                trigger: 'manual',
+                                html: true,
+                                content: function () {
+                                    console.log(d)
+                                    return "Year: " + d.label +
+                                            //"<br/>Journal: " + d.label +
+                                        "<br/>Width: " + d3.format(",")(d.value ? d.value : d.y1 - d.y0);
+                                }//ektupwnei to width
+                            });
+                            $(this).popover('show')
+                        }
+                    }
+                });
+            }
+
 
 
             function onResize() {
                 prev_w = w;
                 w = windowElem.width()/2,
-                    h = windowElem.width()/2,
-                    mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
+                h = windowElem.width()/2,
+                resizeLayout();// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
 
-                if(detectmob() || windowElem.width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
-                    w = windowElem.width();
-                    h = windowElem.width();
-                    mytextTitleElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-                    mytextContentElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
-                    myinfoElem.attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
-
-                    if(jumpPreviousElem.length == 0)
-                        myinfoElem.prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
-                    jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
-
-                    mygraphElem.attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
-
-                    if(jumpNextElem.length == 0)
-                        mygraphElem.prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
-                    jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
-
-                    mysubdivisionElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
-                    mygraphElem.insertBefore('#myinfo');
-                    mysubdivisionElem.insertAfter('#myinfo');
-                    flagForTranformation = 1;
-                }
-                else if (windowElem.width()>755 && flagForTranformation==1){
-                    flagForTranformation = 0;
-                    mytextTitleElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
-                    mytextContentElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
-                    myinfoElem.attr("style","float:;clear:; min-height:;height:;min-width:;width:;");
-                    mygraphElem.attr("style","float:;padding-right:;clear:;");
-                    jumpNextElem.remove();
-                    jumpPreviousElem.remove();
-                    mysubdivisionElem.attr("style","float:;clear:;min-width:;width:;");
-                    myinfoElem.insertBefore('#mygraph');
-                    mysubdivisionElem.insertAfter('#mygraph');
-                }
-
-//			graphElem.style["width"]= w;
-                graphElem.attr("style","height:"+h);
-
+//			    graphElem.style["width"]= w;
                 loadingText
                     .style("font-size",w/20)
                     .attr("x", (w / 2) - (w/7)) // pou einai to miso tou loading
                     .attr("y", h / 2);
-
 
                 // semantic zooming
                 scaleFactor = w/prev_w;
@@ -3628,29 +3890,51 @@
                 prev_w = w;
             }
 
-            function checkToChangeLayout(){
-                if(detectmob() || windowElem.width()<=755) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
+            function resizeLayout(){
+                if(detectmob() || windowElem.width()<=990) {		// if in mobile device then we need the graph to be shown in bigger frame, and all the other divs to be placed vertically
                     w = windowElem.width();//800,
                     h = windowElem.width();//800,
                     mytextTitleElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
                     mytextContentElem.attr("style","min-height:0px;height:auto;min-width:20%;width:95%;margin-bottom:10px");
                     myinfoElem.attr("style","float:left;clear:left; min-height:0px;height:auto;min-width:20%;width:100%;");
 
-                    if(jumpPreviousElem.length == 0)
+                    if(jumpPreviousElem.length == 0){
                         myinfoElem.prepend('<input id="jumpPrevious" type="button" style="width:100%" value="Regress to Graph">');
-                    jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
+                        jumpPreviousElem = $("#jumpPrevious");  // happens only once
 
-                    mygraphElem.attr("style","float:center;padding-left:-20;padding-right:-20;clear:left;");
-
-                    if(jumpNextElem.length == 0)
                         mygraphElem.prepend('<input id="jumpNext" type="button" style="width:100%" value="Proceed to Labels">');
-                    jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
+                        jumpNextElem = $("#jumpNext");
 
-                    mysubdivisionElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
+                        jumpPreviousElem.on("click",function(){windowElem.location = "#mygraph"});
+                        jumpNextElem.on("click",function(){windowElem.location = "#myinfo"});
+                    }
+                    mygraphContainerElem.attr("style","position:;float:center;padding-left:-20;padding-right:-20;clear:left;height:"+h);
+                    $("h4").attr("style","position:;")
+                    legenddivElem.attr("style","float:left;clear:left;min-width:20%;width:100%;");
                     mygraphElem.insertBefore('#myinfo');
-                    mysubdivisionElem.insertAfter('#myinfo');
+                    legenddivElem.insertAfter('#myinfo');
 
                 }
+                else{
+                    mytextTitleElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
+                    mytextContentElem.attr("style","min-height:;height:;min-width:20%;width:;margin-bottom:;word-break:break-all");
+                    myinfoElem.attr("style","float:;clear:; min-height:;height:;min-width:;width:;");
+                    mygraphContainerElem.attr("style","float:;padding-right:;clear:;position:fixed;height:;width:"+9*w/8);
+                    $("h4").attr("style","position:fixed;")
+                    if(jumpPreviousElem.length >= 0) {
+                        jumpNextElem.remove();
+                        jumpPreviousElem.remove();
+                    }
+                    legenddivElem.attr("style","float:;clear:;min-width:;width:;");
+                    myinfoElem.insertBefore('#mygraph');
+                    legenddivElem.insertAfter('#mygraph');
+                }
+                graphElem.attr("style","width:"+w+";height:"+h);
+                chordElem.attr("style","width:"+w+";height:"+h);
+                chord2Elem.attr("style","width:"+w+";height:"+h);
+                trendElem.attr("style","width:"+w+";height:"+h);
+                trend2Elem.attr("style","width:"+w+";height:"+h);
+                trend3Elem.attr("style","width:"+w+";height:"+h);
             }
 
             function checkFullscreen() {
@@ -3663,8 +3947,28 @@
                         mygraphContainerElem.attr("style","width:100%;height:100%;top:0;background-color:none");
 
                         /* move svg to center */// translation is not working in webkit fullscreen, so we manually set a padding left in 1/4. thats because previously the #graph has the windowElem.width/2 size and it is centered (e.g. 1/4+1/2+1/4), so now that the graph has the windowElem size we want the svg to be translated where it was previously, so 1/4 of the windowElem size
-                        if ( webkit == 1) vis.style("padding-left", windowElem.width() / 4);
-                        else vis.attr("transform","translate(" + windowElem.width()/4 + ")");
+                        if ( webkit == 1) {
+                            vis.style("padding-left", windowElem.width() / 4);
+                            vis.style("width", windowElem.width());
+                            d3.select("#trenddiv").style("padding-left", windowElem.width() / 4);
+                            d3.select("#trenddiv").style("width", windowElem.width());
+                            d3.select("#trend2div").style("padding-left", windowElem.width() / 4);
+                            d3.select("#trend2div").style("width", windowElem.width());
+                            d3.select("#trend3div").style("padding-left", windowElem.width() / 4);
+                            d3.select("#trend3div").style("width", windowElem.width());
+                            trenddivElem.style("height",h);
+                        }
+                        else {
+                            vis.attr("transform","translate(" + windowElem.width()/4 + ")");
+                            vis.style("width", windowElem.width());
+                            d3.select("#trenddiv").attr("transform","translate(" + windowElem.width()/4 + ")");
+                            d3.select("#trenddiv").style("width", windowElem.width());
+                            d3.select("#trend2div").attr("transform","translate(" + windowElem.width()/4 + ")");
+                            d3.select("#trend2div").style("width", windowElem.width());
+                            d3.select("#trend3div").attr("transform","translate(" + windowElem.width()/4 + ")");
+                            d3.select("#trend3div").style("width", windowElem.width());
+                            trenddivElem.style("height",h);
+                        }
 
                         chordElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
                         chord2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
@@ -3677,8 +3981,21 @@
                         mygraphContainerElem.attr("style","width:100%;height:100%;top:0;background-color:none");
 
                         /* move svg to left back to initial position */
-                        if ( webkit == 1) vis.style("padding-left", "");
-                        else vis.attr("transform","translate(" + 0 + ")");
+                        if ( webkit == 1) {
+                            vis.style("padding-left", "");
+                            d3.select("#trenddiv").style("padding-left","0");
+                            d3.select("#trend2div").style("padding-left","0");
+                            d3.select("#trend3div").style("padding-left","0");
+//to apo katw xreiazetai mono gia auto to trend giati gia kapoio logo den emfanizotan
+                            trenddivElem.style("height",h);
+                        }
+                        else {
+                            vis.attr("transform","translate(" + 0 + ")");
+                            d3.select("#trenddiv").attr("transform","translate(" + 0 + ")");
+                            d3.select("#trend2div").attr("transform","translate(" + 0 + ")");
+                            d3.select("#trend3div").attr("transform","translate(" + 0 + ")");
+                            trenddivElem.style("height",h);
+                        }
                         graphReset();
 
                         chordElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
@@ -3687,6 +4004,11 @@
                         trendElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
                         trend2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
                         trend3Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+
+
+                        svgfullscreenExit();
+                        pill1Elem.removeClass("active");
+                        pill1Elem.blur();
                     }
                 });
 
@@ -3788,10 +4110,10 @@
     <div class="col-md-5">
         <!-- <div id="mytext-title" style="max-width:95%;width:95%;vertical-align:top;position:absolute;word-break:break-all;  " xmlns="http://www.w3.org/1999/xhtml"></div> -->
     </div>
-    <div class="col-md-3" style="margin-top:-30px"> <!--- margin is set mostly for the header placing-->
+    <div class="col-md-3" style="margin-top:-30px;"> <!--- margin is set mostly for the header placing-->
         <!-- <div class="page-header"> -->
         <h4 style="position:fixed;"><?php echo $title ;?>
-            <small style="position:fixed;"><?php echo $subtitle ;?> <span class="sr-only">(current page name)</span></small>
+            <small><?php echo $subtitle ;?> <span class="sr-only">(current page name)</span></small>
         </h4>
         <!-- </div> -->
 
@@ -3851,9 +4173,10 @@
                         <li class="dropdown">
                             <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
-                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-journal.html" target="_blank">Trends 2  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-communication.html" target="_blank">Trends 3  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+<!--                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>-->
+                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">ACM Topic Trend Analysis 1990-2011</a></li>
+                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-communication.html" target="_blank">ACM (Journal: Communications) 1990-2011</a></li>
+                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">ACM (Journal: SIGMOD Records) 1976-2011</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -3874,6 +4197,8 @@
                     </div>
                     <div id="trend2div" class="tab-pane">
                     </div>
+                    <div id="trend3div" class="tab-pane">
+                    </div>
                 </div>
             </div>
             <div class="col-md-12">
@@ -3888,7 +4213,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3" id="mysubdivision" style="overflow:auto;">
+    <div class="col-md-3" id="legenddiv" style="overflow:auto;">
         <table class="table table-condensed table-striped">
             <thead>
             <tr>
@@ -3900,6 +4225,14 @@
             </thead>
             <tbody id="legend"></tbody>
         </table>
+    </div>
+    <div class="col-md-3" id="legend2div" style="overflow:auto;text-overflow:ellipsis">
+        <div id="trendlegend1">
+        </div>
+        <div id="trendlegend2">
+        </div>
+        <div id="trendlegend3">
+        </div>
     </div>
 </div>
 </body>

@@ -60,9 +60,29 @@
           .y0(function (d) { return y(d.y0); })
           .y1(function (d) { return y(d.y0 + d.y); });
 
-      var color = d3.scale.ordinal()
-//          .range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
-          .range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
+
+      var clr20 = d3.scale.category20().range(),
+              clrEven = [],
+              clrOdd = [];
+
+      for (var i=0 ; i < clr20.length ; i++)
+          if (i % 2) clrEven.push(clr20[i]);
+          else clrOdd.push(clr20[i]);
+      var clr= [];
+      for (var i=0 ; i < clrEven.length ; i++){
+          clr.push(clrEven[i]);
+          clr.push(clrOdd[i])
+      }
+      var clr2 = d3.scale.category20b().range();	//to be appended in the first clr (20 more colors)
+      $.merge(clr, clr2);					// add second array's elements to first
+      var clr3 = d3.scale.category20c().range();	//to be appended in the first clr (20 more colors)
+      $.merge(clr, clr3);					// add second array's elements to first
+
+
+
+      //      var color = d3.scale.ordinal()//          .range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
+      //          .range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
+      var color = d3.scale.ordinal().range(clr);
 
       var svg = d3.select("body").append("svg")
           .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags

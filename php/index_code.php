@@ -3536,6 +3536,7 @@
 //            chordHandler(d,i);
 //
 //            // below for the legend row on the right and the left classified nodes
+                //Todo to apo katw xreiazetai otan kanw enable to fade
 //                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(function(o,j){legendHandler(o,i)});
                 clickedChord = !clickedChord;
             }

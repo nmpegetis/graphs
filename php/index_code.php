@@ -98,8 +98,9 @@
         }
 
         .shadow {
+            -webkit-filter: opacity(1);
             -webkit-filter: drop-shadow( 0px 0px 10px yellow);
-            filter: drop-shadow( 0px 0px 10px yellow ); /* Same syntax as box-shadow */
+            filter: drop-shadow( 0px 0px 10px yellow );  /*Same syntax as box-shadow*/
         }
 
         .btn{
@@ -185,7 +186,15 @@
         .inactive_trend{
             opacity: .1;
         }
-/* trend ccs ends here */
+
+        .reverserows{
+            display: -webkit-flex; /* Safari */
+            -webkit-flex-direction: row-reverse; /* Safari 6.1+ */
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        /* trend ccs ends here */
 
     </style>
 
@@ -219,7 +228,7 @@
 
     <script type="text/javascript" src="../../../slider/js/bootstrap-slider.js"></script>
     <script type="text/javascript" src="../../../js/fullscreen/jquery.fullscreen-min.js"></script>
-
+    <script type="text/javascript" src="../../../js/seedrandom.min.js"></script>
 
 
     <script>
@@ -314,6 +323,7 @@
                 pill1Elem = $("#pill1"),
                 pill2Elem = $("#pill2"),
                 pill3Elem = $("#pill3"),
+                pill4Elem = $("#pill4"),
                 grantsGroup1Elem,
                 grantsGroup2Elem,
                 chordElem = $("#chord"),
@@ -331,6 +341,9 @@
                 seriesElem,
                 streamPathElem;
 
+            // in order graph not to be random https://github.com/davidbau/seedrandom
+            Math.seedrandom('mySeed');
+
             // d3 Selections
             var vis = d3.select("#graph"),
                 legend = d3.select("#legend"),
@@ -345,7 +358,7 @@
             var style,
 
             // sizes, zooming, scaling, translating and colors
-                fade_out, strong, normal, w, h, prev_w, scaleFactor, translation, xScale, yScale, previous_scale, zoom_type, fontsizeVar, smallestFontVar, gravity, charge, clrArray, flagForTranformation,
+                fade_out, strong, normal, fadelimit, w, h, prev_w, scaleFactor, translation, xScale, yScale, previous_scale, zoom_type, fontsizeVar, smallestFontVar, gravity, charge, clrArray, flagForTranformation,
                 clr20, clrEven, clrOdd, clr, clr2, clr3,
 
             // text and labels
@@ -396,6 +409,13 @@
                 percentage: function(a, b){
                     return Math.round((a/b)*100);
                 }
+//                ,
+//                reverseChildren: function() {
+//                    return this.each(function(){
+//                        var $this = $(this);
+//                        $this.children().each(function(){ $this.prepend(this) });
+//                    });
+//                }
             });
 
             dropdownThresholdsElem.on("click", function () {
@@ -510,6 +530,9 @@
                 initializeExperimentPage();
                 if ((expsimilarity = thr5Elem.val()*0.01) > 1 || expsimilarity < 0) initializeExperimentPage();
                 console.log(expsimilarity)
+                console.log(window.location.href)
+                UpdateQueryString("s", expsimilarity);
+                console.log(window.location.href)
                 ajaxCall(experimentName,expsimilarity);
                 mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                 thr5Elem.val("> "+$.percentage(expsimilarity,1)+" %");
@@ -553,23 +576,37 @@
 //            trendmenu1Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
 //            trendmenu2Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
 //            trendmenu3Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
-            trendmenu1Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");});
-            trendmenu2Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");});
-            trendmenu3Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");});
+            //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
+            trendmenu1Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");});
+            trendmenu2Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");});
+            trendmenu3Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");});
 
+
+            // the same piece of code with the below $(document).fullScreen() because it doesn't catch the escape button click
+            $(document).keyup(function(e) {
+                if (e.keyCode == 27) {   // esc
+                    svgfullscreenExit();
+                    pill1Elem.find("a").find("span").removeClass("glyphicon-resize-small");
+                    pill1Elem.find("a").find("span").addClass("glyphicon-fullscreen");
+                    pill1Elem.removeClass("active");
+                    pill1Elem.blur();
+                }
+            });
 
             pill1Elem.on("click",function(){
-//todo mallon to apo katw if telika den xreiazetai
-//                if(!(trenddivElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")))
-                    if($(document).fullScreen()) {
-                        svgfullscreenExit();
-                        pill1Elem.removeClass("active");
-                        pill1Elem.blur();
-                    }
-                    else {
-                        svgfullscreen();
-                        pill1Elem.addClass("active");
-                    }
+                if($(document).fullScreen()) {
+                    svgfullscreenExit();
+                    pill1Elem.find("a").find("span").removeClass("glyphicon-resize-small");
+                    pill1Elem.find("a").find("span").addClass("glyphicon-fullscreen");
+                    pill1Elem.removeClass("active");
+                    pill1Elem.blur();
+                }
+                else {
+                    svgfullscreen();
+                    pill1Elem.find("a").find("span").removeClass("glyphicon-fullscreen");
+                    pill1Elem.find("a").find("span").addClass("glyphicon-resize-small");
+                    pill1Elem.addClass("active");
+                }
             });
 
 //todo if fullscreen kai patithei to escape tote to apo katw
@@ -595,11 +632,20 @@
 
                 pill3Elem.blur();
             });
+            pill4Elem.unbind().on("click",function(){
+                pill4Elem.removeClass("active");
+                if(graphdivElem.hasClass("active")) graphCentralize();
+                else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
+                else if (trenddivElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")) trendReset();
+
+                pill4Elem.blur();
+            });
 
 
             exitclassifiedNodesHeaderElem.click(function(){
                 classifiedNodesHeaderElem.hide();
                 classifiedNodesElem.hide();
+                nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
             });
 
 
@@ -654,8 +700,6 @@
                 .on("tick", initialTick);
 
 
-
-
 // Na tsekarw me to Enter ti tha anoigei. An  leitourgei swsta
             documentElem.keydown(function(e) {
                 //itan 13
@@ -694,10 +738,10 @@
             });
 
 
-
             /***************************************************************************
              *******							FUNCTIONS							*******
              ***************************************************************************/
+
 
             /**** DRAGGING FUNCTIONS ****/
             function dragstarted(d){
@@ -801,6 +845,20 @@
 
 
             function graphReset() {
+                grantsElem.multiselect('deselectAll', false);
+
+                graphCentralize();
+
+                ///initialize
+                var types = [];
+                $(".circle").each(function(){
+                    types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
+
+                });
+                showtype(fade_out, types);
+            }
+
+            function graphCentralize(){
                 scaleFactor = 1;
                 translation = [0,0];
                 previous_scale = 1;
@@ -809,7 +867,6 @@
                 console.log("scales", translation, scaleFactor);
                 browseTick(false);
             }
-
 
             /**** FADING AND COLORING FUNCTIONS ****/
             /* refills the opacity of each color after fading */
@@ -845,14 +902,16 @@
 
             function fadeGraph(opacity) {
                 return function(d, i) {
+//                    if($(".active_row").length == 0 && !classifiedNodesElem.find("div").find("ul").is(':visible')) {   // if there is active row or the left list of nodes is visible then don't fade
+                   //to fadelimit einai mia metabliti pithanotata idia i pio megali apo to normal etsi wste sta megala peiramata pou tha orizw egw poia tha einai auta na min ginetai fade
+                    if($(".circle").css("fill-opacity") >= fadelimit) {   // if there is active row or the left list of nodes is visible then don't fade
 
-                    if($(".active_row").length == 0) {
-                        // addClass for svg to place yellow shadow
+                    // addClass for svg to place yellow shadow
                         $(this).attr('class', function(index, classNames) {
                             return classNames + ' shadow';
                         });
 
-                        if ($(this).css("fill-opacity") < normal)
+                        if ($(this).css("fill-opacity") < fadelimit)
                             return false;
 
                         graphHandler(d, opacity);
@@ -1017,6 +1076,7 @@
                             numOfClassifiedNodes++;
                             classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
                             classifiedNodesElem.show();
+                            fadelimit = 0.9;
                         }
                         /* move circle elements above all others within the same grouping */
 //                    vis.selectAll(".circle").moveToFront();
@@ -1053,6 +1113,13 @@
 
             /* reset */
             function reset(){					/* normalizeNodesAndRemoveLabels */
+                console.log(grantsElem.find("option:selected")[0])
+                if (grantsElem.find("option:selected")[0] !== undefined) {
+                    console.log("eimai mesa reset")
+                    return 0;
+                }
+                console.log("eimai eksw  reset")
+
                 var types = [];
                 $(".circle").each(function(){
                     types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
@@ -1069,6 +1136,7 @@
                 classifiedNodesHeaderElem.hide();
                 tagsElem.val("");
                 classifiedNodesElem.hide();
+                nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
 
                 filter1Elem.hide();
                 filter2Elem.hide();
@@ -1645,6 +1713,7 @@
 
                 classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
                 classifiedNodesElem.show();
+                fadelimit = 0.9;
 
                 mytextContentElem.hide();
                 boostBtnElem.hide();
@@ -1679,7 +1748,6 @@
                     vis.select(".loading").remove();
 
                     browseTick(true);
-
                     force.stop()
                 }
                 else {
@@ -1727,6 +1795,7 @@
                         grants = myresponse.grants;
                         experiments = myresponse.expers;
                         renderpage(myresponse.resp);
+//                        graphElem.children().attr("style","z-index:1000")
                     },
                     error: function (e) {
                         alert('Error: ' + JSON.stringify(e));
@@ -1739,7 +1808,7 @@
             /* renderpage called from ajax */
             function renderpage(response){
                 pillsElem.show();
-
+//                pillsElem.attr("style","z-index:-1");
                 legend_data = [];
                 max_proj = 0;
                 var type_hash = [];
@@ -1974,6 +2043,8 @@
 // uncomment below to see how it works
 //				console.log("source "+j +"="+links[j].source+" -- target "+j +"="+links[j].target);
                 }
+
+                nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
 
                 var median = 0;
                 for (j = 0; j < links.length ; j++) {
@@ -2213,13 +2284,12 @@
                                 var selectedOptions = grantsElem.find("option:selected");
                                 var allOptions = grantsElem.find("option");
 //                                $(":checkbox[value=" + $(this).val() + "]").attr('checked', true)
-                                console.log(selectedOptions)
                                 classifiedNodesHandler(selectedOptions, allOptions);
                                 grantsElem.multiselect("refresh");
-
                             }
                         });
                     }
+                    fadelimit = 0.9;
 
                     $(".multiselect-clear-filter").on('click', function() {
                         grantsElem.multiselect('deselectAll', false);
@@ -2227,6 +2297,7 @@
                         var selectedOptions = grantsElem.find("option:selected");
                         classifiedNodesHandler(selectedOptions, allOptions);
                         grantsElem.multiselect("refresh");
+                        nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
                     });
 
                     $(".multiselect-container")
@@ -2535,7 +2606,9 @@
                     createTrends(1);
                     createTrends(2);
                     createTrends(3);
+
                 }
+
                 chordElem = $("#chord");
                 chord2Elem = $("#chord2");
                 trendElem = $("#trend");
@@ -2649,6 +2722,7 @@
                 fade_out = <?php echo $fade_out ;?>,
                 strong = <?php echo $strong ;?>,
                 normal = <?php echo $normal ;?>,
+                nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8,                // fadelimit is a variable with values same or bigger than normal so that in bigger experiments we can define if we want or not the visualization to fade
                 w = windowElem.width()/2,//800,
                 h = windowElem.width()/2,//800,
 
@@ -2682,9 +2756,9 @@
                 trendmenuElem.parent().hide();
                 pill3Elem.hide();
 
-                trendCSV11 = "crunchbase-quarters.csv",
-                trendCSV12 = "comminicationACM_pivot_1990-2011.csv",
-                trendCSV13 = "acm-sigmod-pivot-all-1976-2011.csv",
+                trendCSV11 = "crunchbase-quarters_new.csv",
+                trendCSV12 = "comminicationACM_pivot_1990-2011_new.csv",
+                trendCSV13 = "acm-sigmod-pivot-all-1976-2011_new.csv",
                 trendCSV2 = "weighted_topics2.csv";
 
                 if (/^FET*/.test(experimentName)){
@@ -2737,6 +2811,35 @@
                 spinner = new Spinner(opts).spin(target);
             }
 
+            function UpdateQueryString(key, value, url) {
+                if (!url) url = window.location.href;
+                var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi"),
+                    hash;
+
+                if (re.test(url)) {
+                    if (typeof value !== 'undefined' && value !== null)
+                        return url.replace(re, '$1' + key + "=" + value + '$2$3');
+                    else {
+                        hash = url.split('#');
+                        url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+                        if (typeof hash[1] !== 'undefined' && hash[1] !== null)
+                            url += '#' + hash[1];
+                        return url;
+                    }
+                }
+                else {
+                    if (typeof value !== 'undefined' && value !== null) {
+                        var separator = url.indexOf('?') !== -1 ? '&' : '?';
+                        hash = url.split('#');
+                        url = hash[0] + separator + key + '=' + value;
+                        if (typeof hash[1] !== 'undefined' && hash[1] !== null)
+                            url += '#' + hash[1];
+                        return url;
+                    }
+                    else
+                        return url;
+                }
+            }
             function loadThresholdsFromUrlParameters(){
                 // pass configuration with parameters
                 experimentDescription = "";
@@ -2872,6 +2975,9 @@
                     .attr("r", function(d) {
                         return d.radius
                     })
+                    .attr("fixed", function(d) {
+                        return true
+                    })
                     .attr("cx", function(d) {
                         return d.x
                     })
@@ -2889,6 +2995,7 @@
                         }
                     })
                     .on("click", function(d,i){
+                        grantsElem.multiselect('deselectAll', false);
                         $(this).attr('class', function(index, classNames) {
                             return classNames.replace('shadow', '');
                         });
@@ -2995,6 +3102,7 @@
                 classifiedNodesHeaderElem.hide();
                 classifiedNodesElem.hide();
                 classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
+                nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
                 boostBtnElem.hide();
 
                 //find all types to show
@@ -3057,6 +3165,7 @@
                         classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
                         classifiedNodeButtons();
                         classifiedNodesElem.show();
+                        fadelimit = 0.9;
                     }
                 }
                 else {
@@ -3100,6 +3209,7 @@
                         classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
                         classifiedNodeButtons();
                         classifiedNodesElem.show();
+                        fadelimit = 0.9;
                     }
                 }
             }
@@ -3301,8 +3411,8 @@
                     .data(chord_layout.groups)
                     .enter().append("svg:g")
                     .attr("class", function(d, i) { return "group "+subdivisionsChord[i].name; })
-                    .on("mouseover", chord_mouseover)
-                    .on("mouseout", chord_mouseout)
+//                    .on("mouseover", chord_mouseover)
+//                    .on("mouseout", chord_mouseout)
                     .on("click",chord_click);
 
 
@@ -3426,7 +3536,7 @@
 //            chordHandler(d,i);
 //
 //            // below for the legend row on the right and the left classified nodes
-                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(function(o,j){legendHandler(o,i)});
+//                d3.selectAll("#legend_row"+subdivisionsChord[i].name).each(function(o,j){legendHandler(o,i)});
                 clickedChord = !clickedChord;
             }
 
@@ -3502,8 +3612,21 @@
 
                 var trend_svg;
                 var trendCSV1;
+                var mousex;
+                var vertical;
 
                 if (type == 1){
+                    vertical = d3.select("#trenddiv")
+                        .append("div")
+                        .style("position", "absolute")
+                        .style("z-index", "19")
+                        .style("width", "1px")
+                        .style("height", height)
+                        .style("top", "60px")
+                        .style("bottom", "0px")
+                        .style("left", "0px")
+                        .style("background", "#000");
+
                     trend_svg = d3.select("#trenddiv")
                         .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
                         .style("preserveAspectRatio", "xMidYMid meet")
@@ -3517,6 +3640,17 @@
                     trendCSV1 = trendCSV11;
                 }
                 else if (type == 2) {
+                    vertical = d3.select("#trend2div")
+                        .append("div")
+                        .style("position", "absolute")
+                        .style("z-index", "19")
+                        .style("width", "1px")
+                        .style("height", height)
+                        .style("top", "60px")
+                        .style("bottom", "0px")
+                        .style("left", "0px")
+                        .style("background", "#000");
+
                     trend_svg = d3.select("#trend2div")
                         .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
                         .style("preserveAspectRatio", "xMidYMid meet")
@@ -3530,6 +3664,17 @@
                     trendCSV1 = trendCSV12;
                 }
                 else if (type == 3) {
+                    vertical = d3.select("#trend3div")
+                        .append("div")
+                        .style("position", "absolute")
+                        .style("z-index", "19")
+                        .style("width", "1px")
+                        .style("height", height)
+                        .style("top", "60px")
+                        .style("bottom", "0px")
+                        .style("left", "0px")
+                        .style("background", "#000");
+
                     trend_svg = d3.select("#trend3div")
                         .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
                         .style("preserveAspectRatio", "xMidYMid meet")
@@ -3542,6 +3687,16 @@
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                     trendCSV1 = trendCSV13;
                 }
+
+                trend_svg
+                    .on("mousemove", function(){
+                        mousex = d3.mouse(this);
+                        mousex = mousex[0]+43;
+                        vertical.style("left", mousex + "px" )})
+                    .on("mouseover", function(){
+                        mousex = d3.mouse(this);
+                        mousex = mousex[0];
+                        vertical.style("left", mousex + "px")});
 
                 d3.csv("data/"+trendCSV1, function (error, data) {
                     d3.csv("data/"+trendCSV2, function(error, topics) {
@@ -3587,7 +3742,7 @@
 
                         x.domain(data.map(function (d) { return d.quarter; }));
 
-                        stack(seriesArr);
+                        stack(seriesArr.reverse());
 
                         y.domain([0, d3.max(seriesArr, function (c) {
                             return d3.max(c.values, function (d) { return d.y0 + d.y; });
@@ -3609,10 +3764,11 @@
                             .text("Weight");
 
                         var selection = trend_svg.selectAll(".series")
-                            .data(seriesArr)
+                            .data(seriesArr.reverse())
                             .enter().append("g")
                             .attr("id", function (d,i) { return "series"+type+"_"+i })
-                            .attr("class", "series");
+                            .attr("class", "series")
+                            .on("click", function (d) { clickPopover.call(this, d, type); });
 
                         selection.append("path")
                             .attr("class", "streamPath")
@@ -3643,16 +3799,21 @@
     //                        .style("preserveAspectRatio", "xMidYMid meet")
                             .append("div")
                             .append("svg")
+                            .attr("class", "trendlegendsvg")
                             .attr("width",  2000) // gia na xwrane ta topic word bags
                             .attr("height", 1000) // gia na xwrane ta top 50 topic words
                             .style("cursor","pointer")
     //                        .style("overflow-x","scroll")
                             .selectAll(".trendlegend")
 //                            .data(varNames.slice().reverse())
-                            .data(varNames.slice().reverse())
+//                            .data(varNames.slice().reverse())
+                            .data(varNames)
                             .enter().append("g")
+                            .attr("id", function (d,i) { return "trendlegend"+type+"_"+i })
                             .attr("class", "trendlegend")
-                            .attr("transform", function (d, i) {return "translate(55," + i * 20 + ")"; });
+                            .attr("transform", function (d, i) {return "translate(55," + i * 20 + ")"; })
+                            .on("click", function (d) { clickPopover.call(this, d, type); });
+
 
     //                var trendlegend = trend_svg.selectAll(".trendlegend")
     //                    .data(varNames.slice().reverse())
@@ -3685,6 +3846,7 @@
         //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
         //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
                         .text(function (d) {return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+
                     });
                 });
             }
@@ -3694,11 +3856,16 @@
                 classifiedNodesHeaderElem.hide();   //clear anything included in child nodes
                 classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
                 classifiedNodesElem.hide();
+                nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
                 legenddivElem.hide();
                 legend2divElem.show();
 
                 $(".series").each(function () {
                     $(this).attr("class", "series");
+                });
+
+                $(".trendlegend").each(function () {
+                    $(this).attr("class", "trendlegend");
                 });
             }
 
@@ -3709,7 +3876,6 @@
             }
 
             function showPopover (d, type) {
-
                 var tit = 0;
                 var titindex = 0;
                 var titname = 0;
@@ -3762,8 +3928,16 @@
                 var tit = 0;
                 var titindex = 0;
                 var titname = 0;
+                var elementid;
                 topicnames.filter(function (o,i) {
-                    if (d.name == o.id) {
+                    if ($.isNumeric(d)) {           // if legend was clicked
+                        elementid = d;
+                    }
+                    else{                           // if legend was clicked
+                        elementid = d.name;
+
+                    }
+                    if (elementid == o.id) {
 
                         tit=o.index+"."+o.name;
                         titname = o.name;
@@ -3771,9 +3945,13 @@
 
                         if ($("#series" + type + "_" + i).attr("class") == "series active_trend") {
                             $("#series" + type + "_" + i).attr("class", "series inactive_trend");
+                            $("#trendlegend" + type + "_" + i).attr("class", "trendlegend inactive_trend");
                             if ($(".active_trend").length == 0) {
                                 $(".inactive_trend").each(function () {
-                                    $(this).attr("class", "series");
+                                    if ($(this).attr("class") == "series inactive_trend")
+                                        $(this).attr("class", "series");
+                                    else
+                                        $(this).attr("class", "trendlegend");
                                 });
                                 trendReset();
                             }
@@ -3795,12 +3973,18 @@
                         }
                         else {
                             $("#series" + type + "_" + i).attr("class", "series active_trend");
+                            $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
 
-                            if ($(".active_trend").length == 1) {
+                            if ($(".active_trend").length == 2) {       //ena gia to series kai ena gia to trendlegend
                                 $(".series").each(function () {
                                     $(this).attr("class", "series inactive_trend");
                                 });
+                                $(".trendlegend").each(function () {
+                                    $(this).attr("class", "trendlegend inactive_trend");
+                                });
+
                                 $("#series" + type + "_" + i).attr("class", "series active_trend");
+                                $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
 
                                 mytextTitleElem.empty();
                                 mytextTitleElem.show();
@@ -3817,35 +4001,37 @@
                                 classifiedNodeButtons();
 
                             }
-                            else if ($(".active_trend").length >= 1) {
+                            else if ($(".active_trend").length >= 2) {
                                 mytextTitleElem.hide();
                                 classifiedNodesHeaderElem.hide();   //clear anything included in child nodes
                                 classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
                                 classifiedNodesElem.hide();
+                                nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
                                 legenddivElem.hide();
                                 legend2divElem.show();
                             }
 
-                            $(this).popover({
-                                //            title: d.name,
-                                // title: topicnames.forEach(function(o){if(d.name==o.id)console.log(o.index);return o.index;}),
-                                title: tit,
-                                placement: 'auto top',
-                                container: 'body',
-                                trigger: 'manual',
-                                html: true,
-                                content: function () {
-                                    console.log(d)
-                                    return "Year: " + d.label +
-                                            //"<br/>Journal: " + d.label +
-                                        "<br/>Width: " + d3.format(",")(d.value ? d.value : d.y1 - d.y0);
-                                }//ektupwnei to width
-                            });
-                            $(this).popover('show')
+                            if (!($.isNumeric(d))) {
+                                $(this).popover({
+                                    //            title: d.name,
+                                    // title: topicnames.forEach(function(o){if(d.name==o.id)console.log(o.index);return o.index;}),
+                                    title: tit,
+                                    placement: 'auto top',
+                                    container: 'body',
+                                    trigger: 'manual',
+                                    html: true,
+                                    content: function () {
+                                        return "Year: " + d.label +
+                                                //"<br/>Journal: " + d.label +
+                                            "<br/>Width: " + d3.format(",")(d.value ? d.value : d.y1 - d.y0);
+                                    }//ektupwnei to width
+                                });
+                                $(this).popover('show')
+                            }
                         }
                     }
                 });
-            }
+            };
 
 
 
@@ -4201,12 +4387,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div id="pills" class="col-md-1 nav navbar-right" style="padding-top:0px;">
+            <div class="col-md-11" style="padding-right:2%;"></div>
+            <div class="col-md-1">
+                <div id="pills" class="col-md-1 nav navbar-right" style="padding-top:0px">
                     <ul class="nav navbar-right nav-pills nav-stacked">
 <!--                        <li id="pill1"><a class="mypills" href="#a" data-toggle="tab"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>-->
                         <li id="pill1"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>
                         <li id="pill2"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>
+                        <li id="pill4"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-magnet glyphiconmystyle fullscreen" role="button" title="Centralize Magnet" aria-hidden="true"></span></a></li>
                         <li id="pill3" class="disabled"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-new-window glyphiconmystyle fullscreen" role="button" title="New Window Mode" aria-hidden="true"></span></a></li>
                     </ul>
                 </div>

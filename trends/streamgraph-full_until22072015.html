@@ -22,12 +22,6 @@
       .point:hover{
         opacity: .5;
       }
-      .active_trend{
-          opacity: 1;
-      }
-      .inactive_trend{
-          opacity: .1;
-      }
     </style>
   </head>
   <body>
@@ -96,32 +90,6 @@
         .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      var mousex;
-      var vertical =  d3.select("body")
-              .append("div")
-              .attr("id","stream")
-              .style("position", "absolute")
-              .style("z-index", "19")
-              .style("width", "1px")
-              .style("max-width", "1000px")
-              .style("height", height)
-              .style("top", "60px")
-              .style("bottom", "-180px")
-              .style("left", "0px")
-              .style("background", "#000");
-
-      d3.select("body")
-              .on("mousemove", function(){
-                  mousex = d3.mouse(this);
-                  mousex = mousex[0]+3;
-                  if (mousex >920) mousex = 920;
-                  vertical.style("left", mousex + "px" )})
-              .on("mouseover", function(){
-                  mousex = d3.mouse(this);
-                  mousex = mousex[0];
-                  vertical.style("left", mousex + "px")});
-
-
       d3.csv("data/crunchbase-quarters.csv", function (error, data) {
         d3.csv("data/weighted_topics2.csv", function(error, topics) {
     //       if (error) return console.warn(error);
@@ -178,7 +146,7 @@
 
         x.domain(data.map(function (d) { return d.quarter; }));
 
-        stack(seriesArr.reverse());
+        stack(seriesArr);
 
         y.domain([0, d3.max(seriesArr, function (c) { 
             return d3.max(c.values, function (d) { return d.y0 + d.y; });
@@ -200,16 +168,13 @@
             .text("Weight");
 
         var selection = svg.selectAll(".series")
-          .data(seriesArr.reverse())
+          .data(seriesArr)
           .enter().append("g")
-            .attr("id", function (d,i) { return "series_"+i })
-            .attr("class", "series")
-            .on("click", function (d) { clickPopover.call(this, d); });
+            .attr("class", "series");
 
         selection.append("path")
           .attr("class", "streamPath")
           .attr("d", function (d) { return area(d.values); })
-            .attr("id", function (d,i) { return "streamPath"+i })
           .style("fill", function (d) { return color(d.name); })
           .style("stroke", "grey");
 
@@ -227,15 +192,13 @@
            .attr("r", "10px")
            .style("fill",function (d) { return color(d.name); })
            .on("mouseover", function (d) { showPopover.call(this, d); })
-           .on("mouseout",  function (d) { removePopovers(); });
+           .on("mouseout",  function (d) { removePopovers(); })
 
         var legend = svg.selectAll(".legend")
-            .data(varNames)
+            .data(varNames.slice().reverse())
           .enter().append("g")
-            .attr("id", function (d,i) { return "trendlegend_"+i })
             .attr("class", "legend")
-            .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; })
-            .on("click", function (d) { clickPopover.call(this, d); });
+            .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
 
         legend.append("rect")
             .attr("x", width-30)    // gia na mpoun aristera
@@ -285,85 +248,6 @@
           $(this).popover('show')
         }
 
-            function trendReset(){
-                $(".series").each(function () {
-                    $(this).attr("class", "series");
-                });
-
-                $(".legend").each(function () {
-                    $(this).attr("class", "legend");
-                });
-            }
-
-            function clickPopover (d) {
-                var tit = 0;
-                var titindex = 0;
-                var titname = 0;
-                var elementid;
-                topicnames.filter(function (o, i) {
-                    if ($.isNumeric(d)) {           // if legend was clicked
-                        elementid = d;
-                    }
-                    else {                           // if legend was clicked
-                        elementid = d.name;
-
-                    }
-                    if (elementid == o.id) {
-
-                        tit = o.index + "." + o.name;
-                        titname = o.name;
-                        titindex = o.index;
-
-                        if ($("#series_" + i).attr("class") == "series active_trend") {
-                            $("#series_" + i).attr("class", "series inactive_trend");
-                            $("#trendlegend_" + i).attr("class", "legend inactive_trend");
-                            if ($(".active_trend").length == 0) {
-                                $(".inactive_trend").each(function () {
-                                    if ($(this).attr("class") == "series inactive_trend")
-                                        $(this).attr("class", "series");
-                                    else
-                                        $(this).attr("class", "legend");
-                                });
-                                trendReset();
-                            }
-//                            else if ($(".active_trend").length == 1) {
-//                                mytextTitleElem.empty();
-//                                mytextTitleElem.show();
-//                                mytextTitle.append("div").append("ul")
-//                                    .attr("class", "pagination active")
-//                                    .attr("data-toggle", "tooltip")
-//                                    .attr("data-placement", "right")
-//                                    .attr("title", "...more about project and link...")
-//                                    .style("cursor", "pointer")
-//                                    //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
-//                                    //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-//                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray").html("Selected topic: <br/>" + tit);
-//                                console.log($(".active_trend"));
-//                                autocompletelog(titname);
-//                            }
-                        }
-                        else {
-                            $("#series_" + i).attr("class", "series active_trend");
-                            $("#trendlegend_" + i).attr("class", "legend active_trend");
-
-                            if ($(".active_trend").length == 2) {       //ena gia to series kai ena gia to trendlegend
-                                $(".series").each(function () {
-                                    $(this).attr("class", "series inactive_trend");
-                                });
-                                $(".legend").each(function () {
-                                    $(this).attr("class", "legend inactive_trend");
-                                });
-
-                                $("#series_" + i).attr("class", "series active_trend");
-                                $("#trendlegend_" + i).attr("class", "legend active_trend");
-
-                            }
-
-                        }
-                    }
-                });
-
-            }
         });
       });
     </script>

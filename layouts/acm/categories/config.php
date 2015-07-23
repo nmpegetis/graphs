@@ -50,7 +50,9 @@ $fontsizeVar = 26; 				// 43 fontsizeVar variable multiplied with previous_scale
 $smallestFontVar = 13;
 
 // similarities for the graph labeling 
-$expsimilarity = 0.85;			// similarity for querying the database
+//$expsimilarity = $_GET['s'];
+//if ($expsimilarity <= 0)
+    $expsimilarity = 0.85;			// similarity for querying the database
 $similarityThr = 0.85;			// similarity threshold
 $nodeConnectionsThr = 0.75; 		// node connections threshold
 $maxNodeConnectionsThr = 0; 	//percentage of minimum node connections for label printing

@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4de64057-89db-4e55-ad99-e8ce4da73264" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/layouts/acm/categories/data/acm-sigmod-pivot-all-1976-2011.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/layouts/acm/categories/data/acm-sigmod-pivot-all-1976-2011_new.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/layouts/acm/categories/data/comminicationACM_pivot_1990-2011.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/layouts/acm/categories/data/comminicationACM_pivot_1990-2011_new.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/layouts/acm/categories/data/crunchbase-quarters.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/layouts/acm/categories/data/crunchbase-quarters_new.csv" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/php/index_code.php" afterPath="$PROJECT_DIR$/php/index_code.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="4de64057-89db-4e55-ad99-e8ce4da73264" name="Default" comment="" />
     <ignored path="graphs.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -50,7 +41,7 @@
       <file leaf-file-name="index_code.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/php/index_code.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9614325">
+            <state vertical-scroll-proportion="2.251613">
               <caret line="2655" column="34" selection-start-line="2655" selection-start-column="34" selection-end-line="2655" selection-end-column="34" />
               <folding>
                 <marker date="1437749874000" expanded="true" signature="44658:44686" placeholder="..." />
@@ -449,9 +440,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32932693" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -906,7 +897,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/php/index_code.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9614325">
+        <state vertical-scroll-proportion="2.251613">
           <caret line="2655" column="34" selection-start-line="2655" selection-start-column="34" selection-end-line="2655" selection-end-column="34" />
           <folding>
             <marker date="1437749874000" expanded="true" signature="44658:44686" placeholder="..." />

@@ -1041,9 +1041,10 @@
                                 .attr("class", "pagination active")
                                 .attr("data-toggle", "tooltip")
                                 .attr("data-placement", "right")
-                                .attr("title", "...more about project and link...")
+//                                .attr("title", "...more about project and link...")
                                 .style("cursor","pointer")
-                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html('<?php echo $node_name;?>: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
+//                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).attr("style", "font-weight:400").html('<?php //echo $node_name;?>//: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
+                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).attr("style", "font-weight:400").html('<?php echo $node_name;?>: ' + o.name + "</br> Category: " + o.area);
                             var str = "";
                             topicsGroupPerNode = grants[o.id];
                             if (topics1 != null) {
@@ -1057,7 +1058,7 @@
                                         if ((opacity = mywords[j].counts / mywords[0].counts) < 0.8) {
                                             opacity = 0.8;
                                         }
-                                        str += "<span class='topic' style='opacity:" + opacity + ";'>" + mywords[j].item + "</span>";
+                                        str += "<span class='topic' style='opacity:" + opacity + ";font-weight:400'>" + mywords[j].item + "</span>";
                                         if (j < wlen - 1)
                                             str += ",&nbsp";
                                     }
@@ -1072,7 +1073,8 @@
 
 
                             var classifiedNodes = "";
-                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+//                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + "</a></li>";
                             numOfClassifiedNodes++;
                             classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
                             classifiedNodesElem.show();
@@ -1113,12 +1115,7 @@
 
             /* reset */
             function reset(){					/* normalizeNodesAndRemoveLabels */
-                console.log(grantsElem.find("option:selected")[0])
-                if (grantsElem.find("option:selected")[0] !== undefined) {
-                    console.log("eimai mesa reset")
-                    return 0;
-                }
-                console.log("eimai eksw  reset")
+                if (grantsElem.find("option:selected")[0] !== undefined) return 0;
 
                 var types = [];
                 $(".circle").each(function(){
@@ -1139,14 +1136,16 @@
                 nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
 
                 filter1Elem.hide();
-                filter2Elem.hide();
+//                filter2Elem.hide();
+                filter2Elem.show();
                 mytextTitleElem.empty();
                 mytextContentElem.empty();
 
                 upButtonElem.hide();
                 downButtonElem.hide();
 
-                filtersElem.val("opt0");
+//                filtersElem.val("opt0");
+                filtersElem.val("#opt2");
                 grantsElem.multiselect("deselectAll",false);
             }
 
@@ -1205,7 +1204,7 @@
 
             function classifiedNodeButtons(){
                 counter=0;						//(re)-initialize counter to zero
-                listLength = 10;
+                listLength = 5;
 
                 classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
                 counter+=listLength;
@@ -1697,7 +1696,8 @@
 
                 for (i=0 ; i<availableTags.length ; i++){
                     if (message==availableTags[i].item){
-                        classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
+//                        classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
+                        classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + "</a></li>";
 
                         searchResultNodes.push(availableTags[i].index);	//node results in topic word search
 
@@ -2543,10 +2543,10 @@
                             filter1Elem.hide();
                             filter2Elem.show()
                         }
-                        else{
-                            filter1Elem.hide();
-                            filter2Elem.hide()
-                        }
+//                        else{
+//                            filter1Elem.hide();
+//                            filter2Elem.hide()
+//                        }
                     });
 
 
@@ -2632,7 +2632,8 @@
                 upButtonElem.hide();
                 downButtonElem.hide();
                 filter1Elem.hide();
-                filter2Elem.hide();
+                filter2Elem.show();
+//                filter2Elem.hide();
                 boostBtnElem.hide();
                 experimentBtnElem.hide();
                 mytextTitleElem.hide();
@@ -2651,7 +2652,8 @@
                 trenddivElem.empty();
                 trend2divElem.empty();
 
-                filtersElem.val("opt0");
+//                filtersElem.val("opt0");
+                filtersElem.val("#opt2");
 
                 linkedByIndex = {},
                 nodeConnections = [],
@@ -2686,7 +2688,7 @@
                 discriminativeWord = {},
                 discriminativeWordCounts = {},
                 label = {},
-                listLength = 10,
+                listLength = 5,
                 counter = 0,
                 numOfClassifiedNodes = 0,
                 flagForTranformation = 0,
@@ -3157,7 +3159,8 @@
                         var o;
                         $.each(types,function(i,obj){
                             o = $.grep(nodes, function(o) { return o.index == obj })[0];
-                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+//                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + "</a></li>";
                             numOfClassifiedNodes++;
 
                         });
@@ -3179,7 +3182,8 @@
                         var o;
                         $.each(types,function(i,obj){
                             o = $.grep(nodes, function(o) { return o.index == obj })[0];
-                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+//                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + " <span class=\"badge badge-info\">" + o.value + "</span></a></li>";
+                            classifiedNodes += "<li class=\"" + o.color + "result\"><a class=\"" + o.color + "result \" id=\"" + o.index + "\">" + o.name + "</a></li>";
                             numOfClassifiedNodes++;
 
                         });
@@ -3908,11 +3912,11 @@
                                         .attr("class", "pagination active")
                                         .attr("data-toggle", "tooltip")
                                         .attr("data-placement", "right")
-                                        .attr("title", "...more about project and link...")
+//                                        .attr("title", "...more about project and link...")
                                         .style("cursor", "pointer")
 //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
 //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                        .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray").html("Selected topic: <br/>" + tit);
+                                        .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic: <br/>" + tit);
                                     //}
                                 }
                             });
@@ -3993,11 +3997,11 @@
                                     .attr("class", "pagination active")
                                     .attr("data-toggle", "tooltip")
                                     .attr("data-placement", "right")
-                                    .attr("title", "...more about project and link...")
+//                                    .attr("title", "...more about project and link...")
                                     .style("cursor", "pointer")
                                     //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
                                     //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray").html("Selected topic: <br/>" + tit);
+                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic: <br/>" + tit);
                                 autocompletelog(titname);
                                 classifiedNodeButtons();
 
@@ -4143,7 +4147,8 @@
                             d3.select("#trend2div").style("width", windowElem.width());
                             d3.select("#trend3div").style("padding-left", windowElem.width() / 4);
                             d3.select("#trend3div").style("width", windowElem.width());
-                            trenddivElem.style("height",h);
+//                            trenddivElem.style("height",h);
+                            trenddivElem.attr("style","height:"+h);
                         }
                         else {
                             vis.attr("transform","translate(" + windowElem.width()/4 + ")");
@@ -4154,7 +4159,7 @@
                             d3.select("#trend2div").style("width", windowElem.width());
                             d3.select("#trend3div").attr("transform","translate(" + windowElem.width()/4 + ")");
                             d3.select("#trend3div").style("width", windowElem.width());
-                            trenddivElem.style("height",h);
+                            trenddivElem.attr("style","height:"+h);
                         }
 
                         chordElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
@@ -4166,7 +4171,6 @@
                     }
                     else{
                         mygraphContainerElem.attr("style","width:100%;height:100%;top:0;background-color:none");
-
                         /* move svg to left back to initial position */
                         if ( webkit == 1) {
                             vis.style("padding-left", "");
@@ -4174,14 +4178,16 @@
                             d3.select("#trend2div").style("padding-left","0");
                             d3.select("#trend3div").style("padding-left","0");
 //to apo katw xreiazetai mono gia auto to trend giati gia kapoio logo den emfanizotan
-                            trenddivElem.style("height",h);
+//                            trenddivElem.style("height",h);
+                            trenddivElem.attr("style","height:"+h);
                         }
                         else {
                             vis.attr("transform","translate(" + 0 + ")");
                             d3.select("#trenddiv").attr("transform","translate(" + 0 + ")");
                             d3.select("#trend2div").attr("transform","translate(" + 0 + ")");
                             d3.select("#trend3div").attr("transform","translate(" + 0 + ")");
-                            trenddivElem.style("height",h);
+//                            trenddivElem.style("height",h);
+                            trenddivElem.attr("style","height:"+h);
                         }
                         graphReset();
 
@@ -4247,9 +4253,9 @@
                 <li>
                     Filter by:
                     <select id="filters" data-toggle="tooltip" data-placement="bottom" title="Select an option of filtering  <?php echo $node_name ;?> elements">
-                        <option id="opt0"></option>
+<!--                        <option id="opt0"></option>-->
                         <option id="opt1" data-toggle="tooltip" data-placement="right" title="Filter by searching or clicking one or multiple  <?php echo $node_name ;?>s"><?php echo $node_name."s" ;?></option>
-                        <option id="opt2" data-toggle="tooltip" data-placement="right" title="Filter by finding a bag of topic words">Topic word search</option>
+                        <option id="opt2" data-toggle="tooltip" data-placement="right" title="Filter by finding a bag of topic words" selected="selected">Topic word search</option>
                     </select>
                 </li>
                 <li id="filter1" style="padding-left:10px">
@@ -4322,10 +4328,10 @@
             <h5 id="classifiedNodesHeader" style="cursor:pointer"><span id="exitclassifiedNodesHeader"><i class="glyphicon glyphicon-remove-sign"></i></span><h5>
         </div>
         <div class="nav-wrap" id="classifiedNodes" style="cursor:pointer">
-            <div><button id="upButton" class="btn btn-primary btn-sm ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 10</span></button>
+            <div><button id="upButton" class="btn btn-primary btn-sm ui-multiselect ui-widget ui-state-default ui-corner-all previous" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;" ><span><i class="glyphicon glyphicon-arrow-up"></i>Previous 5</span></button>
                 <ul class="pagination pagination-sm">
                 </ul>
-                <button id="downButton" class="btn btn-primary btn-sm ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 10<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
+                <button id="downButton" class="btn btn-primary btn-sm ui-multiselect ui-widget ui-state-default ui-corner-all next\" style="padding-left:5px;padding-right:5px;width:100%;text-align: center;"><span>Next 5<i class="glyphicon glyphicon-arrow-down"></i></span></li></button>
             </div>
         </div>
 

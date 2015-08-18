@@ -1775,6 +1775,8 @@
                 else if(experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFET100T.php");
                 else if(experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewHEALTH200T.php");
                 else if(experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFull300T.php");
+                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.6") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull300T.php");
+                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.6") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull320T.php");
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMCategories.php");
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMAuthors.php");
                 else ajaxCallURL(experiment,expsimilarity,"./dbfront.php");

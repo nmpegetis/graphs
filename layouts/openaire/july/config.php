@@ -25,9 +25,9 @@ $query_grants = "select project_code, topicid, weight from topicsperdocview wher
 
 //$query_grants = "select PubCategory.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategory on topicsPerDoc.DocId= PubCategory.PubId INNER JOIN (Select Category FROM pubCategory GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategory.category where weight>0.02 AND ExperimentId=? group By PubCategory.Category , TopicId order by  pubCategory.Category, Weight desc, TopicId";
 
-$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+$query_topics = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 
-$query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+$query_topics_nosort = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
 $query_topicsdistribution = null;
 $query_treemap = null;
 $query_trends = null;
@@ -62,8 +62,8 @@ $maxNodeConnectionsThr = 0; 	//percentage of minimum node connections for label 
 $linkThr = 0.2;					//similarity value threshold for label printin
 
 // d3 layout plotting
-$charge = -1100;					// according to http://jsfiddle.net/cSn6w/8/			// charge of each 'electron' - or 'proton' +, positive or negative
-$gravity = 1;					// sets how close to each other the nodes are... if >1000 nodes it is good to be a number >2
+$charge = -200;					// according to http://jsfiddle.net/cSn6w/8/			// charge of each 'electron' - or 'proton' +, positive or negative
+$gravity = 10;					// sets how close to each other the nodes are... if >1000 nodes it is good to be a number >2
 
 // d3 chord dimensions
 $chord_width = 0;

@@ -1775,8 +1775,10 @@
                 else if(experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFET100T.php");
                 else if(experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewHEALTH200T.php");
                 else if(experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFull300T.php");
-                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.6") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull300T.php");
-                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.6") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull320T.php");
+                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull300T_81.php");
+                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull320T_81.php");
+                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull300T_80.php");
+                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull320T_80.php");
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMCategories.php");
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMAuthors.php");
                 else ajaxCallURL(experiment,expsimilarity,"./dbfront.php");
@@ -2194,6 +2196,7 @@
                                                     if(z != subdConnections[j].name){
 
                                                         percentageSum = subdBiConnectionsNum[i][j]+subdBiConnectionsNum[j][i];
+//                                                        percentageSum = subdBiConnectionsNum[i][j];
                                                         if (percentageSum > 0){
                                                             str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
                                                                 // + "<div class='cell' style='border-top:solid "+subdivisionsChord[i].color+";'>"
@@ -3200,6 +3203,10 @@
                                 .attr("title", o.area+" description")
                                 //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
                                 .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
+                                console.log( "subdivisionsChord[i].relations" )
+                                console.log( subdivisionsChord[i].relations )
+                                console.log( "relations[i]" )
+                                console.log( relations[i] )
                         }
                         else{
                             mytextTitleElem.empty();
@@ -3227,12 +3234,13 @@
             /* test function is similar to fade function*/
             function createJsonFile(){
 
-                nodeCircles.each(function(mynode) {
+                nodeCircles.each(function(mynode) {     // initializations
                     var areaIndex = subdConnections.indexOf(mynode.color);
                     if(areaIndex != -1){	// if already exists
                         subdConnectionsNum[areaIndex]++;
                     }
                     else{
+                        //creating and initializing subdconnections array and subdBiconnections/subdBiconnectionsNum matrices 
                         subdConnections.push(mynode.color);
                         areaIndex = subdConnections.indexOf(mynode.color);
                         subdConnectionsNum[areaIndex] = 1;
@@ -3246,7 +3254,7 @@
                     }
 
                     nodeCircles.each(function(d) {
-                        if (isNodeConnected(mynode, d)) {
+                        if (isNodeConnected(mynode, d)) {           // checks both ways connection
                             if (d != mynode){
                                 var areaBiIndex = subdBiConnections[areaIndex].indexOf(d.color);
                                 if(areaBiIndex != -1){	// if already exists
@@ -3312,8 +3320,9 @@
                     subdSum = 0;
                     subdSumCross = 0;
                     for (var j = 0; j < subdConnections.length; j++) {
-                        subdSum += subdBiConnectionsNum[i][j];
-                        subdSumCross += subdBiConnectionsNumCross[i][j];
+//todo
+                        subdSum += subdBiConnectionsNum[i][j] + subdBiConnectionsNum[j][i];
+                        subdSumCross += subdBiConnectionsNumCross[i][j] + subdBiConnectionsNumCross[j][i];
                     }
                     relations.push(subdSum);
                     relationsCross.push(subdSumCross);

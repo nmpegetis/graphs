@@ -21,7 +21,10 @@ $query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,Acr1 as n
 $query_experiments = "select distinct ExperimentId,Description,initialSimilarity from experiment";
 
 //$query_grants = "select project_code, TopicId, AVG(Weight) as weight from TopicsPerDoc Inner join links on TopicsPerDoc.DocId=links.originalid where Weight>0.02 AND ExperimentId=? Group By project_code, TopicId Order by project_code, AVG(Weight) Desc";
-$query_grants = "select project_code, topicid, weight from topicsperdocview where ExperimentId=?";
+//$query_grants = "select project_code, topicid, weight from topicsperdocview where ExperimentId=?";
+$query_grants = "select projectid as project_code, TopicId, AVG(Weight) as weight from pubtopic Inner join links on pubtopic.pubId=links.originalid where Weight>0.02 AND ExperimentId=? Group By projectid, TopicId Order by projectid, AVG(Weight) Desc";
+//select project_code, TopicId, AVG(Weight) as weight from TopicsPerDoc Inner join links on TopicsPerDoc.DocId=links.originalid where Weight>0.02 AND ExperimentId=? Group By project_code, TopicId Order by project_code, AVG(Weight) Desc
+
 
 //$query_grants = "select PubCategory.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategory on topicsPerDoc.DocId= PubCategory.PubId INNER JOIN (Select Category FROM pubCategory GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategory.category where weight>0.02 AND ExperimentId=? group By PubCategory.Category , TopicId order by  pubCategory.Category, Weight desc, TopicId";
 
@@ -55,19 +58,19 @@ $fontsizeVar = 26; 				// 43 fontsizeVar variable multiplied with previous_scale
 $smallestFontVar = 13;
 
 // similarities for the graph labeling 
-$expsimilarity = 0.6;			// similarity for querying the database ... for the first experiment
-$similarityThr = 0.5;			// similarity threshold
-$nodeConnectionsThr = 0.1; 		// node connections threshold
+$expsimilarity = 0.8;	///0.6		// similarity for querying the database ... for the first experiment
+$similarityThr = 0;			// similarity threshold
+$nodeConnectionsThr = 0.3; 		// node connections threshold
 $maxNodeConnectionsThr = 0; 	//percentage of minimum node connections for label printing
-$linkThr = 0.2;					//similarity value threshold for label printin
+$linkThr = 0;					//similarity value threshold for label printin
 
 // d3 layout plotting
-$charge = -200;					// according to http://jsfiddle.net/cSn6w/8/			// charge of each 'electron' - or 'proton' +, positive or negative
-$gravity = 10;					// sets how close to each other the nodes are... if >1000 nodes it is good to be a number >2
+$charge = -300;			///-180		// according to http://jsfiddle.net/cSn6w/8/			// charge of each 'electron' - or 'proton' +, positive or negative
+$gravity = 10;			///12		// sets how close to each other the nodes are... if >1000 nodes it is good to be a number >2
 
 // d3 chord dimensions
-$chord_width = 0;
-$chord_height = -100;
+$chord_width = 50;
+$chord_height = -300;
 $wordWidth = 150;
 $wordHeight = 200;
 $wordPadding = -15;				//-15 is for padding labels outside the outerRadius

@@ -370,11 +370,13 @@
             // links
                 links,						// includes all the links among the nodes
                 linkedByIndex, similarityThr, linkThr,
+                jsonLinks,
 
             // nodes
                 nodes,						// includes all the nodes
                 nodeConnections, maxNodeConnections, nodesToFade, nodesInGroup, neighborNode, focused, nodeConnectionsThr, maxNodeConnectionsThr, node_hash, clickedNode, max_proj,
                 numOfClassifiedNodes,				            //classifiedNodes found
+                jsonNodes,
 
             // categories
                 legend_data, subdConnections, subdBiConnections, subdConnectionsNum, subdBiConnectionsNum, fetOpenNum, fetProactiveNum, fetFlagshipNum, relations,
@@ -401,7 +403,10 @@
                 target,
                 opts,
                 spinner,
-                webkit;
+                webkit,
+
+            //graph
+                graphPositionsExist;
 
 
             // function creation jquery percentage
@@ -417,7 +422,6 @@
 //                    });
 //                }
             });
-
             dropdownThresholdsElem.on("click", function () {
                 $(this).parent().toggleClass('open');
             });
@@ -450,7 +454,31 @@
             loadThresholdsFromUrlParameters();
             initializeExperimentPage();
             loadThresholdsFromUrlParameters();  //only when changing the parameters on url and refreshing
-            ajaxCall(experimentName,expsimilarity);
+
+            //todo graph positions set true if json file exists... make correct name files to check them
+            graphPositionsExist=false;
+
+            if (graphPositionsExist){
+                var filename = "graph_"+experimentName+"_"+expsimilarity+".json";
+                var graph;
+                $.getJSON( filename).done( function(json) {
+                    jsonNodes = $.parseJSON(json.nodes);
+                    jsonLinks = $.parseJSON(json.links);
+                    console.log( "success" );
+                    ajaxCall(experimentName,expsimilarity);
+                }).fail(function() {
+                    console.log( "error in json position reading file" );
+                });
+
+//                $.getJSON( "graphLinks.json", function(json) {
+//                    jsonLinks = json;
+//                    console.log( "success" );
+//                    ajaxCall(experimentName,expsimilarity);
+//                });
+            }
+            else{
+                ajaxCall(experimentName,expsimilarity);
+            }
             mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
             resizeLayout();
             checkFullscreen();
@@ -687,6 +715,25 @@
             if (windowElem.width() < 755)
                 charge *= 1.5;
 
+//            force.nodes(JSON.parse(storedNodes));
+//            force.links(JSON.parse(storedNodes));
+//            force.start();
+
+//            force = self.force = d3.layout.force()
+//                .linkDistance(function(d) {
+//                    return Math.round(10*d.value);
+//                })
+//                .linkStrength(function(d) {
+//                    return d.value;
+//                })
+//                .charge( charge*((windowElem.width()*w*0.3)/(755*755))) // according to http://jsfiddle.net/cSn6w/8/
+//                .gravity(gravity)
+//                .size([w, h]);
+//            force.nodes($.getJSON( "graphNodes.json", function() {console.log( "success" );}));
+//            force.links($.getJSON( "graphLinks.json", function() {console.log( "success" );}));
+//
+//            force.stop();
+
             force = self.force = d3.layout.force()
                 .linkDistance(function(d) {
                     return Math.round(10*d.value);
@@ -696,9 +743,14 @@
                 })
                 .charge( charge*((windowElem.width()*w*0.3)/(755*755))) // according to http://jsfiddle.net/cSn6w/8/
                 .gravity(gravity)
-                .size([w, h])
-                .on("tick", initialTick);
+                .size([w, h]);
 
+            if (graphPositionsExist){
+                force.on("tick", jsonTick);
+            }
+            else{
+                force.on("tick", initialTick);
+            }
 
 // Na tsekarw me to Enter ti tha anoigei. An  leitourgei swsta
             documentElem.keydown(function(e) {
@@ -1373,6 +1425,8 @@
 
             /**** TICK FUNCTIONS ****/
             function browseTick(firsttime) {
+                $(".loading").remove();
+
                 nodeCircles
                     /* transition animates the elements selected. In browsing we don't need it */
 //                    .transition()
@@ -1416,9 +1470,9 @@
                 nodeLabels
 //                    .transition()
 //                    .duration(200)
-                    .attr("class", function(d) {
-                        return "labels " + d.color
-                    })
+//                    .attr("class", function(d) {
+//                        return "labels " + d.color
+//                    })
 //                        .attr("x", function(d) {
 //                            return (d.x+7);
 //                        })
@@ -1746,20 +1800,20 @@
                 if (e.alpha < 0.04) {
 
                     vis.select(".loading").remove();
-
+                    storeGraph();
                     browseTick(true);
                     force.stop()
                 }
                 else {
 //				if (e.alpha < 0.015) {
-                    if (e.alpha < 0.004) {
+//                    if (e.alpha < 0.04) {
                         var q = d3.geom.quadtree(nodes),				//ftiaxnei tous kombous se sxima quadtree
                             i = 0,
                             n = nodes.length;
                         while (++i < n) {
                             q.visit(collide(nodes[i]));
                         }
-                    }
+//                    }
                     loadingText.text(function() {
                         // before for alpha < 0.01 below instead of 143 was 100
                         return "Loading: " + Math.round((1 - (e.alpha * 10 - 0.1)) * 143) + "%"
@@ -1767,6 +1821,12 @@
                 }
             }
 
+
+            function jsonTick(e) {
+                vis.select(".loading").remove();
+                browseTick(true);
+                force.stop()
+            }
 
             /**** DB CONNECTION FUNCTIONS ****/
 
@@ -1783,6 +1843,8 @@
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMAuthors.php");
                 else ajaxCallURL(experiment,expsimilarity,"./dbfront.php");
             }
+
+
             function ajaxCallURL(experiment,expsimilarity,url) {
                 console.log("call "+experiment);
                 $.ajax({
@@ -1793,7 +1855,7 @@
                     success: function (resp) {
                         spinner.stop();
                         myresponse = JSON.parse(resp);
-                        //documentElem.bind("graphDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                        //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
                         topics1 = myresponse.topicsNoSort;
                         topics2 = myresponse.topics;
                         grants = myresponse.grants;
@@ -1805,6 +1867,56 @@
                         alert('Error: ' + JSON.stringify(e));
                     }
                 });
+            }
+
+
+            function storeGraph(){
+
+//                var storedNodes = JSON.stringify(force.nodes());
+//                var storedLinks = JSON.stringify(force.links());
+
+                // we send data with POST typy
+                $.ajax({
+                    type: "POST",
+                    dataType : "json",
+                    async: false,
+                    url: './saveGraphPositions.php',
+                    data: { datanodes: JSON.stringify(force.nodes()),
+                        datalinks: JSON.stringify(force.links()),
+                        similarity: expsimilarity,
+                        experiment: experimentName
+                    },
+                    success: function () {alert("Thanks!"); },
+                    failure: function() {alert("Error!");}
+                });
+
+//                $.ajax({
+//                    type: "POST",
+//                    dataType : "json",
+//                    async: false,
+//                    url: './saveNodesInJson.php',
+//                    data: { data: JSON.stringify(force.nodes()),
+//                            similarity: expsimilarity,
+//                            experiment: experimentName
+//                    },
+////                    data: { data: JSON.stringify(vis.selectAll(".circle"))},
+//                    success: function () {alert("Thanks!"); },
+//                    failure: function() {alert("Error!");}
+//                });
+//
+//                $.ajax({
+//                    type: "POST",
+//                    dataType : "json",
+//                    async: false,
+//                    url: './saveLinksInJson.php',
+//                    data: { data: JSON.stringify(force.links()),
+//                        similarity: expsimilarity,
+//                        experiment: experimentName
+//                    },
+////                    data: { data: JSON.stringify(vis.selectAll(".link")) },
+//                    success: function () {alert("Thanks!"); },
+//                    failure: function() {alert("Error!");}
+//                });
             }
 
 
@@ -2101,6 +2213,10 @@
                     if(legend_data[i].pr > max_proj)
                         max_proj = legend_data[i].pr;
                 }
+
+//todo to apo katw to bazw kai edw .... iiiii haaaa
+                findTopicLabels();
+                loadLabels();
 
                 update();
 
@@ -2920,6 +3036,7 @@
                 });
 
                 var ew = 0;
+
                 force
                     .nodes(nodes
                         .map(function(d) {
@@ -2929,7 +3046,7 @@
                                 y: Math.random() * h
                             })
                         })
-                )
+                    )
                     .links(links
                         .map(function(d) {
                             ew++;
@@ -2938,11 +3055,18 @@
                                 target: d.target
                             })
                         })
-                )
+                    )
                     .start();
 
-                linkLines = vis.selectAll(".links")
-                    .data(links);
+                if (graphPositionsExist) {
+                    linkLines = vis.selectAll(".link")
+                        .data(jsonLinks);
+                }
+                else{
+                    linkLines = vis.selectAll(".link")
+                        .data(links);
+                }
+
                 var u =0;
                 linkLines.enter().append("svg:line")					//edw ftiaxnei tis akmes
                     .attr("class", function(d) {
@@ -2966,10 +3090,16 @@
                     });
 
 
-                linkLines.exit();
+                linkLines.exit().remove();
 
-                nodeCircles = vis.selectAll(".circle")				//i html klasi gia tous kombous
+                if (graphPositionsExist) {
+                    nodeCircles = vis.selectAll(".circle")				//i html klasi gia tous kombous
+                        .data(jsonNodes);
+                }
+                else{
+                    nodeCircles = vis.selectAll(".circle")				//i html klasi gia tous kombous
                     .data(nodes);
+                }
 
                 nodeCircles.enter()									// edw ftiaxnei tous kombous sss
                     .append("svg:circle")
@@ -2981,9 +3111,6 @@
                     })
                     .attr("r", function(d) {
                         return d.radius
-                    })
-                    .attr("fixed", function(d) {
-                        return true
                     })
                     .attr("cx", function(d) {
                         return d.x
@@ -3044,8 +3171,15 @@
 
                 nodeCircles.exit().remove();
 
-                nodeLabels = vis.selectAll(".labels")
+                if (graphPositionsExist) {
+                    nodeLabels = vis.selectAll(".labels")
+                        .data(jsonNodes);
+                }
+                else{
+                    nodeLabels = vis.selectAll(".labels")
                     .data(nodes);
+                }
+
                 nodeLabels.enter()
                     .append("svg:text")
                     .attr("class", function(d) {
@@ -3053,6 +3187,40 @@
                     })
                     .attr("id", function(d) {
                         return "circle-label-"+d.index
+                    })
+
+                    .attr("x",function (d){
+                    return d.x+7
+                    })
+                    .attr("y",function (d){
+                        return d.y-7
+                    })
+//				.text(function(d){return d.index;});
+                    .text(function(d) {
+
+                        if (labeled[d.index]){
+//                            if (firsttime) {
+                                label[d.index] = "";
+                                // console.log("topicWords printed on graph:");
+                                for (i = 0; i < svgSortedTopicWords.length; i++) {
+                                    if (svgSortedTopicWords[i].key == d.index) {
+                                        if (!labelIsOnGraph[svgSortedTopicWords[i].item]) {
+                                            label[d.index] = svgSortedTopicWords[i].item;
+                                            // console.log("svgSortedTopicWords["+i+"].key="+svgSortedTopicWords[i].key+" label="+label);
+                                            labelIsOnGraph[label[d.index]] = true;
+                                        }
+                                        break;
+                                    }
+                                }
+//                            }
+
+                            if((links[d.index].value>similarityThr-(0.2*previous_scale)) && (nodeConnections[d.index] > (nodeConnectionsThr/Math.sqrt(previous_scale))*maxNodeConnections)){
+                                return label[d.index];
+                            }
+                            else{
+                                return "";
+                            }
+                        }
                     });
 
                 nodeLabels.exit().remove();
@@ -4297,8 +4465,8 @@
                                 <input type="text" id="thr4" class="form-control" aria-label="connectivity threshold(percentage)" maxlength="9" placeholder="e.g. 15" style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for ALL <?php echo $node_name ;?>s to be labeled, <b>100</b> for NONE of the <?php echo $node_name ;?>s to be labeled">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>ENS for Experiment Node Similarity</b><br/>Defines the experiment threshold over which a <?php echo $node_name ;?> is loaded on graph from the database retrieval.">ENS</span>
                                 <input type="text" id="thr5" class="form-control" aria-label="experiment similarity threshold(percentage)" maxlength="9" placeholder="e.g. 65"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for ALL <?php echo $node_name ;?>s to be retrieved from the database, <b>100</b> for NONE of the <?php echo $node_name ;?>s to be retrieved.">
-                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>GRA for Graph Gravity</b><br/>Defines the Tractive Force of each <?php echo $node_name ;?> to the other <?php echo $node_name ;?>s. Like a proton.">GRA</span>
-                                <input type="text" id="thr6" class="form-control" aria-label="Force Directed Graph Gravity" maxlength="9" placeholder="e.g. 2"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for SMALL Tractive Force among <?php echo $node_name ;?>s, <b> > 10</b> for BIG Tractive Force among <?php echo $node_name ;?>s">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>GRA for Graph Gravity</b><br/>Defines the Tractive Force from the center of the graph layout to all <?php echo $node_name ;?>s.">GRA</span>
+                                <input type="text" id="thr6" class="form-control" aria-label="Force Directed Graph Gravity" maxlength="9" placeholder="e.g. 2"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for SMALL Tractive Force from the center of layout, <b> > 10</b> for BIG Tractive Force from the center of layout">
                                 <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>CHA for Graph Charge</b><br/>Defines the Repulsive Charge of each <?php echo $node_name ;?> to the other <?php echo $node_name ;?>s. Like an electron.">CHA</span>
                                 <input type="text" id="thr7" class="form-control" aria-label="Force Directed Graph Charge" maxlength="9" placeholder="e.g. -1100"  style="width:60px" data-toggle="tooltip" data-placement="bottom" data-html="true" data-title="Thresholds" title="<b>0</b> for SMALL Repulsive Charge among <?php echo $node_name ;?>s, <b> < -10000</b> for BIG Repulsive Charge among <?php echo $node_name ;?>s">
                             </div>

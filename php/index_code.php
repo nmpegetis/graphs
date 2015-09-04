@@ -406,7 +406,7 @@
                 webkit,
 
             //graph
-                graphPositionsExist;
+                graphPositionsExist,jsonfilename;
 
 
             // function creation jquery percentage
@@ -454,35 +454,10 @@
             loadThresholdsFromUrlParameters();
             initializeExperimentPage();
             loadThresholdsFromUrlParameters();  //only when changing the parameters on url and refreshing
-
-            //todo graph positions set true if json file exists... make correct name files to check them
-            graphPositionsExist=false;
-
-            if (graphPositionsExist){
-                var filename = "graph_"+experimentName+"_"+expsimilarity+".json";
-                var graph;
-                $.getJSON( filename).done( function(json) {
-                    jsonNodes = $.parseJSON(json.nodes);
-                    jsonLinks = $.parseJSON(json.links);
-                    console.log( "success" );
-                    ajaxCall(experimentName,expsimilarity);
-                }).fail(function() {
-                    console.log( "error in json position reading file" );
-                });
-
-//                $.getJSON( "graphLinks.json", function(json) {
-//                    jsonLinks = json;
-//                    console.log( "success" );
-//                    ajaxCall(experimentName,expsimilarity);
-//                });
-            }
-            else{
-                ajaxCall(experimentName,expsimilarity);
-            }
+            graphLoad();
             mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
             resizeLayout();
             checkFullscreen();
-
 
 
             /* event handlers */
@@ -561,7 +536,7 @@
                 console.log(window.location.href)
                 UpdateQueryString("s", expsimilarity);
                 console.log(window.location.href)
-                ajaxCall(experimentName,expsimilarity);
+                graphLoad();
                 mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                 thr5Elem.val("> "+$.percentage(expsimilarity,1)+" %");
             });
@@ -794,6 +769,34 @@
              *******							FUNCTIONS							*******
              ***************************************************************************/
 
+            function graphLoad(){
+                jsonfilename = "graph_"+experimentName+"_"+expsimilarity+".json";
+                graphPositionsExist=UrlExists(jsonfilename);  //graph positions set true if json file exists
+                if (graphPositionsExist){
+                    $.getJSON( jsonfilename).done( function(json) {
+                        jsonNodes = $.parseJSON(json.nodes);
+                        jsonLinks = $.parseJSON(json.links);
+                        console.log( "success in json positions" );
+                        ajaxCall(experimentName,expsimilarity);
+                    }).fail(function() {
+                        console.log( "error in json position reading file" );
+                    });
+                }
+                else{
+                    graphPositionsExist=false;
+                    ajaxCall(experimentName,expsimilarity);
+                }
+            }
+
+
+
+            function UrlExists(url)
+            {
+                var http = new XMLHttpRequest();
+                http.open('HEAD', url, false);
+                http.send();
+                return http.status!=404;
+            }
 
             /**** DRAGGING FUNCTIONS ****/
             function dragstarted(d){
@@ -2601,7 +2604,7 @@
                             experimentName = myval;
 
                             initializeExperimentPage();
-                            ajaxCall(myval,expsimilarity);
+                            graphLoad();
                             mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
 
 // hard code for the Brusseles ... to be moved ... paizei rolo kai i othoni einia ftiagmena gia 13-15
@@ -3058,6 +3061,8 @@
                     )
                     .start();
 
+                jsonfilename = "graph_"+experimentName+"_"+expsimilarity+".json";
+                graphPositionsExist=UrlExists(jsonfilename);
                 if (graphPositionsExist) {
                     linkLines = vis.selectAll(".link")
                         .data(jsonLinks);

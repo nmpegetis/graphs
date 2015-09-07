@@ -512,7 +512,6 @@
                 browseTick(true);
                 thr3Elem.val("> "+$.percentage(linkThr,1)+" %");
             });
-//            thr3Elem.attr('disabled',true);
 
             thr4Elem.focus(function(){
                 thr4Elem.val($.percentage(maxNodeConnectionsThr,1));
@@ -522,7 +521,7 @@
                 browseTick(true);
                 thr4Elem.val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
             });
-//            thr4Elem.attr('disabled',true);
+
             thr5Elem.focus(function(){
                 thr5Elem.val($.percentage(expsimilarity,1));
             });
@@ -540,7 +539,6 @@
                 mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                 thr5Elem.val("> "+$.percentage(expsimilarity,1)+" %");
             });
-//            thr5Elem.attr('disabled',true);
 
             thr6Elem.focus(function(){
                 console.log("gravity init="+gravity);
@@ -555,7 +553,6 @@
                 force.start();
                 thr6Elem.val(gravity);
             });
-
 
             thr7Elem.focus(function(){
                 console.log("charge init="+gravity);
@@ -576,10 +573,7 @@
             graphmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
             chordmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
             chordmenu2Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
-//            trendmenu1Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
-//            trendmenu2Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
-//            trendmenu3Elem.on("click", function(){legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill1Elem.addClass("disabled");pill3Elem.removeClass("disabled");});
-            //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
+    //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
             trendmenu1Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");});
             trendmenu2Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");});
             trendmenu3Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");});
@@ -611,11 +605,6 @@
                     pill1Elem.addClass("active");
                 }
             });
-
-//todo if fullscreen kai patithei to escape tote to apo katw
-//            svgfullscreenExit();
-//            pill1Elem.removeClass("active");
-//            pill1Elem.blur();
 
 
             pill2Elem.unbind().on("click",function(){
@@ -690,25 +679,6 @@
             if (windowElem.width() < 755)
                 charge *= 1.5;
 
-//            force.nodes(JSON.parse(storedNodes));
-//            force.links(JSON.parse(storedNodes));
-//            force.start();
-
-//            force = self.force = d3.layout.force()
-//                .linkDistance(function(d) {
-//                    return Math.round(10*d.value);
-//                })
-//                .linkStrength(function(d) {
-//                    return d.value;
-//                })
-//                .charge( charge*((windowElem.width()*w*0.3)/(755*755))) // according to http://jsfiddle.net/cSn6w/8/
-//                .gravity(gravity)
-//                .size([w, h]);
-//            force.nodes($.getJSON( "graphNodes.json", function() {console.log( "success" );}));
-//            force.links($.getJSON( "graphLinks.json", function() {console.log( "success" );}));
-//
-//            force.stop();
-
             force = self.force = d3.layout.force()
                 .linkDistance(function(d) {
                     return Math.round(10*d.value);
@@ -769,34 +739,6 @@
              *******							FUNCTIONS							*******
              ***************************************************************************/
 
-            function graphLoad(){
-                jsonfilename = "graph_"+experimentName+"_"+expsimilarity+".json";
-                graphPositionsExist=UrlExists(jsonfilename);  //graph positions set true if json file exists
-                if (graphPositionsExist){
-                    $.getJSON( jsonfilename).done( function(json) {
-                        jsonNodes = $.parseJSON(json.nodes);
-                        jsonLinks = $.parseJSON(json.links);
-                        console.log( "success in json positions" );
-                        ajaxCall(experimentName,expsimilarity);
-                    }).fail(function() {
-                        console.log( "error in json position reading file" );
-                    });
-                }
-                else{
-                    graphPositionsExist=false;
-                    ajaxCall(experimentName,expsimilarity);
-                }
-            }
-
-
-
-            function UrlExists(url)
-            {
-                var http = new XMLHttpRequest();
-                http.open('HEAD', url, false);
-                http.send();
-                return http.status!=404;
-            }
 
             /**** DRAGGING FUNCTIONS ****/
             function dragstarted(d){
@@ -1053,7 +995,7 @@
 
 
                 linkLines.style("stroke-opacity", function (o) {
-                    return o.source === mynode || o.target === mynode ? normal : opacity;
+                    return o.source.index === mynode.index || o.target.index === mynode.index ? normal : opacity;
                 });
 
                 labels.sort(function (a, b) {
@@ -1070,8 +1012,9 @@
 
                 vis.selectAll(".labels")
                     .style("font-size",fontsize+"px");
-
             }
+
+
             function mytextHandler (mynode,opacity){
                 mytext.selectAll(".nodetext").remove();
 
@@ -1460,7 +1403,7 @@
                         return translation[1] + scaleFactor*d.target.y;
                     });
 
-                if (firsttime) {
+                if (firsttime) {            // true every time we change similarity or experiment
                     findTopicLabels();
                     loadLabels();
                 }
@@ -1473,15 +1416,6 @@
                 nodeLabels
 //                    .transition()
 //                    .duration(200)
-//                    .attr("class", function(d) {
-//                        return "labels " + d.color
-//                    })
-//                        .attr("x", function(d) {
-//                            return (d.x+7);
-//                        })
-//                        .attr("y", function(d) {
-//                            return (d.y-7);
-//                        })
                     .attr("x",function (d){
                         return (translation[0] + scaleFactor*d.x+7)
                     })
@@ -1831,26 +1765,63 @@
                 force.stop()
             }
 
-            /**** DB CONNECTION FUNCTIONS ****/
+            /**** AJAX FUNCTIONS ****/
 
-            function ajaxCall(experiment,expsimilarity){
-                if(experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFET80T.php");
-                else if(experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFET100T.php");
-                else if(experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewHEALTH200T.php");
-                else if(experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") ajaxCallURL(experiment,expsimilarity,"../../../jsonReviewFull300T.php");
-                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull300T_81.php");
-                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull320T_81.php");
-                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull300T_80.php");
-                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") ajaxCallURL(experiment,expsimilarity,"../../../jsonJulyFull320T_80.php");
-                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMCategories.php");
-                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") ajaxCallURL(experiment,expsimilarity,"../../../jsonACMAuthors.php");
-                else ajaxCallURL(experiment,expsimilarity,"./dbfront.php");
+
+            function graphLoad(){
+                jsonfilename = "graph_"+experimentName+"_"+expsimilarity+".json";
+                graphPositionsExist=UrlExists(jsonfilename);  //graph positions set true if json file exists
+                if (graphPositionsExist){
+                    $.when(getJSONpositions(), ajaxCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
+                        renderpage(JSON.parse(a2[0]).resp);
+                    });
+                }
+                else{
+                    graphPositionsExist=false;
+                    $.when(ajaxCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxCall() to finish and when done then renders the page
+                        renderpage(JSON.parse(a1).resp);
+                    });
+                }
             }
 
 
-            function ajaxCallURL(experiment,expsimilarity,url) {
+            function getJSONpositions() {
+                // NOTE:  This function must return the value
+                //        from calling the $.ajax() method.
+                return $.getJSON( jsonfilename).done( function(json) {
+                    jsonNodes = $.parseJSON(json.nodes);
+                    jsonLinks = $.parseJSON(json.links);
+                }).fail(function() {
+                    console.log( "error in json position reading file" );
+                });
+            }
+
+            function UrlExists(url)
+            {
+                var http = new XMLHttpRequest();
+                http.open('HEAD', url, false);
+                http.send();
+                return http.status!=404;
+            }
+
+
+            function ajaxCall(experiment,expsimilarity) {
                 console.log("call "+experiment);
-                $.ajax({
+                var url;
+
+                if(experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewFET80T.php";
+                else if(experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewFET100T.php";
+                else if(experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewHEALTH200T.php";
+                else if(experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") url = "../../../jsonReviewFull300T.php";
+                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") url = "../../../jsonJulyFull300T_81.php";
+                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") url = "../../../jsonJulyFull320T_81.php";
+                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull300T_80.php";
+                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull320T_80.php";
+                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
+                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
+                else url = "./dbfront.php";
+
+                return $.ajax({
                     type: "GET",
                     async: true,
                     url: url,
@@ -1863,7 +1834,6 @@
                         topics2 = myresponse.topics;
                         grants = myresponse.grants;
                         experiments = myresponse.expers;
-                        renderpage(myresponse.resp);
 //                        graphElem.children().attr("style","z-index:1000")
                     },
                     error: function (e) {
@@ -1874,11 +1844,7 @@
 
 
             function storeGraph(){
-
-//                var storedNodes = JSON.stringify(force.nodes());
-//                var storedLinks = JSON.stringify(force.links());
-
-                // we send data with POST typy
+                // we send data with POST
                 $.ajax({
                     type: "POST",
                     dataType : "json",
@@ -1892,34 +1858,6 @@
                     success: function () {alert("Thanks!"); },
                     failure: function() {alert("Error!");}
                 });
-
-//                $.ajax({
-//                    type: "POST",
-//                    dataType : "json",
-//                    async: false,
-//                    url: './saveNodesInJson.php',
-//                    data: { data: JSON.stringify(force.nodes()),
-//                            similarity: expsimilarity,
-//                            experiment: experimentName
-//                    },
-////                    data: { data: JSON.stringify(vis.selectAll(".circle"))},
-//                    success: function () {alert("Thanks!"); },
-//                    failure: function() {alert("Error!");}
-//                });
-//
-//                $.ajax({
-//                    type: "POST",
-//                    dataType : "json",
-//                    async: false,
-//                    url: './saveLinksInJson.php',
-//                    data: { data: JSON.stringify(force.links()),
-//                        similarity: expsimilarity,
-//                        experiment: experimentName
-//                    },
-////                    data: { data: JSON.stringify(vis.selectAll(".link")) },
-//                    success: function () {alert("Thanks!"); },
-//                    failure: function() {alert("Error!");}
-//                });
             }
 
 
@@ -2005,12 +1943,6 @@
                                 legend_data[type_hash.length-1].name = response[j].category1_3;
                                 legend_data[type_hash.length-1].pr=1;
                                 legend_data[type_hash.length-1].desc=response[j].category1_3descr;
-
-                                // if we want to have darker stroke, augment it to 2 or more
-                                style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-                                /* styling for results in autocomplete search */
-                                style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-                                colorCnt++;
                             }
 
                             nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_2, subarea: response[j].category1_3, subareaDescr: response[j].category1_3descr, color:response[j].category1_3}; //value # of publications
@@ -2034,12 +1966,6 @@
                                 legend_data[type_hash.length-1].name = response[j].category1_2;
                                 legend_data[type_hash.length-1].pr=1;
                                 legend_data[type_hash.length-1].desc=response[j].category1_3descr;
-
-                                // if we want to have darker stroke, augment it to 2 or more
-                                style.innerHTML += "."+response[j].category1_2+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-                                /* styling for results in autocomplete search */
-                                style.innerHTML += "."+response[j].category1_2+"result{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-                                colorCnt++;
                             }
 
                             nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_2, subarea: response[j].category1_3, subareaDescr: response[j].category1_3descr, color:response[j].category1_2}; //value # of publications
@@ -2114,13 +2040,6 @@
                                 legend_data[type_hash.length-1].name = response[j].category2_3;
                                 legend_data[type_hash.length-1].pr=1;
                                 legend_data[type_hash.length-1].desc=response[j].category2_3descr;
-
-
-                                // if we want to have darker stroke, augment it to 2 or more
-                                style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-                                /* styling for results in autocomplete search */
-                                style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-                                colorCnt++;
                             }
 
                             nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_2, subarea: response[j].category2_3, subareaDescr: response[j].category2_3descr, color:response[j].category2_3}; //value # of publications
@@ -2142,13 +2061,6 @@
                                 legend_data[type_hash.length-1].name = response[j].category2_2;
                                 legend_data[type_hash.length-1].pr=1;
                                 legend_data[type_hash.length-1].desc=response[j].category2_3descr;
-
-
-                                // if we want to have darker stroke, augment it to 2 or more
-                                style.innerHTML += "."+response[j].category2_2+"{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; background-color:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-                                /* styling for results in autocomplete search */
-                                style.innerHTML += "."+response[j].category2_2+"result{stroke:"+d3.rgb(clr[colorCnt]).darker(1)+"; fill:"+clr[colorCnt]+"; color:"+clr[colorCnt]+";} ";
-                                colorCnt++;
                             }
 
                             nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_2, subarea: response[j].category2_3, subareaDescr: response[j].category2_3descr, color:response[j].category2_2}; //value # of publications
@@ -2217,13 +2129,22 @@
                         max_proj = legend_data[i].pr;
                 }
 
-//todo to apo katw to bazw kai edw .... iiiii haaaa
+                // needed when the graph loads from json in update()
                 findTopicLabels();
                 loadLabels();
 
                 update();
 
-                legend_data.sort(compare);
+                legend_data.sort(compare);  // sort legend from max_nodes to min_nodes
+                legend_data.forEach(function(d,i) { //sort coloring on legends
+                    if (! /^FET*/.test(experimentName)) {       // when the experiment is a FET experiment then we need different coloring done above with legend_data creation
+                        // if we want to have darker stroke, augment it to 2 or more
+                        style.innerHTML += "." + d.name + "{stroke:" + d3.rgb(clr[i]).darker(1) + "; fill:" + clr[i] + "; background-color:" + clr[i] + "; color:" + clr[i] + ";} ";
+                        /* styling for results in autocomplete search */
+                        style.innerHTML += "." + d.name + "result{stroke:" + d3.rgb(clr[i]).darker(1) + "; fill:" + clr[i] + "; color:" + clr[i] + ";} ";
+                    }
+                });
+
                 nodes.sort(compareGrants);
 
                 createJsonFile();
@@ -2316,20 +2237,11 @@
 
                                                         percentageSum = subdBiConnectionsNum[i][j]+subdBiConnectionsNum[j][i];
 //                                                        percentageSum = subdBiConnectionsNum[i][j];
+// previous on 20150907 backup
                                                         if (percentageSum > 0){
                                                             str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
-                                                                // + "<div class='cell' style='border-top:solid "+subdivisionsChord[i].color+";'>"
-                                                                // + subdBiConnectionsNum[i][j]
-                                                                // + " (" + chord_formatPercent(subdBiConnectionsNum[i][j]/subdivisionsChord[i].relations)
-                                                                // + ")</div>"
-                                                                // + "<div class='cell' style='color:"+subdivisionsChord[j].color+";border-left:solid "+subdivisionsChord[i].color+";border-top:solid "+subdivisionsChord[i].color+";'>"
-                                                                // + subdBiConnectionsNum[j][i]
-                                                                // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/subdivisionsChord[j].relations)
-                                                                // + ")</div></div>" ;
                                                             + "<div class='cell' style='color:"+rgb2hex(clrArray[j])+";'>"
                                                             + percentageSum
-                                                                // + " (" + chord_formatPercent(subdBiConnectionsNum[j][i]/subdivisionsChord[j].relations)
-                                                                // + ")</div></div>" ;
                                                             + "</div></div>" ;
                                                         }
                                                     }
@@ -2338,11 +2250,6 @@
 
                                                             str += "<div class='row'><div class='cell'>" + z + "</div><div class='cell'>"
                                                             + subdBiConnectionsNum[i][i]
-                                                                // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
-                                                                // + ")</div><div class='cell' style='border-left:solid;border-top:solid;'>"
-                                                                // + subdBiConnectionsNum[i][i]
-                                                                // + " (" + chord_formatPercent(subdBiConnectionsNum[i][i]/z.relations)
-                                                                // + ")</div></div>" ;
                                                             + "</div></div>";
                                                         }
                                                     }
@@ -2595,8 +2502,6 @@
                                             expsimilarity = <?php echo $expsimilarity ;?>;
                                         }
                                         console.log("experimentName:"+d.id);
-//                                        console.log("experimentDescription:"+d.desc);
-  //                                      console.log("expsimilarity:"+d.initialSimilarity)
                                     }
                                     return d.id;
                                 });
@@ -2607,7 +2512,7 @@
                             graphLoad();
                             mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
 
-// hard code for the Brusseles ... to be moved ... paizei rolo kai i othoni einia ftiagmena gia 13-15
+//todo hard code for the Brusseles ... to be moved ... paizei rolo kai i othoni einia ftiagmena gia 13-15
                             if (/^FET*/.test(experimentName)){
                                 gravity = 3;
                                 charge = -1100;
@@ -2643,8 +2548,6 @@
                                             expsimilarity = <?php echo $expsimilarity ;?>;
                                         }
                                         console.log("new experimentName:"+d.id);
-//                                        console.log("new experimentDescription:"+d.desc);
-  //                                      console.log("new expsimilarity:"+d.initialSimilarity)
                                     }
                                     return d.id;
                                 });
@@ -2667,10 +2570,6 @@
                             filter1Elem.hide();
                             filter2Elem.show()
                         }
-//                        else{
-//                            filter1Elem.hide();
-//                            filter2Elem.hide()
-//                        }
                     });
 
 
@@ -2688,7 +2587,6 @@
                             console.log("experimentDescription:"+d.desc);
                             console.log("expsimilarity:"+d.initialSimilarity);
                             if(experimentName == d.id){
-//                                experimentName = d.id;
                                 experimentDescription = d.desc;
                                 if((expsimilarity = d.initialSimilarity) == null){
                                     expsimilarity = <?php echo $expsimilarity ;?>;
@@ -2930,7 +2828,7 @@
                     hwaccel: false,         // Whether to use hardware acceleration
                     className: 'spinner',   // The CSS class to assign to the spinner
                     zIndex: 2e9,            // The z-index (defaults to 2000000000)
-                    top: '50%',             // Top position relative to parent
+                    top: '100',             // Top position relative to parent
                     left: '50%'             // Left position relative to parent
                 };
 
@@ -3139,7 +3037,7 @@
                             return classNames.replace('shadow', '');
                         });
 
-                        var myfade = fadeGraph(fade_out);
+//                        var myfade = fadeGraph(fade_out);
                         if(focused == d.name){
                             focused = '';
                             nodeCircles.on("mouseover", fadeGraph(fade_out))
@@ -3211,7 +3109,6 @@
                                     if (svgSortedTopicWords[i].key == d.index) {
                                         if (!labelIsOnGraph[svgSortedTopicWords[i].item]) {
                                             label[d.index] = svgSortedTopicWords[i].item;
-                                            // console.log("svgSortedTopicWords["+i+"].key="+svgSortedTopicWords[i].key+" label="+label);
                                             labelIsOnGraph[label[d.index]] = true;
                                         }
                                         break;
@@ -3374,12 +3271,8 @@
                                 .attr("data-toggle","tooltip")
                                 .attr("data-placement","right")
                                 .attr("title", o.area+" description")
-                                //						.append("li").append("a").attr("class", "nodetext " + d.name + " active").html(d.name + ":<br/><em>" + d.pr + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord[i].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + relations[i] + "</em> <?php echo $node_name;?> relations in other areas");
-                                .append("li").append("a").attr("class", "nodetext " + o.area + " active").html(o.area + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s ");
-                                console.log( "subdivisionsChord[i].relations" )
-                                console.log( subdivisionsChord[i].relations )
-                                console.log( "relations[i]" )
-                                console.log( relations[i] )
+                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").html(o.color + ":<br/><em>" + types.length + "</em> <?php echo $node_name;?>s <br/><em>" + subdivisionsChord.filter( function(obj){return obj.name == o.color;} )[0].relations + "</em> <?php echo $node_name;?> total relations<br/><em>" + subdivisionsChord.filter( function(obj){return obj.name == o.color;} )[0].relationsCross + "</em> <?php echo $node_name;?> relations with other areas");
+//                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").html(o.color + ":<br/><em>" + types.length + "</em> <?php //echo $node_name;?>//s ");
                         }
                         else{
                             mytextTitleElem.empty();
@@ -3667,25 +3560,7 @@
                                 + ")" ; // &harr; the name of the arrow
 
                         }
-                        /*					if(subdivisionsChord[d.source.index].name != subdivisionsChord[d.target.index].name){
-                         return subdivisionsChord[d.source.index].name
-                         + " → " + subdivisionsChord[d.target.index].name
-                         + ": " + d.source.value
-                         + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-                         + ")\n" + subdivisionsChord[d.target.index].name
-                         + " → " + subdivisionsChord[d.source.index].name
-                         + ": " + d.target.value
-                         + " (" + chord_formatPercent(d.target.value/subdivisionsChord[d.target.index].relations)
-                         + ")" ;
-                         }
-                         else{
-                         return subdivisionsChord[d.source.index].name
-                         + " → " + subdivisionsChord[d.target.index].name
-                         + ": " + d.source.value
-                         + " (" + chord_formatPercent(d.source.value/subdivisionsChord[d.source.index].relations)
-                         + ")" ;
-                         }
-                         */
+//previous on 20150907 backup
                     });
 
             }
@@ -3759,12 +3634,11 @@
             }
 
             function createTrends(type) {
-//            var margin = {top: 20, right: 55, bottom: 30, left: 40},
-//                width  = 1000 - margin.left - margin.right,
-//                height = 700  - margin.top  - margin.bottom;
                 var margin = {top: 20, right: 55, bottom: 30, left: 40},
                     width  = w,
                     height = 3*h/4;
+//                width  = 1000 - margin.left - margin.right,
+//                height = 700  - margin.top  - margin.bottom;
 
                 var x = d3.scale.ordinal()
                     .rangeRoundBands([0, width], .1);
@@ -3887,8 +3761,8 @@
                         mousex = mousex[0];
                         vertical.style("left", mousex + "px")});
 
-                d3.csv("data/"+trendCSV1, function (error, data) {
-                    d3.csv("data/"+trendCSV2, function(error, topics) {
+                d3.csv("../data/"+trendCSV1, function (error, data) {
+                    d3.csv("../data/"+trendCSV2, function(error, topics) {
 
                         var labelVar = 'quarter';
                         var varNames = d3.keys(data[0])

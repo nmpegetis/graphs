@@ -406,7 +406,7 @@
                 webkit,
 
             //graph
-                graphPositionsExist,jsonfilename;
+                graphPositionsExist,jsonfilename,renderPageData,changed;
 
 
             // function creation jquery percentage
@@ -533,7 +533,7 @@
                 if ((expsimilarity = thr5Elem.val()*0.01) > 1 || expsimilarity < 0) initializeExperimentPage();
                 console.log(expsimilarity)
                 console.log(window.location.href)
-                UpdateQueryString("s", expsimilarity);
+                history.pushState('data', '', updateURLParameter(window.location.href, 's', expsimilarity));
                 console.log(window.location.href)
                 graphLoad();
                 mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
@@ -548,8 +548,12 @@
                 console.log("gravity="+gravity);
                 gravity = thr6Elem.val();
                 console.log("gravity="+gravity);
-                window['force']['charge'](charge);
+                console.log(window.location.href)
+                history.pushState('data', '', updateURLParameter(window.location.href, 'g', gravity));
+                console.log(window.location.href)
                 window['force']['gravity'](gravity);
+                changed = true;
+                force.on("tick", initialTick);
                 force.start();
                 thr6Elem.val(gravity);
             });
@@ -561,15 +565,26 @@
             thr7Elem.change(function(){
                 console.log("charge="+charge);
                 charge = thr7Elem.val();
-                console.log("maxNodeConnectionsThr="+charge);
+                console.log("charge="+charge);
+                console.log(window.location.href)
+                history.pushState('data', '', updateURLParameter(window.location.href, 'c', charge));
+                console.log(window.location.href)
                 window['force']['charge'](charge);
-                window['force']['gravity'](gravity);
+                changed = true;
+                force.on("tick", initialTick);
                 force.start();
 //                mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                 thr7Elem.val(charge);
             });
 
-
+            documentElem.on("myTrigger", function (evt) {       // http://www.htmlgoodies.com/beyond/javascript/creating-custom-events-with-jquery.html
+                console.log("myTrigger")
+                if(changed){
+                    initializeExperimentPage();
+                    graphLoad();
+                    changed = false;
+                }
+            });
             graphmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
             chordmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
             chordmenu2Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
@@ -705,10 +720,14 @@
                     return false;
                 }
                 else if (e.keyCode == 38 || e.keyCode == 40 && selectedLabelIndex !== null) {	// up and down buttom
-                    if (e.keyCode == 38)
+                    if (e.keyCode == 38){
+                        console.log("up btn")
                         selectedLabelIndex--;
-                    if (e.keyCode == 40)
+                    }
+                    if (e.keyCode == 40) {
+                        console.log("down btn")
                         selectedLabelIndex++;
+                    }
                     if (selectedLabelIndex < 0)
                         selectedLabelIndex = labels.length - 1;
                     if (selectedLabelIndex > labels.length - 1)
@@ -725,10 +744,12 @@
                     return false;
                 }
                 else if (e.keyCode == 39) {		// right buttom
+                    console.log("right charge")
                     window['force']['charge'](window['force']['charge']() - 10);
                     force.start();
                 }
                 else if (e.keyCode == 37) {		// left buttom
+                    console.log("left charge")
                     window['force']['charge'](window['force']['charge']() + 10);
                     force.start();
                 }
@@ -1142,8 +1163,7 @@
                 upButtonElem.hide();
                 downButtonElem.hide();
 
-//                filtersElem.val("opt0");
-                filtersElem.val("#opt2");
+                filtersElem.val($("#filters option:first").val());
                 grantsElem.multiselect("deselectAll",false);
             }
 
@@ -1739,7 +1759,12 @@
                     vis.select(".loading").remove();
                     storeGraph();
                     browseTick(true);
-                    force.stop()
+                    force.stop();
+                    $.event.trigger({               //trigger for charge and gravity change
+                        type:    "myTrigger",
+                        message: "myTrigger fired.",
+                        time:    new Date()
+                    });
                 }
                 else {
 //				if (e.alpha < 0.015) {
@@ -1769,17 +1794,20 @@
 
 
             function graphLoad(){
-                jsonfilename = "graph_"+experimentName+"_"+expsimilarity+".json";
+
+                jsonfilename = "data/graph_"+experimentName+"_"+expsimilarity+"_"+gravity+"_"+charge+".json";
                 graphPositionsExist=UrlExists(jsonfilename);  //graph positions set true if json file exists
                 if (graphPositionsExist){
                     $.when(getJSONpositions(), ajaxCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
-                        renderpage(JSON.parse(a2[0]).resp);
+                        renderPageData = JSON.parse(a2[0]).resp;
+                        renderpage(renderPageData);
                     });
                 }
                 else{
                     graphPositionsExist=false;
                     $.when(ajaxCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxCall() to finish and when done then renders the page
-                        renderpage(JSON.parse(a1).resp);
+                        renderPageData = JSON.parse(a1).resp;
+                        renderpage(renderPageData);
                     });
                 }
             }
@@ -1853,7 +1881,9 @@
                     data: { datanodes: JSON.stringify(force.nodes()),
                         datalinks: JSON.stringify(force.links()),
                         similarity: expsimilarity,
-                        experiment: experimentName
+                        experiment: experimentName,
+                        gravity: gravity,
+                        charge: charge
                     },
                     success: function () {alert("Thanks!"); },
                     failure: function() {alert("Error!");}
@@ -2507,6 +2537,9 @@
                                 });
 
                             experimentName = myval;
+                            console.log(window.location.href);
+                            history.pushState('data', '', updateURLParameter(window.location.href, 'ex', experimentName));
+                            console.log(window.location.href);
 
                             initializeExperimentPage();
                             graphLoad();
@@ -2674,9 +2707,7 @@
                 trenddivElem.empty();
                 trend2divElem.empty();
 
-//                filtersElem.val("opt0");
-                filtersElem.val("#opt2");
-
+                filtersElem.val($("#filters option:first").val());
                 linkedByIndex = {},
                 nodeConnections = [],
                 maxNodeConnections = 0,
@@ -2835,35 +2866,52 @@
                 spinner = new Spinner(opts).spin(target);
             }
 
-            function UpdateQueryString(key, value, url) {
-                if (!url) url = window.location.href;
-                var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi"),
-                    hash;
+            function updateURLParameter(url, param, paramVal)
+            {
+                var TheAnchor = null;
+                var newAdditionalURL = "";
+                var tempArray = url.split("?");
+                var baseURL = tempArray[0];
+                var additionalURL = tempArray[1];
+                var temp = "";
 
-                if (re.test(url)) {
-                    if (typeof value !== 'undefined' && value !== null)
-                        return url.replace(re, '$1' + key + "=" + value + '$2$3');
-                    else {
-                        hash = url.split('#');
-                        url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
-                        if (typeof hash[1] !== 'undefined' && hash[1] !== null)
-                            url += '#' + hash[1];
-                        return url;
+                if (additionalURL)
+                {
+                    var tmpAnchor = additionalURL.split("#");
+                    var TheParams = tmpAnchor[0];
+                    TheAnchor = tmpAnchor[1];
+                    if(TheAnchor)
+                        additionalURL = TheParams;
+
+                    tempArray = additionalURL.split("&");
+
+                    for (i=0; i<tempArray.length; i++)
+                    {
+                        if(tempArray[i].split('=')[0] != param)
+                        {
+                            newAdditionalURL += temp + tempArray[i];
+                            temp = "&";
+                        }
                     }
                 }
-                else {
-                    if (typeof value !== 'undefined' && value !== null) {
-                        var separator = url.indexOf('?') !== -1 ? '&' : '?';
-                        hash = url.split('#');
-                        url = hash[0] + separator + key + '=' + value;
-                        if (typeof hash[1] !== 'undefined' && hash[1] !== null)
-                            url += '#' + hash[1];
-                        return url;
-                    }
-                    else
-                        return url;
+                else
+                {
+                    var tmpAnchor = baseURL.split("#");
+                    var TheParams = tmpAnchor[0];
+                    TheAnchor  = tmpAnchor[1];
+
+                    if(TheParams)
+                        baseURL = TheParams;
                 }
+
+                if(TheAnchor)
+                    paramVal += "#" + TheAnchor;
+
+                var rows_txt = temp + "" + param + "=" + paramVal;
+                return baseURL + "?" + newAdditionalURL + rows_txt;
             }
+
+
             function loadThresholdsFromUrlParameters(){
                 // pass configuration with parameters
                 experimentDescription = "";
@@ -2959,7 +3007,7 @@
                     )
                     .start();
 
-                jsonfilename = "graph_"+experimentName+"_"+expsimilarity+".json";
+                jsonfilename = "data/graph_"+experimentName+"_"+expsimilarity+"_"+gravity+"_"+charge+".json";
                 graphPositionsExist=UrlExists(jsonfilename);
                 if (graphPositionsExist) {
                     linkLines = vis.selectAll(".link")
@@ -4312,8 +4360,8 @@
                     Filter by:
                     <select id="filters" data-toggle="tooltip" data-placement="bottom" title="Select an option of filtering  <?php echo $node_name ;?> elements">
 <!--                        <option id="opt0"></option>-->
+                        <option id="opt2" data-toggle="tooltip" data-placement="right" title="Filter by finding a bag of topic words">Topic word search</option>
                         <option id="opt1" data-toggle="tooltip" data-placement="right" title="Filter by searching or clicking one or multiple  <?php echo $node_name ;?>s"><?php echo $node_name."s" ;?></option>
-                        <option id="opt2" data-toggle="tooltip" data-placement="right" title="Filter by finding a bag of topic words" selected="selected">Topic word search</option>
                     </select>
                 </li>
                 <li id="filter1" style="padding-left:10px">

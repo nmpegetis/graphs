@@ -22,11 +22,27 @@ $query_experiments = "select distinct ExperimentId,Description from experiment";
 $query_grants = "select catid, topicid, Weight from topiccategoryview where ExperimentId=?";
 $query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+
+//Query gia dynamic topic distribution per year (Top 50 Topics). Μπορει να xρησιμοποιηθεί σε Trend γραφημα
+//$query_topicsdistribution = "select ACMJournals.TITLE,  Year, Top50topics.TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join (select topicId from topicDetails order by Weight desc Limit 50) Top50topics on topicsPerDoc.TopicId = Top50topics.TopicId Inner Join ACMData1 on topicsPerDoc.DocId= articleID Inner Join ACMJournals on ACMJournals.DOI=ACMData1.doinumber where weight>0.2 AND ExperimentId='ACM_250T_1000IT_0IIT_100B_4M_cos' group By  ACMJournals.TITLE, Year, Top50topics.TopicId order by  ACMJournals.TITLE, Year, Top50topics.TopicId, Weight desc";
+// until Sept2015 - acmdata1.db
 //$query_topicsdistribution = "select * from topicsperyearview order by topicid";
-$query_topicsdistribution = null;
+
+// from Sept2015 - PTM3DB.db
+$query_topicsdistribution = "select * from topicdistributionperbatchidview";            // order by topicid";
+//$query_topicsdistribution = null;
+
+// QUERY gia static (συνολικο) topic distribution (TOP 50 topics). Μπορει να χρησιμοποιηθει σε TreeMAP,
+// until Sept2015 - acmdata1.db
+//$query_treemap = "select ACMJournals.TITLE,  Top50topics.TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join (select topicId from topicDetails order by Weight desc Limit 50) Top50topics on topicsPerDoc.TopicId = Top50topics.TopicId Inner Join ACMData1 on topicsPerDoc.DocId= articleID Inner Join ACMJournals on ACMJournals.DOI=ACMData1.doinumber where weight>0.2 AND ExperimentId='ACM_250T_1000IT_0IIT_100B_4M_cos' group By  ACMJournals.TITLE, Top50topics.TopicId order by  ACMJournals.TITLE, Top50topics.TopicId, Weight desc";
 //$query_treemap = "select * from treemapview";
+// from Sept2015 - PTM3DB.db
 $query_treemap = null;
-$query_trends = "select * from top50distributionview";
+
+// until Sept2015 - acmdata1.db
+//$query_trends = "select * from top50distributionview";
+// from Sept2015 - PTM3DB.db
+$query_trends = "select * from top50distributionperbatchidview";
 
 ///////////////////////////////////
 ///// front-end configuration /////

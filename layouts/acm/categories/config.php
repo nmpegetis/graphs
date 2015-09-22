@@ -8,7 +8,7 @@
 $max_execution_time = 120;  //300 seconds = 5 minutes
 $memory_limit = '4096M';	//'-1';		// unlimited memory
 $memcache_port = 11211;
-$db_name = "acmdata1.db";
+$db_name = "PTM3DB.db";
 $db_path = "../../../dbs/".$db_name;
 
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
@@ -18,9 +18,14 @@ $query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,CV1_Categ
 //$query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,EntityId1 as node1name,EntityId2 as node2name,AC1_Category0 as category1_1, AC1_Category0 as category1_2, AC1_Category0 as category1_3, AC2_Category0 as category2_1, AC2_Category0 as category2_2,AC2_Category0 as category2_3, catCnts1 as category1_counts,catCnts2 as category2_counts,Similarity from EntitySimilarityView_cat where ExperimentId=? and  Similarity>?";
 
 $query_experiments = "select distinct ExperimentId,Description from experiment";
+
+// until Sept2015 - acmdata1.db
 //$query_grants = "select PubCategoryview.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategoryview on topicsPerDoc.DocId= PubCategoryview.PubId INNER JOIN (Select Category FROM PubCategoryview GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategoryview.category where weight>0.02 AND ExperimentId=? group By PubCategoryview.Category, TopicId order by  PubCategoryview.Category, Weight desc, TopicId";
+// from Sept2015 - PTM3DB.db
 $query_grants = "select catid, topicid, Weight from topiccategoryview where ExperimentId=?";
+
 $query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+
 $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
 
 //Query gia dynamic topic distribution per year (Top 50 Topics). Μπορει να xρησιμοποιηθεί σε Trend γραφημα

@@ -9,7 +9,9 @@ $max_execution_time = 120;  //300 seconds = 5 minutes
 $memory_limit = '4096M';	//'-1';		// unlimited memory
 $memcache_port = 11211;
 $db_name = "acmdata1.db";
+$trends_db_name = "PTM3DB.db";
 $db_path = "../../../dbs/".$db_name;
+$trends_db_path = "../../../dbs/".$trends_db_name;
 
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
 
@@ -49,8 +51,9 @@ $query_trends = "select * from top50distributionperbatchidview";
 ///////////////////////////////////
 
 $title = "ACM Categories";								// title of the webpage
+$trends_title = "ACM Topics Distribution";								// title of the webpage when ACM
 $subtitle = "";								// subtitle of the webpage
-$experimentName = "ACM_250T_1000IT_0IIT_100B_4M_cos";	// first experiment to load 
+$experimentName = "ACM_300T_1000IT_0IIT_100B_4M_cos";	// first experiment to load
 $experimentDescription = "Topic modeling based on: 1)Abstracts from ACM publications 2)Authors 3)Citations 4)ACMCategories SimilarityType:cos Similarity on Authors & Categories"; 	// first description to load
 $node_name = "Field";
 $node_groupName1 = "ACM Fields";

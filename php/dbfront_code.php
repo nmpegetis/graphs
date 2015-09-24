@@ -246,118 +246,12 @@ else{
 }
 
 
-
-/////////////////////////////////////////
-///// TOPICS DISTRIBUTION PER YEAR //////
-/////////////////////////////////////////
-
-$query = $query_topicsdistribution;
-if ($query != null) {
-
-	$querykey = "KEY" . md5($query) . $db_name;
-
-	$topicsdistribution = $meminstance->get($querykey);
-
-	if (!$topicsdistribution) {
-
-		$topicsdistribution = array();
-		$stmt = $mydb->doQuery($query);
-		$res = $stmt->fetch();
-		do {
-			array_push($topicsdistribution,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2]));	
-		} while ($res = $stmt->fetch());
-
-	   	$meminstance->set($querykey, $topicsdistribution, 0, $memcache_time);
-		//	print "got result from mysql\n";
-	}
-	else{
-		//	print "got result from memcached\n";
-	}
-
-}
-else{
-	$topicsdistribution = null;	
-}
-
-
-
-/////////////////////
-///// TREE MAP //////
-/////////////////////
-
-
-if ($query = $query_treemap != null) {
-
-	$querykey = "KEY" . md5($query) . $db_name;
-
-	$treemap = $meminstance->get($querykey);
-
-	if (!$treemap) {
-
-		$treemap = array();
-		$stmt = $mydb->doQuery($query);
-		$res = $stmt->fetch();
-		do {
-			array_push($treemap,array("id"=>$res[2],"title"=>$res[0],"year"=>$res[1],"weight"=>$res[3]));	
-		} while ($res = $stmt->fetch());
-
-	   	$meminstance->set($querykey, $treemap, 0, $memcache_time);
-		//	print "got result from mysql\n";
-	}
-	else{
-		//	print "got result from memcached\n";
-}
-
-}
-else{
-	$treemap = null;	
-}
-
-
-
-//////////////////////////////////////////////////
-///// TOPICS DISTRIBUTION PER YEAR : TRENDS //////
-//////////////////////////////////////////////////
-
-$query = $query_trends;
-if ($query != null) {
-
-$querykey = "KEY" . md5($query) . $db_name;
-
-$trends = $meminstance->get($querykey);
-
-if (!$trends) {
-
-	$trends = array();
-	$stmt = $mydb->doQuery($query);
-	$res = $stmt->fetch();
-	do {
-		array_push($trends,array("id"=>$res[2],"title"=>$res[0],"year"=>$res[1],"weight"=>$res[3]));	
-	} while ($res = $stmt->fetch());
-
-   	$meminstance->set($querykey, $trends, 0, $memcache_time);
-	//	print "got result from mysql\n";
-}
-else{
-	//	print "got result from memcached\n";
-}
-
-}
-else{
-	$trends = null;	
-}
-
-
-
 $everything = array();
 $everything['resp'] = $list;
 $everything['grants'] = $grants;
 $everything['topics'] = $topics;
 $everything['topicsNoSort'] = $topicsNoSort;
 $everything['expers'] = $experiments;
-$everything['distribution'] = $topicsdistribution;
-$everything['treemap'] = $treemap;
-$everything['trends'] = $trends;
 //	print_r($everything['resp']);
 
 //echo json_decode(json_encode($everything, JSON_UNESCAPED_UNICODE));

@@ -70,7 +70,7 @@ class database {
 
 }
 
-if(!isset($_GET['s']) || !isset($_GET['ex'])){
+if(!isset($_GET['ex'])){
 	echo "params not set";
 }
 
@@ -79,208 +79,40 @@ $mydb = new database("sqlite","",0,$db_path,"","");
 
 
 
-//////////////////////////////
-///// GRAPH LAYOUT QUERY /////
-//////////////////////////////
-
-$query = $query_graphLayout;
-$move_elems = array("=?",">?"); 
-$set_elems = array("=".$_GET['ex'],">".$_GET['s']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
-$querykey = "KEY" . md5($memQuery);
-$list = $meminstance->get($querykey);
-
-if (!$list) {
-
-	$stmt = $mydb->doPrepare($query);
-
-	$stmt = $mydb->doExecute($stmt,array($_GET['ex'],$_GET['s']));
-
-// instead of fetching all together... delay a little but for sure change the encoding of each one
-//	$list = $stmt->fetchAll();
-	while($row = $stmt->fetch(PDO::FETCH_ASSOC))
-	{
-		foreach($row as &$value)
-		{
-			$value = mb_convert_encoding($value, "UTF-8", "Windows-1252");
-		}
-		unset($value); # safety: remove reference
-		$list[] = array_map('utf8_encode', $row );
-	}
-	//print_r($list);
-
-   $meminstance->set($querykey, $list, 0, $memcache_time);		
-	//	print "got result from mysql\n";
-}
-else{
-	//	print "got result from memcached\n";
-}
-
-
-//////////////////////////////
-///// EXPERIMENTS QUERY //////
-//////////////////////////////
-
-
-$query = $query_experiments;
-
-$querykey = "KEY" . md5($query) . $db_name;		// to distinguish when the experiments are loaded from the correct database <-- a.k.a. each layout has its own database
-
-$experiments = $meminstance->get($querykey);
-
-if (!$experiments) {
-
-	$experiments = array();
-	$stmt = $mydb->doQuery($query);
-	$res = $stmt->fetch();
-	do {
-		array_push($experiments,array("id"=>$res[0],"desc"=>$res[1],"Metadata"=>$res[2],"initialSimilarity"=>$res[3],"PhraseBoost"=>$res[4]));
-	} while ($res = $stmt->fetch());
-
-   	$meminstance->set($querykey, $experiments, 0, $memcache_time);
-	//	print "got result from mysql\n";
-}
-else{
-	//	print "got result from memcached\n";
-}
-
-
-/////////////////////////
-///// GRANTS QUERY //////
-/////////////////////////
-
-
-$query = $query_grants;
-$move_elems = array("?"); 
-$set_elems = array($_GET['ex']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
-$querykey = "KEY" . md5($memQuery);
-$grants = $meminstance->get($querykey);
-
-if (!$grants) {
-
-	$grants = array();
-
-	$stmt = $mydb->doPrepare($query);
-	$stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-
-	$res = $stmt->fetch();
-	do {
-		if(!isset($grants[$res[0]]))
-			$grants[$res[0]] = array();
-		if(count($grants[$res[0]])>3)
-			continue;
-		array_push($grants[$res[0]],array("topic"=>$res[1],"weight"=>$res[2]));	
-	} while ($res = $stmt->fetch());
-
-   	$meminstance->set($querykey, $grants, 0, $memcache_time);
-	//	print "got result from mysql\n";
-}
-else{
-	//	print "got result from memcached\n";
-}
-
-
-/////////////////////////
-///// TOPICS QUERY //////
-/////////////////////////
-
-$query = $query_topics;
-$move_elems = array("?"); 
-$set_elems = array($_GET['ex']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
-$querykey = "KEY" . md5($memQuery);
-$topics = $meminstance->get($querykey);
-
-if (!$topics) {
-	$topics = array();
-	$stmt = $mydb->doPrepare($query);
-	$stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-	$res = $stmt->fetch();
-	do {
-		if(!isset($topics[$res[0]]))
-			$topics[$res[0]] = array();
-		if(count($topics[$res[0]])>9)
-			continue;
-		array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2]));	
-	} while ($res = $stmt->fetch());
-
-   	$meminstance->set($querykey, $topics, 0, $memcache_time);
-	//	print "got result from mysql\n";
-}
-else{
-	//	print "got result from memcached\n";
-}
-
-
-////////////////////////////////////
-///// TOPICS NOT SORTED QUERY //////
-////////////////////////////////////
-
-
-$query = $query_topics_nosort;
-$move_elems = array("?"); 
-$set_elems = array($_GET['ex']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
-$querykey = "KEY" . md5($memQuery);
-$topicsNoSort = $meminstance->get($querykey);
-
-if (!$topicsNoSort) {
-	$topicsNoSort = array();
-	$stmt = $mydb->doPrepare($query);
-	$stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-	$res = $stmt->fetch();
-	do {
-		if(!isset($topicsNoSort[$res[0]]))
-			$topicsNoSort[$res[0]] = array();
-		if(count($topicsNoSort[$res[0]])>9)
-			continue;
-		array_push($topicsNoSort[$res[0]],array("item"=>$res[1],"counts"=>$res[2]));	
-	} while ($res = $stmt->fetch());
-
-   	$meminstance->set($querykey, $topicsNoSort, 0, $memcache_time);
-   	//	print "got result from mysql\n";
-}
-else{
-	//	print "got result from memcached\n";
-}
-
-
-
 /////////////////////////////////////////
 ///// TOPICS DISTRIBUTION PER YEAR //////
 /////////////////////////////////////////
-
-$query = $query_topicsdistribution;
-if ($query != null) {
-
-	$querykey = "KEY" . md5($query) . $db_name;
-
-	$topicsdistribution = $meminstance->get($querykey);
-
-	if (!$topicsdistribution) {
-
-		$topicsdistribution = array();
-		$stmt = $mydb->doQuery($query);
-		$res = $stmt->fetch();
-		do {
-			array_push($topicsdistribution,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2]));	
-		} while ($res = $stmt->fetch());
-
-	   	$meminstance->set($querykey, $topicsdistribution, 0, $memcache_time);
-		//	print "got result from mysql\n";
-	}
-	else{
-		//	print "got result from memcached\n";
-	}
-
-}
-else{
-	$topicsdistribution = null;	
-}
-
-
-
+//
+//$query = $query_topicsdistribution;
+//if ($query != null) {
+//
+//	$querykey = "KEY" . md5($query) . $db_name;
+//
+//	$topicsdistribution = $meminstance->get($querykey);
+//
+//	if (!$topicsdistribution) {
+//
+//		$topicsdistribution = array();
+//		$stmt = $mydb->doQuery($query);
+//		$res = $stmt->fetch();
+//		do {
+//			array_push($topicsdistribution,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2]));
+//		} while ($res = $stmt->fetch());
+//
+//	   	$meminstance->set($querykey, $topicsdistribution, 0, $memcache_time);
+//		//	print "got result from mysql\n";
+//	}
+//	else{
+//		//	print "got result from memcached\n";
+//	}
+//
+//}
+//else{
+//	$topicsdistribution = null;
+//}
+//
+//
+//
 /////////////////////
 ///// TREE MAP //////
 /////////////////////
@@ -320,44 +152,120 @@ else{
 //////////////////////////////////////////////////
 
 $query = $query_trends;
+$move_elems = array("?");
+$set_elems = array($_GET['ex']);
+
+
 if ($query != null) {
 
-$querykey = "KEY" . md5($query) . $db_name;
+	$memQuery = str_replace($move_elems, $set_elems, $query);
+	$querykey = "KEY" . md5($memQuery) . $db_name;
 
-$trends = $meminstance->get($querykey);
+	$trends = $meminstance->get($querykey);
 
-if (!$trends) {
+	if (!$trends) {
 
-	$trends = array();
-	$stmt = $mydb->doQuery($query);
-	$res = $stmt->fetch();
-	do {
-		array_push($trends,array("id"=>$res[2],"title"=>$res[0],"year"=>$res[1],"weight"=>$res[3]));	
-	} while ($res = $stmt->fetch());
+		$trends = array();
+		$stmt = $mydb->doQuery($query);
+//		$res = $stmt->fetch();
+//		do {
+//			array_push($trends,array("id"=>$res[2],"title"=>$res[0],"year"=>$res[1],"weight"=>$res[3]));
+//		} while ($res = $stmt->fetch());
+		$res = $stmt->fetch();
+		do {
+			if(!isset($trends[$res[0]]))
+				$trends[$res[0]] = array();
+			array_push($trends[$res[0]],array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[5],"avgweight"=>$res[3]));
+		} while ($res = $stmt->fetch());
 
-   	$meminstance->set($querykey, $trends, 0, $memcache_time);
-	//	print "got result from mysql\n";
-}
-else{
-	//	print "got result from memcached\n";
-}
-
+		$meminstance->set($querykey, $trends, 0, $memcache_time);
+		//	print "got result from mysql\n";
+	}
+	else{
+		//	print "got result from memcached\n";
+	}
 }
 else{
 	$trends = null;	
 }
 
 
+// todo to be uncommented if stand alone and topics not loaded from graph visualization
+
+/////////////////////////
+///// TOPICS QUERY //////
+/////////////////////////
+//
+//$query = $query_topics;
+//$move_elems = array("?");
+//$set_elems = array($_GET['ex']);
+//$memQuery = str_replace($move_elems, $set_elems, $query);
+//$querykey = "KEY" . md5($memQuery);
+//$topics = $meminstance->get($querykey);
+//
+//if (!$topics) {
+//	$topics = array();
+//	$stmt = $mydb->doPrepare($query);
+//	$stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//	$res = $stmt->fetch();
+//	do {
+//		if(!isset($topics[$res[0]]))
+//			$topics[$res[0]] = array();
+//		if(count($topics[$res[0]])>9)
+//			continue;
+//		array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2]));
+//	} while ($res = $stmt->fetch());
+//
+//	$meminstance->set($querykey, $topics, 0, $memcache_time);
+//	//	print "got result from mysql\n";
+//}
+//else{
+//	//	print "got result from memcached\n";
+//}
+//
+//
+////////////////////////////////////
+///// TOPICS NOT SORTED QUERY //////
+////////////////////////////////////
+//
+//
+//$query = $query_topics_nosort;
+//$move_elems = array("?");
+//$set_elems = array($_GET['ex']);
+//$memQuery = str_replace($move_elems, $set_elems, $query);
+//$querykey = "KEY" . md5($memQuery);
+//$topicsNoSort = $meminstance->get($querykey);
+//
+//if (!$topicsNoSort) {
+//	$topicsNoSort = array();
+//	$stmt = $mydb->doPrepare($query);
+//	$stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//	$res = $stmt->fetch();
+//	do {
+//		if(!isset($topicsNoSort[$res[0]]))
+//			$topicsNoSort[$res[0]] = array();
+//		if(count($topicsNoSort[$res[0]])>9)
+//			continue;
+//		array_push($topicsNoSort[$res[0]],array("item"=>$res[1],"counts"=>$res[2]));
+//	} while ($res = $stmt->fetch());
+//
+//	$meminstance->set($querykey, $topicsNoSort, 0, $memcache_time);
+//	//	print "got result from mysql\n";
+//}
+//else{
+//	//	print "got result from memcached\n";
+//}
+
+
 
 $everything = array();
-$everything['resp'] = $list;
-$everything['grants'] = $grants;
-$everything['topics'] = $topics;
-$everything['topicsNoSort'] = $topicsNoSort;
-$everything['expers'] = $experiments;
 $everything['distribution'] = $topicsdistribution;
 $everything['treemap'] = $treemap;
 $everything['trends'] = $trends;
+// todo to be uncommented if stand alone and topics not loaded from graph visualization
+//$everything['topics'] = $topics;
+//$everything['topicsNoSort'] = $topicsNoSort;
+
 //	print_r($everything['resp']);
 
 //echo json_decode(json_encode($everything, JSON_UNESCAPED_UNICODE));

@@ -184,7 +184,7 @@
             opacity: 1;
         }
         .inactive_trend{
-            opacity: .1;
+            opacity: .05;
         }
 
         .reverserows{
@@ -314,7 +314,7 @@
                 trendmenu1Elem = $("#trendmenu1"),
                 trendmenu2Elem = $("#trendmenu2"),
                 trendmenu3Elem = $("#trendmenu3"),
-                trenddivElem = $("#trenddiv"),
+                trend1divElem = $("#trend1div"),
                 trend2divElem = $("#trend2div"),
                 trend3divElem = $("#trend3div"),
                 legend2divElem = $("#legend2div"),
@@ -404,6 +404,12 @@
                 opts,
                 spinner,
                 webkit,
+                clickedTopics,
+                distribution,
+                treemap,
+                trends,
+
+
 
             //graph
                 graphPositionsExist,jsonfilename,renderPageData,changed;
@@ -626,14 +632,14 @@
                 pill2Elem.removeClass("active");
                 if(graphdivElem.hasClass("active")) graphReset();
                 else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
-                else if (trenddivElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")) trendReset();
+                else if (trend1divElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")) trendReset(true);
 
                 pill2Elem.blur();
             });
             pill3Elem.on("click",function(){
                 pill3Elem.removeClass("active");
 
-                if(trenddivElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
+                if(trend1divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
                 else if(trend2divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
                 else if(trend3divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
 
@@ -643,7 +649,7 @@
                 pill4Elem.removeClass("active");
                 if(graphdivElem.hasClass("active")) graphCentralize();
                 else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
-                else if (trenddivElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")) trendReset();
+                else if (trend1divElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")) trendReset(false);
 
                 pill4Elem.blur();
             });
@@ -1349,7 +1355,7 @@
                             legend2divElem.hide();
                             pill1Elem.removeClass("disabled");
                             pill3Elem.addClass("disabled");
-                            trenddivElem.removeClass("active");trend2divElem.removeClass("active");trend3divElem.removeClass("active");
+                            trend1divElem.removeClass("active");trend2divElem.removeClass("active");trend3divElem.removeClass("active");
                         }
 
                         $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
@@ -1483,9 +1489,9 @@
 
             function findTopicLabels(){
 //NMP
-                /* The following code is executed only when the ajaxCall has loaded all the Topics */
+                /* The following code is executed only when the ajaxGraphCall has loaded all the Topics */
                 // documentElem.ajaxComplete(function() { 	// if "ajaxComplete" the code is executed every time one of the ajaxCalls is completed
-                // documentElem.bind("topicsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                // documentElem.bind("topicsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
 
                 k = 0,
                 n = nodes.length,
@@ -1798,15 +1804,17 @@
                 jsonfilename = "data/graph_"+experimentName+"_"+expsimilarity+"_"+gravity+"_"+charge+".json";
                 graphPositionsExist=UrlExists(jsonfilename);  //graph positions set true if json file exists
                 if (graphPositionsExist){
-                    $.when(getJSONpositions(), ajaxCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
+                    $.when(getJSONpositions(), ajaxGraphCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
                         renderPageData = JSON.parse(a2[0]).resp;
+                        ajaxTrendsCall(experimentName);
                         renderpage(renderPageData);
                     });
                 }
                 else{
                     graphPositionsExist=false;
-                    $.when(ajaxCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxCall() to finish and when done then renders the page
+                    $.when(ajaxGraphCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxGraphCall() to finish and when done then renders the page
                         renderPageData = JSON.parse(a1).resp;
+                        ajaxTrendsCall(experimentName);
                         renderpage(renderPageData);
                     });
                 }
@@ -1833,7 +1841,7 @@
             }
 
 
-            function ajaxCall(experiment,expsimilarity) {
+            function ajaxGraphCall(experiment,expsimilarity) {
                 console.log("call "+experiment);
                 var url;
 
@@ -1857,7 +1865,7 @@
                     success: function (resp) {
                         spinner.stop();
                         myresponse = JSON.parse(resp);
-                        //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxCall has loaded all the Topics
+                        //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
                         topics1 = myresponse.topicsNoSort;
                         topics2 = myresponse.topics;
                         grants = myresponse.grants;
@@ -1870,6 +1878,36 @@
                 });
             }
 
+
+            function ajaxTrendsCall(experiment) {
+                console.log("Trends: call "+experiment);
+                var url;
+
+//                if(experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos") url = "../../../jsonReviewFET80T.php";
+//                else if(experiment == "ACM_300T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
+//                else if(experiment == "ACM_300T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
+//                else
+                    url = "./trends.php";
+
+                return $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: url,
+                    data: "ex=" + experiment,
+                    success: function (resp) {
+                        myresponse = JSON.parse(resp);
+                        distribution = myresponse.distribution;
+                        treemap = myresponse.treemap;
+                        trends = myresponse.trends;
+// todo to be uncommented if stand alone and topics not loaded from graph visualization ... uncomment also in trends_code.php
+//                        topics1 = myresponse.topicsNoSort;
+//                        topics2 = myresponse.topics;
+                    },
+                    error: function (e) {
+                        alert('Error: ' + JSON.stringify(e));
+                    }
+                });
+            }
 
             function storeGraph(){
                 // we send data with POST
@@ -2704,7 +2742,7 @@
                 chorddivElem.empty();
                 chord2divElem.empty();
 
-                trenddivElem.empty();
+                trend1divElem.empty();
                 trend2divElem.empty();
 
                 filtersElem.val($("#filters option:first").val());
@@ -2719,6 +2757,9 @@
                 topicsFlag = false,
                 grants = [],
                 myresponse = [],
+                distribution = [],
+                treemap = [],
+                trends = [],
                 nodes = [],
                 links = [],
                 labels = [],
@@ -2783,7 +2824,8 @@
 
                 clr20 = d3.scale.category20().range(),
                 clrEven = [],
-                clrOdd = [];
+                clrOdd = [],
+                clickedTopics = [];
 
                 for (var i=0 ; i < clr20.length ; i++)
                     if (i % 2) clrEven.push(clr20[i]);
@@ -3702,103 +3744,89 @@
                     .scale(y)
                     .orient("left");
 
-                var stack = d3.layout.stack()
-                    .offset("wiggle")
-                    .values(function (d) { return d.values; })
-                    .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
-                    .y(function (d) { return d.value; });
-
-                var area = d3.svg.area()
-                    .interpolate("cardinal")
-                    .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
-                    .y0(function (d) { return y(d.y0); })
-                    .y1(function (d) { return y(d.y0 + d.y); });
-
                 // var color = d3.scale.ordinal()
                 //     .range(["#001c9c","#101b4d","#475003","#9c8305","#d3c47c"]);
                 var color = d3.scale.ordinal()
-                              .range(clr);
+                    .range(clr);
 //                    .range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
 
 
-                var trend_svg;
                 var trendCSV1;
-                var mousex;
-                var vertical;
-
                 if (type == 1){
-                    vertical = d3.select("#trenddiv")
-                        .append("div")
-                        .style("position", "absolute")
-                        .style("z-index", "19")
-                        .style("width", "1px")
-                        .style("height", height)
-                        .style("top", "60px")
-                        .style("bottom", "0px")
-                        .style("left", "0px")
-                        .style("background", "#000");
-
-                    trend_svg = d3.select("#trenddiv")
-                        .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-                        .style("preserveAspectRatio", "xMidYMid meet")
-                        .style("cursor","pointer")
-                        .append("svg:svg")
-                        .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
-                        .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
-                        .attr("id","trend")
-                        .append("g")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                     trendCSV1 = trendCSV11;
                 }
                 else if (type == 2) {
-                    vertical = d3.select("#trend2div")
-                        .append("div")
-                        .style("position", "absolute")
-                        .style("z-index", "19")
-                        .style("width", "1px")
-                        .style("height", height)
-                        .style("top", "60px")
-                        .style("bottom", "0px")
-                        .style("left", "0px")
-                        .style("background", "#000");
-
-                    trend_svg = d3.select("#trend2div")
-                        .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-                        .style("preserveAspectRatio", "xMidYMid meet")
-                        .style("cursor","pointer")
-                        .append("svg:svg")
-                        .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
-                        .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
-                        .attr("id","trend")
-                        .append("g")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                     trendCSV1 = trendCSV12;
                 }
                 else if (type == 3) {
-                    vertical = d3.select("#trend3div")
-                        .append("div")
-                        .style("position", "absolute")
-                        .style("z-index", "19")
-                        .style("width", "1px")
-                        .style("height", height)
-                        .style("top", "60px")
-                        .style("bottom", "0px")
-                        .style("left", "0px")
-                        .style("background", "#000");
-
-                    trend_svg = d3.select("#trend3div")
-                        .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-                        .style("preserveAspectRatio", "xMidYMid meet")
-                        .style("cursor","pointer")
-                        .append("svg:svg")
-                        .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
-                        .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
-                        .attr("id","trend")
-                        .append("g")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                     trendCSV1 = trendCSV13;
                 }
 
+
+                var vertical = d3.select("#trend"+type+"div")
+                    .append("div")
+                    .style("position", "absolute")
+                    .style("z-index", "19")
+                    .style("width", "1px")
+                    .style("height", height)
+                    .style("top", "60px")
+                    .style("bottom", "0px")
+                    .style("left", "0px")
+                    .style("background", "#000");
+
+
+                var chart = d3.select("#trend"+type+"div")
+                    .append("div")
+                    .attr("class", "col-md-10 col-md-offset-1")
+                    .attr("id", "chart")
+                    .append("div")
+                    .attr("class", "btn-group")
+                    .attr("data-toggle", "buttons");
+
+//                chart
+//                    .append("label")
+//                    .attr("class", "btn btn-primary")
+//                    .attr("id", "sbar")
+//                    .text("Bar")
+//                    .append("input")
+//                    .attr("type","radio")
+//                    .attr("name","options");
+                chart
+                    .append("label")
+                    .attr("class", "btn btn-primary")
+                    .attr("id", "line")
+                    .text("Line")
+                    .append("input")
+                    .attr("type","radio")
+                    .attr("name","options");
+                chart
+                    .append("label")
+                    .attr("class", "btn btn-primary")
+                    .attr("id", "area")
+                    .text("Area")
+                    .append("input")
+                    .attr("type","radio")
+                    .attr("name","options");
+                chart
+                    .append("label")
+                    .attr("class", "btn btn-primary active")
+                    .attr("id", "strm")
+                    .text("Stream")
+                    .append("input")
+                    .attr("type","radio")
+                    .attr("name","options");
+
+                var mousex;
+                var trend_svg = d3.select("#trend"+type+"div")
+                    .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+                    .style("preserveAspectRatio", "xMidYMid meet")
+                    .style("cursor","pointer")
+                    .append("svg:svg")
+                    .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
+                    .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
+                    .attr("id","trend")
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                 trend_svg
                     .on("mousemove", function(){
                         mousex = d3.mouse(this);
@@ -3810,17 +3838,177 @@
                         vertical.style("left", mousex + "px")});
 
                 d3.csv("../data/"+trendCSV1, function (error, data) {
-                    d3.csv("../data/"+trendCSV2, function(error, topics) {
+//                    d3.csv("../data/"+trendCSV2, function(error, topics) {
+//console.log("data")
+//console.log(data)
+//console.log("topics")
+//console.log(topics)
+//console.log("topics1!")
+//console.log(topics1)
+console.log("topics2!")
+console.log(topics2)
+                    var labelVar = 'quarter';
+                    var varNames = d3.keys(data[0])
+                        .filter(function (key) { return key !== labelVar;});
+                    color.domain(varNames);
 
-                        var labelVar = 'quarter';
-                        var varNames = d3.keys(data[0])
-                            .filter(function (key) { return key !== labelVar;});
-                        color.domain(varNames);
+                    // use a copy of the below, not a reference
+                    var varNamesReversed = varNames.map(function(arr) {
+                        return arr.slice();
+                    }).reverse();
 
+                    stackChart(data, "wiggle");
+                    $( "#sbar,#line,#area,#strm" ).click(function() {
+                        chartClearAll();
+                        trendReset(false);
+                        if (this.id == "line") {
+                            lineChart(data);
+                        } else if (this.id == "area") {
+                            stackChart(data, "zero");
+                        } else {
+                            stackChart(data, "wiggle");
+                        }
+
+                        clickedTopics.forEach(function(topic){
+                            clickPopover(topic, type, true);
+                        })
+                    });
+//
+//                        VIZ.onResize();
+//
+//                        $(window).on("resize", function() {
+//                            VIZ.onResize();
+//                        });
+//
+
+                    function stackBarChart(data) {
                         var seriesArr = [], series = {};
-                        varNames.forEach(function (name) {
+                        varNamesReversed.forEach(function (name) {
                             series[name] = {name: name, values:[]};
                             seriesArr.push(series[name]);
+                        });
+
+                        var topic_hash = [];
+                        topicnames = [];
+                        var index = 0;
+
+                        for (var key in topics2) {
+                            console.log("key")
+                            console.log(key)
+                            $.each(topics2[key], function (i, d) {
+                                console.log("line d")
+                                console.log(d)
+                                console.log("line i")
+                                console.log(i)
+                                //
+                                var nodeindex = topic_hash.indexOf(key);
+                                if (nodeindex != -1) {
+                                    var newname = topicnames[nodeindex].name;
+                                    newname += "," + d.item;
+                                    topicnames[nodeindex].name = newname;
+                                }
+                                else {
+                                    topic_hash.push(key);
+                                    //            topicnames[topic_hash.length-1] = {};
+                                    topicnames.push({index: index, id: key, name: d.item});
+                                    index++;
+                                }
+
+                            });
+                        }
+//                        //todo edw kai sta alla antistoixa na balw ta topics pou thelw
+//                        topics.forEach(function(d,i) {
+//
+//                            var nodeindex = topic_hash.indexOf(i);
+//                            if(nodeindex != -1){
+//                                var newname = topicnames[nodeindex].name;
+//                                newname += "," + d[i].item;
+//                                topicnames[nodeindex].name = newname;
+//                            }
+//                            else{
+//                                topic_hash.push(i);
+//                                //            topicnames[topic_hash.length-1] = {};
+//                                topicnames.push({index:index, id:i, name:d[i].item});
+//                                index++;
+//                            }
+//
+//                        });
+
+                        data.forEach(function (d) {
+                            var y0 = 0;
+                            d.mapping = varNames.map(function (name) {
+                                series[name].values.push({name: name, label: d[labelVar], value: +d[name]});
+                                return {
+                                    name: name,
+                                    label: d[labelVar],
+                                    y0: y0,
+                                    y1: y0 += +d[name]
+                                };
+                            });
+                            d.total = d.mapping[d.mapping.length - 1].y1;
+                        });
+
+                        x.domain(data.map(function (d) { return d.quarter; }));
+                        y.domain([0, d3.max(data, function (d) { return d.total; })]);
+
+                       drawAxis();
+
+                        var selection = trend_svg.selectAll(".bar")
+                            .data(data)
+                            .enter().append("g")
+//                                .attr("id", function (d,i) { return "bar"+type+"_"+i })
+//                                .attr("class", "series");
+//                                .on("click", function (d) { clickPopover.call(this, d, type, false); });
+
+                        selection
+                            .attr("transform", function (d,i) {
+                                return "translate(" + x(d.quarter) + ",0)"; });
+
+                        selection.selectAll(".series")
+                            .data(function (d) {
+//                                    console.log("d.mapping");
+//                                    console.log(d.mapping);
+                                return d.mapping;})
+                            .enter().append("rect")
+                            .attr("id", function (d,i) {
+//                                    return "series"+type+"_"+d.mapping[i].name})
+                               return "series"+type+"_"+ i})
+                            .attr("class", function (d,i) {
+//                                    return "series"+type+"_"+d.mapping[i].name})
+                                return "series series"+type+"_"+ i})
+//                                .attr("id", function (d,i) { return "rect"+i })
+                            .attr("width", x.rangeBand())
+                            .attr("y", function (d) { return y(d.y1); })
+                            .attr("height", function (d) { return y(d.y0) - y(d.y1); })
+                            .style("fill", function (d) { return color(d.name); })
+                            .style("stroke", "grey")
+                            .on("mouseover", function (d) { showPopover.call(this, d); })
+                            .on("mouseout",  function (d) { removePopovers(); })
+                            .on("click", function (d) { clickPopover.call(this, d, type, false); });
+
+                        drawAxis();
+                        drawLegend(varNames,topic_hash);
+                    }
+
+
+                    function lineChart(data) {
+                        var line = d3.svg.line()
+                            .interpolate("cardinal")
+                            .x(function (d) {
+                                return x(d.label) + x.rangeBand() / 2;
+                            })
+                            .y(function (d) {
+                                return y(d.value);
+                            });
+
+
+                        var seriesData = varNames.map(function (name) {
+                            return {
+                                name: name,
+                                values: data.map(function (d) {
+                                    return {name: name, label: d[labelVar], value: +d[name]};
+                                })
+                            };
                         });
 
 
@@ -3828,22 +4016,158 @@
                         topicnames = [];
                         var index = 0;
 
-                        topics.forEach(function(d) {
 
-                            var nodeindex = topic_hash.indexOf(d.topicid);
-                            if(nodeindex != -1){
-                                var newname = topicnames[nodeindex].name;
-                                newname += "," + d.item;
-                                topicnames[nodeindex].name = newname;
-                            }
-                            else{
-                                topic_hash.push(d.topicid);
-    //            topicnames[topic_hash.length-1] = {};
-                                topicnames.push({index:index, id:d.topicid, name:d.item});
-                                index++;
-                            }
+                        for (var key in topics2) {
+                            console.log("key")
+                            console.log(key)
+                            $.each(topics2[key], function (i, d) {
+                                console.log("line d")
+                                console.log(d)
+                                console.log("line i")
+                                console.log(i)
+    //
+                                var nodeindex = topic_hash.indexOf(key);
+                                if (nodeindex != -1) {
+                                    var newname = topicnames[nodeindex].name;
+                                    newname += "," + d.item;
+                                    topicnames[nodeindex].name = newname;
+                                }
+                                else {
+                                    topic_hash.push(key);
+                                    //            topicnames[topic_hash.length-1] = {};
+                                    topicnames.push({index: index, id: key, name: d.item});
+                                    index++;
+                                }
 
+                            });
+                        }
+                        //todo edw kai sta alla antistoixa na balw ta topics pou thelw
+//                        topics.forEach(function(d,i) {
+//                            var nodeindex = topic_hash.indexOf(i);
+//                            if(nodeindex != -1){
+//                                var newname = topicnames[nodeindex].name;
+//                                newname += "," + d[i].item;
+//                                topicnames[nodeindex].name = newname;
+//                            }
+//                            else{
+//                                topic_hash.push(i);
+//                                //            topicnames[topic_hash.length-1] = {};
+//                                topicnames.push({index:index, id:i, name:d[i].item});
+//                                index++;
+//                            }
+//
+//                        });
+
+                        x.domain(data.map(function (d) { return d.quarter; }));
+                        y.domain([
+                            d3.min(seriesData, function (c) {
+                                return d3.min(c.values, function (d) { return d.value; });
+                            }),
+                            d3.max(seriesData, function (c) {
+                                return d3.max(c.values, function (d) { return d.value; });
+                            })
+                        ]);
+
+                        drawAxis();
+
+                        var series = trend_svg.selectAll(".series")
+                            .data(seriesData)
+                            .enter().append("g")
+                            .attr("id", function (d,i) { return "series"+type+"_"+i })
+                            .attr("class", "series")
+                            .on("click", function (d) { clickPopover.call(this, d, type, false); });
+
+                        series.append("path")
+                            .attr("class", "line")
+                            .attr("d", function (d) { return line(d.values); })
+                            .attr("id", function (d,i) { return "streamPath"+i })
+                            .style("stroke", function (d) { return color(d.name); })
+                            .style("stroke-width", "4px")
+                            .style("fill", "none");
+
+                        series.selectAll(".linePoint")
+                            .data(function (d) { return d.values; })
+                            .enter().append("circle")
+                            .attr("class", "linePoint")
+                            .attr("cx", function (d) { return x(d.label) + x.rangeBand()/2; })
+                            .attr("cy", function (d) { return y(d.value); })
+                            .attr("r", "3px")
+                            .style("fill", function (d) { return color(d.name); })
+                            .style("stroke", "grey")
+                            .style("stroke-width", "1px")
+                            .on("mouseover", function (d) { showPopover.call(this, d); })
+                            .on("mouseout",  function (d) { removePopovers(); })
+                            .on("click", function (d) { clickPopover.call(this, d, type, false); });
+
+                        drawAxis();
+                        drawLegend(varNames,topic_hash);
+                    }
+
+
+                    function stackChart(data, offset){
+
+                        var stack = d3.layout.stack()
+                            .offset(offset)
+                            .values(function (d) { return d.values; })
+                            .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+                            .y(function (d) { return d.value; });
+
+                        var area = d3.svg.area()
+                            .interpolate("cardinal")
+                            .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+                            .y0(function (d) { return y(d.y0); })
+                            .y1(function (d) { return y(d.y0 + d.y); });
+
+                        var seriesArr = [], series = {};
+                        varNames.forEach(function (name) {
+                            series[name] = {name: name, values:[]};
+                            seriesArr.push(series[name]);
                         });
+
+                        var topic_hash = [];
+                        topicnames = [];
+                        var index = 0;
+
+                        for (var key in topics2) {
+                            console.log("key")
+                            console.log(key)
+                            $.each(topics2[key], function (i, d) {
+                                console.log("line d")
+                                console.log(d)
+                                console.log("line i")
+                                console.log(i)
+                                //
+                                var nodeindex = topic_hash.indexOf(key);
+                                if (nodeindex != -1) {
+                                    var newname = topicnames[nodeindex].name;
+                                    newname += "," + d.item;
+                                    topicnames[nodeindex].name = newname;
+                                }
+                                else {
+                                    topic_hash.push(key);
+                                    //            topicnames[topic_hash.length-1] = {};
+                                    topicnames.push({index: index, id: key, name: d.item});
+                                    index++;
+                                }
+
+                            });
+                        }
+                        //todo edw kai sta alla antistoixa na balw ta topics pou thelw
+//                            topics.forEach(function(d) {
+//                                var nodeindex = topic_hash.indexOf(d.topicid);
+//                                if(nodeindex != -1){
+//                                    var newname = topicnames[nodeindex].name;
+//                                    newname += "," + d.item;
+//                                    topicnames[nodeindex].name = newname;
+//                                }
+//                                else{
+//                                    topic_hash.push(d.topicid);
+//                                    //            topicnames[topic_hash.length-1] = {};
+//                                    topicnames.push({index:index, id:d.topicid, name:d.item});
+//                                    index++;
+//                                }
+//
+//                            });
 
                         data.forEach(function (d) {
                             varNames.map(function (name) {
@@ -3859,27 +4183,12 @@
                             return d3.max(c.values, function (d) { return d.y0 + d.y; });
                         })]);
 
-                        trend_svg.append("g")
-                            .attr("class", "x axis")
-                            .attr("transform", "translate(0," + height + ")")
-                            .call(xAxis);
-
-                        trend_svg.append("g")
-                            .attr("class", "y axis")
-                            .call(yAxis)
-                            .append("text")
-                            .attr("transform", "rotate(-90)")
-                            .attr("y", 6)
-                            .attr("dy", ".71em")
-                            .style("text-anchor", "end")
-                            .text("Weight");
-
                         var selection = trend_svg.selectAll(".series")
                             .data(seriesArr.reverse())
                             .enter().append("g")
                             .attr("id", function (d,i) { return "series"+type+"_"+i })
                             .attr("class", "series")
-                            .on("click", function (d) { clickPopover.call(this, d, type); });
+                            .on("click", function (d) { clickPopover.call(this, d, type, false); });
 
                         selection.append("path")
                             .attr("class", "streamPath")
@@ -3903,37 +4212,47 @@
                             .style("fill",function (d) { return color(d.name); })
                             .on("mouseover", function (d) { showPopover.call(this, d, type); })
                             .on("mouseout",  function (d) { removePopovers(); })
-                            .on("click", function (d) { clickPopover.call(this, d, type); });
+                            .on("click", function (d) { clickPopover.call(this, d, type, false); });
 
-                        var trendlegend = d3.select("#trendlegend"+type)
-    //                        .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
-    //                        .style("preserveAspectRatio", "xMidYMid meet")
-                            .append("div")
-                            .append("svg")
-                            .attr("class", "trendlegendsvg")
-                            .attr("width",  2000) // gia na xwrane ta topic word bags
-                            .attr("height", 1000) // gia na xwrane ta top 50 topic words
-                            .style("cursor","pointer")
-    //                        .style("overflow-x","scroll")
-                            .selectAll(".trendlegend")
+                        drawAxis();
+                        drawLegend(varNames,topic_hash);
+                    }
+//                    });
+                });
+
+                // the function below needs trend_svg that is declared inside the above function
+                function drawLegend (varNames,topic_hash) {
+                    d3.selectAll("#trendlegend"+type).select("div").remove();
+                    var trendlegend = d3.select("#trendlegend"+type)
+                        //                        .style("viewBox", "0 0 " + w + " " + h )          // in order to be ok in all browsers
+                        //                        .style("preserveAspectRatio", "xMidYMid meet")
+                        .append("div")
+                        .append("svg")
+                        .attr("class", "trendlegendsvg")
+                        .attr("width",  2000) // gia na xwrane ta topic word bags
+                        .attr("height", 1000) // gia na xwrane ta top 50 topic words
+                        .style("cursor","pointer")
+                        //                        .style("overflow-x","scroll")
+                        .selectAll(".trendlegend")
 //                            .data(varNames.slice().reverse())
 //                            .data(varNames.slice().reverse())
-                            .data(varNames)
-                            .enter().append("g")
-                            .attr("id", function (d,i) { return "trendlegend"+type+"_"+i })
-                            .attr("class", "trendlegend")
-                            .attr("transform", function (d, i) {return "translate(55," + i * 20 + ")"; })
-                            .on("click", function (d) { clickPopover.call(this, d, type); });
+                        .data(varNames)
+                        .enter().append("g")
+                        .attr("id", function (d,i) { return "trendlegend"+type+"_"+i })
+                        .attr("class", "trendlegend")
+                        .attr("transform", function (d, i) {return "translate(55," + i * 20 + ")"; })
+                        .on("click", function (d) { clickPopover.call(this, d, type, false); });
 
 
-    //                var trendlegend = trend_svg.selectAll(".trendlegend")
-    //                    .data(varNames.slice().reverse())
-    //                    .enter().append("g")
-    //                    .attr("class", "trendlegend")
-    //                    .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
+                    //                var trendlegend = trend_svg.selectAll(".trendlegend")
+                    //                    .data(varNames.slice().reverse())
+                    //                    .enter().append("g")
+                    //                    .attr("class", "trendlegend")
+                    //                    .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
+
 
                     trendlegend.append("rect")
-    //                    .attr("x", width-30)    // gia na mpoun aristera
+                        //                    .attr("x", width-30)    // gia na mpoun aristera
                         .attr("x", -30)    // gia na mpoun aristera
                         .attr("width", 10)
                         .attr("height", 10)
@@ -3941,12 +4260,12 @@
                         .style("stroke", "grey");
 
                     trendlegend
-    //                    .append("div")
-    //                    .style("word-wrap","break-word")
-    //                    .style("word-break","break-all")
-    //                    .style("white-space","normal")
+                        //                    .append("div")
+                        //                    .style("word-wrap","break-word")
+                        //                    .style("word-break","break-all")
+                        //                    .style("white-space","normal")
                         .append("text")
-    //                    .attr("x", width-10)
+                        //                    .attr("x", width-10)
                         .attr("x", 0)
                         .attr("y", 6)
                         .attr("dy", ".35em")
@@ -3954,15 +4273,37 @@
                         //todo: meta apo kapoio unclick otan menei ena na fainontai ta related nodes. na dw pou xanetai to label 0 sto teleutaio. na auksisw kai to width giati mallon den xwrane,ti einai to weight sti stili.. na balw ... sto titlo
                         .style("text-anchor", "start")
 //                        .text(function (d) { return d; });
-        //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
-        //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+                        //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
+                        //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
                         .text(function (d) {return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+                }
 
-                    });
-                });
+
+                function drawAxis() {
+
+                    trend_svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis);
+
+                    trend_svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "end")
+                        .text("Weight");
+                }
+
+
+                function chartClearAll() {
+                    trend_svg.selectAll("*").remove()
+                }
             }
 
-            function trendReset(){
+            function trendReset(fullReset){          // if fullReset=true then also clickedTopics are reset, else they are not (difference between magnet and reset and also when changing trends)
                 mytextTitleElem.hide();
                 classifiedNodesHeaderElem.hide();   //clear anything included in child nodes
                 classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
@@ -3970,6 +4311,9 @@
                 nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
                 legenddivElem.hide();
                 legend2divElem.show();
+
+                if (fullReset)
+                   clickedTopics = []; // empty array of clicked nodes
 
                 $(".series").each(function () {
                     $(this).attr("class", "series");
@@ -4035,7 +4379,7 @@
                 $(this).popover('show')
             }
 
-            function clickPopover (d,type) {
+            function clickPopover (d,type,initializationOfTrend) {
                 var tit = 0;
                 var titindex = 0;
                 var titname = 0;
@@ -4046,15 +4390,27 @@
                     }
                     else{                           // if legend was clicked
                         elementid = d.name;
-
                     }
-                    if (elementid == o.id) {
+
+                    if (elementid == o.id) {        // keep clicked topics in array to keep clicked in other chart and trends cause of consistency
+                        var topicIndex = clickedTopics.indexOf(elementid);
+                        if (initializationOfTrend){
+                            // do nothing
+                        }
+                        else if (topicIndex != -1){	// if already exists
+                            clickedTopics.splice(topicIndex, 1);
+                        }
+                        else {
+                            clickedTopics.push(elementid);
+                        }
+                        console.log(clickedTopics)
 
                         tit=o.index+"."+o.name;
                         titname = o.name;
                         titindex= o.index;
 
                         if ($("#series" + type + "_" + i).attr("class") == "series active_trend") {
+                            console.log("create series inactive_trend");
                             $("#series" + type + "_" + i).attr("class", "series inactive_trend");
                             $("#trendlegend" + type + "_" + i).attr("class", "trendlegend inactive_trend");
                             if ($(".active_trend").length == 0) {
@@ -4064,25 +4420,11 @@
                                     else
                                         $(this).attr("class", "trendlegend");
                                 });
-                                trendReset();
+                                trendReset(true);
                             }
-//                            else if ($(".active_trend").length == 1) {
-//                                mytextTitleElem.empty();
-//                                mytextTitleElem.show();
-//                                mytextTitle.append("div").append("ul")
-//                                    .attr("class", "pagination active")
-//                                    .attr("data-toggle", "tooltip")
-//                                    .attr("data-placement", "right")
-//                                    .attr("title", "...more about project and link...")
-//                                    .style("cursor", "pointer")
-//                                    //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
-//                                    //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-//                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray").html("Selected topic: <br/>" + tit);
-//                                console.log($(".active_trend"));
-//                                autocompletelog(titname);
-//                            }
                         }
                         else {
+                            console.log("create series active_trend");
                             $("#series" + type + "_" + i).attr("class", "series active_trend");
                             $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
 
@@ -4247,25 +4589,25 @@
                         if ( webkit == 1) {
                             vis.style("padding-left", windowElem.width() / 4);
                             vis.style("width", windowElem.width());
-                            d3.select("#trenddiv").style("padding-left", windowElem.width() / 4);
-                            d3.select("#trenddiv").style("width", windowElem.width());
+                            d3.select("#trend1div").style("padding-left", windowElem.width() / 4);
+                            d3.select("#trend1div").style("width", windowElem.width());
                             d3.select("#trend2div").style("padding-left", windowElem.width() / 4);
                             d3.select("#trend2div").style("width", windowElem.width());
                             d3.select("#trend3div").style("padding-left", windowElem.width() / 4);
                             d3.select("#trend3div").style("width", windowElem.width());
-//                            trenddivElem.style("height",h);
-                            trenddivElem.attr("style","height:"+h);
+//                            trend1divElem.style("height",h);
+                            trend1divElem.attr("style","height:"+h);
                         }
                         else {
                             vis.attr("transform","translate(" + windowElem.width()/4 + ")");
                             vis.style("width", windowElem.width());
-                            d3.select("#trenddiv").attr("transform","translate(" + windowElem.width()/4 + ")");
-                            d3.select("#trenddiv").style("width", windowElem.width());
+                            d3.select("#trend1div").attr("transform","translate(" + windowElem.width()/4 + ")");
+                            d3.select("#trend1div").style("width", windowElem.width());
                             d3.select("#trend2div").attr("transform","translate(" + windowElem.width()/4 + ")");
                             d3.select("#trend2div").style("width", windowElem.width());
                             d3.select("#trend3div").attr("transform","translate(" + windowElem.width()/4 + ")");
                             d3.select("#trend3div").style("width", windowElem.width());
-                            trenddivElem.attr("style","height:"+h);
+                            trend1divElem.attr("style","height:"+h);
                         }
 
                         chordElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
@@ -4280,20 +4622,20 @@
                         /* move svg to left back to initial position */
                         if ( webkit == 1) {
                             vis.style("padding-left", "");
-                            d3.select("#trenddiv").style("padding-left","0");
+                            d3.select("#trend1div").style("padding-left","0");
                             d3.select("#trend2div").style("padding-left","0");
                             d3.select("#trend3div").style("padding-left","0");
 //to apo katw xreiazetai mono gia auto to trend giati gia kapoio logo den emfanizotan
-//                            trenddivElem.style("height",h);
-                            trenddivElem.attr("style","height:"+h);
+//                            trend1divElem.style("height",h);
+                            trend1divElem.attr("style","height:"+h);
                         }
                         else {
                             vis.attr("transform","translate(" + 0 + ")");
-                            d3.select("#trenddiv").attr("transform","translate(" + 0 + ")");
+                            d3.select("#trend1div").attr("transform","translate(" + 0 + ")");
                             d3.select("#trend2div").attr("transform","translate(" + 0 + ")");
                             d3.select("#trend3div").attr("transform","translate(" + 0 + ")");
-//                            trenddivElem.style("height",h);
-                            trenddivElem.attr("style","height:"+h);
+//                            trend1divElem.style("height",h);
+                            trend1divElem.attr("style","height:"+h);
                         }
                         graphReset();
 
@@ -4317,6 +4659,37 @@
                     console.log("Browser won't enter full screen mode for some reason.");
                 });
             }
+
+
+//            d3.select("#save").on("click", function(){
+//                var html = $("#graphdiv").html();
+//console.log(html)
+//                //console.log(html);
+//                var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
+//                var img = '<img src="'+imgsrc+'">';
+//                d3.select("#svgdataurl").html(img);
+//
+//
+//                var canvas = document.querySelector("canvas"),
+//                    context = canvas.getContext("2d");
+//
+//                var image = new Image;
+//                image.src = imgsrc;
+//                image.onload = function() {
+//                    context.drawImage(image, 0, 0);
+//
+//                    var canvasdata = canvas.toDataURL("image/png");
+//
+//                    var pngimg = '<img src="'+canvasdata+'">';
+//                    d3.select("#pngdataurl").html(pngimg);
+//
+//                    var a = document.createElement("a");
+//                    a.download = "sample.png";
+//                    a.href = canvasdata;
+//                    a.click();
+//                };
+//
+//            });
         });
 
     </script>
@@ -4472,8 +4845,8 @@
                         <li class="dropdown">
                             <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
-<!--                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>-->
-                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trenddiv" href="../../../trends/streamgraph-full.html" target="_blank">ACM Topic Trend Analysis 1990-2011</a></li>
+<!--                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>-->
+                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">ACM Topic Trend Analysis 1990-2011</a></li>
                                 <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-communication.html" target="_blank">ACM (Journal: Communications) 1990-2011</a></li>
                                 <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">ACM (Journal: SIGMOD Records) 1976-2011</a></li>
                             </ul>
@@ -4492,7 +4865,7 @@
                     </div>
                     <div id="chord2div" class="tab-pane">
                     </div>
-                    <div id="trenddiv" class="tab-pane" >
+                    <div id="trend1div" class="tab-pane" >
                     </div>
                     <div id="trend2div" class="tab-pane">
                     </div>
@@ -4514,6 +4887,14 @@
             </div>
         </div>
     </div>
+<!--    <button id="save">Save as Image</button>-->
+<!--    <h2>SVG dataurl:</h2>-->
+<!--    <div id="svgdataurl"></div>-->
+<!---->
+<!--    <h2>SVG converted to PNG dataurl via HTML5 CANVAS:</h2>-->
+<!--    <div id="pngdataurl"></div>-->
+<!---->
+<!--    <canvas width="960" height="500" style="display:none"></canvas>-->
     <div class="col-md-3" id="legenddiv" style="overflow:auto;">
         <table class="table table-condensed table-striped">
             <thead>

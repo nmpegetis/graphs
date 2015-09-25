@@ -259,7 +259,7 @@ else{
 
 
 $everything = array();
-$everything['distribution'] = $topicsdistribution;
+// $everything['distribution'] = $topicsdistribution;
 $everything['treemap'] = $treemap;
 $everything['trends'] = $trends;
 // todo to be uncommented if stand alone and topics not loaded from graph visualization

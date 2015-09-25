@@ -23,10 +23,20 @@ class database {
 		try {
 			switch($type){
 				case 'postgres':
-					$this->db = new PDO('pgsql:host='.$host.';port='.$port.';dbname='.$name.';user='.$username.';password='.$password);
+					try{
+						$this->db = new PDO('pgsql:host='.$host.';port='.$port.';dbname='.$name.';user='.$username.';password='.$password);
+					}
+					catch(PDOException $e){
+						echo $e->getMessage();
+					}
 					break;
 				case 'sqlite':
-					$this->db = new PDO('sqlite:'.$name);
+					try{
+						$this->db = new PDO('sqlite:'.$name);
+					}
+					catch(PDOException $e){
+						echo $e->getMessage();
+					}
 					break;
 				default:
 					echo "not known database type\n";
@@ -39,7 +49,6 @@ class database {
 	}
 
 	function doQuery($query){
-
 		$stmt = $this->db->query($query);
 		$this->last_query = $query;
 		if(!$stmt){
@@ -55,6 +64,7 @@ class database {
 		$this->last_query = $query;
 		if(!$stmt){
             error_log("Failed to prepare query with message: ".$this->db->errorInfo(), 0);
+            echo "Failed to prepare query with message: ".$this->db->errorInfo();
             return false;
 		}
 		return $stmt;
@@ -63,6 +73,7 @@ class database {
 	function doExecute($stmt,$params){
 		if(!$stmt->execute($params)){
             error_log("Failed to execute query with message: ".$stmt->errorInfo(), 0);
+            echo "Failed to execute query with message: ".$stmt->errorInfo();
             return false;
 		}
 		return $stmt;
@@ -76,7 +87,6 @@ if(!isset($_GET['s']) || !isset($_GET['ex'])){
 
 
 $mydb = new database("sqlite","",0,$db_path,"","");
-
 
 
 //////////////////////////////
@@ -105,6 +115,7 @@ if (!$list) {
 			$value = mb_convert_encoding($value, "UTF-8", "Windows-1252");
 		}
 		unset($value); # safety: remove reference
+
 		$list[] = array_map('utf8_encode', $row );
 	}
 	//print_r($list);
@@ -129,10 +140,9 @@ $querykey = "KEY" . md5($query) . $db_name;		// to distinguish when the experime
 $experiments = $meminstance->get($querykey);
 
 if (!$experiments) {
-
 	$experiments = array();
-	$stmt = $mydb->doQuery($query);
-	$res = $stmt->fetch();
+		$stmt = $mydb->doQuery($query);
+		$res = $stmt->fetch();
 	do {
 		array_push($experiments,array("id"=>$res[0],"desc"=>$res[1],"Metadata"=>$res[2],"initialSimilarity"=>$res[3],"PhraseBoost"=>$res[4]));
 	} while ($res = $stmt->fetch());
@@ -213,9 +223,9 @@ else{
 }
 
 
-////////////////////////////////////
-///// TOPICS NOT SORTED QUERY //////
-////////////////////////////////////
+// ////////////////////////////////////
+// ///// TOPICS NOT SORTED QUERY //////
+// ////////////////////////////////////
 
 
 $query = $query_topics_nosort;
@@ -244,7 +254,6 @@ if (!$topicsNoSort) {
 else{
 	//	print "got result from memcached\n";
 }
-
 
 $everything = array();
 $everything['resp'] = $list;

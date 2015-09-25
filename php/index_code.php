@@ -409,6 +409,7 @@
                 distribution,
                 treemap,
                 trends,
+                columns,
 
 
 
@@ -1843,6 +1844,74 @@
 
 
             function ajaxGraphCall(experiment,expsimilarity) {
+
+                $.getJSON( "../data/trends.json").done( function(json) {
+                    // trends = $.parseJSON(json);
+                    console.log( "trends" );
+                    var response = json.trends;
+//                        console.log(response);
+//                        console.log(json.trends);
+                    //trends = json;
+
+//                        var varNamesNew = [];
+//                        console.log("varnames NEW")
+//                        for (var key in response) {
+////                            console.log(response.keys()[0])
+//                            varNamesNew.push(key);
+                    var result = pivot(response, ['year'], ['id'], {});
+//                            console.log(result)
+//                        console.log(result.rowHeaders.length)
+//                        console.log(result.columnHeaders.length)
+                    var line;
+                    line = "quarter";
+                    for (var k = 0;k < result.columnHeaders.length; k++) {
+                        line += "," + result.columnHeaders[k]
+                        columns.push(parseInt(result.columnHeaders[k]));
+                    }
+//                    console.log(line)
+                    console.log("columns")
+                    for (var i =0 ; i<result.rowHeaders.length ; i++) {
+                        line += "\n"+result.rowHeaders[i];
+                        for (var j = 0; j < result.columnHeaders.length; j++){
+
+                            if (result[i][j] !== undefined)
+                                line += "," +result[i][j][0].weight
+                            else
+                                line += ",0"
+
+//                            console.log(response[key][0].id)
+
+//                            $.each(json.trends[key], function (i, d) {
+//                                console.log(d)
+//                            });
+//                        }
+//                        console.log(varNamesNew)
+                        }
+                    }
+                    console.log(columns)
+                    console.log(line)
+
+                    $.ajax({
+                        type: "POST",
+                        async: true,
+                        url: "./fileCreator.php",
+                        dataType: 'text',		// this is json if we put it like this JSON object
+                        data: {
+                            /*        json : JSON.stringify(jsonObject) /* convert here only */
+                            func: "csv",
+                            csv: line
+                        },
+                        success: function () {
+                            console.log("CSV file Created")
+                        },
+                        error: function (e) {
+                            alert('Error: ' + e);
+                        }
+                    })
+                }).fail(function() {
+                    console.log( "error in json position reading file" );
+                });
+
                 console.log("call "+experiment);
                 var url;
 
@@ -2696,6 +2765,7 @@
                 });
 
 
+
                 createChord(1);
                 createChord(2);
                 if (/^ACM*/.test(experimentName)) {
@@ -2706,70 +2776,6 @@
                 }
 
 
-
-                $.getJSON( "../data/trends.json").done( function(json) {
-                    // trends = $.parseJSON(json);
-                    console.log( "trends" );
-                    var response = json.trends;
-//                        console.log(response);
-//                        console.log(json.trends);
-                    //trends = json;
-
-//                        var varNamesNew = [];
-//                        console.log("varnames NEW")
-//                        for (var key in response) {
-////                            console.log(response.keys()[0])
-//                            varNamesNew.push(key);
-                    var result = pivot(response, ['year'], ['id'], {});
-//                            console.log(result)
-//                        console.log(result.rowHeaders.length)
-//                        console.log(result.columnHeaders.length)
-                    var line;
-                    line = "quarter";
-                    for (var k = 0;k < result.columnHeaders.length; k++)
-                        line += "," + result.columnHeaders[k]
-//                    console.log(line)
-                    for (var i =0 ; i<result.rowHeaders.length ; i++) {
-                        line += "\n"+result.rowHeaders[i];
-                        for (var j = 0; j < result.columnHeaders.length; j++){
-                            if (result[i][j] !== undefined)
-                                line += "," +result[i][j][0].weight
-                            else
-                                line += ",0"
-
-//                            console.log(response[key][0].id)
-
-//                            $.each(json.trends[key], function (i, d) {
-//                                console.log(d)
-//                            });
-//                        }
-//                        console.log(varNamesNew)
-                         }
-                        console.log(line)
-
-
-                    }
-
-                    $.ajax({
-                        type: "POST",
-                        async: true,
-                        url: "./fileCreator.php",
-                        dataType: 'text',		// this is json if we put it like this JSON object
-                        data: {
-                            /*        json : JSON.stringify(jsonObject) /* convert here only */
-                            func: "csv",
-                            csv: line
-                        },
-                        success: function () {
-                            console.log("CSV file Created")
-                        },
-                        error: function (e) {
-                            alert('Error: ' + e);
-                        }
-                    })
-                }).fail(function() {
-                    console.log( "error in json position reading file" );
-                });
 
                 chordElem = $("#chord");
                 chord2Elem = $("#chord2");
@@ -2894,7 +2900,8 @@
                 clr20 = d3.scale.category20().range(),
                 clrEven = [],
                 clrOdd = [],
-                clickedTopics = [];
+                clickedTopics = [],
+                columns = [];
 
                 for (var i=0 ; i < clr20.length ; i++)
                     if (i % 2) clrEven.push(clr20[i]);
@@ -3907,6 +3914,36 @@
                         mousex = mousex[0];
                         vertical.style("left", mousex + "px")});
 
+
+
+                console.log("topics2!")
+                console.log(topics1)
+                var topics1trends = jQuery.extend(true, {}, topics1);
+                var trendstopics = {};
+
+//                console.log(topics1trends)
+                console.log(topics1trends)
+                for (var key in topics1trends){
+                    var keyint = parseInt(key)
+                    if (columns.indexOf(keyint) > -1){
+//                        console.log(topics1trends[keyint])
+                        trendstopics[keyint] = topics1trends[keyint];
+//                        trendstopics.push(topics1trends[keyint]);
+                    }
+                }
+//                console.log(topics1trends)
+                console.log(trendstopics)
+//                $.each(topics1trends,function(o) {
+//                    if ($.inArray(o,columns))// == 15,25,36,38,42,
+////                            44,77,79,100,124,137,141,141,146,149,151,159,168,171,175,178,179,180,186,191,196,204,209,220,223,228,236,255,259,263,264,267,269,274,277,278,279,287,290,294,299,301,321,328,332,335,345,346,349,353,355,356,363,365,368,374,380,382)) {
+//
+////                        console.log("o:"+o)
+////                        tit = o.index + "." + o.name;
+////                        titname = o.name;
+////                        titindex = o.index;
+////                    }
+//                });
+//                console.log(trendstopics)
                 d3.csv("../data/"+trendCSV1, function (error, data) {
 //                    d3.csv("../data/"+trendCSV2, function(error, topics) {
 //console.log("data")
@@ -3915,14 +3952,13 @@
 //console.log(topics)
 //console.log("topics1!")
 //console.log(topics1)
-console.log("topics2!")
-//console.log(topics2)
+
                     var labelVar = 'quarter';
                     var varNames = d3.keys(data[0])
                         .filter(function (key) { return key !== labelVar;});
                     color.domain(varNames);
-console.log("varnames")
-console.log(varNames)
+//console.log("varnames")
+//console.log(varNames)
                     // use a copy of the below, not a reference
                     var varNamesReversed = varNames.map(function(arr) {
                         return arr.slice();
@@ -3963,10 +3999,10 @@ console.log(varNames)
                         topicnames = [];
                         var index = 0;
 
-                        for (var key in topics2) {
+                        for (var key in trendstopics) {
                             console.log("key")
                             console.log(key)
-                            $.each(topics2[key], function (i, d) {
+                            $.each(trendstopics[key], function (i, d) {
                                 console.log("line d")
                                 console.log(d)
                                 console.log("line i")
@@ -4088,14 +4124,14 @@ console.log(varNames)
                         var index = 0;
 
 
-                        for (var key in topics2) {
-                            console.log("key")
-                            console.log(key)
-                            $.each(topics2[key], function (i, d) {
-                                console.log("line d")
-                                console.log(d)
-                                console.log("line i")
-                                console.log(i)
+                        for (var key in trendstopics) {
+//                            console.log("key")
+//                            console.log(key)
+                            $.each(trendstopics[key], function (i, d) {
+//                                console.log("line d")
+//                                console.log(d)
+//                                console.log("line i")
+//                                console.log(i)
     //
                                 var nodeindex = topic_hash.indexOf(key);
                                 if (nodeindex != -1) {
@@ -4199,10 +4235,10 @@ console.log(varNames)
                         topicnames = [];
                         var index = 0;
 
-                        for (var key in topics2) {
+                        for (var key in trendstopics) {
 //                            console.log("key")
 //                            console.log(key)
-                            $.each(topics2[key], function (i, d) {
+                            $.each(trendstopics[key], function (i, d) {
 //                                console.log("line d")
 //                                console.log(d)
 //                                console.log("line i")

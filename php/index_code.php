@@ -230,6 +230,7 @@
     <script type="text/javascript" src="../../../js/fullscreen/jquery.fullscreen-min.js"></script>
     <script type="text/javascript" src="../../../js/seedrandom.min.js"></script>
 
+    <script type="text/javascript" src="../../../js/jp.js"></script>
 
     <script>
         // use below to change layout in mobile devices
@@ -1855,6 +1856,7 @@
                 else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull320T_80.php";
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
+                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.70") url = "../../../jsonACMCategories_70_092015.php";
                 else url = "./dbfront.php";
 
                 return $.ajax({
@@ -1898,7 +1900,8 @@
                         myresponse = JSON.parse(resp);
                         distribution = myresponse.distribution;
                         treemap = myresponse.treemap;
-                        trends = myresponse.trends;
+                        //trends = myresponse.trends;
+                        console.log(trends);
 // todo to be uncommented if stand alone and topics not loaded from graph visualization ... uncomment also in trends_code.php
 //                        topics1 = myresponse.topicsNoSort;
 //                        topics2 = myresponse.topics;
@@ -2702,6 +2705,72 @@
 
                 }
 
+
+
+                $.getJSON( "../data/trends.json").done( function(json) {
+                    // trends = $.parseJSON(json);
+                    console.log( "trends" );
+                    var response = json.trends;
+//                        console.log(response);
+//                        console.log(json.trends);
+                    //trends = json;
+
+//                        var varNamesNew = [];
+//                        console.log("varnames NEW")
+//                        for (var key in response) {
+////                            console.log(response.keys()[0])
+//                            varNamesNew.push(key);
+                    var result = pivot(response, ['year'], ['id'], {});
+//                            console.log(result)
+//                        console.log(result.rowHeaders.length)
+//                        console.log(result.columnHeaders.length)
+                    var line;
+                    line = "quarter";
+                    for (var k = 0;k < result.columnHeaders.length; k++)
+                        line += "," + result.columnHeaders[k]
+//                    console.log(line)
+                    for (var i =0 ; i<result.rowHeaders.length ; i++) {
+                        line += "\n"+result.rowHeaders[i];
+                        for (var j = 0; j < result.columnHeaders.length; j++){
+                            if (result[i][j] !== undefined)
+                                line += "," +result[i][j][0].weight
+                            else
+                                line += ",0"
+
+//                            console.log(response[key][0].id)
+
+//                            $.each(json.trends[key], function (i, d) {
+//                                console.log(d)
+//                            });
+//                        }
+//                        console.log(varNamesNew)
+                         }
+                        console.log(line)
+
+
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        async: true,
+                        url: "./fileCreator.php",
+                        dataType: 'text',		// this is json if we put it like this JSON object
+                        data: {
+                            /*        json : JSON.stringify(jsonObject) /* convert here only */
+                            func: "csv",
+                            csv: line
+                        },
+                        success: function () {
+                            console.log("CSV file Created")
+                        },
+                        error: function (e) {
+                            alert('Error: ' + e);
+                        }
+                    })
+                }).fail(function() {
+                    console.log( "error in json position reading file" );
+                });
+
                 chordElem = $("#chord");
                 chord2Elem = $("#chord2");
                 trendElem = $("#trend");
@@ -2759,7 +2828,7 @@
                 myresponse = [],
                 distribution = [],
                 treemap = [],
-                trends = [],
+                trends = {},
                 nodes = [],
                 links = [],
                 labels = [],
@@ -2853,10 +2922,11 @@
                 trendmenuElem.parent().hide();
                 pill3Elem.hide();
 
-                trendCSV11 = "crunchbase-quarters_new.csv",
+//                trendCSV11 = "crunchbase-quarters_new.csv",
+                trendCSV11 = "trendscsv.csv",
                 trendCSV12 = "comminicationACM_pivot_1990-2011_new.csv",
                 trendCSV13 = "acm-sigmod-pivot-all-1976-2011_new.csv",
-                trendCSV2 = "weighted_topics2.csv";
+//                trendCSV2 = "weighted_topics2.csv";
 
                 if (/^FET*/.test(experimentName)){
                     categoriesElem.show();
@@ -3846,12 +3916,13 @@
 //console.log("topics1!")
 //console.log(topics1)
 console.log("topics2!")
-console.log(topics2)
+//console.log(topics2)
                     var labelVar = 'quarter';
                     var varNames = d3.keys(data[0])
                         .filter(function (key) { return key !== labelVar;});
                     color.domain(varNames);
-
+console.log("varnames")
+console.log(varNames)
                     // use a copy of the below, not a reference
                     var varNamesReversed = varNames.map(function(arr) {
                         return arr.slice();
@@ -4129,13 +4200,13 @@ console.log(topics2)
                         var index = 0;
 
                         for (var key in topics2) {
-                            console.log("key")
-                            console.log(key)
+//                            console.log("key")
+//                            console.log(key)
                             $.each(topics2[key], function (i, d) {
-                                console.log("line d")
-                                console.log(d)
-                                console.log("line i")
-                                console.log(i)
+//                                console.log("line d")
+//                                console.log(d)
+//                                console.log("line i")
+//                                console.log(i)
                                 //
                                 var nodeindex = topic_hash.indexOf(key);
                                 if (nodeindex != -1) {

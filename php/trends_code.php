@@ -175,7 +175,7 @@ if ($query != null) {
 		do {
 			if(!isset($trends[$res[0]]))
 				$trends[$res[0]] = array();
-			array_push($trends[$res[0]],array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[5],"avgweight"=>$res[3]));
+			array_push($trends[$res[0]],array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[4],"avgweight"=>$res[3]));
 		} while ($res = $stmt->fetch());
 
 		$meminstance->set($querykey, $trends, 0, $memcache_time);

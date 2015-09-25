@@ -45,6 +45,15 @@ where JournalISSN IS NULL AND (TopicDistributionPerBatch.TopicId IN
 (15,25,36,38,42,
 44,77,79,100,124,137,141,141,146,149,151,159,168,171,175,178,179,180,186,191,196,204,209,220,223,228,236,255,259,263,264,267,269,274,277,278,279,287,290,294,299,301,321,328,332,335,345,346,349,353,355,356,363,365,368,374,380,382))
 order by topicid,batchid";
+// $query_trends = "Select * from TopicDistributionPerBatch
+// INNER JOIN TopicDescription on
+// TopicDescription.TopicId=TopicDistributionPerBatch.TopicId
+// AND TopicDescription.ExperimentId=TopicDistributionPerBatch.ExperimentId
+// and  TopicDescription.VisibilityIndex>2
+// where JournalISSN IS NULL AND (TopicDistributionPerBatch.TopicId IN
+// (15,25,36,38,42,
+// 44,77,79,100,124,137,141,141,146,149,151,159,168,171,175,178,179,180,186,191,196,204,209,220,223,228,236,255,259,263,264,267,269,274,277,278,279,287,290,294,299,301,321,328,332,335,345,346,349,353,355,356,363,365,368,374,380,382))
+// order by batchid,topicid,";
 //$query_topicsdistribution = null;
 
 // QUERY gia static (συνολικο) topic distribution (TOP 50 topics). Μπορει να χρησιμοποιηθει σε TreeMAP,
@@ -84,7 +93,7 @@ $smallestFontVar = 13;
 // similarities for the graph labeling 
 //$expsimilarity = $_GET['s'];
 //if ($expsimilarity <= 0)
-    $expsimilarity = 0.85;			// similarity for querying the database
+    $expsimilarity = 0.70;			// similarity for querying the database
 $similarityThr = 0.85;			// similarity threshold
 $nodeConnectionsThr = 0.75; 		// node connections threshold
 $maxNodeConnectionsThr = 0; 	//percentage of minimum node connections for label printing

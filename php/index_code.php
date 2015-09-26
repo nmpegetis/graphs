@@ -4387,12 +4387,12 @@
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + height + ")")
                         .call(xAxis)
-                        .attr("style","font-size:12px");
+                        .attr("style","font-size:11px");
 
                     trend_svg.append("g")
                         .attr("class", "y axis")
                         .call(yAxis)
-                        .attr("style","font-size:12px")
+                        .attr("style","font-size:11px")
                         .append("text")
                         .attr("transform", "rotate(-90)")
                         .attr("y", 6)

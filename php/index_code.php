@@ -4498,7 +4498,7 @@
                         html : true,
                         content: function() {
 //                        if (!trendClicked) {
-//                            if ($(".active_trend").length == 0 || $(".active_trend").length > 2 ) {
+                            if ($(".active_trend").length == 0 || $(".active_trend").length > 2 ) {
                                 topicnames.filter(function (o,i) {
                                     if (d.name == o.id) {
 
@@ -4518,9 +4518,15 @@
                                         //}
                                     }
                                 });
-//                            }
+                            }
+                            else {
+                                mytextTitleElem.hide();
+                                classifiedNodesHeaderElem.hide();   //clear anything included in child nodes
+                                classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
+                                classifiedNodesElem.hide();
+                            }
 
-                            return "Year: " + d.label +
+                                return "Year: " + d.label +
                                     //"<br/>Journal: " + d.label +
                                 "<br/>Width: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }//ektupwnei to width
                     });

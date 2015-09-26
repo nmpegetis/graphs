@@ -4477,12 +4477,14 @@
                     var tit = 0;
                     var titindex = 0;
                     var titname = 0;
+                    var tittopic;
 
                     topicnames.filter(function(o){
                         if(d.name==o.id){
                             tit=o.index+"."+o.name;
                             titname = o.name;
                             titindex= o.index;
+                            tittopic= o.topic;
                         }
                     });
                     $(this).popover({
@@ -4509,7 +4511,9 @@
                                             .style("cursor", "pointer")
 //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
 //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
+//                                        .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
+                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+
                                         //}
                                     }
                                 });
@@ -4590,6 +4594,33 @@
                                         $(this).attr("class", "trendlegend");
                                 });
                                 trendReset(true);
+                            }
+                            else if ($(".active_trend").length == 2) {       //ena gia to series kai ena gia to trendlegend
+//                                $(".series").each(function () {
+//                                    $(this).attr("class", "series inactive_trend");
+//                                });
+//                                $(".trendlegend").each(function () {
+//                                    $(this).attr("class", "trendlegend inactive_trend");
+//                                });
+//
+//                                $("#series" + type + "_" + i).attr("class", "series active_trend");
+//                                $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
+//
+                                mytextTitleElem.empty();
+                                mytextTitleElem.show();
+                                mytextTitle.append("div").append("ul")
+                                    .attr("class", "pagination active")
+                                    .attr("data-toggle", "tooltip")
+                                    .attr("data-placement", "right")
+//                                    .attr("title", "...more about project and link...")
+                                    .style("cursor", "pointer")
+                                    //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
+                                    //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
+                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+//                                autocompletelog(titname);
+                                autocompletelogtrends(tittopic,tit);
+                                classifiedNodeButtons();
+
                             }
                         }
                         else {

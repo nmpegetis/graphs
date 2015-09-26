@@ -23,8 +23,16 @@ $query_experiments = "select distinct ExperimentId,Description from experiment";
 //$query_grants = "select PubCategoryview.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategoryview on topicsPerDoc.DocId= PubCategoryview.PubId INNER JOIN (Select Category FROM PubCategoryview GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategoryview.category where weight>0.02 AND ExperimentId=? group By PubCategoryview.Category, TopicId order by  PubCategoryview.Category, Weight desc, TopicId";
 $query_grants = "select authorid, topicid, Weight from topicauthorview where ExperimentId=?";
 
-$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
-$query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+//$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+$query_topics = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 
+inner join topicdescription on topicdescription.topicid=topicdescriptionview.topicid
+where topicdescription.ExperimentId=? Order By topicdescription.TopicID ASC, WeightedCounts DESC";
+
+
+//$query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+$query_topics_nosort = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 
+inner join topicdescription on topicdescription.topicid=topicdescriptionview.topicid
+where topicdescription.ExperimentId=? Order By topicdescription.TopicID ASC, Counts DESC";
 //$query_topicsdistribution = "select * from topicsperyearview";
 $query_topicsdistribution = null;
 //$query_treemap = "select * from treemapview";
@@ -44,7 +52,6 @@ order by topicid,batchid";
 ///////////////////////////////////
 
 $title = "ACM Authors";								// title of the webpage
-$trends_title = "ACM Topics Distribution";								// title of the webpage when ACM
 $subtitle = "";								// subtitle of the webpage
 $experimentName = "ACM_400T_1000IT_0IIT_100B_5M_cos";	// first experiment to load
 $experimentDescription = "Topic modeling based on: 1)Abstracts from ACM publications 2)Authors 3)Citations 4)ACMCategories SimilarityType:cos Similarity on Authors & Categories"; 	// first description to load
@@ -62,7 +69,7 @@ $fontsizeVar = 26; 				// 43 fontsizeVar variable multiplied with previous_scale
 $smallestFontVar = 13;
 
 // similarities for the graph labeling 
-$expsimilarity = 0.75;			// similarity for querying the database
+$expsimilarity = 0.55;			// similarity for querying the database
 $similarityThr = 0.68;			// similarity threshold
 $nodeConnectionsThr = 0.1; 		// node connections threshold
 $maxNodeConnectionsThr = 0; 	//percentage of minimum node connections for label printing

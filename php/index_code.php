@@ -599,13 +599,13 @@
                     changed = false;
                 }
             });
-            graphmenu1Elem.on("click", function(){if(trendsclicked)graphReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(pagetitle);trendsclicked=false;});
+            graphmenu1Elem.on("click", function(){if(trendsclicked){chordReset();graphReset()};legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(pagetitle);trendsclicked=false;});
             chordmenu1Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);trendsclicked=false;});
             chordmenu2Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);trendsclicked=false;});
     //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
-            trendmenu1Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu2Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu3Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu1Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu2Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu3Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
 
 
             // the same piece of code with the below $(document).fullScreen() because it doesn't catch the escape button click

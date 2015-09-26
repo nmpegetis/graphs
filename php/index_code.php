@@ -1706,7 +1706,7 @@
 
 //todo na to enwsw me to apo katw autocomple
             /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
-            function autocompletelogtrends( message, title, topic ) {
+            function autocompletelogtrends( message, title, id ) {
                 var classifiedNodes = "";
                 var searchResultNodes = [];				//initialize every time in topic word search
 
@@ -1715,7 +1715,7 @@
                 mytextTitle.append("div").append("ul")
                     .attr("class", "pagination active")
 //                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
-                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+colortrendslegend(topic)+";font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>"+message+"</small>");
+                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+colortrendslegend(id)+";font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>"+message+"</small>");
 
                 tagsElem.attr("title",message);
 
@@ -4511,7 +4511,7 @@
                                             .style("cursor", "pointer")
 //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
 //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(titname)+";font-weight:400").html("Selected topic: <br/>" + tit);
+                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
                                         //}
                                     }
                                 });
@@ -4620,9 +4620,9 @@
                                     .style("cursor", "pointer")
                                     //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
                                     //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+colortrendslegend(titname)+";font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+colortrendslegend(o.id)+";font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
 //                                autocompletelog(titname);
-                                autocompletelogtrends(tittopic,tit,titname);
+                                autocompletelogtrends(tittopic,tit, o.id);
                                 classifiedNodeButtons();
 
                             }

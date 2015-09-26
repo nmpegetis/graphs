@@ -412,7 +412,7 @@
                 distribution,
                 treemap,
                 trends,
-                columns,colortrendslegend,
+                columns,
 
 
 
@@ -1706,7 +1706,7 @@
 
 //todo na to enwsw me to apo katw autocomple
             /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
-            function autocompletelogtrends( message, title, color ) {
+            function autocompletelogtrends( message, title ) {
                 var classifiedNodes = "";
                 var searchResultNodes = [];				//initialize every time in topic word search
 
@@ -1715,7 +1715,7 @@
                 mytextTitle.append("div").append("ul")
                     .attr("class", "pagination active")
 //                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
-                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color+";font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>"+message+"</small>");
+                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>"+message+"</small>");
 
                 tagsElem.attr("title",message);
 
@@ -3903,8 +3903,6 @@
                     .range(clr);
 //                    .range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
 
-                colortrendslegend = color;
-
 
                 var trendCSV1;
                 if (type == 1){
@@ -4023,7 +4021,7 @@
                     var labelVar = 'quarter';
                     var varNames = d3.keys(data[0])
                         .filter(function (key) { return key !== labelVar;});
-                    colortrendslegend.domain(varNames);
+                    color.domain(varNames);
 //console.log("varnames")
 //console.log(varNames)
                     // use a copy of the below, not a reference
@@ -4154,7 +4152,7 @@
                             .attr("width", x.rangeBand())
                             .attr("y", function (d) { return y(d.y1); })
                             .attr("height", function (d) { return y(d.y0) - y(d.y1); })
-                            .style("fill", function (d) { return colortrendslegend(d.name); })
+                            .style("fill", function (d) { return color(d.name); })
                             .style("stroke", "grey")
                             .on("mouseover", function (d) { showPopover.call(this, d); })
                             .on("mouseout",  function (d) { removePopovers(); })
@@ -4233,7 +4231,7 @@
                             .attr("class", "line")
                             .attr("d", function (d) { return line(d.values); })
                             .attr("id", function (d,i) { return "streamPath"+i })
-                            .style("stroke", function (d) { return colortrendslegend(d.name); })
+                            .style("stroke", function (d) { return color(d.name); })
                             .style("stroke-width", "4px")
                             .style("fill", "none");
 
@@ -4244,7 +4242,7 @@
                             .attr("cx", function (d) { return x(d.label) + x.rangeBand()/2; })
                             .attr("cy", function (d) { return y(d.value); })
                             .attr("r", "3px")
-                            .style("fill", function (d) { return colortrendslegend(d.name); })
+                            .style("fill", function (d) { return color(d.name); })
                             .style("stroke", "grey")
                             .style("stroke-width", "1px")
                             .on("mouseover", function (d) { showPopover.call(this, d); })
@@ -4342,7 +4340,7 @@
                             .attr("class", "streamPath")
                             .attr("d", function (d) { return area(d.values); })
                             .attr("id", function (d,i) { return "streamPath"+i })
-                            .style("fill", function (d) { return colortrendslegend(d.name); })
+                            .style("fill", function (d) { return color(d.name); })
                             .style("stroke", "grey");
 
                         var points = trend_svg.selectAll(".seriesPoints")
@@ -4357,7 +4355,7 @@
                             .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
                             .attr("cy", function (d) { return y(d.y0 + d.y); })
                             .attr("r", "9.5px")
-                            .style("fill",function (d) { return colortrendslegend(d.name); })
+                            .style("fill",function (d) { return color(d.name); })
                             .on("mouseover", function (d) { showPopover.call(this, d, type); })
                             .on("mouseout",  function (d) { removePopovers(); })
                             .on("click", function (d) { clickPopover.call(this, d, type, false); });
@@ -4420,7 +4418,7 @@
                         .attr("x", -30)    // gia na mpoun aristera
                         .attr("width", 10)
                         .attr("height", 10)
-                        .style("fill", colortrendslegend)
+                        .style("fill", color)
                         .style("stroke", "grey");
 
                     trendlegend
@@ -4511,7 +4509,7 @@
                                             .style("cursor", "pointer")
 //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
 //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+colortrendslegend(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
+                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
                                         //}
                                     }
                                 });
@@ -4620,9 +4618,9 @@
                                     .style("cursor", "pointer")
                                     //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
                                     //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+colortrendslegend(o.id)+";font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
 //                                autocompletelog(titname);
-                                autocompletelogtrends(tittopic,tit, colortrendslegend(o.id));
+                                autocompletelogtrends(tittopic,tit);
                                 classifiedNodeButtons();
 
                             }

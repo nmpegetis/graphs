@@ -412,7 +412,7 @@
                 distribution,
                 treemap,
                 trends,
-                columns,
+                columns,colortrendslegend,
 
 
 
@@ -1706,7 +1706,7 @@
 
 //todo na to enwsw me to apo katw autocomple
             /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
-            function autocompletelogtrends( message, title ) {
+            function autocompletelogtrends( message, title, topic ) {
                 var classifiedNodes = "";
                 var searchResultNodes = [];				//initialize every time in topic word search
 
@@ -1715,7 +1715,7 @@
                 mytextTitle.append("div").append("ul")
                     .attr("class", "pagination active")
 //                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
-                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>"+message+"</small>");
+                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+colortrendslegend(topic)+";font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>"+message+"</small>");
 
                 tagsElem.attr("title",message);
 
@@ -3903,6 +3903,8 @@
                     .range(clr);
 //                    .range(["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf","#aec7e8","#ffbb78","#98df8a","#ff9896","#c5b0d5","#c49c94","#f7b6d2","#c7c7c7","#dbdb8d","#9edae5"]);
 
+                colortrendslegend = jQuery.extend(true, {}, color);
+
 
                 var trendCSV1;
                 if (type == 1){
@@ -4465,6 +4467,62 @@
                 function chartClearAll() {
                     trend_svg.selectAll("*").remove()
                 }
+
+
+                function removePopovers () {
+                    $('.popover').each(function () {
+                        $(this).remove();
+                    });
+                }
+
+                function showPopover (d, type) {
+                    var tit = 0;
+                    var titindex = 0;
+                    var titname = 0;
+
+                    topicnames.filter(function(o){
+                        if(d.name==o.id){
+                            tit=o.index+"."+o.name;
+                            titname = o.name;
+                            titindex= o.index;
+                        }
+                    });
+                    $(this).popover({
+                        //            title: d.name,
+                        // title: topicnames.forEach(function(o){if(d.name==o.id)console.log(o.index);return o.index;}),
+                        title: tit,
+                        placement: 'auto top',
+                        container: 'body',
+                        trigger: 'manual',
+                        html : true,
+                        content: function() {
+//                        if (!trendClicked) {
+                            if ($(".active_trend").length == 0) {
+                                topicnames.filter(function (o,i) {
+                                    if (d.name == o.id) {
+
+                                        mytextTitleElem.empty();
+                                        mytextTitleElem.show();
+                                        mytextTitle.append("div").append("ul")
+                                            .attr("class", "pagination active")
+                                            .attr("data-toggle", "tooltip")
+                                            .attr("data-placement", "right")
+//                                        .attr("title", "...more about project and link...")
+                                            .style("cursor", "pointer")
+//                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
+//                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
+                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
+                                        //}
+                                    }
+                                });
+                            }
+
+                            return "Year: " + d.label +
+                                    //"<br/>Journal: " + d.label +
+                                "<br/>Width: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }//ektupwnei to width
+                    });
+                    $(this).popover('show')
+                }
             }
 
             function trendReset(fullReset){          // if fullReset=true then also clickedTopics are reset, else they are not (difference between magnet and reset and also when changing trends)
@@ -4488,60 +4546,7 @@
                 });
             }
 
-            function removePopovers () {
-                $('.popover').each(function () {
-                    $(this).remove();
-                });
-            }
 
-            function showPopover (d, type) {
-                var tit = 0;
-                var titindex = 0;
-                var titname = 0;
-
-                topicnames.filter(function(o){
-                    if(d.name==o.id){
-                        tit=o.index+"."+o.name;
-                        titname = o.name;
-                        titindex= o.index;
-                    }
-                });
-                $(this).popover({
-                    //            title: d.name,
-                    // title: topicnames.forEach(function(o){if(d.name==o.id)console.log(o.index);return o.index;}),
-                    title: tit,
-                    placement: 'auto top',
-                    container: 'body',
-                    trigger: 'manual',
-                    html : true,
-                    content: function() {
-//                        if (!trendClicked) {
-                        if ($(".active_trend").length == 0) {
-                            topicnames.filter(function (o,i) {
-                                if (d.name == o.id) {
-
-                                    mytextTitleElem.empty();
-                                    mytextTitleElem.show();
-                                    mytextTitle.append("div").append("ul")
-                                        .attr("class", "pagination active")
-                                        .attr("data-toggle", "tooltip")
-                                        .attr("data-placement", "right")
-//                                        .attr("title", "...more about project and link...")
-                                        .style("cursor", "pointer")
-//                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
-//                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                        .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
-                                    //}
-                                }
-                            });
-                        }
-
-                        return "Year: " + d.label +
-                                //"<br/>Journal: " + d.label +
-                            "<br/>Width: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }//ektupwnei to width
-                });
-                $(this).popover('show')
-            }
 
             function clickPopover (d,type,initializationOfTrend) {
                 var tit = 0;
@@ -4617,7 +4622,7 @@
                                     //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
                                     .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
 //                                autocompletelog(titname);
-                                autocompletelogtrends(tittopic,tit);
+                                autocompletelogtrends(tittopic,tit,titname);
                                 classifiedNodeButtons();
 
                             }

@@ -413,6 +413,7 @@
                 treemap,
                 trends,
                 columns,
+                trendsclicked,
 
 
 
@@ -598,13 +599,13 @@
                     changed = false;
                 }
             });
-            graphmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(pagetitle);});
-            chordmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);});
-            chordmenu2Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);});
+            graphmenu1Elem.on("click", function(){if(trendsclicked)graphReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(pagetitle);trendsclicked=false;});
+            chordmenu1Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);trendsclicked=false;});
+            chordmenu2Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);trendsclicked=false;});
     //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
-            trendmenu1Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);});
-            trendmenu2Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);});
-            trendmenu3Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);});
+            trendmenu1Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu2Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu3Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
 
 
             // the same piece of code with the below $(document).fullScreen() because it doesn't catch the escape button click
@@ -2970,7 +2971,7 @@
                 nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8,                // fadelimit is a variable with values same or bigger than normal so that in bigger experiments we can define if we want or not the visualization to fade
                 w = windowElem.width()/2,//800,
                 h = windowElem.width()/2,//800,
-
+                trendsclicked=false,
                 clr20 = d3.scale.category20().range(),
                 clrEven = [],
                 clrOdd = [],
@@ -4595,33 +4596,22 @@
                                 });
                                 trendReset(true);
                             }
-                            else if ($(".active_trend").length == 2) {       //ena gia to series kai ena gia to trendlegend
-//                                $(".series").each(function () {
-//                                    $(this).attr("class", "series inactive_trend");
-//                                });
-//                                $(".trendlegend").each(function () {
-//                                    $(this).attr("class", "trendlegend inactive_trend");
-//                                });
+// todo to apo katw prepei na to ftiaksw na einai to swsto clicked
+//                            else if ($(".active_trend").length == 2) {       //ena gia to series kai ena gia to trendlegend
+//                                mytextTitleElem.empty();
+//                                mytextTitleElem.show();
+//                                mytextTitle.append("div").append("ul")
+//                                    .attr("class", "pagination active")
+//                                    .attr("data-toggle", "tooltip")
+//                                    .attr("data-placement", "right")
+////                                    .attr("title", "...more about project and link...")
+//                                    .style("cursor", "pointer")
+//                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+////                                autocompletelog(titname);
+//                                autocompletelogtrends(tittopic,tit);
+//                                classifiedNodeButtons();
 //
-//                                $("#series" + type + "_" + i).attr("class", "series active_trend");
-//                                $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
-//
-                                mytextTitleElem.empty();
-                                mytextTitleElem.show();
-                                mytextTitle.append("div").append("ul")
-                                    .attr("class", "pagination active")
-                                    .attr("data-toggle", "tooltip")
-                                    .attr("data-placement", "right")
-//                                    .attr("title", "...more about project and link...")
-                                    .style("cursor", "pointer")
-                                    //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
-                                    //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
-//                                autocompletelog(titname);
-                                autocompletelogtrends(tittopic,tit);
-                                classifiedNodeButtons();
-
-                            }
+//                            }
                         }
                         else {
                             console.log("create series active_trend");

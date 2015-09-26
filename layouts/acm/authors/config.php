@@ -52,6 +52,8 @@ order by topicid,batchid";
 ///////////////////////////////////
 
 $title = "ACM Authors";								// title of the webpage
+$trends_title = "ACM Trends";								// title of the webpage when ACM
+$chord_title = "ACM Categories Connectivity";								// title of the webpage when ACM
 $subtitle = "";								// subtitle of the webpage
 $experimentName = "ACM_400T_1000IT_0IIT_100B_5M_cos";	// first experiment to load
 $experimentDescription = "Topic modeling based on: 1)Abstracts from ACM publications 2)Authors 3)Citations 4)ACMCategories SimilarityType:cos Similarity on Authors & Categories"; 	// first description to load

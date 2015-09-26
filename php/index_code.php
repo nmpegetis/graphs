@@ -318,6 +318,7 @@
                 trend1divElem = $("#trend1div"),
                 trend2divElem = $("#trend2div"),
                 trend3divElem = $("#trend3div"),
+                pagetitleElem = $("#pagetitle"),
                 legend2divElem = $("#legend2div"),
                 dropdownThresholdsElem = $("#dropdownThresholds"),
                 pillsElem = $("#pills"),
@@ -356,7 +357,9 @@
 
 
             /* globals */
-            var style,
+            var style, pagetitle,
+                trendstitle,chordtitle,
+
 
             // sizes, zooming, scaling, translating and colors
                 fade_out, strong, normal, fadelimit, w, h, prev_w, scaleFactor, translation, xScale, yScale, previous_scale, zoom_type, fontsizeVar, smallestFontVar, gravity, charge, clrArray, flagForTranformation,
@@ -416,6 +419,7 @@
             //graph
                 graphPositionsExist,jsonfilename,renderPageData,changed;
 
+            legenddivElem.hide();
 
             // function creation jquery percentage
             jQuery.extend({
@@ -463,6 +467,7 @@
             initializeExperimentPage();
             loadThresholdsFromUrlParameters();  //only when changing the parameters on url and refreshing
             graphLoad();
+            legenddivElem.hide();
             mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
             resizeLayout();
             checkFullscreen();
@@ -593,13 +598,13 @@
                     changed = false;
                 }
             });
-            graphmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
-            chordmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
-            chordmenu2Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");});
+            graphmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(pagetitle);});
+            chordmenu1Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);});
+            chordmenu2Elem.on("click", function(){legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);});
     //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
-            trendmenu1Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");});
-            trendmenu2Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");});
-            trendmenu3Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");});
+            trendmenu1Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);});
+            trendmenu2Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);});
+            trendmenu3Elem.on("click", function(){graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);});
 
 
             // the same piece of code with the below $(document).fullScreen() because it doesn't catch the escape button click
@@ -1328,7 +1333,9 @@
 
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
-                        myTabElem.find("li:first").addClass("active");
+//todo previously it was like this
+//                        myTabElem.find("li:first").addClass("active");
+                        myTabElem.find("li:last").addClass("active");
                         chorddivElem.removeClass("active");
                         graphdivElem.addClass("active");
                         legenddivElem.show();
@@ -1380,7 +1387,7 @@
 
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
-                        myTabElem.find("li:first").addClass("active");
+                        myTabElem.find("li:last").addClass("active");
                         chorddivElem.removeClass("active");
                         graphdivElem.addClass("active");
                     })
@@ -1870,8 +1877,7 @@
                         line += "," + result.columnHeaders[k]
                         columns.push(parseInt(result.columnHeaders[k]));
                     }
-//                    console.log(line)
-                    console.log("columns")
+
                     for (var i =0 ; i<result.rowHeaders.length ; i++) {
                         line += "\n"+result.rowHeaders[i];
                         for (var j = 0; j < result.columnHeaders.length; j++){
@@ -1890,8 +1896,6 @@
 //                        console.log(varNamesNew)
                         }
                     }
-                    console.log(columns)
-                    console.log(line)
 
                     $.ajax({
                         type: "POST",
@@ -1902,6 +1906,9 @@
                             /*        json : JSON.stringify(jsonObject) /* convert here only */
                             func: "csv",
                             csv: line
+//todo edw na prosthesw ena id wste na dimiourgw diaforetika arxeia gia to kathena
+//                            csv: line,
+//                            id:
                         },
                         success: function () {
                             console.log("CSV file Created")
@@ -2524,7 +2531,7 @@
 
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
-                        myTabElem.find("li:first").addClass("active");
+                        myTabElem.find("li:last").addClass("active");
                         chorddivElem.removeClass("active");
                         graphdivElem.addClass("active");
 
@@ -2571,7 +2578,7 @@
 
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
-                        myTabElem.find("li:first").addClass("active");
+                        myTabElem.find("li:last").addClass("active");
                         chorddivElem.removeClass("active");
                         graphdivElem.addClass("active");
 
@@ -2619,7 +2626,7 @@
 
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
-                        myTabElem.find("li:first").addClass("active");
+                        myTabElem.find("li:last").addClass("active");
                         chorddivElem.removeClass("active");
                         graphdivElem.addClass("active");
 
@@ -2809,7 +2816,9 @@
                 mytextTitleElem.hide();
                 mytextContentElem.hide();
                 pillsElem.hide();
+//  todo previously it was like this
                 legend2divElem.hide();
+//                legenddivElem.hide();
 
                 legendElem.empty();
                 graphElem.empty();
@@ -2895,6 +2904,9 @@
                 fade_out = <?php echo $fade_out ;?>,
                 strong = <?php echo $strong ;?>,
                 normal = <?php echo $normal ;?>,
+                pagetitle = "<?php echo $title ;?>",
+                chordtitle = "<?php echo $chord_title ;?>",
+                trendstitle = "<?php echo $trends_title ;?>",
                 nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8,                // fadelimit is a variable with values same or bigger than normal so that in bigger experiments we can define if we want or not the visualization to fade
                 w = windowElem.width()/2,//800,
                 h = windowElem.width()/2,//800,
@@ -3612,7 +3624,7 @@
                         .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
                         .style("preserveAspectRatio", "xMidYMid meet")
                         .style("border-style","solid")
-                        .style("cursor","pointer")
+                        .style("cursor","default")
                         .style("border-color","snow")
                         .append("svg:svg")
                         .attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
@@ -3629,7 +3641,7 @@
                         .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
                         .style("preserveAspectRatio", "xMidYMid meet")
                         .style("border-style","solid")
-                        .style("cursor","pointer")
+                        .style("cursor","default")
                         .style("border-color","snow")
                         .append("svg:svg")
                         .attr("width", chord_width+wordWidth)		//gia na xwrane oi lekseis
@@ -3660,6 +3672,7 @@
                 chord_group = chord_svg.selectAll(".group")
                     .data(chord_layout.groups)
                     .enter().append("svg:g")
+                    .style("cursor","pointer")
                     .attr("class", function(d, i) { return "group "+subdivisionsChord[i].name; })
 //                    .on("mouseover", chord_mouseover)
 //                    .on("mouseout", chord_mouseout)
@@ -3701,6 +3714,7 @@
                     .data(chord_layout.chords)
                     .enter().append("path")
                     .attr("class", function(d, i) { return "chord "+subdivisionsChord[d.source.index].name+" chord-source-" + d.source.index+" chord-target-" + d.target.index; })
+                    .style("cursor","default")
                     .style("fill", function(d) { return subdivisionsChord[d.source.index].color; })
                     .attr("d", chord_path);
 
@@ -3804,7 +3818,7 @@
 
             function createTrends(type) {
                 var margin = {top: 20, right: 55, bottom: 30, left: 40},
-                    width  = w,
+                    width  = w-30,
                     height = 3*h/4;
 //                width  = 1000 - margin.left - margin.right,
 //                height = 700  - margin.top  - margin.bottom;
@@ -3847,8 +3861,8 @@
                     .style("position", "absolute")
                     .style("z-index", "19")
                     .style("width", "1px")
-                    .style("height", height)
-                    .style("top", "60px")
+                    .style("height", height+20)
+                    .style("top", "85px")
                     .style("bottom", "0px")
                     .style("left", "0px")
                     .style("background", "#000");
@@ -3901,7 +3915,7 @@
                     .style("preserveAspectRatio", "xMidYMid meet")
                     .style("cursor","pointer")
                     .append("svg:svg")
-                    .attr("width",  width  + margin.left + margin.right + 1200) // gia na xwrane ta topic word bags
+                    .attr("width",  width  + margin.left + margin.right + 1000) // gia na xwrane ta topic word bags
                     .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
                     .attr("id","trend")
                     .append("g")
@@ -3919,12 +3933,11 @@
 
 
                 console.log("topics2!")
-                console.log(topics1)
+//                console.log(topics1)
                 var topics1trends = jQuery.extend(true, {}, topics1);
                 var trendstopics = {};
 
 //                console.log(topics1trends)
-                console.log(topics1trends)
                 for (var key in topics1trends){
                     var keyint = parseInt(key)
                     if (columns.indexOf(keyint) > -1){
@@ -3933,19 +3946,9 @@
 //                        trendstopics.push(topics1trends[keyint]);
                     }
                 }
-//                console.log(topics1trends)
-                console.log(trendstopics)
-//                $.each(topics1trends,function(o) {
-//                    if ($.inArray(o,columns))// == 15,25,36,38,42,
-////                            44,77,79,100,124,137,141,141,146,149,151,159,168,171,175,178,179,180,186,191,196,204,209,220,223,228,236,255,259,263,264,267,269,274,277,278,279,287,290,294,299,301,321,328,332,335,345,346,349,353,355,356,363,365,368,374,380,382)) {
-//
-////                        console.log("o:"+o)
-////                        tit = o.index + "." + o.name;
-////                        titname = o.name;
-////                        titindex = o.index;
-////                    }
-//                });
+
 //                console.log(trendstopics)
+
                 d3.csv("../data/"+trendCSV1, function (error, data) {
 //                    d3.csv("../data/"+trendCSV2, function(error, topics) {
 //console.log("data")
@@ -4125,47 +4128,25 @@
                         topicnames = [];
                         var index = 0;
 
-
                         for (var key in trendstopics) {
-//                            console.log("key")
-//                            console.log(key)
                             $.each(trendstopics[key], function (i, d) {
-//                                console.log("line d")
-//                                console.log(d)
-//                                console.log("line i")
-//                                console.log(i)
-    //
                                 var nodeindex = topic_hash.indexOf(key);
                                 if (nodeindex != -1) {
-                                    var newname = topicnames[nodeindex].name;
-                                    newname += "," + d.item;
-                                    topicnames[nodeindex].name = newname;
+                                    var newtopicitem = topicnames[nodeindex].topic;
+                                    newtopicitem += "," + d.item;
+                                    topicnames[nodeindex].topic = newtopicitem;
                                 }
                                 else {
                                     topic_hash.push(key);
                                     //            topicnames[topic_hash.length-1] = {};
-                                    topicnames.push({index: index, id: key, name: d.item});
+//todo na mpainei to title-description pleon sto legend oxi to topic
+//                                    topicnames.push({index: index, id: key, name: d.item});
+                                    topicnames.push({index: index, id: key, name: d.title, topic: d.item});
                                     index++;
                                 }
 
                             });
                         }
-                        //todo edw kai sta alla antistoixa na balw ta topics pou thelw
-//                        topics.forEach(function(d,i) {
-//                            var nodeindex = topic_hash.indexOf(i);
-//                            if(nodeindex != -1){
-//                                var newname = topicnames[nodeindex].name;
-//                                newname += "," + d[i].item;
-//                                topicnames[nodeindex].name = newname;
-//                            }
-//                            else{
-//                                topic_hash.push(i);
-//                                //            topicnames[topic_hash.length-1] = {};
-//                                topicnames.push({index:index, id:i, name:d[i].item});
-//                                index++;
-//                            }
-//
-//                        });
 
                         x.domain(data.map(function (d) { return d.quarter; }));
                         y.domain([
@@ -4210,6 +4191,22 @@
 
                         drawAxis();
                         drawLegend(varNames,topic_hash);
+
+                        $(".x").find(".tick").find("text").html(function(i,t){
+                                console.log(i)
+                                console.log(t)
+                                if (t=="1950-1979")
+                                    return "1950-79"
+                                else if (t=="1980-1989")
+                                    return "1980-89"
+                                else if (t=="1990-1995")
+                                    return "1990-95"
+                                else if (t=="1995-1999")
+                                    return "1995-99"
+                                else
+                                    return t
+                            }
+                        );
                     }
 
 
@@ -4238,48 +4235,24 @@
                         var index = 0;
 
                         for (var key in trendstopics) {
-//                            console.log("key")
-//                            console.log(key)
                             $.each(trendstopics[key], function (i, d) {
-//                                console.log("line d")
-//                                console.log(d)
-//                                console.log("line i")
-//                                console.log(i)
-                                //
                                 var nodeindex = topic_hash.indexOf(key);
                                 if (nodeindex != -1) {
-//todo na mpainei to description oxi to title
-//                                    var newname = topicnames[nodeindex].name;
-//                                    newname += "," + d.item;
-//                                    topicnames[nodeindex].name = newname;
+                                    var newtopicitem = topicnames[nodeindex].topic;
+                                    newtopicitem += "," + d.item;
+                                    topicnames[nodeindex].topic = newtopicitem;
                                 }
                                 else {
                                     topic_hash.push(key);
                                             //            topicnames[topic_hash.length-1] = {};
-//todo to idio ekana kai edw
+//todo na mpainei to title-description pleon sto legend oxi to topic
 //                                    topicnames.push({index: index, id: key, name: d.item});
-                                    topicnames.push({index: index, id: key, name: d.title});
+                                    topicnames.push({index: index, id: key, name: d.title, topic: d.item});
                                     index++;
                                 }
 
                             });
                         }
-                        //todo edw kai sta alla antistoixa na balw ta topics pou thelw
-//                            topics.forEach(function(d) {
-//                                var nodeindex = topic_hash.indexOf(d.topicid);
-//                                if(nodeindex != -1){
-//                                    var newname = topicnames[nodeindex].name;
-//                                    newname += "," + d.item;
-//                                    topicnames[nodeindex].name = newname;
-//                                }
-//                                else{
-//                                    topic_hash.push(d.topicid);
-//                                    //            topicnames[topic_hash.length-1] = {};
-//                                    topicnames.push({index:index, id:d.topicid, name:d.item});
-//                                    index++;
-//                                }
-//
-//                            });
 
                         data.forEach(function (d) {
                             varNames.map(function (name) {
@@ -4293,6 +4266,7 @@
 
                         y.domain([0, d3.max(seriesArr, function (c) {
                             return d3.max(c.values, function (d) { return d.y0 + d.y; });
+//                            return d3.max(c.values, function (d) { return ""; });
                         })]);
 
                         var selection = trend_svg.selectAll(".series")
@@ -4328,6 +4302,22 @@
 
                         drawAxis();
                         drawLegend(varNames,topic_hash);
+
+                        $(".y").find(".tick").find("text").hide();
+
+                        $(".x").find(".tick").find("text").html(function(i,t){
+                                if (t=="1950-1979")
+                                    return "1950-79";
+                                else if (t=="1980-1989")
+                                    return "1980-89";
+                                else if (t=="1990-1995")
+                                    return "1990-95";
+                                else if (t=="1995-1999")
+                                    return "1995-99";
+                                else
+                                    return t;
+                            }
+                        );
                     }
 //                    });
                 });
@@ -4396,11 +4386,13 @@
                     trend_svg.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + height + ")")
-                        .call(xAxis);
+                        .call(xAxis)
+                        .attr("style","font-size:12px");
 
                     trend_svg.append("g")
                         .attr("class", "y axis")
                         .call(yAxis)
+                        .attr("style","font-size:12px")
                         .append("text")
                         .attr("transform", "rotate(-90)")
                         .attr("y", 6)
@@ -4896,7 +4888,7 @@
     </div>
     <div class="col-md-3" style="margin-top:-30px;"> <!--- margin is set mostly for the header placing-->
         <!-- <div class="page-header"> -->
-        <h4 style="position:fixed;"><?php echo $title ;?>
+        <h4 id="pagetitle" style="position:fixed;"><?php echo $title ;?>
             <small><?php echo $subtitle ;?> <span class="sr-only">(current page name)</span></small>
         </h4>
         <!-- </div> -->
@@ -4945,8 +4937,16 @@
             <div class="col-md-14" style="height:1px;">
                 <div class="col-md-12" style="padding-right:2%;">
                     <ul class="nav navbar-nav nav-tabs navbar-right" id="myTab">
-                        <li class="active"><a id="graphmenu1"  data-toggle="tab" data-target="#graphdiv">Force-Directed Graph</a></li>
 <!--                        <li class="active"><a data-toggle="tab" data-target="#graphdiv">Force-Directed Graph <span class="divider-right"></span><span class="btn btn-xs glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span><span class="btn btn-xs glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>-->
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
+                                <!--                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>-->
+                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">ACM Topic Trend Analysis 1990-2011</a></li>
+                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-communication.html" target="_blank">ACM (Journal: Communications) 1990-2011</a></li>
+                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">ACM (Journal: SIGMOD Records) 1976-2011</a></li>
+                            </ul>
+                        </li>
                         <li class="dropdown">
                             <a class="dropdown-toggle" id="chordmenu" data-toggle="dropdown" data-target="#">Chord<b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="chordmenu">
@@ -4954,15 +4954,7 @@
                                 <li><a id="chordmenu2" data-toggle="tab" data-target="#chord2div">Crossdisciplinary Connectivity</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
-<!--                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>-->
-                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">ACM Topic Trend Analysis 1990-2011</a></li>
-                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-communication.html" target="_blank">ACM (Journal: Communications) 1990-2011</a></li>
-                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">ACM (Journal: SIGMOD Records) 1976-2011</a></li>
-                            </ul>
-                        </li>
+                        <li class="active"><a id="graphmenu1"  data-toggle="tab" data-target="#graphdiv">Force-Directed Graph</a></li>
                     </ul>
                 </div>
                 <div class="tab-content" id="myTabContent">
@@ -5007,7 +4999,7 @@
 <!--    <div id="pngdataurl"></div>-->
 <!---->
 <!--    <canvas width="960" height="500" style="display:none"></canvas>-->
-    <div class="col-md-3" id="legenddiv" style="overflow:auto;">
+    <div class="col-md-3" id="legenddiv" style="overflow:auto">
         <table class="table table-condensed table-striped">
             <thead>
             <tr>

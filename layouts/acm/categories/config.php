@@ -80,7 +80,8 @@ $query_treemap = null;
 ///////////////////////////////////
 
 $title = "ACM Categories";								// title of the webpage
-$trends_title = "ACM Topics Distribution";								// title of the webpage when ACM
+$trends_title = "ACM Trends";								// title of the webpage when ACM
+$chord_title = "ACM Categories Connectivity";								// title of the webpage when ACM
 $subtitle = "";								// subtitle of the webpage
 $experimentName = "ACM_400T_1000IT_0IIT_100B_3M_cos";	// first experiment to load
 $experimentDescription = "Topic modeling based on: 1)Abstracts from ACM publications 2)Authors 3)Citations 4)ACMCategories SimilarityType:cos Similarity on Authors & Categories"; 	// first description to load

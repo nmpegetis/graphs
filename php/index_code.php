@@ -4511,7 +4511,7 @@
                                             .style("cursor", "pointer")
 //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
 //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
+                                            .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(titname)+";font-weight:400").html("Selected topic: <br/>" + tit);
                                         //}
                                     }
                                 });
@@ -4620,7 +4620,7 @@
                                     .style("cursor", "pointer")
                                     //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
                                     //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+colortrendslegend(titname)+";font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
 //                                autocompletelog(titname);
                                 autocompletelogtrends(tittopic,tit,titname);
                                 classifiedNodeButtons();

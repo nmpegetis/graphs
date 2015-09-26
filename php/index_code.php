@@ -4332,7 +4332,7 @@
                         .append("svg")
                         .attr("class", "trendlegendsvg")
                         .attr("width",  2000) // gia na xwrane ta topic word bags
-                        .attr("height", 1000) // gia na xwrane ta top 50 topic words
+                        .attr("height", 1200) // gia na xwrane ta top 50 topic words
                         .style("cursor","pointer")
                         //                        .style("overflow-x","scroll")
                         .selectAll(".trendlegend")
@@ -4487,6 +4487,7 @@
                 var tit = 0;
                 var titindex = 0;
                 var titname = 0;
+                var tittopic;
                 var elementid;
                 topicnames.filter(function (o,i) {
                     if ($.isNumeric(d)) {           // if legend was clicked
@@ -4512,6 +4513,7 @@
                         tit=o.index+"."+o.name;
                         titname = o.name;
                         titindex= o.index;
+                        tittopic= o.topic;
 
                         if ($("#series" + type + "_" + i).attr("class") == "series active_trend") {
                             console.log("create series inactive_trend");
@@ -4553,8 +4555,9 @@
                                     .style("cursor", "pointer")
                                     //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
                                     //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic: <br/>" + tit);
-                                autocompletelog(titname);
+                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+//                                autocompletelog(titname);
+                                autocompletelog(tittopic);
                                 classifiedNodeButtons();
 
                             }

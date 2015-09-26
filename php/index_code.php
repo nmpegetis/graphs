@@ -1586,7 +1586,9 @@
                         }
 
                         if (ii<wlen){
-                            discriminativeWord[nodes[k].index] += ","+mywords[ii].item;
+//                            discriminativeWord[nodes[k].index] += ","+mywords[ii].item;
+//todo edw mpainoun ta titles anti oi 3 lekseis
+                            discriminativeWord[nodes[k].index]  = mywords[ii].title;
 
                             discriminativeWordCounts[nodes[k].index] = mywords[0].counts;
                             // console.log("IN k="+k+" FIRST discriminativeWord="+discriminativeWord[nodes[k].index]+" with counts = "+discriminativeWordCounts[nodes[k].index]);
@@ -4246,14 +4248,17 @@
                                 //
                                 var nodeindex = topic_hash.indexOf(key);
                                 if (nodeindex != -1) {
-                                    var newname = topicnames[nodeindex].name;
-                                    newname += "," + d.item;
-                                    topicnames[nodeindex].name = newname;
+//todo na mpainei to description oxi to title
+//                                    var newname = topicnames[nodeindex].name;
+//                                    newname += "," + d.item;
+//                                    topicnames[nodeindex].name = newname;
                                 }
                                 else {
                                     topic_hash.push(key);
-                                    //            topicnames[topic_hash.length-1] = {};
-                                    topicnames.push({index: index, id: key, name: d.item});
+                                            //            topicnames[topic_hash.length-1] = {};
+//todo to idio ekana kai edw
+//                                    topicnames.push({index: index, id: key, name: d.item});
+                                    topicnames.push({index: index, id: key, name: d.title});
                                     index++;
                                 }
 

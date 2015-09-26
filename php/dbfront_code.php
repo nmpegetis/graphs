@@ -212,7 +212,7 @@ if (!$topics) {
 			$topics[$res[0]] = array();
 		if(count($topics[$res[0]])>9)
 			continue;
-		array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2]));	
+		array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2],"title"=>$res[3]));	
 	} while ($res = $stmt->fetch());
 
    	$meminstance->set($querykey, $topics, 0, $memcache_time);
@@ -245,7 +245,7 @@ if (!$topicsNoSort) {
 			$topicsNoSort[$res[0]] = array();
 		if(count($topicsNoSort[$res[0]])>9)
 			continue;
-		array_push($topicsNoSort[$res[0]],array("item"=>$res[1],"counts"=>$res[2]));	
+		array_push($topicsNoSort[$res[0]],array("item"=>$res[1],"counts"=>$res[2],"title"=>$res[3]));	
 	} while ($res = $stmt->fetch());
 
    	$meminstance->set($querykey, $topicsNoSort, 0, $memcache_time);

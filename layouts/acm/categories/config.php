@@ -25,9 +25,16 @@ $query_experiments = "select distinct ExperimentId,Description from experiment";
 // from Sept2015 - PTM3DB.db
 $query_grants = "select catid, topicid, Weight from topiccategoryview where ExperimentId=?";
 
-$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+//$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+$query_topics = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 
+inner join topicdescription on topicdescription.topicid=topicdescriptionview.topicid
+where topicdescription.ExperimentId=? Order By topicdescription.TopicID ASC, WeightedCounts DESC";
 
-$query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+
+//$query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+$query_topics_nosort = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 
+inner join topicdescription on topicdescription.topicid=topicdescriptionview.topicid
+where topicdescription.ExperimentId=? Order By topicdescription.TopicID ASC, Counts DESC";
 
 //Query gia dynamic topic distribution per year (Top 50 Topics). Μπορει να xρησιμοποιηθεί σε Trend γραφημα
 //$query_topicsdistribution = "select ACMJournals.TITLE,  Year, Top50topics.TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join (select topicId from topicDetails order by Weight desc Limit 50) Top50topics on topicsPerDoc.TopicId = Top50topics.TopicId Inner Join ACMData1 on topicsPerDoc.DocId= articleID Inner Join ACMJournals on ACMJournals.DOI=ACMData1.doinumber where weight>0.2 AND ExperimentId='ACM_250T_1000IT_0IIT_100B_4M_cos' group By  ACMJournals.TITLE, Year, Top50topics.TopicId order by  ACMJournals.TITLE, Year, Top50topics.TopicId, Weight desc";
@@ -75,7 +82,7 @@ $query_treemap = null;
 $title = "ACM Categories";								// title of the webpage
 $trends_title = "ACM Topics Distribution";								// title of the webpage when ACM
 $subtitle = "";								// subtitle of the webpage
-$experimentName = "ACM_400T_1000IT_0IIT_100B_5M_cos";	// first experiment to load
+$experimentName = "ACM_400T_1000IT_0IIT_100B_3M_cos";	// first experiment to load
 $experimentDescription = "Topic modeling based on: 1)Abstracts from ACM publications 2)Authors 3)Citations 4)ACMCategories SimilarityType:cos Similarity on Authors & Categories"; 	// first description to load
 $node_name = "Field";
 $node_groupName1 = "ACM Fields";

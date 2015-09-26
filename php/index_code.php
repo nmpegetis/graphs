@@ -4498,7 +4498,7 @@
                         html : true,
                         content: function() {
 //                        if (!trendClicked) {
-                            if ($(".active_trend").length == 0 || $(".active_trend").length > 2 ) {
+//                            if ($(".active_trend").length == 0 || $(".active_trend").length > 2 ) {
                                 topicnames.filter(function (o,i) {
                                     if (d.name == o.id) {
 
@@ -4518,7 +4518,7 @@
                                         //}
                                     }
                                 });
-                            }
+//                            }
 
                             return "Year: " + d.label +
                                     //"<br/>Journal: " + d.label +

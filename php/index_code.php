@@ -1704,6 +1704,66 @@
                 return result;
             }
 
+//todo na to enwsw me to apo katw autocomple
+            /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
+            function autocompletelogtrends( message, title ) {
+                var classifiedNodes = "";
+                var searchResultNodes = [];				//initialize every time in topic word search
+
+                mytextTitleElem.empty();
+                mytextTitleElem.show();
+                mytextTitle.append("div").append("ul")
+                    .attr("class", "pagination active")
+//                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>"+message+"</small>");
+
+                tagsElem.attr("title",message);
+
+                classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
+                classifiedNodesHeaderElem.show();
+
+
+                for (i=0 ; i<availableTags.length ; i++){
+                    if (message==availableTags[i].item){
+//                        classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
+                        classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + "</a></li>";
+
+                        searchResultNodes.push(availableTags[i].index);	//node results in topic word search
+
+                        $('#'+availableTags[i].index).hover(function(){
+                            $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                            $(this).css("opacity","0.5");
+                        },function(){
+                            $(this).css("opacity","initial");
+                            $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                        });
+                    }
+                }
+
+                classifiedNodesElem.find("div").find("ul").append(classifiedNodes);
+                classifiedNodesElem.show();
+                fadelimit = 0.9;
+
+                mytextContentElem.hide();
+                boostBtnElem.hide();
+
+
+
+///initialize
+                var types = [];
+                $(".circle").each(function(){
+                    types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
+
+                });
+                showtype(fade_out, types);
+///find what to show
+                showtype(fade_out, searchResultNodes);
+                // not show links in this ocassion
+                linkLines.style("stroke-opacity", function (o) {
+                    return fade_out;
+                });
+
+            }
 
             /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
             function autocompletelog( message ) {
@@ -4470,7 +4530,7 @@
                                         .style("cursor", "pointer")
 //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
 //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                        .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic: <br/>" + tit);
+                                        .append("li").append("a").attr("class", "nodetext active").attr("style", "color:"+color(d.name)+";font-weight:400").html("Selected topic: <br/>" + tit);
                                     //}
                                 }
                             });
@@ -4557,7 +4617,7 @@
                                     //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
                                     .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
 //                                autocompletelog(titname);
-                                autocompletelog(tittopic);
+                                autocompletelogtrends(tittopic,tit);
                                 classifiedNodeButtons();
 
                             }

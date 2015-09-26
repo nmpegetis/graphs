@@ -4498,7 +4498,7 @@
                         html : true,
                         content: function() {
 //                        if (!trendClicked) {
-                            if ($(".active_trend").length == 0) {
+                            if ($(".active_trend").length == 0 || $(".active_trend").length > 2 ) {
                                 topicnames.filter(function (o,i) {
                                     if (d.name == o.id) {
 
@@ -4618,20 +4618,6 @@
                             $("#series" + type + "_" + i).attr("class", "series active_trend");
                             $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
 
-
-                            mytextTitleElem.empty();
-                            mytextTitleElem.show();
-                            mytextTitle.append("div").append("ul")
-                                .attr("class", "pagination active")
-                                .attr("data-toggle", "tooltip")
-                                .attr("data-placement", "right")
-//                                    .attr("title", "...more about project and link...")
-                                .style("cursor", "pointer")
-                                //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
-                                //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
-                                .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
-//                                autocompletelog(titname);
-
                             if ($(".active_trend").length == 2) {       //ena gia to series kai ena gia to trendlegend
                                 $(".series").each(function () {
                                     $(this).attr("class", "series inactive_trend");
@@ -4642,6 +4628,19 @@
 
                                 $("#series" + type + "_" + i).attr("class", "series active_trend");
                                 $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
+
+                                mytextTitleElem.empty();
+                                mytextTitleElem.show();
+                                mytextTitle.append("div").append("ul")
+                                    .attr("class", "pagination active")
+                                    .attr("data-toggle", "tooltip")
+                                    .attr("data-placement", "right")
+//                                    .attr("title", "...more about project and link...")
+                                    .style("cursor", "pointer")
+                                    //                                        .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).html("Selected topic: <br/>" + tit);
+                                    //                                        .append("li").append("a").attr("class", "nodetext active").attr("style","color:"+color(tit)).html("Selected topic: <br/>" + tit);
+                                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+//                                autocompletelog(titname);
                                 autocompletelogtrends(tittopic,tit);
                                 classifiedNodeButtons();
 

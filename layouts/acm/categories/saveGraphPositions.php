@@ -2,7 +2,7 @@
 $myFile = "data/graph_".$_POST["experiment"]."_".$_POST["similarity"]."_".$_POST["gravity"]."_".$_POST["charge"].".json";
 //chmod($myFile, 0777);
 
-$fh = fopen($myFile, 'w') or die("can't open file");
+$fh = fopen(".$myFile.", 'w') or die("can't open file");
 //$stringData = $_POST["data"];
 
 $everything = array();

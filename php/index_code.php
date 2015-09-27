@@ -1954,8 +1954,7 @@
                             line += ",0"
                     }
                 }
-                console.log("line"+trendindex)
-console.log(line)
+
                 $.ajax({
                     type: "POST",
                     async: true,
@@ -2010,7 +2009,7 @@ console.log(line)
 
 //todo epitides to allaksa to apo katw gia na min to brei kai na ektelestei to ajaxtrends gia na parw ta kainouriga dedomena
 //                trendsjsonfilename = "../data/trends1.json";
-                trendsjsonfilename = "../data/trends.json";
+                trendsjsonfilename = "../data/trends1.json";
                 trendsPositionsExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
 
                 if (trendsPositionsExist){

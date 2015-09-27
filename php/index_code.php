@@ -4030,7 +4030,7 @@
 
 
 
-                console.log("topics2!")
+//                console.log("topics2!")
 //                console.log(topics1)
                 var topics1trends = jQuery.extend(true, {}, topics1);
                 var trendstopics = {};
@@ -4473,7 +4473,7 @@
 //                        .text(function (d) { return d; });
                         //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
                         //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
-                        .text(function (d) {return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+                        .text(function (d) {console.log(d);return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
                 }
 
 
@@ -4623,7 +4623,7 @@
                         tittopic= o.topic;
 
                         if ($("#series" + type + "_" + i).attr("class") == "series active_trend") {
-                            console.log("create series inactive_trend");
+//                            console.log("create series inactive_trend");
                             $("#series" + type + "_" + i).attr("class", "series inactive_trend");
                             $("#trendlegend" + type + "_" + i).attr("class", "trendlegend inactive_trend");
                             if ($(".active_trend").length == 0) {
@@ -4653,7 +4653,7 @@
 //                            }
                         }
                         else {
-                            console.log("create series active_trend");
+//                            console.log("create series active_trend");
                             $("#series" + type + "_" + i).attr("class", "series active_trend");
                             $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
 

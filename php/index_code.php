@@ -1969,8 +1969,8 @@
             function ajaxGraphCall(experiment,expsimilarity) {
 
 //todo epitides to allaksa to apo katw gia na min to brei kai na ektelestei to ajaxtrends gia na parw ta kainouriga dedomena
-                trendsjsonfilename = "../data/trends1.json";
-//                trendsjsonfilename = "../data/trends.json";
+//                trendsjsonfilename = "../data/trends1.json";
+                trendsjsonfilename = "../data/trends.json";
                 trendsPositionsExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
 
                 if (trendsPositionsExist){

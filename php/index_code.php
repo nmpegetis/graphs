@@ -414,7 +414,7 @@
                 trends,
                 columns,
                 trendsclicked,
-
+                trendsPositionsExist,trendsjsonfilename,
 
 
             //graph
@@ -1875,10 +1875,11 @@
 
                 jsonfilename = "data/graph_"+experimentName+"_"+expsimilarity+"_"+gravity+"_"+charge+".json";
                 graphPositionsExist=UrlExists(jsonfilename);  //graph positions set true if json file exists
+
                 if (graphPositionsExist){
                     $.when(getJSONpositions(), ajaxGraphCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
                         renderPageData = JSON.parse(a2[0]).resp;
-                        ajaxTrendsCall(experimentName);
+//                        ajaxTrendsCall(experimentName);
                         renderpage(renderPageData);
                     });
                 }
@@ -1886,7 +1887,7 @@
                     graphPositionsExist=false;
                     $.when(ajaxGraphCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxGraphCall() to finish and when done then renders the page
                         renderPageData = JSON.parse(a1).resp;
-                        ajaxTrendsCall(experimentName);
+//                        ajaxTrendsCall(experimentName);
                         renderpage(renderPageData);
                     });
                 }
@@ -1904,34 +1905,13 @@
                 });
             }
 
-            function UrlExists(url)
-            {
-                var http = new XMLHttpRequest();
-                http.open('HEAD', url, false);
-                http.send();
-                return http.status!=404;
-            }
-
-
-            function ajaxGraphCall(experiment,expsimilarity) {
-
-                $.getJSON( "../data/trends.json").done( function(json) {
-                    // trends = $.parseJSON(json);
+            function gettrendJSONpositions(trendsjsonfilename) {
+                // NOTE:  This function must return the value
+                //        from calling the $.ajax() method.
+                return $.getJSON(trendsjsonfilename).done( function(json) {
                     console.log( "trends" );
                     var response = json.trends;
-//                        console.log(response);
-//                        console.log(json.trends);
-                    //trends = json;
-
-//                        var varNamesNew = [];
-//                        console.log("varnames NEW")
-//                        for (var key in response) {
-////                            console.log(response.keys()[0])
-//                            varNamesNew.push(key);
                     var result = pivot(response, ['year'], ['id'], {});
-//                            console.log(result)
-//                        console.log(result.rowHeaders.length)
-//                        console.log(result.columnHeaders.length)
                     var line;
                     line = "quarter";
                     for (var k = 0;k < result.columnHeaders.length; k++) {
@@ -1947,14 +1927,6 @@
                                 line += "," +result[i][j][0].weight
                             else
                                 line += ",0"
-
-//                            console.log(response[key][0].id)
-
-//                            $.each(json.trends[key], function (i, d) {
-//                                console.log(d)
-//                            });
-//                        }
-//                        console.log(varNamesNew)
                         }
                     }
 
@@ -1967,9 +1939,9 @@
                             /*        json : JSON.stringify(jsonObject) /* convert here only */
                             func: "csv",
                             csv: line
-//todo edw na prosthesw ena id wste na dimiourgw diaforetika arxeia gia to kathena
-//                            csv: line,
-//                            id:
+                            //todo edw na prosthesw ena id wste na dimiourgw diaforetika arxeia gia to kathena
+                            //                            csv: line,
+                            //                            id:
                         },
                         success: function () {
                             console.log("CSV file Created")
@@ -1981,6 +1953,31 @@
                 }).fail(function() {
                     console.log( "error in json position reading file" );
                 });
+
+            }
+
+
+            function UrlExists(url)
+            {
+                var http = new XMLHttpRequest();
+                http.open('HEAD', url, false);
+                http.send();
+                return http.status!=404;
+            }
+
+
+            function ajaxGraphCall(experiment,expsimilarity) {
+
+                trendsjsonfilename = "../data/trends.json";
+                trendsPositionsExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
+
+                if (trendsPositionsExist){
+                    gettrendJSONpositions(trendsjsonfilename);
+                }
+                else{
+                    trendsPositionsExist=false;
+                    ajaxTrendsCall(experiment);
+                }
 
                 console.log("call "+experiment);
                 var url;
@@ -2037,13 +2034,53 @@
                     data: "ex=" + experiment,
                     success: function (resp) {
                         myresponse = JSON.parse(resp);
-                        distribution = myresponse.distribution;
+                        //distribution = myresponse.distribution;
                         treemap = myresponse.treemap;
-                        //trends = myresponse.trends;
+                        trends = myresponse.trends;
                         console.log(trends);
 // todo to be uncommented if stand alone and topics not loaded from graph visualization ... uncomment also in trends_code.php
 //                        topics1 = myresponse.topicsNoSort;
 //                        topics2 = myresponse.topics;
+                        var result = pivot(response, ['year'], ['id'], {});
+                        var line;
+                        line = "quarter";
+                        for (var k = 0;k < result.columnHeaders.length; k++) {
+                            line += "," + result.columnHeaders[k]
+                            columns.push(parseInt(result.columnHeaders[k]));
+                        }
+
+                        for (var i =0 ; i<result.rowHeaders.length ; i++) {
+                            line += "\n"+result.rowHeaders[i];
+                            for (var j = 0; j < result.columnHeaders.length; j++){
+
+                                if (result[i][j] !== undefined)
+                                    line += "," +result[i][j][0].weight
+                                else
+                                    line += ",0"
+                            }
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            async: true,
+                            url: "./fileCreator.php",
+                            dataType: 'text',		// this is json if we put it like this JSON object
+                            data: {
+                                /*        json : JSON.stringify(jsonObject) /* convert here only */
+                                func: "csv",
+                                csv: line
+//todo edw na prosthesw ena id wste na dimiourgw diaforetika arxeia gia to kathena
+//                            csv: line,
+//                            id:
+                            },
+                            success: function () {
+                                console.log("CSV file Created")
+                            },
+                            error: function (e) {
+                                alert('Error: ' + e);
+                            }
+                        })
+
                     },
                     error: function (e) {
                         alert('Error: ' + JSON.stringify(e));

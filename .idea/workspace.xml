@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4de64057-89db-4e55-ad99-e8ce4da73264" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/php/index_code.php" afterPath="$PROJECT_DIR$/php/index_code.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="graphs.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -65,19 +66,22 @@
       <file leaf-file-name="index_code.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/php/index_code.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.20451528">
-              <caret line="1912" column="0" selection-start-line="1912" selection-start-column="0" selection-end-line="1912" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.500664">
+              <caret line="1956" column="45" selection-start-line="1956" selection-start-column="45" selection-end-line="1956" selection-end-column="45" />
               <folding>
+                <element signature="n#style#0;n#input#0;n#li#2;n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <marker date="1443358638000" expanded="true" signature="45924:45952" placeholder="..." />
-                <marker date="1443358638000" expanded="true" signature="119008:119033" placeholder="..." />
-                <marker date="1443358638000" expanded="true" signature="119102:119118" placeholder="..." />
-                <marker date="1443358638000" expanded="true" signature="119156:119172" placeholder="..." />
-                <marker date="1443358638000" expanded="true" signature="119973:119979" placeholder="..." />
-                <marker date="1443358638000" expanded="true" signature="230167:230177" placeholder="..." />
-                <marker date="1443358638000" expanded="true" signature="230381:230391" placeholder="..." />
+                <marker date="1443376744000" expanded="true" signature="49247:49275" placeholder="..." />
+                <marker date="1443376744000" expanded="true" signature="122721:122746" placeholder="..." />
+                <marker date="1443376744000" expanded="true" signature="122815:122831" placeholder="..." />
+                <marker date="1443376744000" expanded="true" signature="122869:122885" placeholder="..." />
+                <marker date="1443376744000" expanded="true" signature="123686:123692" placeholder="..." />
+                <marker date="1443376744000" expanded="true" signature="235340:235350" placeholder="..." />
+                <marker date="1443376744000" expanded="true" signature="235554:235564" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -106,7 +110,7 @@
       <file leaf-file-name="dbfront_code.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/php/dbfront_code.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.545455">
+            <state vertical-scroll-proportion="102.0">
               <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="70" selection-end-column="5" />
               <folding />
             </state>
@@ -116,24 +120,25 @@
       <file leaf-file-name="config.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/layouts/acm/authors/config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="8.909091">
-              <caret line="23" column="15" selection-start-line="23" selection-start-column="15" selection-end-line="23" selection-end-column="15" />
+            <state vertical-scroll-proportion="-21.636364">
+              <caret line="119" column="14" selection-start-line="119" selection-start-column="14" selection-end-line="119" selection-end-column="14" />
               <folding>
-                <marker date="1443352466000" expanded="true" signature="723:1134" placeholder="select Entit..EntitySimilarityView_authors..." />
-                <marker date="1443352466000" expanded="true" signature="1159:1215" placeholder="select disti..experiment..." />
-                <marker date="1443352466000" expanded="true" signature="1710:1784" placeholder="select autho..topicauthorview..." />
-                <marker date="1443352466000" expanded="true" signature="1819:2260" placeholder="select Topic..TopicDistributionPerAuthorView..." />
-                <marker date="1443352466000" expanded="true" signature="2146:2259" placeholder="select Topic..topicdescription..." />
-                <marker date="1443352466000" expanded="true" signature="2427:2698" placeholder="select topic..topicdescriptionview..." />
-                <marker date="1443352466000" expanded="true" signature="2872:3135" placeholder="select topic..topicdescriptionview..." />
-                <marker date="1443352466000" expanded="true" signature="3327:3926" placeholder="Select * fro..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="3957:4404" placeholder="Select Batch..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="4493:4943" placeholder="Select Batch..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="5035:5485" placeholder="Select Batch..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="5556:6006" placeholder="Select Batch..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="6076:6526" placeholder="Select Batch..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="6598:7048" placeholder="Select Batch..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="7131:7581" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="723:1134" placeholder="select Entit..EntitySimilarityView_authors..." />
+                <marker date="1443374316000" expanded="true" signature="1159:1215" placeholder="select disti..experiment..." />
+                <marker date="1443374316000" expanded="true" signature="1710:1784" placeholder="select autho..topicauthorview..." />
+                <marker date="1443374316000" expanded="true" signature="1819:2260" placeholder="select Topic..TopicDistributionPerAuthorView..." />
+                <marker date="1443374316000" expanded="true" signature="2146:2259" placeholder="select Topic..topicdescription..." />
+                <marker date="1443374316000" expanded="true" signature="2427:2698" placeholder="select topic..topicdescriptionview..." />
+                <marker date="1443374316000" expanded="true" signature="2872:3135" placeholder="select topic..topicdescriptionview..." />
+                <marker date="1443374316000" expanded="true" signature="3327:3926" placeholder="Select * fro..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="3957:4404" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="4493:4943" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="5035:5485" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="5556:6006" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="6076:6526" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="6598:7048" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="7131:7581" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374316000" expanded="true" signature="7665:8115" placeholder="Select Batch..TopicDistributionPerBatch..." />
               </folding>
             </state>
           </provider>
@@ -142,18 +147,22 @@
       <file leaf-file-name="config.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/layouts/acm/categories/config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-18.90909">
-              <caret line="115" column="6" selection-start-line="115" selection-start-column="6" selection-end-line="115" selection-end-column="35" />
+            <state vertical-scroll-proportion="-1.6530613">
+              <caret line="125" column="6" selection-start-line="125" selection-start-column="6" selection-end-line="125" selection-end-column="46" />
               <folding>
-                <marker date="1443352466000" expanded="true" signature="706:1122" placeholder="select Entit..EntitySimilarityView_cat..." />
-                <marker date="1443352466000" expanded="true" signature="1586:1642" placeholder="select disti..experiment..." />
-                <marker date="1443352466000" expanded="true" signature="2180:2253" placeholder="select catid..topiccategoryview..." />
-                <marker date="1443352466000" expanded="true" signature="2420:2691" placeholder="select topic..topicdescriptionview..." />
-                <marker date="1443352466000" expanded="true" signature="2865:3128" placeholder="select topic..topicdescriptionview..." />
-                <marker date="1443352466000" expanded="true" signature="4116:4715" placeholder="Select * fro..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="6192:6639" placeholder="Select Batch..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="6728:7178" placeholder="Select Batch..TopicDistributionPerBatch..." />
-                <marker date="1443352466000" expanded="true" signature="8311:8761" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374367000" expanded="true" signature="706:1122" placeholder="select Entit..EntitySimilarityView_cat..." />
+                <marker date="1443374367000" expanded="true" signature="1586:1642" placeholder="select disti..experiment..." />
+                <marker date="1443374367000" expanded="true" signature="2180:2253" placeholder="select catid..topiccategoryview..." />
+                <marker date="1443374367000" expanded="true" signature="2420:2691" placeholder="select topic..topicdescriptionview..." />
+                <marker date="1443374367000" expanded="true" signature="2865:3128" placeholder="select topic..topicdescriptionview..." />
+                <marker date="1443374367000" expanded="true" signature="4116:4715" placeholder="Select * fro..TopicDistributionPerBatch..." />
+                <marker date="1443374367000" expanded="true" signature="6192:6639" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374367000" expanded="true" signature="6728:7178" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374367000" expanded="true" signature="7270:7720" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374367000" expanded="true" signature="7791:8241" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374367000" expanded="true" signature="8311:8761" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374367000" expanded="true" signature="8833:9283" placeholder="Select Batch..TopicDistributionPerBatch..." />
+                <marker date="1443374367000" expanded="true" signature="9399:9849" placeholder="Select Batch..TopicDistributionPerBatch..." />
               </folding>
             </state>
           </provider>
@@ -162,8 +171,8 @@
       <file leaf-file-name="trends_code.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/php/trends_code.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.868421">
-              <caret line="447" column="34" selection-start-line="447" selection-start-column="34" selection-end-line="447" selection-end-column="34" />
+            <state vertical-scroll-proportion="-0.5263158">
+              <caret line="378" column="44" selection-start-line="378" selection-start-column="44" selection-end-line="378" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -225,10 +234,10 @@
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/php/dbfront_code.php" />
         <option value="$PROJECT_DIR$/layouts/acm/categories/saveGraphPositions.php" />
+        <option value="$PROJECT_DIR$/layouts/acm/categories/fileCreator.php" />
         <option value="$PROJECT_DIR$/layouts/acm/authors/config.php" />
         <option value="$PROJECT_DIR$/layouts/acm/categories/config.php" />
         <option value="$PROJECT_DIR$/php/trends_code.php" />
-        <option value="$PROJECT_DIR$/layouts/acm/categories/fileCreator.php" />
         <option value="$PROJECT_DIR$/php/index_code.php" />
       </list>
     </option>
@@ -656,16 +665,19 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="n#style#0;n#input#0;n#li#2;n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1443358638000" expanded="true" signature="45924:45952" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119008:119033" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119102:119118" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119156:119172" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119973:119979" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="230167:230177" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="230381:230391" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="49247:49275" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122721:122746" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122815:122831" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122869:122885" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="123686:123692" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="235340:235350" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="235554:235564" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -740,16 +752,19 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="n#style#0;n#input#0;n#li#2;n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1443358638000" expanded="true" signature="45924:45952" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119008:119033" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119102:119118" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119156:119172" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119973:119979" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="230167:230177" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="230381:230391" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="49247:49275" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122721:122746" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122815:122831" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122869:122885" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="123686:123692" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="235340:235350" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="235554:235564" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -824,16 +839,19 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="n#style#0;n#input#0;n#li#2;n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1443358638000" expanded="true" signature="45924:45952" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119008:119033" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119102:119118" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119156:119172" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119973:119979" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="230167:230177" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="230381:230391" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="49247:49275" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122721:122746" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122815:122831" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122869:122885" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="123686:123692" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="235340:235350" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="235554:235564" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1054,14 +1072,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/php/dbfront_code.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.545455">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="70" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/layouts/acm/authors/fileCreator.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1070,52 +1080,65 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/layouts/acm/categories/config.php">
+    <entry file="file://$PROJECT_DIR$/layouts/acm/authors/config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.90909">
-          <caret line="115" column="6" selection-start-line="115" selection-start-column="6" selection-end-line="115" selection-end-column="35" />
+        <state vertical-scroll-proportion="-21.636364">
+          <caret line="119" column="14" selection-start-line="119" selection-start-column="14" selection-end-line="119" selection-end-column="14" />
           <folding>
-            <marker date="1443352466000" expanded="true" signature="706:1122" placeholder="select Entit..EntitySimilarityView_cat..." />
-            <marker date="1443352466000" expanded="true" signature="1586:1642" placeholder="select disti..experiment..." />
-            <marker date="1443352466000" expanded="true" signature="2180:2253" placeholder="select catid..topiccategoryview..." />
-            <marker date="1443352466000" expanded="true" signature="2420:2691" placeholder="select topic..topicdescriptionview..." />
-            <marker date="1443352466000" expanded="true" signature="2865:3128" placeholder="select topic..topicdescriptionview..." />
-            <marker date="1443352466000" expanded="true" signature="4116:4715" placeholder="Select * fro..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="6192:6639" placeholder="Select Batch..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="6728:7178" placeholder="Select Batch..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="8311:8761" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="723:1134" placeholder="select Entit..EntitySimilarityView_authors..." />
+            <marker date="1443374316000" expanded="true" signature="1159:1215" placeholder="select disti..experiment..." />
+            <marker date="1443374316000" expanded="true" signature="1710:1784" placeholder="select autho..topicauthorview..." />
+            <marker date="1443374316000" expanded="true" signature="1819:2260" placeholder="select Topic..TopicDistributionPerAuthorView..." />
+            <marker date="1443374316000" expanded="true" signature="2146:2259" placeholder="select Topic..topicdescription..." />
+            <marker date="1443374316000" expanded="true" signature="2427:2698" placeholder="select topic..topicdescriptionview..." />
+            <marker date="1443374316000" expanded="true" signature="2872:3135" placeholder="select topic..topicdescriptionview..." />
+            <marker date="1443374316000" expanded="true" signature="3327:3926" placeholder="Select * fro..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="3957:4404" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="4493:4943" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="5035:5485" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="5556:6006" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="6076:6526" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="6598:7048" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="7131:7581" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374316000" expanded="true" signature="7665:8115" placeholder="Select Batch..TopicDistributionPerBatch..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/layouts/acm/authors/config.php">
+    <entry file="file://$PROJECT_DIR$/layouts/acm/categories/config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="8.909091">
-          <caret line="23" column="15" selection-start-line="23" selection-start-column="15" selection-end-line="23" selection-end-column="15" />
+        <state vertical-scroll-proportion="-1.6530613">
+          <caret line="125" column="6" selection-start-line="125" selection-start-column="6" selection-end-line="125" selection-end-column="46" />
           <folding>
-            <marker date="1443352466000" expanded="true" signature="723:1134" placeholder="select Entit..EntitySimilarityView_authors..." />
-            <marker date="1443352466000" expanded="true" signature="1159:1215" placeholder="select disti..experiment..." />
-            <marker date="1443352466000" expanded="true" signature="1710:1784" placeholder="select autho..topicauthorview..." />
-            <marker date="1443352466000" expanded="true" signature="1819:2260" placeholder="select Topic..TopicDistributionPerAuthorView..." />
-            <marker date="1443352466000" expanded="true" signature="2146:2259" placeholder="select Topic..topicdescription..." />
-            <marker date="1443352466000" expanded="true" signature="2427:2698" placeholder="select topic..topicdescriptionview..." />
-            <marker date="1443352466000" expanded="true" signature="2872:3135" placeholder="select topic..topicdescriptionview..." />
-            <marker date="1443352466000" expanded="true" signature="3327:3926" placeholder="Select * fro..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="3957:4404" placeholder="Select Batch..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="4493:4943" placeholder="Select Batch..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="5035:5485" placeholder="Select Batch..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="5556:6006" placeholder="Select Batch..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="6076:6526" placeholder="Select Batch..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="6598:7048" placeholder="Select Batch..TopicDistributionPerBatch..." />
-            <marker date="1443352466000" expanded="true" signature="7131:7581" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374367000" expanded="true" signature="706:1122" placeholder="select Entit..EntitySimilarityView_cat..." />
+            <marker date="1443374367000" expanded="true" signature="1586:1642" placeholder="select disti..experiment..." />
+            <marker date="1443374367000" expanded="true" signature="2180:2253" placeholder="select catid..topiccategoryview..." />
+            <marker date="1443374367000" expanded="true" signature="2420:2691" placeholder="select topic..topicdescriptionview..." />
+            <marker date="1443374367000" expanded="true" signature="2865:3128" placeholder="select topic..topicdescriptionview..." />
+            <marker date="1443374367000" expanded="true" signature="4116:4715" placeholder="Select * fro..TopicDistributionPerBatch..." />
+            <marker date="1443374367000" expanded="true" signature="6192:6639" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374367000" expanded="true" signature="6728:7178" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374367000" expanded="true" signature="7270:7720" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374367000" expanded="true" signature="7791:8241" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374367000" expanded="true" signature="8311:8761" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374367000" expanded="true" signature="8833:9283" placeholder="Select Batch..TopicDistributionPerBatch..." />
+            <marker date="1443374367000" expanded="true" signature="9399:9849" placeholder="Select Batch..TopicDistributionPerBatch..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/php/trends_code.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.868421">
-          <caret line="447" column="34" selection-start-line="447" selection-start-column="34" selection-end-line="447" selection-end-column="34" />
+        <state vertical-scroll-proportion="-0.5263158">
+          <caret line="378" column="44" selection-start-line="378" selection-start-column="44" selection-end-line="378" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/php/dbfront_code.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="102.0">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="70" selection-end-column="5" />
           <folding />
         </state>
       </provider>
@@ -1138,19 +1161,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/php/index_code.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20451528">
-          <caret line="1912" column="0" selection-start-line="1912" selection-start-column="0" selection-end-line="1912" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.500664">
+          <caret line="1956" column="45" selection-start-line="1956" selection-start-column="45" selection-end-line="1956" selection-end-column="45" />
           <folding>
+            <element signature="n#style#0;n#input#0;n#li#2;n#ul#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#li#0;n#ul#0;n#div#3;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1443358638000" expanded="true" signature="45924:45952" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119008:119033" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119102:119118" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119156:119172" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="119973:119979" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="230167:230177" placeholder="..." />
-            <marker date="1443358638000" expanded="true" signature="230381:230391" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="49247:49275" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122721:122746" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122815:122831" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="122869:122885" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="123686:123692" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="235340:235350" placeholder="..." />
+            <marker date="1443376744000" expanded="true" signature="235554:235564" placeholder="..." />
           </folding>
         </state>
       </provider>

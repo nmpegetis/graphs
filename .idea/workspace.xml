@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4de64057-89db-4e55-ad99-e8ce4da73264" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/php/index_code.php" afterPath="$PROJECT_DIR$/php/index_code.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/layouts/acm/categories/saveGraphPositions.php" afterPath="$PROJECT_DIR$/layouts/acm/categories/saveGraphPositions.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="graphs.iws" />
@@ -63,23 +64,33 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index_code.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index_code.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/php/index_code.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.20397352">
-              <caret line="1970" column="38" selection-start-line="1970" selection-start-column="38" selection-end-line="1970" selection-end-column="38" />
+            <state vertical-scroll-proportion="13.714286">
+              <caret line="4618" column="0" selection-start-line="4618" selection-start-column="0" selection-end-line="4618" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <marker date="1443312582000" expanded="true" signature="45924:45952" placeholder="..." />
-                <marker date="1443312582000" expanded="true" signature="118659:118684" placeholder="..." />
-                <marker date="1443312582000" expanded="true" signature="118753:118769" placeholder="..." />
-                <marker date="1443312582000" expanded="true" signature="118807:118823" placeholder="..." />
-                <marker date="1443312582000" expanded="true" signature="119624:119630" placeholder="..." />
-                <marker date="1443312582000" expanded="true" signature="229957:229967" placeholder="..." />
-                <marker date="1443312582000" expanded="true" signature="230171:230181" placeholder="..." />
+                <marker date="1443345224000" expanded="true" signature="45924:45952" placeholder="..." />
+                <marker date="1443345224000" expanded="true" signature="118659:118684" placeholder="..." />
+                <marker date="1443345224000" expanded="true" signature="118753:118769" placeholder="..." />
+                <marker date="1443345224000" expanded="true" signature="118807:118823" placeholder="..." />
+                <marker date="1443345224000" expanded="true" signature="119624:119630" placeholder="..." />
+                <marker date="1443345224000" expanded="true" signature="229812:229822" placeholder="..." />
+                <marker date="1443345224000" expanded="true" signature="230026:230036" placeholder="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="saveGraphPositions.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/layouts/acm/categories/saveGraphPositions.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.035897437">
+              <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -141,7 +152,7 @@
       <file leaf-file-name="fileCreator.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/layouts/acm/authors/fileCreator.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="-0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -208,6 +219,7 @@
         <option value="$PROJECT_DIR$/layouts/acm/authors/config.php" />
         <option value="$PROJECT_DIR$/layouts/acm/categories/config.php" />
         <option value="$PROJECT_DIR$/php/index_code.php" />
+        <option value="$PROJECT_DIR$/layouts/acm/categories/saveGraphPositions.php" />
       </list>
     </option>
   </component>
@@ -434,6 +446,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="graphs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="graphs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layouts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="acm" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="categories" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -456,7 +490,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="authors" />
+              <option name="myItemId" value="categories" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -635,13 +673,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/layouts/acm/categories/dbfront.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -680,13 +711,13 @@
             <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1443312582000" expanded="true" signature="45924:45952" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118659:118684" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118753:118769" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118807:118823" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="119624:119630" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="229957:229967" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="230171:230181" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="45924:45952" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118659:118684" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118753:118769" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118807:118823" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="119624:119630" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="229812:229822" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="230026:230036" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -764,13 +795,13 @@
             <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1443312582000" expanded="true" signature="45924:45952" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118659:118684" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118753:118769" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118807:118823" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="119624:119630" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="229957:229967" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="230171:230181" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="45924:45952" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118659:118684" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118753:118769" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118807:118823" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="119624:119630" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="229812:229822" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="230026:230036" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -848,13 +879,13 @@
             <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1443312582000" expanded="true" signature="45924:45952" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118659:118684" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118753:118769" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118807:118823" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="119624:119630" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="229957:229967" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="230171:230181" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="45924:45952" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118659:118684" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118753:118769" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118807:118823" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="119624:119630" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="229812:229822" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="230026:230036" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1090,14 +1121,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/layouts/acm/authors/fileCreator.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/layouts/acm/categories/config.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-7.3636365">
@@ -1136,22 +1159,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/layouts/acm/authors/fileCreator.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/php/index_code.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20397352">
-          <caret line="1970" column="38" selection-start-line="1970" selection-start-column="38" selection-end-line="1970" selection-end-column="38" />
+        <state vertical-scroll-proportion="13.714286">
+          <caret line="4618" column="0" selection-start-line="4618" selection-start-column="0" selection-end-line="4618" selection-end-column="0" />
           <folding>
             <element signature="n#style#0;n#h4#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1443312582000" expanded="true" signature="45924:45952" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118659:118684" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118753:118769" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="118807:118823" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="119624:119630" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="229957:229967" placeholder="..." />
-            <marker date="1443312582000" expanded="true" signature="230171:230181" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="45924:45952" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118659:118684" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118753:118769" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="118807:118823" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="119624:119630" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="229812:229822" placeholder="..." />
+            <marker date="1443345224000" expanded="true" signature="230026:230036" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/layouts/acm/categories/saveGraphPositions.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.035897437">
+          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>

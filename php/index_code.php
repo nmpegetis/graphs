@@ -4291,8 +4291,6 @@
                         drawLegend(varNames,topic_hash);
 
                         $(".x").find(".tick").find("text").html(function(i,t){
-                                console.log(i)
-                                console.log(t)
                                 if (t=="1950-1979")
                                     return "1950-79"
                                 else if (t=="1980-1989")
@@ -4618,7 +4616,6 @@
                         else {
                             clickedTopics.push(elementid);
                         }
-                        console.log(clickedTopics)
 
                         tit=o.index+"."+o.name;
                         titname = o.name;

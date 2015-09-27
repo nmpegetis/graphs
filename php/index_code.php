@@ -1905,51 +1905,62 @@
                 });
             }
 
+            function dothework(response,trendindex) {
+                var result = pivot(response, ['year'], ['id'], {});
+                var line;
+                line = "quarter";
+//todo gia auto den eimai sigouros
+                columns = [];
+                for (var k = 0;k < result.columnHeaders.length; k++) {
+                    line += "," + result.columnHeaders[k]
+                    columns.push(parseInt(result.columnHeaders[k]));
+                }
+
+                for (var i =0 ; i<result.rowHeaders.length ; i++) {
+                    line += "\n"+result.rowHeaders[i];
+                    for (var j = 0; j < result.columnHeaders.length; j++){
+
+                        if (result[i][j] !== undefined)
+                            line += "," +result[i][j][0].weight
+                        else
+                            line += ",0"
+                    }
+                }
+
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "./fileCreator.php",
+                    dataType: 'text',		// this is json if we put it like this JSON object
+                    data: {
+                        /*        json : JSON.stringify(jsonObject) /* convert here only */
+                        func: "csv",
+                        csv: line,
+                        //todo edw na prosthesw ena id wste na dimiourgw diaforetika arxeia gia to kathena
+                        id: trendindex
+                    },
+                    success: function () {
+                        console.log("CSV file Created")
+                    },
+                    error: function (e) {
+                        alert('Error: ' + e);
+                    }
+                })
+            }
+
             function gettrendJSONpositions(trendsjsonfilename) {
                 // NOTE:  This function must return the value
                 //        from calling the $.ajax() method.
                 return $.getJSON(trendsjsonfilename).done( function(json) {
                     console.log( "trends" );
-                    var response = json.trends;
-                    var result = pivot(response, ['year'], ['id'], {});
-                    var line;
-                    line = "quarter";
-                    for (var k = 0;k < result.columnHeaders.length; k++) {
-                        line += "," + result.columnHeaders[k]
-                        columns.push(parseInt(result.columnHeaders[k]));
-                    }
+//                    var response = json.trends;
+                    dothework(json.trends,0);
+                    dothework(json.trends1,1);
+                    dothework(json.trends2,2);
+                    dothework(json.trends3,3);
+                    dothework(json.trends4,4);
+                    dothework(json.trends5,5);
 
-                    for (var i =0 ; i<result.rowHeaders.length ; i++) {
-                        line += "\n"+result.rowHeaders[i];
-                        for (var j = 0; j < result.columnHeaders.length; j++){
-
-                            if (result[i][j] !== undefined)
-                                line += "," +result[i][j][0].weight
-                            else
-                                line += ",0"
-                        }
-                    }
-
-                    $.ajax({
-                        type: "POST",
-                        async: true,
-                        url: "./fileCreator.php",
-                        dataType: 'text',		// this is json if we put it like this JSON object
-                        data: {
-                            /*        json : JSON.stringify(jsonObject) /* convert here only */
-                            func: "csv",
-                            csv: line
-                            //todo edw na prosthesw ena id wste na dimiourgw diaforetika arxeia gia to kathena
-                            //                            csv: line,
-                            //                            id:
-                        },
-                        success: function () {
-                            console.log("CSV file Created")
-                        },
-                        error: function (e) {
-                            alert('Error: ' + e);
-                        }
-                    })
                 }).fail(function() {
                     console.log( "error in json position reading file" );
                 });

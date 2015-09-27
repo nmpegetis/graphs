@@ -1954,7 +1954,8 @@
                             line += ",0"
                     }
                 }
-
+                console.log("line"+trendindex)
+console.log(line)
                 $.ajax({
                     type: "POST",
                     async: true,

@@ -1910,9 +1910,10 @@
                 var line;
                 line = "quarter";
 //todo gia auto den eimai sigouros
+                columns[trendindex] = [];
                 for (var k = 0;k < result.columnHeaders.length; k++) {
                     line += "," + result.columnHeaders[k]
-                    columns.push(parseInt(result.columnHeaders[k]));
+                    columns[trendindex].push(parseInt(result.columnHeaders[k]));
                 }
 
                 for (var i =0 ; i<result.rowHeaders.length ; i++) {
@@ -2056,6 +2057,8 @@
                         var result = pivot(response, ['year'], ['id'], {});
                         var line;
                         line = "quarter";
+
+//                        columns[trendindex] = [];
                         for (var k = 0;k < result.columnHeaders.length; k++) {
                             line += "," + result.columnHeaders[k]
                             columns.push(parseInt(result.columnHeaders[k]));
@@ -4050,7 +4053,7 @@
 //                console.log(topics1trends)
                 for (var key in topics1trends){
                     var keyint = parseInt(key)
-                    if (columns.indexOf(keyint) > -1){
+                    if (columns[type].indexOf(keyint) > -1){
 //                        console.log(topics1trends[keyint])
                         trendstopics[keyint] = topics1trends[keyint];
 //                        trendstopics.push(topics1trends[keyint]);

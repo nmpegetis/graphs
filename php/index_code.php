@@ -1938,23 +1938,27 @@
                 var line;
                 line = "quarter";
 //todo gia auto den eimai sigouros
-                columns[trendindex] = [];
+//                var thiscolumns = [];
                 for (var k = 0;k < result.columnHeaders.length; k++) {
                     line += "," + result.columnHeaders[k]
-                    columns[trendindex].push(parseInt(result.columnHeaders[k]));
+                    columns.push(parseInt(result.columnHeaders[k]));
                 }
+
+//                columns[trendindex]=thiscolumns;
+//                columns=thiscolumns;
 
                 for (var i =0 ; i<result.rowHeaders.length ; i++) {
                     line += "\n"+result.rowHeaders[i];
                     for (var j = 0; j < result.columnHeaders.length; j++){
 
                         if (result[i][j] !== undefined)
-                            line += "," +result[i][j][0].weight
+                            line += "," +result[i][j][0].weight;
                         else
                             line += ",0"
                     }
                 }
-
+console.log("line"+trendindex)
+                console.log(line)
                 $.ajax({
                     type: "POST",
                     async: true,
@@ -1981,7 +1985,7 @@
                 //        from calling the $.ajax() method.
                 return $.getJSON(trendsjsonfilename).done( function(json) {
                     console.log( "trends" );
-//                    var response = json.trends;
+                    var response = json.trends;
                     dothework(json.trends,0);
                     dothework(json.trends1,1);
                     dothework(json.trends2,2);
@@ -2009,7 +2013,7 @@
 
 //todo epitides to allaksa to apo katw gia na min to brei kai na ektelestei to ajaxtrends gia na parw ta kainouriga dedomena
 //                trendsjsonfilename = "../data/trends1.json";
-                trendsjsonfilename = "../data/trends1.json";
+                trendsjsonfilename = "../data/trends.json";
                 trendsPositionsExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
 
                 if (trendsPositionsExist){
@@ -4093,7 +4097,7 @@
                     .attr("width",  width  + margin.left + margin.right + 1000) // gia na xwrane ta topic word bags
                     .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
 //todo prin sketo trend
-                    .attr("id","trend"+type)
+                    .attr("id","trend")
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                 trend_svg
@@ -4116,7 +4120,7 @@
 //                console.log(topics1trends)
                 for (var key in topics1trends){
                     var keyint = parseInt(key);
-                    if (columns[type].indexOf(keyint) > -1){
+                    if (columns.indexOf(keyint) > -1 && columns !== undefined){
 //                        console.log(topics1trends[keyint])
                         trendstopics[keyint] = topics1trends[keyint];
 //                        trendstopics.push(topics1trends[keyint]);
@@ -5182,13 +5186,13 @@
                             <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
                                 <!--                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>-->
-                                <li><a id="trendmenu0" data-toggle="tab" data-target="#trend0div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">ACM Topic Trend Analysis 1950-2011</a></li>
-                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">Journal: CACM, Communications of the ACM</a></li>
-                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-communication.html" target="_blank">Journal: ACM SIGSOFT Software Engineering Notes</a></li>
-                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">Journal: Journal of the ACM</a></li>
-                                <li><a id="trendmenu4" data-toggle="tab" data-target="#trend4div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">Journal: ACM SIGMOD Records</a></li>
-                                <li><a id="trendmenu5" data-toggle="tab" data-target="#trend5div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">Journal: ACM SIGPLAN Notices</a></li>
-                                <li><a id="trendmenu6" data-toggle="tab" data-target="#trend6div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">Journal: ACM SIGGRAPH Computer Graphics</a></li>
+                                <li><a id="trendmenu0" data-toggle="tab" data-target="#trend0div" href="#" target="_blank">ACM Topic Trend Analysis 1950-2011</a></li>
+                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="#" target="_blank">Journal: CACM, Communications of the ACM</a></li>
+                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="#" target="_blank">Journal: ACM SIGSOFT Software Engineering Notes</a></li>
+                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="#" target="_blank">Journal: Journal of the ACM</a></li>
+                                <li><a id="trendmenu4" data-toggle="tab" data-target="#trend4div" href="#" target="_blank">Journal: ACM SIGMOD Records</a></li>
+                                <li><a id="trendmenu5" data-toggle="tab" data-target="#trend5div" href="#" target="_blank">Journal: ACM SIGPLAN Notices</a></li>
+                                <li><a id="trendmenu6" data-toggle="tab" data-target="#trend6div" href="#" target="_blank">Journal: ACM SIGGRAPH Computer Graphics</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">

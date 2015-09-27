@@ -161,9 +161,11 @@ else{
 
 
 $query = $query_grants;
-$move_elems = array("?"); 
-$set_elems = array($_GET['ex']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
+//todo ta ebgala gia tin ACM
+//$move_elems = array("?");
+//$set_elems = array($_GET['ex']);
+//$memQuery = str_replace($move_elems, $set_elems, $query);
+$memQuery = $query;
 $querykey = "KEY" . md5($memQuery);
 $grants = $meminstance->get($querykey);
 

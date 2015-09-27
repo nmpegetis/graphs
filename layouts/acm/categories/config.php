@@ -43,15 +43,16 @@ where topicdescription.ExperimentId=? Order By topicdescription.TopicID ASC, Cou
 
 // from Sept2015 - PTM3DB.db
 //$query_trends = "select * from topicdistributionperbatchidview where ExperimentId=? order by topicid, batchid";            // order by topicid";
-$query_trends = "Select * from TopicDistributionPerBatch
-INNER JOIN TopicDescription on
-TopicDescription.TopicId=TopicDistributionPerBatch.TopicId
-AND TopicDescription.ExperimentId=TopicDistributionPerBatch.ExperimentId
-and  TopicDescription.VisibilityIndex>2
-where JournalISSN IS NULL AND (TopicDistributionPerBatch.TopicId IN
-(15,25,36,38,42,
-44,77,79,100,124,137,141,141,146,149,151,159,168,171,175,178,179,180,186,191,196,204,209,220,223,228,236,255,259,263,264,267,269,274,277,278,279,287,290,294,299,301,321,328,332,335,345,346,349,353,355,356,363,365,368,374,380,382))
-order by topicid,batchid";
+//$query_trends = "Select * from TopicDistributionPerBatch
+//INNER JOIN TopicDescription on
+//TopicDescription.TopicId=TopicDistributionPerBatch.TopicId
+//AND TopicDescription.ExperimentId=TopicDistributionPerBatch.ExperimentId
+//and  TopicDescription.VisibilityIndex>2
+//where JournalISSN IS NULL AND (TopicDistributionPerBatch.TopicId IN
+//(15,25,36,38,42,
+//44,77,79,100,124,137,141,141,146,149,151,159,168,171,175,178,179,180,186,191,196,204,209,220,223,228,236,255,259,263,264,267,269,274,277,278,279,287,290,294,299,301,321,328,332,335,345,346,349,353,355,356,363,365,368,374,380,382))
+//order by topicid,batchid";
+//
 // $query_trends = "Select * from TopicDistributionPerBatch
 // INNER JOIN TopicDescription on
 // TopicDescription.TopicId=TopicDistributionPerBatch.TopicId
@@ -70,7 +71,54 @@ order by topicid,batchid";
 // from Sept2015 - PTM3DB.db
 $query_treemap = null;
 
-// until Sept2015 - acmdata1.db
+
+//for all
+$query_trends = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
+from TopicDistributionPerBatch
+INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
+and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
+where JournalISSN IS NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+
+// --Journals
+// -- CACM, Communications of the ACM ISSN: 00010782
+$query_trends1 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
+from TopicDistributionPerBatch
+INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
+and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
+where JournalISSN='00010782' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+
+
+// --Journals
+// -- ACM SIGSOFT Software Engineering Notes, 01635948
+$query_trends2 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
+from TopicDistributionPerBatch
+INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
+and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
+where JournalISSN='01635948' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+
+// --Journals
+// --Journal of the ACM : 00045411
+$query_trends3 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
+from TopicDistributionPerBatch
+INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
+and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
+where JournalISSN='00045411' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+
+// --Journals
+// -- ACM SIGMOD Record: 01635808
+$query_trends4 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
+from TopicDistributionPerBatch
+INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
+and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
+where JournalISSN='01635808' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+
+// --Journals
+// -- ACM SIGPLAN Notices: 03621340
+$query_trends5 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
+from TopicDistributionPerBatch
+INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
+and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
+where JournalISSN='03621340' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";// until Sept2015 - acmdata1.db
 //$query_trends = "select * from top50distributionview";
 // from Sept2015 - PTM3DB.db
 //$query_trends = "select * from top50distributionperbatchidview";

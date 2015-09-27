@@ -152,13 +152,14 @@ else{
 //////////////////////////////////////////////////
 
 $query = $query_trends;
-$move_elems = array("?");
-$set_elems = array($_GET['ex']);
+//$move_elems = array("?");
+//$set_elems = array($_GET['ex']);
 
 
 if ($query != null) {
 
-	$memQuery = str_replace($move_elems, $set_elems, $query);
+//	$memQuery = str_replace($move_elems, $set_elems, $query);
+	$memQuery = $query;
 	$querykey = "KEY" . md5($memQuery) . $db_name;
 
 	$trends = $meminstance->get($querykey);
@@ -179,9 +180,14 @@ if ($query != null) {
 		// 	array_push($trends[$res[1]],array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[4],"avgweight"=>$res[3]));
 		// } while ($res = $stmt->fetch());
 
+//		$res = $stmt->fetch();
+//		do {
+//			array_push($trends,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[4],"avgweight"=>$res[3]));
+//		} while ($res = $stmt->fetch());
+
 		$res = $stmt->fetch();
 		do {
-			array_push($trends,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[4],"avgweight"=>$res[3]));
+			array_push($trends,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2],"avgweight"=>$res[5]));
 		} while ($res = $stmt->fetch());
 
 		$meminstance->set($querykey, $trends, 0, $memcache_time);
@@ -194,6 +200,179 @@ if ($query != null) {
 else{
 	$trends = null;	
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///// TOPICS DISTRIBUTION PER YEAR : TRENDS1 (Journal:CACM, Communications of the ACM ISSN: 00010782)//////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$query = $query_trends1;
+
+if ($query != null) {
+
+	$memQuery = $query;
+	$querykey = "KEY" . md5($memQuery) . $db_name;
+
+	$trends1 = $meminstance->get($querykey);
+
+	if (!$trends1) {
+
+		$trends1 = array();
+		$stmt = $mydb->doQuery($query);
+		$res = $stmt->fetch();
+		do {
+			array_push($trends1,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2],"avgweight"=>$res[5]));
+		} while ($res = $stmt->fetch());
+
+		$meminstance->set($querykey, $trends1, 0, $memcache_time);
+		//	print "got result from mysql\n";
+	}
+	else{
+		//	print "got result from memcached\n";
+	}
+}
+else{
+	$trends1 = null;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///// TOPICS DISTRIBUTION PER YEAR : TRENDS2 (Journal:ACM SIGSOFT Software Engineering Notes, 01635948)//////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$query = $query_trends2;
+
+if ($query != null) {
+
+	$memQuery = $query;
+	$querykey = "KEY" . md5($memQuery) . $db_name;
+
+	$trends2 = $meminstance->get($querykey);
+
+	if (!$trends2) {
+
+		$trends2 = array();
+		$stmt = $mydb->doQuery($query);
+		$res = $stmt->fetch();
+		do {
+			array_push($trends2,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2],"avgweight"=>$res[5]));
+		} while ($res = $stmt->fetch());
+
+		$meminstance->set($querykey, $trends2, 0, $memcache_time);
+		//	print "got result from mysql\n";
+	}
+	else{
+		//	print "got result from memcached\n";
+	}
+}
+else{
+	$trends2 = null;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///// TOPICS DISTRIBUTION PER YEAR : TRENDS3 (Journal:Journal of the ACM : 00045411)//////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$query = $query_trends3;
+
+if ($query != null) {
+
+	$memQuery = $query;
+	$querykey = "KEY" . md5($memQuery) . $db_name;
+
+	$trends3 = $meminstance->get($querykey);
+
+	if (!$trends3) {
+
+		$trends3 = array();
+		$stmt = $mydb->doQuery($query);
+		$res = $stmt->fetch();
+		do {
+			array_push($trends3,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2],"avgweight"=>$res[5]));
+		} while ($res = $stmt->fetch());
+
+		$meminstance->set($querykey, $trends3, 0, $memcache_time);
+		//	print "got result from mysql\n";
+	}
+	else{
+		//	print "got result from memcached\n";
+	}
+}
+else{
+	$trends3 = null;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///// TOPICS DISTRIBUTION PER YEAR : TRENDS4 (Journal:ACM SIGMOD Record: 01635808)//////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$query = $query_trends4;
+
+if ($query != null) {
+
+	$memQuery = $query;
+	$querykey = "KEY" . md5($memQuery) . $db_name;
+
+	$trends4 = $meminstance->get($querykey);
+
+	if (!$trends4) {
+
+		$trends4 = array();
+		$stmt = $mydb->doQuery($query);
+		$res = $stmt->fetch();
+		do {
+			array_push($trends4,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2],"avgweight"=>$res[5]));
+		} while ($res = $stmt->fetch());
+
+		$meminstance->set($querykey, $trends4, 0, $memcache_time);
+		//	print "got result from mysql\n";
+	}
+	else{
+		//	print "got result from memcached\n";
+	}
+}
+else{
+	$trends4 = null;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///// TOPICS DISTRIBUTION PER YEAR : TRENDS5 (Journal:ACM SIGPLAN Notices: 03621340)//////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$query = $query_trends5;
+
+if ($query != null) {
+
+	$memQuery = $query;
+	$querykey = "KEY" . md5($memQuery) . $db_name;
+
+	$trends5 = $meminstance->get($querykey);
+
+	if (!$trends5) {
+
+		$trends5 = array();
+		$stmt = $mydb->doQuery($query);
+		$res = $stmt->fetch();
+		do {
+			array_push($trends5,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2],"avgweight"=>$res[5]));
+		} while ($res = $stmt->fetch());
+
+		$meminstance->set($querykey, $trends5, 0, $memcache_time);
+		//	print "got result from mysql\n";
+	}
+	else{
+		//	print "got result from memcached\n";
+	}
+}
+else{
+	$trends5 = null;
+}
+
 
 
 // todo to be uncommented if stand alone and topics not loaded from graph visualization
@@ -268,6 +447,11 @@ $everything = array();
 // $everything['distribution'] = $topicsdistribution;
 $everything['treemap'] = $treemap;
 $everything['trends'] = $trends;
+$everything['trends1'] = $trends1;
+$everything['trends2'] = $trends2;
+$everything['trends3'] = $trends3;
+$everything['trends4'] = $trends4;
+$everything['trends5'] = $trends5;
 // todo to be uncommented if stand alone and topics not loaded from graph visualization
 //$everything['topics'] = $topics;
 //$everything['topicsNoSort'] = $topicsNoSort;

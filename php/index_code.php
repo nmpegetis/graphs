@@ -1992,7 +1992,7 @@
                 else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull320T_80.php";
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
-//                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.70") url = "../../../jsonACMCategories_70_092015.php";
+                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.70") url = "../../../jsonACMCategories_70_092015.php";
                 else url = "./dbfront.php";
 
                 return $.ajax({
@@ -4473,7 +4473,7 @@
 //                        .text(function (d) { return d; });
                         //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
                         //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
-                        .text(function (d) {console.log(d);return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+                        .text(function (d) {return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
                 }
 
 

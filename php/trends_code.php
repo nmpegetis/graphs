@@ -375,6 +375,41 @@ else{
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///// TOPICS DISTRIBUTION PER YEAR : TRENDS6 (ACM SIGGRAPH Computer Graphics: 00978930)//////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$query = $query_trends6;
+
+if ($query != null) {
+
+	$memQuery = $query;
+	$querykey = "KEY" . md5($memQuery) . $db_name;
+
+	$trends6 = $meminstance->get($querykey);
+
+	if (!$trends6) {
+
+		$trends6 = array();
+		$stmt = $mydb->doQuery($query);
+		$res = $stmt->fetch();
+		do {
+			array_push($trends6,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2],"avgweight"=>$res[5]));
+		} while ($res = $stmt->fetch());
+
+		$meminstance->set($querykey, $trends6, 0, $memcache_time);
+		//	print "got result from mysql\n";
+	}
+	else{
+		//	print "got result from memcached\n";
+	}
+}
+else{
+	$trends6 = null;
+}
+
+
+
 // todo to be uncommented if stand alone and topics not loaded from graph visualization
 
 /////////////////////////
@@ -452,6 +487,7 @@ $everything['trends2'] = $trends2;
 $everything['trends3'] = $trends3;
 $everything['trends4'] = $trends4;
 $everything['trends5'] = $trends5;
+$everything['trends6'] = $trends6;
 // todo to be uncommented if stand alone and topics not loaded from graph visualization
 //$everything['topics'] = $topics;
 //$everything['topicsNoSort'] = $topicsNoSort;

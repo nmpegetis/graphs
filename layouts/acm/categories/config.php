@@ -119,6 +119,17 @@ from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
 where JournalISSN='03621340' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";// until Sept2015 - acmdata1.db
+
+
+
+// --Journals
+// -- ACM SIGGRAPH Computer Graphics: 00978930
+$query_trends6 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
+from TopicDistributionPerBatch
+INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
+and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
+where JournalISSN='00978930' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";// until Sept2015 - acmdata1.db
+
 //$query_trends = "select * from top50distributionview";
 // from Sept2015 - PTM3DB.db
 //$query_trends = "select * from top50distributionperbatchidview";

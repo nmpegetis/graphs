@@ -311,13 +311,20 @@
                 chordmenu2Elem = $("#chordmenu2"),
                 chorddivElem = $("#chorddiv"),
                 chord2divElem = $("#chord2div"),
-                trendmenuElem = $("#trendmenu"),
+                trendmenu0Elem = $("#trendmenu0"),
                 trendmenu1Elem = $("#trendmenu1"),
                 trendmenu2Elem = $("#trendmenu2"),
                 trendmenu3Elem = $("#trendmenu3"),
+                trendmenu4Elem = $("#trendmenu4"),
+                trendmenu5Elem = $("#trendmenu5"),
+                trendmenu6Elem = $("#trendmenu6"),
+                trend0divElem = $("#trend0div"),
                 trend1divElem = $("#trend1div"),
                 trend2divElem = $("#trend2div"),
                 trend3divElem = $("#trend3div"),
+                trend4divElem = $("#trend4div"),
+                trend5divElem = $("#trend5div"),
+                trend6divElem = $("#trend6div"),
                 pagetitleElem = $("#pagetitle"),
                 legend2divElem = $("#legend2div"),
                 dropdownThresholdsElem = $("#dropdownThresholds"),
@@ -330,16 +337,28 @@
                 grantsGroup2Elem,
                 chordElem = $("#chord"),
                 chord2Elem = $("#chord2"),
-                trendElem = $("#trend"),
+                trend0Elem = $("#trend0"),
+                trend1Elem = $("#trend1"),
                 trend2Elem = $("#trend2"),
                 trend3Elem = $("#trend3"),
+                trend4Elem = $("#trend4"),
+                trend5Elem = $("#trend5"),
+                trend6Elem = $("#trend6"),
+                trendCSV10,
                 trendCSV11,
                 trendCSV12,
                 trendCSV13,
+                trendCSV14,
+                trendCSV15,
+                trendCSV16,
                 trendCSV2,
+                trendlegend0Elem,
                 trendlegend1Elem,
                 trendlegend2Elem,
                 trendlegend3Elem,
+                trendlegend4Elem,
+                trendlegend5Elem,
+                trendlegend6Elem,
                 seriesElem,
                 streamPathElem;
 
@@ -603,9 +622,13 @@
             chordmenu1Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);trendsclicked=false;});
             chordmenu2Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);trendsclicked=false;});
     //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
-            trendmenu1Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu2Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu3Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu0Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend0Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu1Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu2Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu3Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu4Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend4Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu5Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend6Elem.hide();trendlegend5Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu6Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
 
 
             // the same piece of code with the below $(document).fullScreen() because it doesn't catch the escape button click
@@ -640,16 +663,20 @@
                 pill2Elem.removeClass("active");
                 if(graphdivElem.hasClass("active")) graphReset();
                 else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
-                else if (trend1divElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")) trendReset(true);
+                else if (trend0divElem.hasClass("active") || trend1divElem.hasClass("active") || trend2divElem.hasClass("active")  || trend3divElem.hasClass("active") || trend4divElem.hasClass("active")  || trend5divElem.hasClass("active") || trend6divElem.hasClass("active")) trendReset(true);
 
                 pill2Elem.blur();
             });
             pill3Elem.on("click",function(){
                 pill3Elem.removeClass("active");
 
-                if(trend1divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
+                if(trend0divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
+                else if(trend1divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
                 else if(trend2divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
                 else if(trend3divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
+                else if(trend4divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
+                else if(trend5divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
+                else if(trend6divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
 
                 pill3Elem.blur();
             });
@@ -657,7 +684,7 @@
                 pill4Elem.removeClass("active");
                 if(graphdivElem.hasClass("active")) graphCentralize();
                 else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
-                else if (trend1divElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active")) trendReset(false);
+                else if (trend0divElem.hasClass("active") || trend1divElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active") || trend4divElem.hasClass("active") || trend5divElem.hasClass("active") || trend6divElem.hasClass("active")) trendReset(false);
 
                 pill4Elem.blur();
             });
@@ -1365,7 +1392,8 @@
                             legend2divElem.hide();
                             pill1Elem.removeClass("disabled");
                             pill3Elem.addClass("disabled");
-                            trend1divElem.removeClass("active");trend2divElem.removeClass("active");trend3divElem.removeClass("active");
+                            trend0divElem.removeClass("active");trend1divElem.removeClass("active");trend2divElem.removeClass("active");
+                            trend3divElem.removeClass("active");trend4divElem.removeClass("active");trend5divElem.removeClass("active");trend6divElem.removeClass("active");
                         }
 
                         $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
@@ -1960,7 +1988,7 @@
                     dothework(json.trends3,3);
                     dothework(json.trends4,4);
                     dothework(json.trends5,5);
-
+                    dothework(json.trends6,6);
                 }).fail(function() {
                     console.log( "error in json position reading file" );
                 });
@@ -2891,22 +2919,33 @@
                 createChord(1);
                 createChord(2);
                 if (/^ACM*/.test(experimentName)) {
+                    createTrends(0);
                     createTrends(1);
                     createTrends(2);
                     createTrends(3);
-
+                    createTrends(4);
+                    createTrends(5);
+                    createTrends(6);
                 }
 
 
 
                 chordElem = $("#chord");
                 chord2Elem = $("#chord2");
-                trendElem = $("#trend");
+                trend0Elem = $("#trend0");
+                trend1Elem = $("#trend1");
                 trend2Elem = $("#trend2");
                 trend3Elem = $("#trend3");
+                trend4Elem = $("#trend4");
+                trend5Elem = $("#trend5");
+                trend6Elem = $("#trend6");
+                trendlegend0Elem = $("#trendlegend0");
                 trendlegend1Elem = $("#trendlegend1");
                 trendlegend2Elem = $("#trendlegend2");
                 trendlegend3Elem = $("#trendlegend3");
+                trendlegend4Elem = $("#trendlegend4");
+                trendlegend5Elem = $("#trendlegend5");
+                trendlegend6Elem = $("#trendlegend6");
                 seriesElem = $(".series");
                 streamPathElem = $("path");
                 mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
@@ -2941,8 +2980,13 @@
                 chorddivElem.empty();
                 chord2divElem.empty();
 
+                trend0divElem.empty();
                 trend1divElem.empty();
                 trend2divElem.empty();
+                trend3divElem.empty();
+                trend4divElem.empty();
+                trend5divElem.empty();
+                trend6divElem.empty();
 
                 filtersElem.val($("#filters option:first").val());
                 linkedByIndex = {},
@@ -3053,13 +3097,19 @@
 //                jQuery.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
 //                jQuery.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
                     //the below 2 only for ACM
-                trendmenuElem.parent().hide();
+                trendmenu0Elem.parent().hide();
                 pill3Elem.hide();
 
 //                trendCSV11 = "crunchbase-quarters_new.csv",
-                trendCSV11 = "trendscsv.csv",
-                trendCSV12 = "comminicationACM_pivot_1990-2011_new.csv",
-                trendCSV13 = "acm-sigmod-pivot-all-1976-2011_new.csv";
+//                trendCSV12 = "comminicationACM_pivot_1990-2011_new.csv",
+//                trendCSV13 = "acm-sigmod-pivot-all-1976-2011_new.csv";
+                trendCSV10 = "trendscsv0.csv",
+                trendCSV11 = "trendscsv1.csv",
+                trendCSV12 = "trendscsv2.csv",
+                trendCSV13 = "trendscsv3.csv",
+                trendCSV14 = "trendscsv4.csv",
+                trendCSV15 = "trendscsv5.csv";
+                trendCSV16 = "trendscsv6.csv";
 //                trendCSV2 = "weighted_topics2.csv";
 
                 if (/^FET*/.test(experimentName)){
@@ -3084,7 +3134,7 @@
                 else if (/^ACM*/.test(experimentName)){
                     categoriesElem.hide();
                     pill3Elem.show();
-                    trendmenuElem.parent().show();
+                    trendmenu0Elem.parent().show();
                 }
 
 
@@ -3958,7 +4008,11 @@
 
 
                 var trendCSV1;
-                if (type == 1){
+
+                if (type == 0){
+                    trendCSV1 = trendCSV10;
+                }
+                else if (type == 1){
                     trendCSV1 = trendCSV11;
                 }
                 else if (type == 2) {
@@ -3967,7 +4021,15 @@
                 else if (type == 3) {
                     trendCSV1 = trendCSV13;
                 }
-
+                else if (type == 4) {
+                    trendCSV1 = trendCSV14;
+                }
+                else if (type == 5) {
+                    trendCSV1 = trendCSV15;
+                }
+                else if (type == 6) {
+                    trendCSV1 = trendCSV16;
+                }
 
                 var vertical = d3.select("#trend"+type+"div")
                     .append("div")
@@ -4030,7 +4092,8 @@
                     .append("svg:svg")
                     .attr("width",  width  + margin.left + margin.right + 1000) // gia na xwrane ta topic word bags
                     .attr("height", height + margin.top  + margin.bottom + 1500) // gia na xwrane ta top 50 topic words
-                    .attr("id","trend")
+//todo prin sketo trend
+                    .attr("id","trend"+type)
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                 trend_svg
@@ -4052,7 +4115,7 @@
 
 //                console.log(topics1trends)
                 for (var key in topics1trends){
-                    var keyint = parseInt(key)
+                    var keyint = parseInt(key);
                     if (columns[type].indexOf(keyint) > -1){
 //                        console.log(topics1trends[keyint])
                         trendstopics[keyint] = topics1trends[keyint];
@@ -4816,9 +4879,13 @@
                 graphElem.attr("style","width:"+w+";height:"+h);
                 chordElem.attr("style","width:"+w+";height:"+h);
                 chord2Elem.attr("style","width:"+w+";height:"+h);
-                trendElem.attr("style","width:"+w+";height:"+h);
+                trend0Elem.attr("style","width:"+w+";height:"+h);
+                trend1Elem.attr("style","width:"+w+";height:"+h);
                 trend2Elem.attr("style","width:"+w+";height:"+h);
                 trend3Elem.attr("style","width:"+w+";height:"+h);
+                trend4Elem.attr("style","width:"+w+";height:"+h);
+                trend5Elem.attr("style","width:"+w+";height:"+h);
+                trend6Elem.attr("style","width:"+w+";height:"+h);
             }
 
             function checkFullscreen() {
@@ -4834,33 +4901,53 @@
                         if ( webkit == 1) {
                             vis.style("padding-left", windowElem.width() / 4);
                             vis.style("width", windowElem.width());
+                            d3.select("#trend0div").style("padding-left", windowElem.width() / 4);
+                            d3.select("#trend0div").style("width", windowElem.width());
                             d3.select("#trend1div").style("padding-left", windowElem.width() / 4);
                             d3.select("#trend1div").style("width", windowElem.width());
                             d3.select("#trend2div").style("padding-left", windowElem.width() / 4);
                             d3.select("#trend2div").style("width", windowElem.width());
                             d3.select("#trend3div").style("padding-left", windowElem.width() / 4);
                             d3.select("#trend3div").style("width", windowElem.width());
+                            d3.select("#trend4div").style("padding-left", windowElem.width() / 4);
+                            d3.select("#trend4div").style("width", windowElem.width());
+                            d3.select("#trend5div").style("padding-left", windowElem.width() / 4);
+                            d3.select("#trend5div").style("width", windowElem.width());
+                            d3.select("#trend6div").style("padding-left", windowElem.width() / 4);
+                            d3.select("#trend6div").style("width", windowElem.width());
 //                            trend1divElem.style("height",h);
-                            trend1divElem.attr("style","height:"+h);
+                            trend0divElem.attr("style","height:"+h);
                         }
                         else {
                             vis.attr("transform","translate(" + windowElem.width()/4 + ")");
                             vis.style("width", windowElem.width());
+                            d3.select("#trend0div").attr("transform","translate(" + windowElem.width()/4 + ")");
+                            d3.select("#trend0div").style("width", windowElem.width());
                             d3.select("#trend1div").attr("transform","translate(" + windowElem.width()/4 + ")");
                             d3.select("#trend1div").style("width", windowElem.width());
                             d3.select("#trend2div").attr("transform","translate(" + windowElem.width()/4 + ")");
                             d3.select("#trend2div").style("width", windowElem.width());
                             d3.select("#trend3div").attr("transform","translate(" + windowElem.width()/4 + ")");
                             d3.select("#trend3div").style("width", windowElem.width());
-                            trend1divElem.attr("style","height:"+h);
+                            d3.select("#trend4div").attr("transform","translate(" + windowElem.width()/4 + ")");
+                            d3.select("#trend4div").style("width", windowElem.width());
+                            d3.select("#trend5div").attr("transform","translate(" + windowElem.width()/4 + ")");
+                            d3.select("#trend5div").style("width", windowElem.width());
+                            d3.select("#trend6div").attr("transform","translate(" + windowElem.width()/4 + ")");
+                            d3.select("#trend6div").style("width", windowElem.width());
+                            trend0divElem.attr("style","height:"+h);
                         }
 
                         chordElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
                         chord2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
 
-                        trendElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                        trend0Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                        trend1Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
                         trend2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
                         trend3Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                        trend4Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                        trend5Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
+                        trend6Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:"+ windowElem.width() / 4);
                     }
                     else{
                         mygraphContainerElem.attr("style","width:100%;height:100%;top:0;background-color:none");
@@ -4870,26 +4957,38 @@
                             d3.select("#trend1div").style("padding-left","0");
                             d3.select("#trend2div").style("padding-left","0");
                             d3.select("#trend3div").style("padding-left","0");
+                            d3.select("#trend0div").style("padding-left","0");
+                            d3.select("#trend4div").style("padding-left","0");
+                            d3.select("#trend5div").style("padding-left","0");
+                            d3.select("#trend6div").style("padding-left","0");
 //to apo katw xreiazetai mono gia auto to trend giati gia kapoio logo den emfanizotan
 //                            trend1divElem.style("height",h);
-                            trend1divElem.attr("style","height:"+h);
+                            trend0divElem.attr("style","height:"+h);
                         }
                         else {
                             vis.attr("transform","translate(" + 0 + ")");
                             d3.select("#trend1div").attr("transform","translate(" + 0 + ")");
                             d3.select("#trend2div").attr("transform","translate(" + 0 + ")");
                             d3.select("#trend3div").attr("transform","translate(" + 0 + ")");
-//                            trend1divElem.style("height",h);
-                            trend1divElem.attr("style","height:"+h);
+                            d3.select("#trend0div").attr("transform","translate(" + 0 + ")");
+                            d3.select("#trend4div").attr("transform","translate(" + 0 + ")");
+                            d3.select("#trend5div").attr("transform","translate(" + 0 + ")");
+                            d3.select("#trend6div").attr("transform","translate(" + 0 + ")");
+//                            trend0divElem.style("height",h);
+                            trend0divElem.attr("style","height:"+h);
                         }
                         graphReset();
 
                         chordElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
                         chord2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
 
-                        trendElem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                        trend0Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                        trend1Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
                         trend2Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
                         trend3Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                        trend4Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                        trend5Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
+                        trend6Elem.attr("style","width:100%;height:100%;top:0;background-color:none;padding-left:;");
 
 
                         svgfullscreenExit();
@@ -5083,9 +5182,13 @@
                             <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
                                 <!--                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>-->
-                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">ACM Topic Trend Analysis 1990-2011</a></li>
-                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-communication.html" target="_blank">ACM (Journal: Communications) 1990-2011</a></li>
-                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">ACM (Journal: SIGMOD Records) 1976-2011</a></li>
+                                <li><a id="trendmenu0" data-toggle="tab" data-target="#trend0div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">ACM Topic Trend Analysis 1950-2011</a></li>
+                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">Journal: CACM, Communications of the ACM</a></li>
+                                <li><a id="trendmenu2" data-toggle="tab" data-target="#trend2div" href="../../../trends/streamgraph-full-communication.html" target="_blank">Journal: ACM SIGSOFT Software Engineering Notes</a></li>
+                                <li><a id="trendmenu3" data-toggle="tab" data-target="#trend3div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">Journal: Journal of the ACM</a></li>
+                                <li><a id="trendmenu4" data-toggle="tab" data-target="#trend4div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">Journal: ACM SIGMOD Records</a></li>
+                                <li><a id="trendmenu5" data-toggle="tab" data-target="#trend5div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">Journal: ACM SIGPLAN Notices</a></li>
+                                <li><a id="trendmenu6" data-toggle="tab" data-target="#trend6div" href="../../../trends/streamgraph-full-sigmod.html" target="_blank">Journal: ACM SIGGRAPH Computer Graphics</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -5110,11 +5213,19 @@
                     </div>
                     <div id="chord2div" class="tab-pane">
                     </div>
+                    <div id="trend0div" class="tab-pane" >
+                    </div>
                     <div id="trend1div" class="tab-pane" >
                     </div>
                     <div id="trend2div" class="tab-pane">
                     </div>
                     <div id="trend3div" class="tab-pane">
+                    </div>
+                    <div id="trend4div" class="tab-pane" >
+                    </div>
+                    <div id="trend5div" class="tab-pane">
+                    </div>
+                    <div id="trend6div" class="tab-pane">
                     </div>
                 </div>
             </div>
@@ -5154,11 +5265,19 @@
         </table>
     </div>
     <div class="col-md-3" id="legend2div" style="overflow:auto;text-overflow:ellipsis">
+        <div id="trendlegend0">
+        </div>
         <div id="trendlegend1">
         </div>
         <div id="trendlegend2">
         </div>
         <div id="trendlegend3">
+        </div>
+        <div id="trendlegend4">
+        </div>
+        <div id="trendlegend5">
+        </div>
+        <div id="trendlegend6">
         </div>
     </div>
 </div>

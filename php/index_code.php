@@ -1910,7 +1910,6 @@
                 var line;
                 line = "quarter";
 //todo gia auto den eimai sigouros
-                columns = [];
                 for (var k = 0;k < result.columnHeaders.length; k++) {
                     line += "," + result.columnHeaders[k]
                     columns.push(parseInt(result.columnHeaders[k]));

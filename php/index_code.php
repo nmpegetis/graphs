@@ -376,7 +376,7 @@
 
 
             /* globals */
-            var style, pagetitle,
+            var style, pagetitle, 
                 trendstitle,chordtitle,
 
 

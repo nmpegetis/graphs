@@ -1141,6 +1141,7 @@
                                 for (var i = 0; i < len; i++) {
                                     var mywords = topics1[topicsGroupPerNode[i].topic];
                                     var wlen = mywords.length;
+                                    str += "<span class='topic' style='opacity:1;font-weight:600'>"+mywords[0].title+":</span><br/>";
                                     for (var j = 0; j < wlen; j++) {
                                         var opacity;
                                         if ((opacity = mywords[j].counts / mywords[0].counts) < 0.8) {

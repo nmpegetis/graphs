@@ -38,12 +38,14 @@ $query_grants = "select AuthorId,TopicId, standard as weight from TopicDistribut
 //$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 $query_topics = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 
 inner join topicdescription on topicdescription.topicid=topicdescriptionview.topicid
+and topicdescription.ExperimentId=topicdescriptionview.ExperimentId
 where topicdescription.ExperimentId=? Order By topicdescription.TopicID ASC, WeightedCounts DESC";
 
 
 //$query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
 $query_topics_nosort = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 
 inner join topicdescription on topicdescription.topicid=topicdescriptionview.topicid
+and topicdescription.ExperimentId=topicdescriptionview.ExperimentId
 where topicdescription.ExperimentId=? Order By topicdescription.TopicID ASC, Counts DESC";
 //$query_topicsdistribution = "select * from topicsperyearview";
 $query_topicsdistribution = null;

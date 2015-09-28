@@ -161,18 +161,21 @@ else{
 
 
 $query = $query_grants;
-$move_elems = array("?"); 
-$set_elems = array($_GET['ex']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
+//todo to afairesa giati sto authors den exei experiment o pinakas....
+// $move_elems = array("?"); 
+// $set_elems = array($_GET['ex']);
+// $memQuery = str_replace($move_elems, $set_elems, $query);
+$memQuery = $query;
 $querykey = "KEY" . md5($memQuery);
 $grants = $meminstance->get($querykey);
 
 if (!$grants) {
 
 	$grants = array();
-
-	$stmt = $mydb->doPrepare($query);
-	$stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//to afairesa giati den exei experiment sto authors
+	// $stmt = $mydb->doPrepare($query);
+	// $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+		$stmt = $mydb->doQuery($query);
 
 	$res = $stmt->fetch();
 	do {

@@ -24,15 +24,16 @@ $query_experiments = "select distinct ExperimentId,Description from experiment";
 // until Sept15
 //$query_grants = "select authorid, topicid, Weight from topicauthorview where ExperimentId=?";
 //after Sept15
-$query_grants = "select TopicDistributionPerAuthorView.AuthorId,
-TopicDistributionPerAuthorView.TopicId,
-TopicDistributionPerAuthorView.NormWeight as weight
-from TopicDistributionPerAuthorView
-where TopicDistributionPerAuthorView.experimentId=?  and
-TopicDistributionPerAuthorView.NormWeight>0.03
-and TopicDistributionPerAuthorView.topicid in (select TopicId from
-topicdescription
-where topicdescription.experimentId=? and topicdescription.VisibilityIndex>1)";
+//$query_grants = "select TopicDistributionPerAuthorView.AuthorId,
+//TopicDistributionPerAuthorView.TopicId,
+//TopicDistributionPerAuthorView.NormWeight as weight
+//from TopicDistributionPerAuthorView
+//where TopicDistributionPerAuthorView.experimentId=?  and
+//TopicDistributionPerAuthorView.NormWeight>0.03
+//and TopicDistributionPerAuthorView.topicid in (select TopicId from
+//topicdescription
+//where topicdescription.experimentId=? and topicdescription.VisibilityIndex>1)";
+$query_grants = "select AuthorId,TopicId, standard as weight from TopicDistributionPerAuthor";
 
 //$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 $query_topics = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 
@@ -58,12 +59,13 @@ $query_treemap = null;
 //44,77,79,100,124,137,141,141,146,149,151,159,168,171,175,178,179,180,186,191,196,204,209,220,223,228,236,255,259,263,264,267,269,274,277,278,279,287,290,294,299,301,321,328,332,335,345,346,349,353,355,356,363,365,368,374,380,382))
 //order by topicid,batchid";
 
+
 //for all
 $query_trends = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN IS NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+where JournalISSN IS NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
 
 // --Journals
 // -- CACM, Communications of the ACM ISSN: 00010782
@@ -71,7 +73,7 @@ $query_trends1 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight,
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='00010782' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+where JournalISSN='00010782' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
 
 
 // --Journals
@@ -80,7 +82,7 @@ $query_trends2 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight,
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='01635948' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+where JournalISSN='01635948' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
 
 // --Journals
 // --Journal of the ACM : 00045411
@@ -88,7 +90,7 @@ $query_trends3 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight,
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='00045411' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+where JournalISSN='00045411' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
 
 // --Journals
 // -- ACM SIGMOD Record: 01635808
@@ -96,7 +98,7 @@ $query_trends4 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight,
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='01635808' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+where JournalISSN='01635808' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
 
 // --Journals
 // -- ACM SIGPLAN Notices: 03621340
@@ -104,15 +106,8 @@ $query_trends5 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight,
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='03621340' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
+where JournalISSN='03621340' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";// until Sept2015 - acmdata1.db
 
-// --Journals
-// -- ACM SIGGRAPH Computer Graphics: 00978930
-$query_trends5 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
-from TopicDistributionPerBatch
-INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='00978930' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";
 
 
 // --Journals
@@ -121,7 +116,7 @@ $query_trends6 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight,
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='00978930' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos'";// until Sept2015 - acmdata1.db
+where JournalISSN='00978930' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";// until Sept2015 - acmdata1.db
 
 ///////////////////////////////////
 ///// front-end configuration /////
@@ -129,9 +124,9 @@ where JournalISSN='00978930' AND TopicDistributionPerBatch.ExperimentId='ACM_400
 
 $title = "ACM Authors";								// title of the webpage
 $trends_title = "ACM Trends";								// title of the webpage when ACM
-$chord_title = "ACM Categories Connectivity";								// title of the webpage when ACM
+$chord_title = "Connectivity of ACM Authors / Category";								// title of the webpage when ACM
 $subtitle = "";								// subtitle of the webpage
-$experimentName = "ACM_400T_1000IT_0IIT_100B_5M_cos";	// first experiment to load
+$experimentName = "ACM_400T_1000IT_0IIT_100B_3M_cos";	// first experiment to load
 $experimentDescription = "Topic modeling based on: 1)Abstracts from ACM publications 2)Authors 3)Citations 4)ACMCategories SimilarityType:cos Similarity on Authors & Categories"; 	// first description to load
 $node_name = "Author";
 $node_groupName1 = "Authors";
@@ -147,7 +142,7 @@ $fontsizeVar = 26; 				// 43 fontsizeVar variable multiplied with previous_scale
 $smallestFontVar = 13;
 
 // similarities for the graph labeling 
-$expsimilarity = 0.55;			// similarity for querying the database
+$expsimilarity = 0.70;			// similarity for querying the database
 $similarityThr = 0.68;			// similarity threshold
 $nodeConnectionsThr = 0.1; 		// node connections threshold
 $maxNodeConnectionsThr = 0; 	//percentage of minimum node connections for label printing

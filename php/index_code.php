@@ -1957,8 +1957,7 @@
                             line += ",0"
                     }
                 }
-console.log("line"+trendindex)
-                console.log(line)
+
                 $.ajax({
                     type: "POST",
                     async: true,
@@ -2037,7 +2036,8 @@ console.log("line"+trendindex)
                 else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull320T_80.php";
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
-                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.70") url = "../../../jsonACMCategories_70_092015.php";
+                // else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.71") url = "../../../jsonACMAuthors_Sept_71.php";
+                // else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors_Sept_55.php";
                 else url = "./dbfront.php";
 
                 return $.ajax({

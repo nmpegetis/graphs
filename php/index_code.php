@@ -331,7 +331,7 @@
                 pillsElem = $("#pills"),
                 pill1Elem = $("#pill1"),
                 pill2Elem = $("#pill2"),
-                pill3Elem = $("#pill3"),
+//                pill3Elem = $("#pill3"),
                 pill4Elem = $("#pill4"),
                 grantsGroup1Elem,
                 grantsGroup2Elem,
@@ -432,6 +432,7 @@
                 treemap,
                 trends,
                 columns,
+                topic_hash,
                 trendsclicked,
                 trendsPositionsExist,trendsjsonfilename,
 
@@ -618,17 +619,45 @@
                     changed = false;
                 }
             });
-            graphmenu1Elem.on("click", function(){if(trendsclicked){chordReset();graphReset()};legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(pagetitle);trendsclicked=false;});
-            chordmenu1Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);trendsclicked=false;});
-            chordmenu2Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");pill3Elem.addClass("disabled");pagetitleElem.html(chordtitle);trendsclicked=false;});
+            graphmenu1Elem.on("click", function(){if(trendsclicked){chordReset();graphReset()};legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");
+//                pill3Elem.addClass("disabled");
+                pagetitleElem.html(pagetitle);trendsclicked=false;});
+            chordmenu1Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");
+//                pill3Elem.addClass("disabled");
+                pagetitleElem.html(chordtitle);trendsclicked=false;});
+            chordmenu2Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");
+//                pill3Elem.addClass("disabled");
+                pagetitleElem.html(chordtitle);trendsclicked=false;});
     //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
-            trendmenu0Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend0Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu1Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend1Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu2Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend2Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu3Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend3Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu4Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend4Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu5Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend6Elem.hide();trendlegend5Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu6Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.show();pill3Elem.removeClass("disabled");pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu0Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
+                trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend0Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu1Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
+                trendlegend0Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend1Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu2Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
+                trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend2Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);
+                trendsclicked=true;});
+            trendmenu3Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
+                trendlegend0Elem.hide();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend3Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu4Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
+                trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend4Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu5Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
+                trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend6Elem.hide();trendlegend5Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);trendsclicked=true;});
+            trendmenu6Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
+                trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);trendsclicked=true;});
 
 
             // the same piece of code with the below $(document).fullScreen() because it doesn't catch the escape button click
@@ -667,19 +696,19 @@
 
                 pill2Elem.blur();
             });
-            pill3Elem.on("click",function(){
-                pill3Elem.removeClass("active");
-
-                if(trend0divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
-                else if(trend1divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
-                else if(trend2divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
-                else if(trend3divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
-                else if(trend4divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
-                else if(trend5divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
-                else if(trend6divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
-
-                pill3Elem.blur();
-            });
+//            pill3Elem.on("click",function(){
+//                pill3Elem.removeClass("active");
+//
+//                if(trend0divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
+//                else if(trend1divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full.html");
+//                else if(trend2divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
+//                else if(trend3divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
+//                else if(trend4divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-communication.html");
+//                else if(trend5divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
+//                else if(trend6divElem.hasClass("active")) redirectUrl("../../../trends/streamgraph-full-sigmod.html");
+//
+//                pill3Elem.blur();
+//            });
             pill4Elem.unbind().on("click",function(){
                 pill4Elem.removeClass("active");
                 if(graphdivElem.hasClass("active")) graphCentralize();
@@ -1391,7 +1420,7 @@
                             legenddivElem.show();
                             legend2divElem.hide();
                             pill1Elem.removeClass("disabled");
-                            pill3Elem.addClass("disabled");
+//                            pill3Elem.addClass("disabled");
                             trend0divElem.removeClass("active");trend1divElem.removeClass("active");trend2divElem.removeClass("active");
                             trend3divElem.removeClass("active");trend4divElem.removeClass("active");trend5divElem.removeClass("active");trend6divElem.removeClass("active");
                         }
@@ -1938,13 +1967,13 @@
                 var line;
                 line = "quarter";
 //todo gia auto den eimai sigouros
-//                var thiscolumns = [];
+                var thiscolumns = [];
                 for (var k = 0;k < result.columnHeaders.length; k++) {
                     line += "," + result.columnHeaders[k]
-                    columns.push(parseInt(result.columnHeaders[k]));
+                    thiscolumns.push(parseInt(result.columnHeaders[k]));
                 }
 
-//                columns[trendindex]=thiscolumns;
+                columns[trendindex]=thiscolumns;
 //                columns=thiscolumns;
 
                 for (var i =0 ; i<result.rowHeaders.length ; i++) {
@@ -3076,7 +3105,8 @@
                 clrEven = [],
                 clrOdd = [],
                 clickedTopics = [],
-                columns = [];
+                columns = [],
+                topic_hash = [];
 
                 for (var i=0 ; i < clr20.length ; i++)
                     if (i % 2) clrEven.push(clr20[i]);
@@ -3102,7 +3132,7 @@
 //                jQuery.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
                     //the below 2 only for ACM
                 trendmenu0Elem.parent().hide();
-                pill3Elem.hide();
+//                pill3Elem.hide();
 
 //                trendCSV11 = "crunchbase-quarters_new.csv",
 //                trendCSV12 = "comminicationACM_pivot_1990-2011_new.csv",
@@ -3137,7 +3167,7 @@
                 }
                 else if (/^ACM*/.test(experimentName)){
                     categoriesElem.hide();
-                    pill3Elem.show();
+//                    pill3Elem.show();
                     trendmenu0Elem.parent().show();
                 }
 
@@ -4120,7 +4150,7 @@
 //                console.log(topics1trends)
                 for (var key in topics1trends){
                     var keyint = parseInt(key);
-                    if (columns.indexOf(keyint) > -1 && columns !== undefined){
+                    if (columns[type].indexOf(keyint) > -1 && columns[type] !== undefined){
 //                        console.log(topics1trends[keyint])
                         trendstopics[keyint] = topics1trends[keyint];
 //                        trendstopics.push(topics1trends[keyint]);
@@ -4180,7 +4210,7 @@
                             seriesArr.push(series[name]);
                         });
 
-                        var topic_hash = [];
+                        var thistopic_hash = [];
                         topicnames = [];
                         var index = 0;
 
@@ -4193,14 +4223,14 @@
                                 console.log("line i")
                                 console.log(i)
                                 //
-                                var nodeindex = topic_hash.indexOf(key);
+                                var nodeindex = thistopic_hash.indexOf(key);
                                 if (nodeindex != -1) {
                                     var newname = topicnames[nodeindex].name;
                                     newname += "," + d.item;
                                     topicnames[nodeindex].name = newname;
                                 }
                                 else {
-                                    topic_hash.push(key);
+                                    thistopic_hash.push(key);
                                     //            topicnames[topic_hash.length-1] = {};
                                     topicnames.push({index: index, id: key, name: d.item});
                                     index++;
@@ -4208,6 +4238,7 @@
 
                             });
                         }
+                        topic_hash[type] = thistopic_hash;
 //                        //todo edw kai sta alla antistoixa na balw ta topics pou thelw
 //                        topics.forEach(function(d,i) {
 //
@@ -4304,20 +4335,20 @@
                         });
 
 
-                        var topic_hash = [];
+                        var thistopic_hash = [];
                         topicnames = [];
                         var index = 0;
 
                         for (var key in trendstopics) {
                             $.each(trendstopics[key], function (i, d) {
-                                var nodeindex = topic_hash.indexOf(key);
+                                var nodeindex = thistopic_hash.indexOf(key);
                                 if (nodeindex != -1) {
                                     var newtopicitem = topicnames[nodeindex].topic;
                                     newtopicitem += "," + d.item;
                                     topicnames[nodeindex].topic = newtopicitem;
                                 }
                                 else {
-                                    topic_hash.push(key);
+                                    thistopic_hash.push(key);
                                     //            topicnames[topic_hash.length-1] = {};
 //todo na mpainei to title-description pleon sto legend oxi to topic
 //                                    topicnames.push({index: index, id: key, name: d.item});
@@ -4327,6 +4358,8 @@
 
                             });
                         }
+
+                        topic_hash[type] = thistopic_hash;
 
                         x.domain(data.map(function (d) { return d.quarter; }));
                         y.domain([
@@ -4408,20 +4441,20 @@
                             seriesArr.push(series[name]);
                         });
 
-                        var topic_hash = [];
+                        var thistopic_hash = [];
                         topicnames = [];
                         var index = 0;
 
                         for (var key in trendstopics) {
                             $.each(trendstopics[key], function (i, d) {
-                                var nodeindex = topic_hash.indexOf(key);
+                                var nodeindex = thistopic_hash.indexOf(key);
                                 if (nodeindex != -1) {
                                     var newtopicitem = topicnames[nodeindex].topic;
                                     newtopicitem += "," + d.item;
                                     topicnames[nodeindex].topic = newtopicitem;
                                 }
                                 else {
-                                    topic_hash.push(key);
+                                    thistopic_hash.push(key);
                                             //            topicnames[topic_hash.length-1] = {};
 //todo na mpainei to title-description pleon sto legend oxi to topic
 //                                    topicnames.push({index: index, id: key, name: d.item});
@@ -4431,6 +4464,8 @@
 
                             });
                         }
+
+                        topic_hash[type] = thistopic_hash;
 
                         data.forEach(function (d) {
                             varNames.map(function (name) {
@@ -4555,7 +4590,7 @@
 //                        .text(function (d) { return d; });
                         //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
                         //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
-                        .text(function (d) {return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
+                        .text(function (d) {return topicnames[topic_hash[type].indexOf(d)].index+"."+topicnames[topic_hash[type].indexOf(d)].name; });
                 }
 
 
@@ -5241,7 +5276,7 @@
                         <li id="pill1"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span></a></li>
                         <li id="pill2"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>
                         <li id="pill4"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-magnet glyphiconmystyle fullscreen" role="button" title="Centralize Magnet" aria-hidden="true"></span></a></li>
-                        <li id="pill3" class="disabled"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-new-window glyphiconmystyle fullscreen" role="button" title="New Window Mode" aria-hidden="true"></span></a></li>
+<!--                        <li id="pill3" class="disabled"><a class="mypills" href="#"><span class="navbar-brand btn glyphicon glyphicon-new-window glyphiconmystyle fullscreen" role="button" title="New Window Mode" aria-hidden="true"></span></a></li>-->
                     </ul>
                 </div>
             </div>

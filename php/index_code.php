@@ -432,7 +432,6 @@
                 treemap,
                 trends,
                 columns,
-                topic_hash,
                 trendsclicked,
                 trendsPositionsExist,trendsjsonfilename,
 
@@ -1967,13 +1966,13 @@
                 var line;
                 line = "quarter";
 //todo gia auto den eimai sigouros
-                var thiscolumns = [];
+//                var thiscolumns = [];
                 for (var k = 0;k < result.columnHeaders.length; k++) {
                     line += "," + result.columnHeaders[k]
-                    thiscolumns.push(parseInt(result.columnHeaders[k]));
+                    columns.push(parseInt(result.columnHeaders[k]));
                 }
 
-                columns[trendindex]=thiscolumns;
+//                columns[trendindex]=thiscolumns;
 //                columns=thiscolumns;
 
                 for (var i =0 ; i<result.rowHeaders.length ; i++) {
@@ -3105,8 +3104,7 @@
                 clrEven = [],
                 clrOdd = [],
                 clickedTopics = [],
-                columns = [],
-                topic_hash = [];
+                columns = [];
 
                 for (var i=0 ; i < clr20.length ; i++)
                     if (i % 2) clrEven.push(clr20[i]);
@@ -4150,7 +4148,7 @@
 //                console.log(topics1trends)
                 for (var key in topics1trends){
                     var keyint = parseInt(key);
-                    if (columns[type].indexOf(keyint) > -1 && columns[type] !== undefined){
+                    if (columns.indexOf(keyint) > -1 && columns !== undefined){
 //                        console.log(topics1trends[keyint])
                         trendstopics[keyint] = topics1trends[keyint];
 //                        trendstopics.push(topics1trends[keyint]);
@@ -4210,7 +4208,7 @@
                             seriesArr.push(series[name]);
                         });
 
-                        var thistopic_hash = [];
+                        var topic_hash = [];
                         topicnames = [];
                         var index = 0;
 
@@ -4223,14 +4221,14 @@
                                 console.log("line i")
                                 console.log(i)
                                 //
-                                var nodeindex = thistopic_hash.indexOf(key);
+                                var nodeindex = topic_hash.indexOf(key);
                                 if (nodeindex != -1) {
                                     var newname = topicnames[nodeindex].name;
                                     newname += "," + d.item;
                                     topicnames[nodeindex].name = newname;
                                 }
                                 else {
-                                    thistopic_hash.push(key);
+                                    topic_hash.push(key);
                                     //            topicnames[topic_hash.length-1] = {};
                                     topicnames.push({index: index, id: key, name: d.item});
                                     index++;
@@ -4238,7 +4236,6 @@
 
                             });
                         }
-                        topic_hash[type] = thistopic_hash;
 //                        //todo edw kai sta alla antistoixa na balw ta topics pou thelw
 //                        topics.forEach(function(d,i) {
 //
@@ -4335,20 +4332,20 @@
                         });
 
 
-                        var thistopic_hash = [];
+                        var topic_hash = [];
                         topicnames = [];
                         var index = 0;
 
                         for (var key in trendstopics) {
                             $.each(trendstopics[key], function (i, d) {
-                                var nodeindex = thistopic_hash.indexOf(key);
+                                var nodeindex = topic_hash.indexOf(key);
                                 if (nodeindex != -1) {
                                     var newtopicitem = topicnames[nodeindex].topic;
                                     newtopicitem += "," + d.item;
                                     topicnames[nodeindex].topic = newtopicitem;
                                 }
                                 else {
-                                    thistopic_hash.push(key);
+                                    topic_hash.push(key);
                                     //            topicnames[topic_hash.length-1] = {};
 //todo na mpainei to title-description pleon sto legend oxi to topic
 //                                    topicnames.push({index: index, id: key, name: d.item});
@@ -4358,8 +4355,6 @@
 
                             });
                         }
-
-                        topic_hash[type] = thistopic_hash;
 
                         x.domain(data.map(function (d) { return d.quarter; }));
                         y.domain([
@@ -4441,20 +4436,20 @@
                             seriesArr.push(series[name]);
                         });
 
-                        var thistopic_hash = [];
+                        var topic_hash = [];
                         topicnames = [];
                         var index = 0;
 
                         for (var key in trendstopics) {
                             $.each(trendstopics[key], function (i, d) {
-                                var nodeindex = thistopic_hash.indexOf(key);
+                                var nodeindex = topic_hash.indexOf(key);
                                 if (nodeindex != -1) {
                                     var newtopicitem = topicnames[nodeindex].topic;
                                     newtopicitem += "," + d.item;
                                     topicnames[nodeindex].topic = newtopicitem;
                                 }
                                 else {
-                                    thistopic_hash.push(key);
+                                    topic_hash.push(key);
                                             //            topicnames[topic_hash.length-1] = {};
 //todo na mpainei to title-description pleon sto legend oxi to topic
 //                                    topicnames.push({index: index, id: key, name: d.item});
@@ -4464,8 +4459,6 @@
 
                             });
                         }
-
-                        topic_hash[type] = thistopic_hash;
 
                         data.forEach(function (d) {
                             varNames.map(function (name) {
@@ -4590,7 +4583,7 @@
 //                        .text(function (d) { return d; });
                         //            .text(function (d) {console.log(d);console.log(topicnames[topic_hash.indexOf(d)]); return d; });
                         //            .text(function (d) {console.log(topicnames[topic_hash.indexOf(d)]); return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
-                        .text(function (d) {return topicnames[topic_hash[type].indexOf(d)].index+"."+topicnames[topic_hash[type].indexOf(d)].name; });
+                        .text(function (d) {return topicnames[topic_hash.indexOf(d)].index+"."+topicnames[topic_hash.indexOf(d)].name; });
                 }
 
 

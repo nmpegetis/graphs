@@ -360,7 +360,8 @@
                 trendlegend5Elem,
                 trendlegend6Elem,
                 seriesElem,
-                streamPathElem;
+                streamPathElem,
+                authorselected;
 
             // in order graph not to be random https://github.com/davidbau/seedrandom
             Math.seedrandom('mySeed');
@@ -2641,7 +2642,12 @@
                                 })[0];
 
                                 clickGraph(clickedNode,fade_out);
+                                console.log("start")
 
+                                console.log(authorselected)
+authorselected = 1;
+                                console.log(authorselected)
+                                console.log("stop")
 // todo kai auto
 //                                var selectedOptions = grantsElem.find("option:selected");
 //                                var allOptions = grantsElem.find("option");
@@ -3114,7 +3120,8 @@
                 clrEven = [],
                 clrOdd = [],
                 clickedTopics = [],
-                columns = [];
+                columns = [],
+                authorselected = 0;
 
                 for (var i=0 ; i < clr20.length ; i++)
                     if (i % 2) clrEven.push(clr20[i]);
@@ -3422,13 +3429,18 @@
                         $(this).attr('class', function(index, classNames) {
                             return classNames.replace('shadow', '');
                         });
+                        console.log("click")
+                        authorselected = 0;
+                        console.log(authorselected)
 
 //                        var myfade = fadeGraph(fade_out);
                         if(focused == d.name){
                             focused = '';
                             nodeCircles.on("mouseover", fadeGraph(fade_out))
                                 .on("mouseout", function(d, i) {
-                                    if($(".active_row").length == 0) {
+                                    if($(".active_row").length == 0 || authorselected == 0) {
+                                        console.log("mouseout")
+                                        console.log(authorselected)
                                         reset();
 
                                         $(this).attr('class', function (index, classNames) {
@@ -3448,7 +3460,6 @@
                             focused = d.name;
                             clickedNode = d;
                             clickGraph(d,fade_out);
-
                             nodeCircles.on("mouseout", function(){return false;})
                                 .on("mouseover", function(){return false;});
                         }

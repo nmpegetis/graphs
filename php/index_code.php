@@ -3416,7 +3416,9 @@ authorselected = 1;
                     })
                     .on("mouseover", fadeGraph(fade_out))
                     .on("mouseout", function(d, i) {
-                        if($(".active_row").length == 0) {
+                        console.log("mouseout 2");
+                        console.log(authorselected);
+                        if($(".active_row").length == 0 && authorselected == 0) {
                             reset();
 
                             $(this).attr('class', function (index, classNames) {
@@ -3438,9 +3440,9 @@ authorselected = 1;
                             focused = '';
                             nodeCircles.on("mouseover", fadeGraph(fade_out))
                                 .on("mouseout", function(d, i) {
-                                    if($(".active_row").length == 0 || authorselected == 0) {
-                                        console.log("mouseout")
-                                        console.log(authorselected)
+                                    console.log("mouseout 1");
+                                    console.log(authorselected);
+                                    if($(".active_row").length == 0 && authorselected == 0) {
                                         reset();
 
                                         $(this).attr('class', function (index, classNames) {
@@ -3460,7 +3462,8 @@ authorselected = 1;
                             focused = d.name;
                             clickedNode = d;
                             clickGraph(d,fade_out);
-                            nodeCircles.on("mouseout", function(){return false;})
+                            nodeCircles.on("mouseout", function(){                        console.log("mouseout 3");
+                                return false;})
                                 .on("mouseover", function(){return false;});
                         }
 

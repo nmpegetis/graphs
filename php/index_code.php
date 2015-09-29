@@ -1204,7 +1204,7 @@
 
             /* reset */
             function reset(){					/* normalizeNodesAndRemoveLabels */
-                if (grantsElem.find("option:selected")[0] !== undefined) return 0;
+//                if (grantsElem.find("option:selected")[0] !== undefined) return 0;
 
                 var types = [];
                 $(".circle").each(function(){
@@ -2620,10 +2620,13 @@
                             maxHeight: 200,
                             buttonWidth: '200px',
                             buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
-                            nonSelectedText: 'Select some <?php echo $node_name;?>s',
+                            nonSelectedText: 'Select an <?php echo $node_name;?>',
+//todo to allaksa gia tin ACM single selection
+//                            nonSelectedText: 'Select some <?php //echo $node_name;?>//s',
                             selectedClass: 'multiselect-selected',
                             //                    includeSelectAllOption: true,
-                            enableClickableOptGroups: true,
+//todo kai auto
+//                            enableClickableOptGroups: true,
                             enableFiltering: true,
                             enableCaseInsensitiveFiltering: true,
                             //                    selectAllText: 'All',
@@ -2636,24 +2639,29 @@
                                 clickedNode = $.grep(nodes, function (obj) {
                                     return obj.index == clickednodeid
                                 })[0];
-                                var selectedOptions = grantsElem.find("option:selected");
-                                var allOptions = grantsElem.find("option");
-//                                $(":checkbox[value=" + $(this).val() + "]").attr('checked', true)
-                                classifiedNodesHandler(selectedOptions, allOptions);
+
+                                clickGraph(clickedNode,fade_out);
+
+// todo kai auto
+//                                var selectedOptions = grantsElem.find("option:selected");
+//                                var allOptions = grantsElem.find("option");
+////                                $(":checkbox[value=" + $(this).val() + "]").attr('checked', true)
+//                                classifiedNodesHandler(selectedOptions, allOptions);
                                 grantsElem.multiselect("refresh");
                             }
                         });
                     }
                     fadelimit = 0.9;
-
-                    $(".multiselect-clear-filter").on('click', function() {
-                        grantsElem.multiselect('deselectAll', false);
-                        var allOptions = grantsElem.find("option");
-                        var selectedOptions = grantsElem.find("option:selected");
-                        classifiedNodesHandler(selectedOptions, allOptions);
-                        grantsElem.multiselect("refresh");
-                        nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
-                    });
+//todo kai auto
+//
+//                    $(".multiselect-clear-filter").on('click', function() {
+//                        grantsElem.multiselect('deselectAll', false);
+//                        var allOptions = grantsElem.find("option");
+//                        var selectedOptions = grantsElem.find("option:selected");
+//                        classifiedNodesHandler(selectedOptions, allOptions);
+//                        grantsElem.multiselect("refresh");
+//                        nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
+//                    });
 
                     $(".multiselect-container")
                         // .attr("style","max-width:300px;max-height:300px;")
@@ -5122,7 +5130,10 @@
                     </select>
                 </li>
                 <li id="filter1" style="padding-left:10px">
-                    <select id="grants" multiple="multiple" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
+<!--todo to ebgala to multiple gia to bootstrap-->
+<!--                    <select id="grants" multiple="multiple" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">-->
+<!--                    </select>-->
+                    <select id="grants" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
                     </select>
                 </li>
                 <li  id="filter2" style="padding-left:10px;width:inherit">

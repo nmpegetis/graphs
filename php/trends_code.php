@@ -113,38 +113,6 @@ $mydb = new database("sqlite","",0,$db_path,"","");
 //
 //
 //
-/////////////////////
-///// TREE MAP //////
-/////////////////////
-
-
-if ($query = $query_treemap != null) {
-
-	$querykey = "KEY" . md5($query) . $db_name;
-
-	$treemap = $meminstance->get($querykey);
-
-	if (!$treemap) {
-
-		$treemap = array();
-		$stmt = $mydb->doQuery($query);
-		$res = $stmt->fetch();
-		do {
-			array_push($treemap,array("id"=>$res[2],"title"=>$res[0],"year"=>$res[1],"weight"=>$res[3]));	
-		} while ($res = $stmt->fetch());
-
-	   	$meminstance->set($querykey, $treemap, 0, $memcache_time);
-		//	print "got result from mysql\n";
-	}
-	else{
-		//	print "got result from memcached\n";
-}
-
-}
-else{
-	$treemap = null;	
-}
-
 
 
 //////////////////////////////////////////////////
@@ -199,6 +167,38 @@ if ($query != null) {
 }
 else{
 	$trends = null;	
+}
+
+/////////////////////
+///// TREE MAP //////
+/////////////////////
+
+$query = $query_treemap;
+if ($query != null) {
+
+	$memQuery = $query;
+	$querykey = "KEY" . md5($memQuery) . $db_name;
+	
+	$treemap = $meminstance->get($querykey);
+
+	if (!$treemap) {
+
+		$treemap = array();
+		$stmt = $mydb->doQuery($query);
+		$res = $stmt->fetch();
+		do {
+			array_push($treemap,array("title"=>$res[0],"id"=>$res[1],"weight"=>$res[2]));	
+		} while ($res = $stmt->fetch());
+
+	   	$meminstance->set($querykey, $treemap, 0, $memcache_time);
+		//	print "got result from mysql\n";
+	}
+	else{
+		//	print "got result from memcached\n";
+	}
+}
+else{
+	$treemap = null;	
 }
 
 

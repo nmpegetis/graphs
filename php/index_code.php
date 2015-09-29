@@ -2065,8 +2065,9 @@
                 else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull320T_80.php";
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
                 else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
-                // else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.71") url = "../../../jsonACMAuthors_Sept_71.php";
-                // else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors_Sept_55.php";
+                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors_Sept_55.php";
+                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.70") url = "../../../jsonACMAuthors_Sept_70.php";
+                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.75") url = "../../../jsonACMAuthors_Sept_75.php";
                 else url = "./dbfront.php";
 
                 return $.ajax({
@@ -4160,8 +4161,9 @@
 
                 d3.csv("../data/"+trendCSV1, function (error, data) {
 //                    d3.csv("../data/"+trendCSV2, function(error, topics) {
-//console.log("data")
-//console.log(data)
+
+// console.log("data")
+// console.log(data)
 //console.log("topics")
 //console.log(topics)
 //console.log("topics1!")
@@ -4170,6 +4172,11 @@
                     var labelVar = 'quarter';
                     var varNames = d3.keys(data[0])
                         .filter(function (key) { return key !== labelVar;});
+
+                    // var varNames = ["39","336","58","41","294","67","92","48","375","353","112","277","82","365","374","396","97","220","137","175","146","274","269","15","217","141","130","331","174","180","316","255","335","159","186","199","209","232","380","203","266","284","271","321","181","235","77","382","267","168","100","42"];
+// console.log(varNames)
+// console.log(varNamesTemp)
+
                     color.domain(varNames);
 //console.log("varnames")
 //console.log(varNames)

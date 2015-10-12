@@ -68,13 +68,19 @@ $query_treemap = "select * from treemap";
 
 
 //for all
-$query_trends = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
+$query_trendsAll = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
 where JournalISSN IS NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
 
 // --Journals
+// -- CACM, Communications of the ACM ISSN: 00010782
+// -- ACM SIGSOFT Software Engineering Notes, 01635948
+// --Journal of the ACM : 00045411
+// -- ACM SIGMOD Record: 01635808
+// -- ACM SIGPLAN Notices: 03621340
+// -- ACM SIGGRAPH Computer Graphics: 00978930
 $move_elems = array('?');
 $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
 
@@ -84,26 +90,15 @@ from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
 where JournalISSN='?' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
-//
-//// -- CACM, Communications of the ACM ISSN: 00010782
-//$query_trends1 = str_replace($move_elems, $set_elems[0], $query_trendsX);
-//// -- ACM SIGSOFT Software Engineering Notes, 01635948
-//$query_trends2 = str_replace($move_elems, $set_elems[1], $query_trendsX);
-//// --Journal of the ACM : 00045411
-//$query_trends3 = str_replace($move_elems, $set_elems[2], $query_trendsX);
-//// -- ACM SIGMOD Record: 01635808
-//$query_trends4 = str_replace($move_elems, $set_elems[3], $query_trendsX);
-//// -- ACM SIGPLAN Notices: 03621340
-//$query_trends5 = str_replace($move_elems, $set_elems[4], $query_trendsX);
-//// -- ACM SIGGRAPH Computer Graphics: 00978930
-//$query_trends6 = str_replace($move_elems, $set_elems[5], $query_trendsX);
-//
-//
 
-$trendsX = array();
-array_push($trendsX,$query_trends);
+// e.g.
+//$query_trends1 = str_replace($move_elems, $set_elems[0], $query_trendsX);
+//array_push($trends_queries,$query_trends1));
+
+$trends_queries = array();
+array_push($trends_queries,$query_trendsAll);
 foreach ($set_elems as &$elem) {
-    array_push($trendsX,str_replace($move_elems, $elem, $query_trendsX));
+    array_push($trends_queries,str_replace($move_elems, $elem, $query_trendsX));
 }
 ///////////////////////////////////
 ///// front-end configuration /////

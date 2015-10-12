@@ -173,8 +173,8 @@ if (!$grants) {
 
 	$grants = array();
 //to afairesa giati den exei experiment sto authors
-	// $stmt = $mydb->doPrepare($query);
-	// $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+	 $stmt = $mydb->doPrepare($query);
+	 $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
 		$stmt = $mydb->doQuery($query);
 
 	$res = $stmt->fetch();

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="OpenAIRE July" uuid="73a1f035-7051-4847-88f0-01932dda3cb7">
+      <secret-storage>master_key</secret-storage>
+    </data-source>
+    <data-source name="ACM" uuid="7b7f74e7-01c2-4493-adc7-521972f16fd6">
+      <secret-storage>master_key</secret-storage>
+    </data-source>
+    <data-source name="OpenAIRE March" uuid="cf73fd72-8b73-4483-86ec-48d4b1efbf54">
+      <secret-storage>master_key</secret-storage>
+    </data-source>
+  </component>
+</project>

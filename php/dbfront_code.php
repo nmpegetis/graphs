@@ -162,10 +162,10 @@ else{
 
 $query = $query_grants;
 //todo to afairesa giati sto authors den exei experiment o pinakas....
-// $move_elems = array("?"); 
-// $set_elems = array($_GET['ex']);
-// $memQuery = str_replace($move_elems, $set_elems, $query);
-$memQuery = $query;
+ $move_elems = array("?");
+ $set_elems = array($_GET['ex']);
+ $memQuery = str_replace($move_elems, $set_elems, $query);
+//$memQuery = $query;
 $querykey = "KEY" . md5($memQuery);
 $grants = $meminstance->get($querykey);
 

@@ -35,7 +35,7 @@ $query_experiments = "select distinct ExperimentId,Description from experiment";
 //and TopicDistributionPerAuthorView.topicid in (select TopicId from
 //topicdescription
 //where topicdescription.experimentId=? and topicdescription.VisibilityIndex>1)";
-$query_grants = "select AuthorId,TopicId, standard as weight from TopicDistributionPerAuthor";
+$query_grants = "select AuthorId,TopicId, standard as weight where ExperimentId=? from TopicDistributionPerAuthor";
 
 //$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 // $query_topics = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 

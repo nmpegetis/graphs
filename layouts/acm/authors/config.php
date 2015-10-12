@@ -75,72 +75,36 @@ and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
 where JournalISSN IS NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
 
 // --Journals
+$move_elems = array('?');
+$set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
+
+// general query for all trends
 $query_trendsX = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
 where JournalISSN='?' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
-
-$query = $query_graphLayout;
-$move_elems = array('?');
-$set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
-// -- CACM, Communications of the ACM ISSN: 00010782
-$query_trends1 = str_replace($move_elems, $set_elems[0], $query_trendsX);
-// -- ACM SIGSOFT Software Engineering Notes, 01635948
-$query_trends2 = str_replace($move_elems, $set_elems[1], $query_trendsX);
-// --Journal of the ACM : 00045411
-$query_trends3 = str_replace($move_elems, $set_elems[2], $query_trendsX);
-// -- ACM SIGMOD Record: 01635808
-$query_trends4 = str_replace($move_elems, $set_elems[3], $query_trendsX);
-// -- ACM SIGPLAN Notices: 03621340
-$query_trends5 = str_replace($move_elems, $set_elems[4], $query_trendsX);
-// -- ACM SIGGRAPH Computer Graphics: 00978930
-$query_trends6 = str_replace($move_elems, $set_elems[5], $query_trendsX);
-
+//
 //// -- CACM, Communications of the ACM ISSN: 00010782
-//$query_trends1 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
-//from TopicDistributionPerBatch
-//INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-//and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-//where JournalISSN='00010782' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
-//
-//
+//$query_trends1 = str_replace($move_elems, $set_elems[0], $query_trendsX);
 //// -- ACM SIGSOFT Software Engineering Notes, 01635948
-//$query_trends2 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
-//from TopicDistributionPerBatch
-//INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-//and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-//where JournalISSN='01635948' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
-//
+//$query_trends2 = str_replace($move_elems, $set_elems[1], $query_trendsX);
 //// --Journal of the ACM : 00045411
-//$query_trends3 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
-//from TopicDistributionPerBatch
-//INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-//and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-//where JournalISSN='00045411' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
-//
+//$query_trends3 = str_replace($move_elems, $set_elems[2], $query_trendsX);
 //// -- ACM SIGMOD Record: 01635808
-//$query_trends4 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
-//from TopicDistributionPerBatch
-//INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-//and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-//where JournalISSN='01635808' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";
-//
-//// --Journals
+//$query_trends4 = str_replace($move_elems, $set_elems[3], $query_trendsX);
 //// -- ACM SIGPLAN Notices: 03621340
-//$query_trends5 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
-//from TopicDistributionPerBatch
-//INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-//and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-//where JournalISSN='03621340' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";// until Sept2015 - acmdata1.db
-//
+//$query_trends5 = str_replace($move_elems, $set_elems[4], $query_trendsX);
 //// -- ACM SIGGRAPH Computer Graphics: 00978930
-//$query_trends6 = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
-//from TopicDistributionPerBatch
-//INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-//and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-//where JournalISSN='00978930' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TrendIndex desc";// until Sept2015 - acmdata1.db
+//$query_trends6 = str_replace($move_elems, $set_elems[5], $query_trendsX);
+//
+//
 
+$trendsX = array();
+array_push($trendsX,$query_trends);
+foreach ($set_elems as &$elem) {
+    array_push($trendsX,str_replace($move_elems, $elem, $query_trendsX));
+}
 ///////////////////////////////////
 ///// front-end configuration /////
 ///////////////////////////////////

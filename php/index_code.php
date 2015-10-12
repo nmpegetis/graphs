@@ -1937,7 +1937,6 @@
                 if (graphPositionsExist){
                     $.when(getJSONpositions(), ajaxGraphCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
                         renderPageData = JSON.parse(a2[0]).resp;
-//                        ajaxTrendsCall(experimentName);
                         renderpage(renderPageData);
                     });
                 }
@@ -1945,7 +1944,6 @@
                     graphPositionsExist=false;
                     $.when(ajaxGraphCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxGraphCall() to finish and when done then renders the page
                         renderPageData = JSON.parse(a1).resp;
-//                        ajaxTrendsCall(experimentName);
                         renderpage(renderPageData);
                     });
                 }
@@ -2041,18 +2039,19 @@
             function ajaxGraphCall(experiment,expsimilarity) {
 
 //todo epitides to allaksa to apo katw gia na min to brei kai na ektelestei to ajaxtrends gia na parw ta kainouriga dedomena
-//                trendsjsonfilename = "../data/trends1.json";
-                trendsjsonfilename = "../data/trends.json";
-                trendsPositionsExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
+                if (/^ACM*/.test(experimentName)) {
+//                  trendsjsonfilename = "../data/trends1.json";
+                    trendsjsonfilename = "../data/trends.json";
+                    trendsPositionsExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
 
-                if (trendsPositionsExist){
-                    gettrendJSONpositions(trendsjsonfilename);
+                    if (trendsPositionsExist) {
+                        gettrendJSONpositions(trendsjsonfilename);
+                    }
+                    else {
+                        trendsPositionsExist = false;
+                        ajaxTrendsCall(experiment);
+                    }
                 }
-                else{
-                    trendsPositionsExist=false;
-                    ajaxTrendsCall(experiment);
-                }
-
                 console.log("call "+experiment);
                 var url;
 
@@ -2095,13 +2094,7 @@
 
             function ajaxTrendsCall(experiment) {
                 console.log("Trends: call "+experiment);
-                var url;
-
-//                if(experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos") url = "../../../jsonReviewFET80T.php";
-//                else if(experiment == "ACM_300T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
-//                else if(experiment == "ACM_300T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
-//                else
-                    url = "./trends.php";
+                var url = "./trends.php";
 
                 return $.ajax({
                     type: "GET",

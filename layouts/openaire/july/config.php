@@ -41,6 +41,8 @@ $query_trends = null;
 ///////////////////////////////////
 
 $title = "OpenAIRE Review";								// title of the webpage
+$trends_title = "OpenAIRE Trends";								// title of the webpage when ACM
+$chord_title = "Connectivity of FP7 Grants / Subdivision";								// title of the webpage when ACM
 $subtitle = "(July, 31 2015)";								// subtitle of the webpage
 $experimentName = "FullGrants_300T_1200IT_0IIT_100B_4M_cos";	// first experiment to load 
 $experimentDescription = "Topic modeling analyzing: 1)Abstracts of publications and project descriptions related to FP7 2)Research Areas 3)Venues (e.g., PubMed, Arxiv, ACM) 4)Grants per Publication Links SimilarityType:cos"; 	// first description to load

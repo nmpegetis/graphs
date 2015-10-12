@@ -2013,7 +2013,7 @@
                 return $.getJSON(trendsjsonfilename).done( function(json) {
                     console.log( "trends" );
                     var response = json.trends;
-                    dothework(json.trends,0);
+                    dothework(json.trends0,0);
                     dothework(json.trends1,1);
                     dothework(json.trends2,2);
                     dothework(json.trends3,3);

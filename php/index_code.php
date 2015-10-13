@@ -2013,13 +2013,20 @@
                 return $.getJSON(trendsjsonfilename).done( function(json) {
                     console.log( "trends" );
                     var response = json.trends;
-                    dothework(json.trends0,0);
-                    dothework(json.trends1,1);
-                    dothework(json.trends2,2);
-                    dothework(json.trends3,3);
-                    dothework(json.trends4,4);
-                    dothework(json.trends5,5);
-                    dothework(json.trends6,6);
+//                    dothework(json.trends0,0);
+//                    dothework(json.trends1,1);
+//                    dothework(json.trends2,2);
+//                    dothework(json.trends3,3);
+//                    dothework(json.trends4,4);
+//                    dothework(json.trends5,5);
+//                    dothework(json.trends6,6);
+                    dothework(json.trends[0],0);
+                    dothework(json.trends[1],1);
+                    dothework(json.trends[2],2);
+                    dothework(json.trends[3],3);
+                    dothework(json.trends[4],4);
+                    dothework(json.trends[5],5);
+                    dothework(json.trends[6],6);
                 }).fail(function() {
                     console.log( "error in json position reading file" );
                 });
@@ -2040,8 +2047,8 @@
 
 //todo epitides to allaksa to apo katw gia na min to brei kai na ektelestei to ajaxtrends gia na parw ta kainouriga dedomena
                 if (/^ACM*/.test(experimentName)) {
-//                  trendsjsonfilename = "../data/trends1.json";
-                    trendsjsonfilename = "../data/trends.json";
+                  trendsjsonfilename = "../data/trends1.json";
+//                    trendsjsonfilename = "../data/trends.json";
                     trendsPositionsExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
 
                     if (trendsPositionsExist) {
@@ -2106,6 +2113,7 @@
                         //distribution = myresponse.distribution;
                         treemap = myresponse.treemap;
                         trends = myresponse.trends;
+                        console.log("trends");
                         console.log(trends);
 // todo to be uncommented if stand alone and topics not loaded from graph visualization ... uncomment also in trends_code.php
 //                        topics1 = myresponse.topicsNoSort;

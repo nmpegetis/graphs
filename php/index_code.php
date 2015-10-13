@@ -2114,7 +2114,15 @@
                         treemap = myresponse.treemap;
                         trends = myresponse.trends;
                         console.log("trends");
-                        console.log(trends);
+                        console.log(trends[0]);
+                        console.log("trends1");
+                        console.log(trends[1]);
+                        console.log("trends2");
+                        console.log(trends[2]);
+                        console.log("trends3");
+                        console.log(trends[3]);
+                        console.log("trends4");
+                        console.log(trends[4]);
 // todo to be uncommented if stand alone and topics not loaded from graph visualization ... uncomment also in trends_code.php
 //                        topics1 = myresponse.topicsNoSort;
 //                        topics2 = myresponse.topics;

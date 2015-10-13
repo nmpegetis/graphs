@@ -22,11 +22,11 @@ $query_graphLayout = "select node1id, node2id,node1name,node2name,category1_1,ca
 // $query_graphLayout = "select node1id, node2id,node1name,node2name,category1_1,category1_2,category1_3,category2_1,category2_2,category2_3,category1_counts,category2_counts,Similarity from graphlayout where ExperimentId=? and  Similarity>?";
 $query_experiments = "select distinct ExperimentId,Description from experiment";
 
-//$query_grants = "select PubCategoryview.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategoryview on topicsPerDoc.DocId= PubCategoryview.PubId INNER JOIN (Select Category FROM PubCategoryview GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategoryview.category where weight>0.02 AND ExperimentId=? group By PubCategoryview.Category, TopicId order by  PubCategoryview.Category, Weight desc, TopicId";
+//$query_nodes = "select PubCategoryview.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategoryview on topicsPerDoc.DocId= PubCategoryview.PubId INNER JOIN (Select Category FROM PubCategoryview GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategoryview.category where weight>0.02 AND ExperimentId=? group By PubCategoryview.Category, TopicId order by  PubCategoryview.Category, Weight desc, TopicId";
 // until Sept15
-//$query_grants = "select authorid, topicid, Weight from topicauthorview where ExperimentId=?";
+//$query_nodes = "select authorid, topicid, Weight from topicauthorview where ExperimentId=?";
 //after Sept15
-//$query_grants = "select TopicDistributionPerAuthorView.AuthorId,
+//$query_nodes = "select TopicDistributionPerAuthorView.AuthorId,
 //TopicDistributionPerAuthorView.TopicId,
 //TopicDistributionPerAuthorView.NormWeight as weight
 //from TopicDistributionPerAuthorView
@@ -35,7 +35,7 @@ $query_experiments = "select distinct ExperimentId,Description from experiment";
 //and TopicDistributionPerAuthorView.topicid in (select TopicId from
 //topicdescription
 //where topicdescription.experimentId=? and topicdescription.VisibilityIndex>1)";
-$query_grants = "select AuthorId,TopicId, standard as weight from TopicDistributionPerAuthor where ExperimentId=?";
+$query_nodes = "select AuthorId,TopicId, standard as weight from TopicDistributionPerAuthor where ExperimentId=?";
 
 //$query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 // $query_topics = "select topicdescriptionview.TopicId,Item, WeightedCounts,title from topicdescriptionview 
@@ -54,8 +54,8 @@ where ExperimentId=?";
 
 //$query_topicsdistribution = "select * from topicsperyearview";
 $query_topicsdistribution = null;
-//$query_treemap = "select * from treemapview";
-$query_treemap = "select * from treemap";
+//$query_heatmap = "select * from heatmapview";
+$query_heatmap = "select * from heatmap";
 //$query_trends = "Select * from TopicDistributionPerBatch
 //INNER JOIN TopicDescription on
 //TopicDescription.TopicId=TopicDistributionPerBatch.TopicId

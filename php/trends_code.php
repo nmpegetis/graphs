@@ -29,8 +29,8 @@ class database {
 					$this->db = new PDO('sqlite:'.$name);
 					break;
 				default:
-					echo "not known database type\n";
-					break;
+                    error_log("not known database type", 0);
+                    break;
 			}
 		} catch(Exception $e){
 			echo "oops..".$e->getMessage()."\n";
@@ -43,8 +43,7 @@ class database {
 		$stmt = $this->db->query($query);
 		$this->last_query = $query;
 		if(!$stmt){
-			$arr = $this->db->errorInfo();
-			echo $arr[2];
+            error_log("Failed to do query with message: ".$this->db->errorInfo(), 0);
 			return false;
 		}
 		return $stmt;
@@ -71,7 +70,7 @@ class database {
 }
 
 if(!isset($_GET['ex'])){
-	echo "params not set";
+    echo "Parameter 'ex' on URL not set";
 }
 
 
@@ -127,24 +126,24 @@ $everything['trends'] = $allTrends;
 ///// TREE MAP //////
 /////////////////////
 
-$query = $query_treemap;
+$query = $query_heatmap;
 if ($query != null) {
 
 	$memQuery = $query;
 	$querykey = "KEY" . md5($memQuery) . $db_name;
 	
-	$treemap = $meminstance->get($querykey);
+	$heatmap = $meminstance->get($querykey);
 
-	if (!$treemap) {
+	if (!$heatmap) {
 
-		$treemap = array();
+		$heatmap = array();
 		$stmt = $mydb->doQuery($query);
 		$res = $stmt->fetch();
 		do {
-			array_push($treemap,array("title"=>$res[0],"id"=>$res[1],"weight"=>$res[2]));	
+			array_push($heatmap,array("title"=>$res[0],"id"=>$res[1],"weight"=>$res[2]));	
 		} while ($res = $stmt->fetch());
 
-	   	$meminstance->set($querykey, $treemap, 0, $memcache_time);
+	   	$meminstance->set($querykey, $heatmap, 0, $memcache_time);
 		//	print "got result from mysql\n";
 	}
 	else{
@@ -152,10 +151,10 @@ if ($query != null) {
 	}
 }
 else{
-	$treemap = null;	
+	$heatmap = null;	
 }
 
-$everything['treemap'] = $treemap;
+$everything['heatmap'] = $heatmap;
 
 
 // todo to be uncommented if stand alone and topics not loaded from graph visualization
@@ -233,7 +232,13 @@ $everything['treemap'] = $treemap;
 
 //echo json_decode(json_encode($everything, JSON_UNESCAPED_UNICODE));
 // encode in every possibility
-echo json_encode($everything,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+$output = json_encode($everything,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+echo $output;
+
+$file = fopen("../data/trends_".$_GET['ex'].".json","w");
+fwrite($file, $output);
+fclose($file);
+
 unset($everything);//release memory
 
 ?>

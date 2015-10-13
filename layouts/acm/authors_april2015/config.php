@@ -20,15 +20,15 @@ $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum f
 $query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,Author1 as node1name,Author2 as node2name,AC1_Category0 as category1_1, AC1_Category0 as category1_2, AC1_Category0 as category1_3, AC2_Category0 as category2_1, AC2_Category0 as category2_2,AC2_Category0 as category2_3, catCnts1 as category1_counts,catCnts2 as category2_counts,Similarity from EntitySimilarityView_authors where ExperimentId=? and  Similarity>?";
 $query_experiments = "select distinct ExperimentId,Description from experiment";
 
-//$query_grants = "select PubCategoryview.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategoryview on topicsPerDoc.DocId= PubCategoryview.PubId INNER JOIN (Select Category FROM PubCategoryview GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategoryview.category where weight>0.02 AND ExperimentId=? group By PubCategoryview.Category, TopicId order by  PubCategoryview.Category, Weight desc, TopicId";
-$query_grants = "select authorid, topicid, Weight from topicauthorview where ExperimentId=?";
+//$query_nodes = "select PubCategoryview.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategoryview on topicsPerDoc.DocId= PubCategoryview.PubId INNER JOIN (Select Category FROM PubCategoryview GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategoryview.category where weight>0.02 AND ExperimentId=? group By PubCategoryview.Category, TopicId order by  PubCategoryview.Category, Weight desc, TopicId";
+$query_nodes = "select authorid, topicid, Weight from topicauthorview where ExperimentId=?";
 
 $query_topics = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
 $query_topics_nosort = "select TopicId,Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
 //$query_topicsdistribution = "select * from topicsperyearview";
 $query_topicsdistribution = null;
-//$query_treemap = "select * from treemapview";
-$query_treemap = null;
+//$query_heatmap = "select * from treemapview";
+$query_heatmap = null;
 $query_trends = "select * from top50distributionview";
 
 

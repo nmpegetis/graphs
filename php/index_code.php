@@ -419,7 +419,7 @@
             //trends
                 topicnames,
 
-                force, myresponse, k, n, counter, availableTags,
+                force, jsonTrendsLayout, k, n, counter, availableTags,
                 availableLabels,
 
                 expsimilarity,
@@ -430,15 +430,15 @@
                 webkit,
                 clickedTopics,
                 distribution,
-                treemap,
+                heatmap,
                 trends,
                 columns,
                 trendsclicked,
-                trendsPositionsExist,trendsjsonfilename,
+                trendsFileExist,trendsjsonfilename,
 
 
             //graph
-                graphPositionsExist,jsonfilename,renderPageData,changed;
+                graphPositionsExist,jsonfilename,renderPageData,changed,jsonLayout;
 
             legenddivElem.hide();
 
@@ -1962,18 +1962,14 @@
             }
 
             function dothework(response,trendindex) {
+                //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
                 var result = pivot(response, ['year'], ['id'], {});
                 var line;
                 line = "quarter";
-//todo gia auto den eimai sigouros
-//                var thiscolumns = [];
                 for (var k = 0;k < result.columnHeaders.length; k++) {
-                    line += "," + result.columnHeaders[k]
+                    line += "," + result.columnHeaders[k];
                     columns.push(parseInt(result.columnHeaders[k]));
                 }
-
-//                columns[trendindex]=thiscolumns;
-//                columns=thiscolumns;
 
                 for (var i =0 ; i<result.rowHeaders.length ; i++) {
                     line += "\n"+result.rowHeaders[i];
@@ -1995,14 +1991,13 @@
                         /*        json : JSON.stringify(jsonObject) /* convert here only */
                         func: "csv",
                         csv: line,
-                        //todo edw na prosthesw ena id wste na dimiourgw diaforetika arxeia gia to kathena
-                        id: trendindex
+                        id: trendindex      // id for distinguishing trends
                     },
                     success: function () {
-                        console.log("CSV file Created")
+                     //   console.log("CSV file Created")
                     },
                     error: function (e) {
-                        alert('Error: ' + e);
+                       console.log("Error in file Creation:"+e);
                     }
                 })
             }
@@ -2010,27 +2005,33 @@
             function gettrendJSONpositions(trendsjsonfilename) {
                 // NOTE:  This function must return the value
                 //        from calling the $.ajax() method.
-                return $.getJSON(trendsjsonfilename).done( function(json) {
-                    console.log( "trends" );
-                    var response = json.trends;
-//                    dothework(json.trends0,0);
-//                    dothework(json.trends1,1);
-//                    dothework(json.trends2,2);
-//                    dothework(json.trends3,3);
-//                    dothework(json.trends4,4);
-//                    dothework(json.trends5,5);
-//                    dothework(json.trends6,6);
-                    dothework(json.trends[0],0);
-                    dothework(json.trends[1],1);
-                    dothework(json.trends[2],2);
-                    dothework(json.trends[3],3);
-                    dothework(json.trends[4],4);
-                    dothework(json.trends[5],5);
-                    dothework(json.trends[6],6);
+                return $.getJSON(trendsjsonfilename).done( function(resp) {
+                    jsonTrendsLayout = resp;
+                    trends = jsonTrendsLayout.trends;
+                    for (var i = 0; i < trends.length; i++) {
+                        dothework(trends[i], i);
+                    }
+                    heatmap = jsonTrendsLayout.heatmap;
+
                 }).fail(function() {
                     console.log( "error in json position reading file" );
                 });
+            }
 
+            function getlayoutJSONpositions(layoutjsonfilename) {
+                // NOTE:  This function must return the value
+                //        from calling the $.ajax() method.
+                return $.getJSON(layoutjsonfilename).done( function(resp) {
+                    spinner.stop();
+                    jsonLayout = resp;
+                    //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
+                    topics1 = jsonLayout.topicsNoSort;
+                    topics2 = jsonLayout.topics;
+                    grants = jsonLayout.grants;
+                    experiments = jsonLayout.expers;
+                }).fail(function() {
+                    console.log( "error in json position reading file" );
+                });
             }
 
 
@@ -2047,132 +2048,116 @@
 
 //todo epitides to allaksa to apo katw gia na min to brei kai na ektelestei to ajaxtrends gia na parw ta kainouriga dedomena
                 if (/^ACM*/.test(experimentName)) {
-                  trendsjsonfilename = "../data/trends1.json";
-//                    trendsjsonfilename = "../data/trends.json";
-                    trendsPositionsExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
-
-                    if (trendsPositionsExist) {
-                        gettrendJSONpositions(trendsjsonfilename);
+                    var alltrendscsvFilesExist=false;
+                    for (var i=0 ; i<=6 ; i++){
+                        var trendsCSVfile = "../data/trendscsv"+i+".csv";
+                        alltrendscsvFilesExist=UrlExists(trendsCSVfile);
+// todo tha prepei gia na isxuei to parakatw na exw panta tis teleutaies baseis... diaforetika tha prepei na sbinw apo to server ta palia arxeia
+// if all trends csv files exist then there is no need to generate them again and make a server call
+                        if (alltrendscsvFilesExist==0)
+                            break;
                     }
-                    else {
-                        trendsPositionsExist = false;
+
+                    // if all trends csv files don't exist then we need to make a server call
+                    if (!alltrendscsvFilesExist) {
                         ajaxTrendsCall(experiment);
                     }
                 }
-                console.log("call "+experiment);
-                var url;
+                console.log("ajaxCall for graph layout: "+experiment);
 
-                if(experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewFET80T.php";
-                else if(experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewFET100T.php";
-                else if(experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewHEALTH200T.php";
-                else if(experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") url = "../../../jsonReviewFull300T.php";
-                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") url = "../../../jsonJulyFull300T_81.php";
-                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") url = "../../../jsonJulyFull320T_81.php";
-                else if(experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull300T_80.php";
-                else if(experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull320T_80.php";
-                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
-                else if(experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
-                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors_Sept_55.php";
-                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.70") url = "../../../jsonACMAuthors_Sept_70.php";
-                else if(experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.75") url = "../../../jsonACMAuthors_Sept_75.php";
-                else url = "./dbfront.php";
 
-                return $.ajax({
-                    type: "GET",
-                    async: true,
-                    url: url,
-                    data: "s=" + expsimilarity + "&ex=" + experiment,
-                    success: function (resp) {
-                        spinner.stop();
-                        myresponse = JSON.parse(resp);
-                        //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
-                        topics1 = myresponse.topicsNoSort;
-                        topics2 = myresponse.topics;
-                        grants = myresponse.grants;
-                        experiments = myresponse.expers;
+                var layoutjsonfilename = "../../../data/layout_"+experiment+"_"+expsimilarity+".json";
+//                trendsjsonfilename = "../data/trends1.json";
+                var layoutFileExist=UrlExists(layoutjsonfilename);  //graph positions set true if json file exists
+
+                // if exists there is no need to query the DB
+                if (layoutFileExist) {
+                    return getlayoutJSONpositions(layoutjsonfilename);
+                }
+                else {
+                    layoutFileExist = false;
+
+
+                    var url= "./dbfront.php";
+
+//                    if (experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewFET80T.php";
+//                    else if (experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewFET100T.php";
+//                    else if (experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewHEALTH200T.php";
+//                    else if (experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") url = "../../../jsonReviewFull300T.php";
+//                    else if (experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") url = "../../../jsonJulyFull300T_81.php";
+//                    else if (experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") url = "../../../jsonJulyFull320T_81.php";
+//                    else if (experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull300T_80.php";
+//                    else if (experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull320T_80.php";
+//                    else if (experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
+//                    else if (experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
+//                    else if (experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors_Sept_55.php";
+//                    else if (experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.70") url = "../../../jsonACMAuthors_Sept_70.php";
+//                    else if (experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.75") url = "../../../jsonACMAuthors_Sept_75.php";
+//                    else url = "./dbfront.php";
+
+                    return $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: url,
+                        data: "s=" + expsimilarity + "&ex=" + experiment,
+                        success: function (resp) {
+                            spinner.stop();
+                            jsonLayout = JSON.parse(resp);
+                            //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
+                            topics1 = jsonLayout.topicsNoSort;
+                            topics2 = jsonLayout.topics;
+                            grants = jsonLayout.grants;
+                            experiments = jsonLayout.expers;
 //                        graphElem.children().attr("style","z-index:1000")
-                    },
-                    error: function (e) {
-                        alert('Error: ' + JSON.stringify(e));
-                    }
-                });
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
+                        }
+                    });
+                }
             }
 
 
             function ajaxTrendsCall(experiment) {
-                console.log("Trends: call "+experiment);
-                var url = "./trends.php";
+                console.log("ajaxCall for trend layout: "+experiment);
 
-                return $.ajax({
-                    type: "GET",
-                    async: true,
-                    url: url,
-                    data: "ex=" + experiment,
-                    success: function (resp) {
-                        myresponse = JSON.parse(resp);
-                        //distribution = myresponse.distribution;
-                        treemap = myresponse.treemap;
-                        trends = myresponse.trends;
-                        console.log("trends");
-                        console.log(trends[0]);
-                        console.log("trends1");
-                        console.log(trends[1]);
-                        console.log("trends2");
-                        console.log(trends[2]);
-                        console.log("trends3");
-                        console.log(trends[3]);
-                        console.log("trends4");
-                        console.log(trends[4]);
+                trendsjsonfilename = "../../../data/trends_"+experiment+".json";
+//                trendsjsonfilename = "../data/trends1.json";
+                trendsFileExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
+
+                // if exists there is no need to query the DB
+                if (trendsFileExist) {
+                    return gettrendJSONpositions(trendsjsonfilename);
+                }
+                else {
+                    trendsFileExist = false;
+                    var url = "./trends.php";
+
+                    //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
+                    return $.ajax({
+                        type: "GET",
+                        async: true,
+                        url: url,
+                        data: "ex=" + experiment,
+                        success: function (resp) {
+                            jsonTrendsLayout = JSON.parse(resp);
+                            //distribution = jsonTrendsLayout.distribution;
+                            heatmap = jsonTrendsLayout.heatmap;
+                            trends = jsonTrendsLayout.trends;
+                            for (var i = 0; i < trends.length; i++) {
+                                dothework(trends[i], i);
+                            }
+
 // todo to be uncommented if stand alone and topics not loaded from graph visualization ... uncomment also in trends_code.php
-//                        topics1 = myresponse.topicsNoSort;
-//                        topics2 = myresponse.topics;
-                        var result = pivot(response, ['year'], ['id'], {});
-                        var line;
-                        line = "quarter";
+//                        topics1 = jsonTrendsLayout.topicsNoSort;
+//                        topics2 = jsonTrendsLayout.topics;
 
-//                        columns[trendindex] = [];
-                        for (var k = 0;k < result.columnHeaders.length; k++) {
-                            line += "," + result.columnHeaders[k]
-                            columns.push(parseInt(result.columnHeaders[k]));
+                        },
+                        error: function (e) {
+                            alert('Error: ' + JSON.stringify(e));
                         }
-
-                        for (var i =0 ; i<result.rowHeaders.length ; i++) {
-                            line += "\n"+result.rowHeaders[i];
-                            for (var j = 0; j < result.columnHeaders.length; j++){
-
-                                if (result[i][j] !== undefined)
-                                    line += "," +result[i][j][0].weight
-                                else
-                                    line += ",0"
-                            }
-                        }
-
-                        $.ajax({
-                            type: "POST",
-                            async: true,
-                            url: "./fileCreator.php",
-                            dataType: 'text',		// this is json if we put it like this JSON object
-                            data: {
-                                /*        json : JSON.stringify(jsonObject) /* convert here only */
-                                func: "csv",
-                                csv: line
-//todo edw na prosthesw ena id wste na dimiourgw diaforetika arxeia gia to kathena
-//                            csv: line,
-//                            id:
-                            },
-                            success: function () {
-                                console.log("CSV file Created")
-                            },
-                            error: function (e) {
-                                alert('Error: ' + e);
-                            }
-                        })
-
-                    },
-                    error: function (e) {
-                        alert('Error: ' + JSON.stringify(e));
-                    }
-                });
+                    });
+                }
             }
 
             function storeGraph(){
@@ -3056,9 +3041,10 @@ authorselected = 1;
                 topicstemp = [],
                 topicsFlag = false,
                 grants = [],
-                myresponse = [],
+                jsonLayout = [],
+                jsonTrendsLayout = [],
                 distribution = [],
-                treemap = [],
+                heatmap = [],
                 trends = {},
                 nodes = [],
                 links = [],

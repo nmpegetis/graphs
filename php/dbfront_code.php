@@ -39,7 +39,7 @@ class database {
 					}
 					break;
 				default:
-					echo "not known database type\n";
+					error_log("not known database type", 0);
 					break;
 			}
 		} catch(Exception $e){
@@ -52,8 +52,7 @@ class database {
 		$stmt = $this->db->query($query);
 		$this->last_query = $query;
 		if(!$stmt){
-			$arr = $this->db->errorInfo();
-			echo $arr[2];
+			error_log("Failed to do query with message: ".$this->db->errorInfo(), 0);
 			return false;
 		}
 		return $stmt;
@@ -64,7 +63,6 @@ class database {
 		$this->last_query = $query;
 		if(!$stmt){
             error_log("Failed to prepare query with message: ".$this->db->errorInfo(), 0);
-            echo "Failed to prepare query with message: ".$this->db->errorInfo();
             return false;
 		}
 		return $stmt;
@@ -73,7 +71,6 @@ class database {
 	function doExecute($stmt,$params){
 		if(!$stmt->execute($params)){
             error_log("Failed to execute query with message: ".$stmt->errorInfo(), 0);
-            echo "Failed to execute query with message: ".$stmt->errorInfo();
             return false;
 		}
 		return $stmt;
@@ -82,7 +79,7 @@ class database {
 }
 
 if(!isset($_GET['s']) || !isset($_GET['ex'])){
-	echo "params not set";
+	echo "Parameters 's' and 'ex' on URL not set";
 }
 
 
@@ -135,7 +132,7 @@ else{
 
 $query = $query_experiments;
 
-$querykey = "KEY" . md5($query) . $db_name;		// to distinguish when the experiments are loaded from the correct database <-- a.k.a. each layout has its own database
+$querykey = "KEY" . md5($query) . $db_name;		// to distinguish when the experiments are loaded from the correct database <-- because some layouts have different database
 
 $experiments = $meminstance->get($querykey);
 
@@ -160,22 +157,18 @@ else{
 /////////////////////////
 
 
-$query = $query_grants;
-//todo to afairesa giati sto authors den exei experiment o pinakas....
- $move_elems = array("?");
- $set_elems = array($_GET['ex']);
- $memQuery = str_replace($move_elems, $set_elems, $query);
-//$memQuery = $query;
+$query = $query_nodes;
+$move_elems = array("?");
+$set_elems = array($_GET['ex']);
+$memQuery = str_replace($move_elems, $set_elems, $query);
 $querykey = "KEY" . md5($memQuery);
 $grants = $meminstance->get($querykey);
 
 if (!$grants) {
 
 	$grants = array();
-//to afairesa giati den exei experiment sto authors
 	 $stmt = $mydb->doPrepare($query);
 	 $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-//		$stmt = $mydb->doQuery($query);
 
 	$res = $stmt->fetch();
 	do {
@@ -268,7 +261,13 @@ $everything['expers'] = $experiments;
 
 //echo json_decode(json_encode($everything, JSON_UNESCAPED_UNICODE));
 // encode in every possibility
-echo json_encode($everything,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+$output = json_encode($everything,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+echo $output;
+
+$file = fopen("../data/layout_".$_GET['ex']."_".$_GET['s'].".json","w");
+fwrite($file, $output);
+fclose($file);
+
 unset($everything);//release memory
 
 ?>

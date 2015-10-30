@@ -265,14 +265,13 @@ $output = json_encode($everything,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT |
 echo $output;
 
 $old = umask(0);
-echo $old;
 
-umask(0777);
-$name = chmod("../data/layout_".$_GET['ex']."_".$_GET['s'].".json",0777);
+// umask(0777);
 $file = fopen("../data/layout_".$_GET['ex']."_".$_GET['s'].".json","w");
+// $name = chmod("../data/layout_".$_GET['ex']."_".$_GET['s'].".json",0777);
 fwrite($file, $output);
 fclose($file);
-umask ($old);
+// umask (0022);
 
 unset($everything);//release memory
 

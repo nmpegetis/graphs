@@ -1142,7 +1142,9 @@
                                 for (var i = 0; i < len; i++) {
                                     var mywords = topics1[topicsGroupPerNode[i].topic];
                                     var wlen = mywords.length;
-                                    str += "<span class='topic' style='opacity:1;font-weight:600'>"+mywords[0].title+":</span><br/>";
+                                    //todo now only available in ACM
+                                    if (/^ACM*/.test(experimentName))
+                                        str += "<span class='topic' style='opacity:1;font-weight:600'>"+mywords[0].title+":</span><br/>";
                                     for (var j = 0; j < wlen; j++) {
                                         var opacity;
                                         if ((opacity = mywords[j].counts / mywords[0].counts) < 0.8) {
@@ -1652,8 +1654,11 @@
                         }
 
                         if (ii<wlen){
-//                            discriminativeWord[nodes[k].index] += ","+mywords[ii].item;
-//todo edw mpainoun ta titles anti oi 3 lekseis
+                            discriminativeWord[nodes[k].index] += ","+mywords[ii].item;
+
+                        //todo edw mpainoun ta titles anti oi 3 lekseis
+                        //todo now only available in ACM  --- the below replaces the above lines and puts on graph the title
+                        if (/^ACM*/.test(experimentName))
                             discriminativeWord[nodes[k].index]  = mywords[ii].title;
 
                             discriminativeWordCounts[nodes[k].index] = mywords[0].counts;

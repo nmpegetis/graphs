@@ -186,7 +186,6 @@ else{
 	//	print "got result from memcached\n";
 }
 
-
 /////////////////////////
 ///// TOPICS QUERY //////
 /////////////////////////
@@ -266,12 +265,14 @@ echo $output;
 
 $old = umask(0);
 
-// umask(0777);
-$file = fopen("../data/layout_".$_GET['ex']."_".$_GET['s'].".json","w");
-// $name = chmod("../data/layout_".$_GET['ex']."_".$_GET['s'].".json",0777);
+//TODO http://stackoverflow.com/questions/8103860/move-uploaded-file-gives-failed-to-open-stream-permission-denied-error-after$file = fopen("../data/layout_".$_GET['ex']."_".$_GET['s'].".json","w");
+
+// cd layouts/acm/data 		or			cd layouts/openaire/data
+// sudo chown deamon ./				// set owner the www-data or daemon in order to be able the client to create file
+// sudo chmod -R 0755 ./
+
 fwrite($file, $output);
 fclose($file);
-// umask (0022);
 
 unset($everything);//release memory
 

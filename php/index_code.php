@@ -1934,14 +1934,16 @@
 
                 if (graphPositionsExist){
                     $.when(getJSONpositions(), ajaxGraphCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
-                        renderPageData = JSON.parse(a2[0]).resp;
+//                        renderPageData = JSON.parse(a2[0].resp);
+                        renderPageData = a2[0].resp;
                         renderpage(renderPageData);
                     });
                 }
                 else{
                     graphPositionsExist=false;
                     $.when(ajaxGraphCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxGraphCall() to finish and when done then renders the page
-                        renderPageData = JSON.parse(a1).resp;
+//                        renderPageData = JSON.parse(a1).resp;
+                        renderPageData = a1.resp;
                         renderpage(renderPageData);
                     });
                 }
@@ -2075,23 +2077,7 @@
                 else {
                     layoutFileExist = false;
 
-
                     var url= "./dbfront.php";
-
-//                    if (experiment == "FETGrants_80T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewFET80T.php";
-//                    else if (experiment == "FETGrants_100T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewFET100T.php";
-//                    else if (experiment == "HEALTHTender_200T_1000IT_0IIT_100B_5M_cos" && expsimilarity == "0.45") url = "../../../jsonReviewHEALTH200T.php";
-//                    else if (experiment == "FullGrants_300T_1200IT_0IIT_150B_4M_cos" && expsimilarity == "0.6") url = "../../../jsonReviewFull300T.php";
-//                    else if (experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") url = "../../../jsonJulyFull300T_81.php";
-//                    else if (experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.81") url = "../../../jsonJulyFull320T_81.php";
-//                    else if (experiment == "FullGrants_300T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull300T_80.php";
-//                    else if (experiment == "FullGrants_320T_1200IT_0IIT_100B_4M_cos" && expsimilarity == "0.80") url = "../../../jsonJulyFull320T_80.php";
-//                    else if (experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.85") url = "../../../jsonACMCategories.php";
-//                    else if (experiment == "ACM_250T_1000IT_0IIT_100B_4M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors.php";
-//                    else if (experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.55") url = "../../../jsonACMAuthors_Sept_55.php";
-//                    else if (experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.70") url = "../../../jsonACMAuthors_Sept_70.php";
-//                    else if (experiment == "ACM_400T_1000IT_0IIT_100B_3M_cos" && expsimilarity == "0.75") url = "../../../jsonACMAuthors_Sept_75.php";
-//                    else url = "./dbfront.php";
 
                     return $.ajax({
                         type: "GET",

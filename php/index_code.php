@@ -296,7 +296,7 @@
                 thr5Elem = $("#thr5"),
                 thr6Elem = $("#thr6"),
                 thr7Elem = $("#thr7"),
-                grantsElem = $("#grants"),
+                graphNodesElem = $("#graphNodes"),
                 category1Elem = $("#category1"),
                 category2Elem = $("#category2"),
                 category3Elem = $("#category3"),
@@ -333,8 +333,8 @@
                 pill2Elem = $("#pill2"),
 //                pill3Elem = $("#pill3"),
                 pill4Elem = $("#pill4"),
-                grantsGroup1Elem,
-                grantsGroup2Elem,
+                graphNodesGroup1Elem,
+                graphNodesGroup2Elem,
                 chordElem = $("#chord"),
                 chord2Elem = $("#chord2"),
                 trend0Elem = $("#trend0"),
@@ -351,7 +351,6 @@
                 trendCSV14,
                 trendCSV15,
                 trendCSV16,
-                trendCSV2,
                 trendlegend0Elem,
                 trendlegend1Elem,
                 trendlegend2Elem,
@@ -373,7 +372,7 @@
                 mytext = d3.select("#mytext-content"),
                 explist = d3.select("#experiments"),
                 search = d3.select("#search"),
-                nodeCircles, linkLines, grantslist1, grantslist2, rows;
+                nodeCircles, linkLines, graphNodesList1, rows;
 
 
             /* globals */
@@ -387,8 +386,8 @@
 
             // text and labels
                 loading, text, selectedLabelIndex, labels, nodeLabels, selectnodeLabels, labeled, topicWords, topicsFlag, labelIsOnGraph, svgSortedTopicWords,
-                topics1,				//initially the sorted topics
-                topics2,				//initially the unsortd topics
+                topicsNotSorted,				//initially the sorted topics
+                topicsSorted,				//initially the unsortd topics
                 topicstemp,				//the swapper between the above two
                 zoomer, fontsize, topicsMap, discriminativeTopic, discriminativeTopicWeight, discriminativeWord, discriminativeWordCounts, topicsGroupPerNode, neighborTopicsGroupPerNode, neighborLen, len, topicPerTopicsGroup, weightPerTopicsGroup,i,j,nl,mywords, wlen, label,
             // links
@@ -413,8 +412,8 @@
                 subdivisionsChord, 		// before its contents were in a csv file
                 chord_group, chord_chord, clickedChord, percentageSum, trendClicked,
 
-            //grants
-                grantsListHtml, listLength, grants,
+            //graphNodes
+                graphNodesListHtml, listLength, graphNodes,
 
             //trends
                 topicnames,
@@ -475,10 +474,6 @@
             });
 
             var doit;
-//            windowElem.on("resize",function(){
-//                clearTimeout(doit);
-//                doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
-//            });
             windowElem.onresize = function(){
                 clearTimeout(doit);
                 doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
@@ -496,7 +491,6 @@
 
             /* event handlers */
             vis.style("height", h)
-                // .style("width", w)
                 .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
                 .style("preserveAspectRatio", "xMidYMid meet")
                 .style("border-style","solid")
@@ -607,7 +601,6 @@
                 changed = true;
                 force.on("tick", initialTick);
                 force.start();
-//                mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
                 thr7Elem.val(charge);
             });
 
@@ -933,7 +926,7 @@
 
 
             function graphReset() {
-                grantsElem.multiselect('deselectAll', false);
+                graphNodesElem.multiselect('deselectAll', false);
 
                 graphCentralize();
 
@@ -1135,12 +1128,12 @@
 //                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).attr("style", "font-weight:400").html('<?php //echo $node_name;?>//: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
                                 .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).attr("style", "font-weight:400").html('<?php echo $node_name;?>: ' + o.name + "</br> Category: " + o.area);
                             var str = "";
-                            topicsGroupPerNode = grants[o.id];
-                            if (topics1 != null) {
+                            topicsGroupPerNode = graphNodes[o.id];
+                            if (topicsNotSorted != null) {
                                 str += "<span style='font-size:small;z-index:500;'><br/></br> TOPICS: <br/>";
                                 len = topicsGroupPerNode.length;
                                 for (var i = 0; i < len; i++) {
-                                    var mywords = topics1[topicsGroupPerNode[i].topic];
+                                    var mywords = topicsNotSorted[topicsGroupPerNode[i].topic];
                                     var wlen = mywords.length;
                                     //todo now only available in ACM
                                     if (/^ACM*/.test(experimentName))
@@ -1197,7 +1190,7 @@
 
 
 
-            function compareGrants(a,b) {
+            function comparegraphNodes(a,b) {
                 if (a.name > b.name)
                     return 1;
                 if (a.name < b.name)
@@ -1207,7 +1200,7 @@
 
             /* reset */
             function reset(){					/* normalizeNodesAndRemoveLabels */
-//                if (grantsElem.find("option:selected")[0] !== undefined) return 0;
+//                if (graphNodesElem.find("option:selected")[0] !== undefined) return 0;
 
                 var types = [];
                 $(".circle").each(function(){
@@ -1237,7 +1230,7 @@
                 downButtonElem.hide();
 
                 filtersElem.val($("#filters option:first").val());
-                grantsElem.multiselect("deselectAll",false);
+                graphNodesElem.multiselect("deselectAll",false);
             }
 
             /* collide */
@@ -1581,7 +1574,7 @@
 
                     if((nodeConnections[nodes[k].index] > maxNodeConnectionsThr*maxNodeConnections) && links[nodes[k].index]!==undefined && (links[nodes[k].index].value>linkThr)){		//afou maxNodeConnections=24 tha broume ta topics se omades toulaxiston twn 4 kai pou einai toulaxiston se kontini apostasi metaksu tous
 
-                        topicsGroupPerNode = grants[nodes[k].id];
+                        topicsGroupPerNode = graphNodes[nodes[k].id];
                         /* in order to find the most discriminative topic we find all the topics in a group with high-connectivity and we find the topic with the max weight
                          if all the topics are unique. If they are not then in the topics that occur in the group more than one times we multiply the weight of the topic
                          with the number occured in group and find the topic with the max weight again
@@ -1605,7 +1598,7 @@
                             for (j=0; j<nodesInGroup[nodes[k].index].length ; j++) {
                                 neighborNode = nodesInGroup[nodes[k].index][j];
                                 if (nodes[neighborNode] != null){
-                                    neighborTopicsGroupPerNode = grants[nodes[neighborNode].id];
+                                    neighborTopicsGroupPerNode = graphNodes[nodes[neighborNode].id];
                                     neighborLen = neighborTopicsGroupPerNode.length;
                                     for(nl=0;nl<neighborLen;nl++){
                                         if(topicPerTopicsGroup == neighborTopicsGroupPerNode[nl].topic){
@@ -1635,7 +1628,7 @@
                     /* algorithm steps */
                     /* Step 1: if the node has a lot of connection as found from the previous loop, then a discriminative topic exists and so we take it */
                     if (discriminativeTopic[nodes[k].index] != null){
-                        mywords = topics1[discriminativeTopic[nodes[k].index]];
+                        mywords = topicsNotSorted[discriminativeTopic[nodes[k].index]];
                         wlen = mywords.length;
                         neighborNode;
 
@@ -1705,12 +1698,12 @@
                 str = "";
 
                 while (++k < n) {
-                    topicsGroupPerNode = grants[nodes[k].id];
-                    if(topics1 != null){
+                    topicsGroupPerNode = graphNodes[nodes[k].id];
+                    if(topicsNotSorted != null){
                         len = topicsGroupPerNode.length;
                         for(var i=0;i<len;i++){
                             var mywords;
-                                mywords = topics1[topicsGroupPerNode[i].topic];
+                                mywords = topicsNotSorted[topicsGroupPerNode[i].topic];
 
                             var wlen = mywords.length;
 
@@ -1726,7 +1719,7 @@
                         }
                         for(var i=0;i<len;i++){
                             var mywords;
-                                mywords = topics2[topicsGroupPerNode[i].topic];
+                                mywords = topicsSorted[topicsGroupPerNode[i].topic];
 
                             var wlen = mywords.length;
 
@@ -2030,9 +2023,9 @@
                     spinner.stop();
                     jsonLayout = resp;
                     //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
-                    topics1 = jsonLayout.topicsNoSort;
-                    topics2 = jsonLayout.topics;
-                    grants = jsonLayout.grants;
+                    topicsNotSorted = jsonLayout.topicsNoSort;
+                    topicsSorted = jsonLayout.topics;
+                    graphNodes = jsonLayout.nodes;
                     experiments = jsonLayout.expers;
                 }).fail(function() {
                     console.log( "error in json position reading file" );
@@ -2109,9 +2102,9 @@
                             spinner.stop();
                             jsonLayout = JSON.parse(resp);
                             //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
-                            topics1 = jsonLayout.topicsNoSort;
-                            topics2 = jsonLayout.topics;
-                            grants = jsonLayout.grants;
+                            topicsNotSorted = jsonLayout.topicsNoSort;
+                            topicsSorted = jsonLayout.topics;
+                            graphNodes = jsonLayout.nodes;
                             experiments = jsonLayout.expers;
 //                        graphElem.children().attr("style","z-index:1000")
                         },
@@ -2154,8 +2147,8 @@
                             }
 
 // todo to be uncommented if stand alone and topics not loaded from graph visualization ... uncomment also in trends_code.php
-//                        topics1 = jsonTrendsLayout.topicsNoSort;
-//                        topics2 = jsonTrendsLayout.topics;
+//                        topicsNotSorted = jsonTrendsLayout.topicsNoSort;
+//                        topicsSorted = jsonTrendsLayout.topics;
 
                         },
                         error: function (e) {
@@ -2469,7 +2462,7 @@
                     }
                 });
 
-                nodes.sort(compareGrants);
+                nodes.sort(comparegraphNodes);
 
                 createJsonFile();
                 createCSVFile();
@@ -2612,14 +2605,14 @@
                 loadNodeList();
 
                 $(function(){
-                    if ($("#grantsButton").length > 0){
-                        grantsElem.multiselect('rebuild')
+                    if ($("#graphNodesButton").length > 0){
+                        graphNodesElem.multiselect('rebuild')
                     }
                     else {
-                        grantsElem.multiselect({
+                        graphNodesElem.multiselect({
                             maxHeight: 200,
                             buttonWidth: '200px',
-                            buttonContainer: '<div class="btn-group" id="grantsButton"></div>',
+                            buttonContainer: '<div class="btn-group" id="graphNodesButton"></div>',
                             nonSelectedText: 'Select an <?php echo $node_name;?>',
 //todo to allaksa gia tin ACM single selection
 //                            nonSelectedText: 'Select some <?php //echo $node_name;?>//s',
@@ -2648,11 +2641,11 @@ authorselected = 1;
                                 console.log(authorselected)
                                 console.log("stop")
 // todo kai auto
-//                                var selectedOptions = grantsElem.find("option:selected");
-//                                var allOptions = grantsElem.find("option");
+//                                var selectedOptions = graphNodesElem.find("option:selected");
+//                                var allOptions = graphNodesElem.find("option");
 ////                                $(":checkbox[value=" + $(this).val() + "]").attr('checked', true)
 //                                classifiedNodesHandler(selectedOptions, allOptions);
-                                grantsElem.multiselect("refresh");
+                                graphNodesElem.multiselect("refresh");
                             }
                         });
                     }
@@ -2660,11 +2653,11 @@ authorselected = 1;
 //todo kai auto
 //
 //                    $(".multiselect-clear-filter").on('click', function() {
-//                        grantsElem.multiselect('deselectAll', false);
-//                        var allOptions = grantsElem.find("option");
-//                        var selectedOptions = grantsElem.find("option:selected");
+//                        graphNodesElem.multiselect('deselectAll', false);
+//                        var allOptions = graphNodesElem.find("option");
+//                        var selectedOptions = graphNodesElem.find("option:selected");
 //                        classifiedNodesHandler(selectedOptions, allOptions);
-//                        grantsElem.multiselect("refresh");
+//                        graphNodesElem.multiselect("refresh");
 //                        nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
 //                    });
 
@@ -2673,7 +2666,7 @@ authorselected = 1;
                         .find("li").find("a").find("label")
                         .attr("style","overflow:hidden;text-overflow:ellipsis;");
 
-                    grantsElem.multiselect("refresh");
+                    graphNodesElem.multiselect("refresh");
 
 
 //todo hard code....
@@ -2913,7 +2906,7 @@ authorselected = 1;
                     });
 
 
-                    grantsElem.multiselect("refresh");
+                    graphNodesElem.multiselect("refresh");
 
                 });
 
@@ -2941,9 +2934,9 @@ authorselected = 1;
 
 
                 boostBtnElem.unbind().on("click", function(){
-                    topicstemp = topics1;
-                    topics1 = topics2;
-                    topics2 = topicstemp;
+                    topicstemp = topicsNotSorted;
+                    topicsNotSorted = topicsSorted;
+                    topicsSorted = topicstemp;
 
                     mytextContentElem.hide();
                     browseTick(true);
@@ -3041,11 +3034,11 @@ authorselected = 1;
                 maxNodeConnections = 0,
                 labeled = [],
                 topicWords = [],
-                topics1 = [],
-                topics2 = [],
+                topicsNotSorted = [],
+                topicsSorted = [],
                 topicstemp = [],
                 topicsFlag = false,
-                grants = [],
+                graphNodes = [],
                 jsonLayout = [],
                 jsonTrendsLayout = [],
                 distribution = [],
@@ -3279,16 +3272,16 @@ authorselected = 1;
             }
 
             function loadNodeList(){
-                // empty for re-initializing grantsList
+                // empty for re-initializing graphNodesList
 
-                grantsElem.empty();
-                grantsElem.append("<optgroup id=\"grantsGroup1\" label=\"<?php echo $node_groupName1 ;?>\"><optgroup id=\"grantsGroup2\" label=\"<?php echo $node_groupName2 ;?>\">")
-                grantsGroup1Elem = $("#grantsGroup1");
-//                grantsGroup2Elem = $("#grantsGroup2");
-                grantslist1 = d3.select("#grantsGroup1");
-//                grantslist2 = d3.select("#grantsGroup2");
+                graphNodesElem.empty();
+                graphNodesElem.append("<optgroup id=\"graphNodesGroup1\" label=\"<?php echo $node_groupName1 ;?>\"><optgroup id=\"graphNodesGroup2\" label=\"<?php echo $node_groupName2 ;?>\">")
+                graphNodesGroup1Elem = $("#graphNodesGroup1");
+//                graphNodesGroup2Elem = $("#graphNodesGroup2");
+                graphNodesList1 = d3.select("#graphNodesGroup1");
+//                graphNodesList2 = d3.select("#graphNodesGroup2");
 
-                grantslist1
+                graphNodesList1
                     .selectAll("option")
 //                    .data(nodes.filter(function(d) { if(d.FET!="NONFET") return 1; else return 0;}))
                     .data(nodes)
@@ -3303,11 +3296,11 @@ authorselected = 1;
                     .text(function(d){return d.name});
     //                var a = $("#filter1 > select").html()
 
-                grantsListHtml = grantsElem.html();
-                grantsElem.empty();
-                grantsElem.append(grantsListHtml)
+                graphNodesListHtml = graphNodesElem.html();
+                graphNodesElem.empty();
+                graphNodesElem.append(graphNodesListHtml)
 
-/*			grantslist2
+/*			graphNodesList2
 				.selectAll("option")
 				.data(nodes.filter(function(d) { if(d.FET!="FET") return 1; else return 0; }))
 				.enter()
@@ -3427,7 +3420,7 @@ authorselected = 1;
                         }
                     })
                     .on("click", function(d,i){
-                        grantsElem.multiselect('deselectAll', false);
+                        graphNodesElem.multiselect('deselectAll', false);
                         $(this).attr('class', function(index, classNames) {
                             return classNames.replace('shadow', '');
                         });
@@ -4164,18 +4157,18 @@ authorselected = 1;
 
 
 
-//                console.log("topics2!")
-//                console.log(topics1)
-                var topics1trends = jQuery.extend(true, {}, topics1);
+//                console.log("topicsSorted!")
+//                console.log(topicsNotSorted)
+                var topicsNotSortedtrends = jQuery.extend(true, {}, topicsNotSorted);
                 var trendstopics = {};
 
-//                console.log(topics1trends)
-                for (var key in topics1trends){
+//                console.log(topicsNotSortedtrends)
+                for (var key in topicsNotSortedtrends){
                     var keyint = parseInt(key);
                     if (columns.indexOf(keyint) > -1 && columns !== undefined){
-//                        console.log(topics1trends[keyint])
-                        trendstopics[keyint] = topics1trends[keyint];
-//                        trendstopics.push(topics1trends[keyint]);
+//                        console.log(topicsNotSortedtrends[keyint])
+                        trendstopics[keyint] = topicsNotSortedtrends[keyint];
+//                        trendstopics.push(topicsNotSortedtrends[keyint]);
                     }
                 }
 
@@ -4188,8 +4181,8 @@ authorselected = 1;
 // console.log(data)
 //console.log("topics")
 //console.log(topics)
-//console.log("topics1!")
-//console.log(topics1)
+//console.log("topicsNotSorted!")
+//console.log(topicsNotSorted)
 
                     var labelVar = 'quarter';
                     var varNames = d3.keys(data[0])
@@ -5145,9 +5138,9 @@ authorselected = 1;
                 </li>
                 <li id="filter1" style="padding-left:10px">
 <!--todo to ebgala to multiple gia to bootstrap-->
-<!--                    <select id="grants" multiple="multiple" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">-->
+<!--                    <select id="graphNodes" multiple="multiple" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">-->
 <!--                    </select>-->
-                    <select id="grants" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
+                    <select id="graphNodes" style="padding-left:5px;padding-right:5px;width:inherit;text-align: center;">
                     </select>
                 </li>
                 <li  id="filter2" style="padding-left:10px;width:inherit">

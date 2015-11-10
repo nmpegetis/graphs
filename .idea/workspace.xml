@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4de64057-89db-4e55-ad99-e8ce4da73264" name="Default" comment="">
+    <list default="true" id="4de64057-89db-4e55-ad99-e8ce4da73264" name="Default" comment="Merge branch 'master' of https://github.com/nmpegetis/graphs&#10;&#10;# Conflicts:&#10;#&#9;php/dbfront_code.php&#10;">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/php/dbfront_code.php" afterPath="$PROJECT_DIR$/php/dbfront_code.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="graphs.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -56,16 +55,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="2081" column="0" selection-start-line="2081" selection-start-column="0" selection-end-line="2081" selection-end-column="0" />
-              <folding>
-                <marker date="1444743620000" expanded="true" signature="49840:49868" placeholder="..." />
-                <marker date="1444743620000" expanded="true" signature="50248:50273" placeholder="..." />
-                <marker date="1444743620000" expanded="true" signature="123977:124002" placeholder="..." />
-                <marker date="1444743620000" expanded="true" signature="124071:124087" placeholder="..." />
-                <marker date="1444743620000" expanded="true" signature="124125:124141" placeholder="..." />
-                <marker date="1444743620000" expanded="true" signature="124942:124948" placeholder="..." />
-                <marker date="1444743620000" expanded="true" signature="238117:238127" placeholder="..." />
-                <marker date="1444743620000" expanded="true" signature="238331:238341" placeholder="..." />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -155,8 +145,8 @@
       <file leaf-file-name="dbfront_code.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/php/dbfront_code.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38807946">
-              <caret line="252" column="0" selection-start-line="252" selection-start-column="0" selection-end-line="252" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.17159763">
+              <caret line="255" column="32" selection-start-line="255" selection-start-column="32" selection-end-line="255" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -287,7 +277,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -390,6 +379,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -507,8 +497,9 @@
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15593705" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15808298" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891566" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32891566" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32771084" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -518,7 +509,6 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290653" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -543,7 +533,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Changes in all generalized code in order to create csv files more dynamically. Also now ajaxCalls are made only when needed. And in future we can also delete some of them. Changes in name variables both in php and js code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes in all generalized code in order to create csv files more dynamically. Also now ajaxCalls are made only when needed. And in future we can also delete some of them. Changes in name variables both in php and js code" />
+    <MESSAGE value="Merge branch 'master' of https://github.com/nmpegetis/graphs&#10;&#10;# Conflicts:&#10;#&#9;php/dbfront_code.php&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/nmpegetis/graphs&#10;&#10;# Conflicts:&#10;#&#9;php/dbfront_code.php&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -993,16 +984,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="2081" column="0" selection-start-line="2081" selection-start-column="0" selection-end-line="2081" selection-end-column="0" />
-          <folding>
-            <marker date="1444743620000" expanded="true" signature="49840:49868" placeholder="..." />
-            <marker date="1444743620000" expanded="true" signature="50248:50273" placeholder="..." />
-            <marker date="1444743620000" expanded="true" signature="123977:124002" placeholder="..." />
-            <marker date="1444743620000" expanded="true" signature="124071:124087" placeholder="..." />
-            <marker date="1444743620000" expanded="true" signature="124125:124141" placeholder="..." />
-            <marker date="1444743620000" expanded="true" signature="124942:124948" placeholder="..." />
-            <marker date="1444743620000" expanded="true" signature="238117:238127" placeholder="..." />
-            <marker date="1444743620000" expanded="true" signature="238331:238341" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1032,8 +1014,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/php/dbfront_code.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38807946">
-          <caret line="252" column="0" selection-start-line="252" selection-start-column="0" selection-end-line="252" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.17159763">
+          <caret line="255" column="32" selection-start-line="255" selection-start-column="32" selection-end-line="255" selection-end-column="32" />
           <folding />
         </state>
       </provider>

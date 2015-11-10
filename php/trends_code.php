@@ -123,7 +123,7 @@ $everything['trends'] = $allTrends;
 
 
 /////////////////////
-///// TREE MAP //////
+///// HEAT MAP //////
 /////////////////////
 
 $query = $query_heatmap;

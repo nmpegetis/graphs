@@ -162,24 +162,24 @@ $move_elems = array("?");
 $set_elems = array($_GET['ex']);
 $memQuery = str_replace($move_elems, $set_elems, $query);
 $querykey = "KEY" . md5($memQuery);
-$grants = $meminstance->get($querykey);
+$nodes = $meminstance->get($querykey);
 
-if (!$grants) {
+if (!$nodes) {
 
-	$grants = array();
+	$nodes = array();
 	 $stmt = $mydb->doPrepare($query);
 	 $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
 
 	$res = $stmt->fetch();
 	do {
-		if(!isset($grants[$res[0]]))
-			$grants[$res[0]] = array();
-		if(count($grants[$res[0]])>3)
+		if(!isset($nodes[$res[0]]))
+			$nodes[$res[0]] = array();
+		if(count($nodes[$res[0]])>3)
 			continue;
-		array_push($grants[$res[0]],array("topic"=>$res[1],"weight"=>$res[2]));	
+		array_push($nodes[$res[0]],array("topic"=>$res[1],"weight"=>$res[2]));
 	} while ($res = $stmt->fetch());
 
-   	$meminstance->set($querykey, $grants, 0, $memcache_time);
+   	$meminstance->set($querykey, $nodes, 0, $memcache_time);
 	//	print "got result from mysql\n";
 }
 else{
@@ -252,7 +252,7 @@ else{
 
 $everything = array();
 $everything['resp'] = $list;
-$everything['grants'] = $grants;
+$everything['nodes'] = $nodes;
 $everything['topics'] = $topics;
 $everything['topicsNoSort'] = $topicsNoSort;
 $everything['expers'] = $experiments;

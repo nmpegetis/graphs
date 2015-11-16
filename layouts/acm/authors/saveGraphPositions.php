@@ -4,8 +4,8 @@ $fh = fopen($myFile, 'w') or die("can't open file");
 //$stringData = $_POST["data"];
 
 $everything = array();
-$everything['nodes'] = $_POST["datanodes"];
-$everything['links'] = $_POST["datalinks"];
+$everything['nodes'] = json_decode($_POST["datanodes"]);
+$everything['links'] = json_decode($_POST["datalinks"]);
 
 //echo json_decode(json_encode($everything, JSON_UNESCAPED_UNICODE));
 // encode in every possibility

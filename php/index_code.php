@@ -1935,8 +1935,12 @@
                 if (graphPositionsExist){
 console.log("if")
                     $.when(getJSONpositions(), ajaxGraphCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
-                       renderPageData = JSON.parse(a2[0].resp);
-                        // renderPageData = a2[0].resp;
+console.log(a1[0])
+console.log(a2[0])
+console.log("endif")
+                       // renderPageData = JSON.parse(a2[0]).resp;
+console.log("endif")
+                        renderPageData = a2[0].resp;
                         renderpage(renderPageData);
                     });
                 }

@@ -3,9 +3,14 @@ $myFile = "data/graph_".$_POST["experiment"]."_".$_POST["similarity"]."_".$_POST
 $fh = fopen($myFile, 'w') or die("can't open file");
 //$stringData = $_POST["data"];
 
+$nodes = str_replace("\\","",$_POST["datanodes"]);
+$links = str_replace("\\","",$_POST["datalinks"]);
+
 $everything = array();
-$everything['nodes'] = json_decode($_POST["datanodes"]);
-$everything['links'] = json_decode($_POST["datalinks"]);
+$everything['nodes'] = $nodes;
+$everything['links'] = $links;
+// $everything['nodes'] = json_decode($nodes);
+// $everything['links'] = json_decode($links);
 
 //echo json_decode(json_encode($everything, JSON_UNESCAPED_UNICODE));
 // encode in every possibility

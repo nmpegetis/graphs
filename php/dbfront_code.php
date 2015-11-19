@@ -270,7 +270,8 @@ $old = umask(0);
 // cd layouts/acm/data 		or			cd layouts/openaire/data
 // sudo chown deamon ./				// set owner the www-data or daemon in order to be able the client to create file
 // sudo chmod -R 0755 ./
-$file = fopen("../data/layout_".$_GET['ex']."_".$_GET['s'].".json","w");
+$myFile = "../../../data/layout_".$_GET['ex']."_".$_GET['s'].".json";
+$file = fopen($myFile,"w");
 fwrite($file, $output);
 fclose($file);
 

@@ -18,7 +18,7 @@ $everything['links'] = $links;
 
 //fwrite($fh, $everything);
 //fwrite($fh, json_encode($everything,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE));
-fwrite($fh, json_encode($everything));
+fwrite($fh, json_encode($everything,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE));
 //file_put_contents($fh,json_encode($everything));
 unset($everything);//release memory
 fclose($fh)

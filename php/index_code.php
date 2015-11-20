@@ -1933,23 +1933,15 @@
                 graphPositionsExist=UrlExists(jsonfilename);  //graph positions set true if json file exists
 
                 if (graphPositionsExist){
-console.log("if")
                     $.when(getJSONpositions(), ajaxGraphCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
-console.log(a1[0])
-console.log(a2[0])
-console.log("endif")
-                       // renderPageData = JSON.parse(a2[0]).resp;
-console.log("endif")
                         renderPageData = a2[0].resp;
                         renderpage(renderPageData);
                     });
                 }
                 else{
-console.log("else")
                     graphPositionsExist=false;
                     $.when(ajaxGraphCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxGraphCall() to finish and when done then renders the page
-                       renderPageData = JSON.parse(a1).resp;
-                        // renderPageData = a1.resp;
+                       renderPageData = a1.resp;
                         renderpage(renderPageData);
                     });
                 }
@@ -1961,6 +1953,7 @@ console.log("else")
                 //        from calling the $.ajax() method.
                 return $.getJSON( jsonfilename).done( function(json) {
                     jsonNodes = $.parseJSON(json.nodes);
+                    console.log ("as")
                     jsonLinks = $.parseJSON(json.links);
                 }).fail(function() {
                     console.log( "error in json position reading file" );

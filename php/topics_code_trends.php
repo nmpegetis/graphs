@@ -164,7 +164,7 @@ $old = umask(0);
 //TODO http://stackoverflow.com/questions/8103860/move-uploaded-file-gives-failed-to-open-stream-permission-denied-error-after$file = fopen("../data/layout_".$_GET['ex']."_".$_GET['s'].".json","w");
 
 // cd layouts/acm/data 		or			cd layouts/openaire/data
-// sudo chown deamon ./				// set owner the www-data or daemon in order to be able the client to create file
+// sudo chown daemon ./				// set owner the www-data or daemon in order to be able the client to create file
 // sudo chmod -R 0755 ./
 
 // write output to file

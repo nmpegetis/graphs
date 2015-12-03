@@ -404,7 +404,7 @@
         }
 
         if((layoutType = getUrlParameter('type')) == null){
-            layoutType = '<?php echo layoutType ;?>';
+            layoutType = '<?php echo $layoutType ;?>';
         }
     }
 
@@ -476,7 +476,7 @@
                     line += ",0"
             }
         }
-
+console.log(line)
         $.ajax({
             type: "POST",
             async: true,

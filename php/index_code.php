@@ -265,7 +265,7 @@
             var windowElem = $(window),
                 documentElem = $(document),
                 bodyElem = $("body"),
-                headElem =$("head"),
+                headElem = $("head"),
                 tooltipElem = $('[data-toggle="tooltip"]'),
                 popoverElem = $('[data-toggle="popover"]'),
                 classifiedNodesHeaderElem = $("#classifiedNodesHeader"),
@@ -307,10 +307,13 @@
                 svgTextElem = $("svg:text"),
                 graphmenu1Elem = $("#graphmenu1"),
                 graphdivElem = $("#graphdiv"),
+                chordmenuElem = $("#chordmenu"),
                 chordmenu1Elem = $("#chordmenu1"),
                 chordmenu2Elem = $("#chordmenu2"),
                 chorddivElem = $("#chorddiv"),
                 chord2divElem = $("#chord2div"),
+                trendmenuElem = $("#trendmenu"),
+                trendmenudataElem = $("#trendmenudata"),
                 trendmenu0Elem = $("#trendmenu0"),
                 trendmenu1Elem = $("#trendmenu1"),
                 trendmenu2Elem = $("#trendmenu2"),
@@ -376,8 +379,8 @@
 
 
             /* globals */
-            var style, pagetitle, 
-                trendstitle,chordtitle,
+            var style, pagetitle,
+                trendstitle, chordtitle, layout,
 
 
             // sizes, zooming, scaling, translating and colors
@@ -385,11 +388,11 @@
                 clr20, clrEven, clrOdd, clr, clr2, clr3,
 
             // text and labels
-                loading, text, selectedLabelIndex, labels, nodeLabels, selectnodeLabels, labeled, topicWords, topicsFlag, labelIsOnGraph, svgSortedTopicWords,
+                loadingText, selectedLabelIndex, labels, nodeLabels, selectnodeLabels, labeled, topicWords, topicsFlag, labelIsOnGraph, svgSortedTopicWords,
                 topicsNotSorted,				//initially the sorted topics
                 topicsSorted,				//initially the unsortd topics
                 topicstemp,				//the swapper between the above two
-                zoomer, fontsize, topicsMap, discriminativeTopic, discriminativeTopicWeight, discriminativeWord, discriminativeWordCounts, topicsGroupPerNode, neighborTopicsGroupPerNode, neighborLen, len, topicPerTopicsGroup, weightPerTopicsGroup,i,j,nl,mywords, wlen, label,
+                zoomer, fontsize, topicsMap, discriminativeTopic, discriminativeTopicWeight, discriminativeWord, discriminativeWordCounts, topicsGroupPerNode, neighborTopicsGroupPerNode, neighborLen, len, topicPerTopicsGroup, weightPerTopicsGroup, i, j, nl, mywords, wlen, label,
             // links
                 links,						// includes all the links among the nodes
                 linkedByIndex, similarityThr, linkThr,
@@ -433,18 +436,18 @@
                 trends,
                 columns,
                 trendsclicked,
-                trendsFileExist,trendsjsonfilename,
+                trendsFileExist, trendsjsonfilename, alltrendscsvFilesExist, trendsNum,
 
 
-            //graph
-                graphPositionsExist,jsonfilename,renderPageData,changed,jsonLayout;
+                //graph
+                graphPositionsExist, jsonfilename, renderPageData, changed, jsonLayout;
 
             legenddivElem.hide();
 
             // function creation jquery percentage
             jQuery.extend({
-                percentage: function(a, b){
-                    return Math.round((a/b)*100);
+                percentage: function (a, b) {
+                    return Math.round((a / b) * 100);
                 }
 //                ,
 //                reverseChildren: function() {
@@ -459,7 +462,7 @@
             });
             bodyElem.on("click", function (e) {
                 if (!dropdownThresholdsElem.is(e.target) && dropdownThresholdsElem.has(e.target).length === 0 && $('.open').has(e.target).length === 0)
-                    dropdownThresholdsElem.parent().attr("class","dropdown");
+                    dropdownThresholdsElem.parent().attr("class", "dropdown");
             });
 
 
@@ -474,108 +477,108 @@
             });
 
             var doit;
-            windowElem.onresize = function(){
+            windowElem.onresize = function () {
                 clearTimeout(doit);
                 doit = setTimeout(onResize, 20);		//after 0.02sec the resizing is done
             };
 
-            loadThresholdsFromUrlParameters();
+//            loadThresholdsFromUrlParameters();
             initializeExperimentPage();
             loadThresholdsFromUrlParameters();  //only when changing the parameters on url and refreshing
+            checkFirstLayoutToBeVisualized();
             graphLoad();
             legenddivElem.hide();
-            mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
+            mygraphContainerElem.attr("style", "position:fixed;width:" + 9 * w / 8);
             resizeLayout();
             checkFullscreen();
 
-
             /* event handlers */
             vis.style("height", h)
-                .style("viewBox", "0 0 " + w + " " + h )			// in order to be ok in all browsers
+                .style("viewBox", "0 0 " + w + " " + h)			// in order to be ok in all browsers
                 .style("preserveAspectRatio", "xMidYMid meet")
-                .style("border-style","solid")
-                .style("cursor","pointer")
-                .style("border-color","#f6f6f6");
+                .style("border-style", "solid")
+                .style("cursor", "pointer")
+                .style("border-color", "#f6f6f6");
 
 
             /* Create scales to handle zoom coordinates */
-            xScale = d3.scale.linear().domain([0,w]);
-            yScale = d3.scale.linear().domain([0,h]);
+            xScale = d3.scale.linear().domain([0, w]);
+            yScale = d3.scale.linear().domain([0, h]);
             /* ranges will be set later based on the size of the SVG */
 
 
             focused = false;
 
-            thr1Elem.val("> "+$.percentage(similarityThr,1)+" %");
-            thr2Elem.val("> "+$.percentage(nodeConnectionsThr,1)+" %");
-            thr3Elem.val("> "+$.percentage(linkThr,1)+" %");
-            thr4Elem.val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
-            thr5Elem.val("> "+$.percentage(expsimilarity,1)+" %");
+            thr1Elem.val("> " + $.percentage(similarityThr, 1) + " %");
+            thr2Elem.val("> " + $.percentage(nodeConnectionsThr, 1) + " %");
+            thr3Elem.val("> " + $.percentage(linkThr, 1) + " %");
+            thr4Elem.val("> " + $.percentage(maxNodeConnectionsThr, 1) + " %");
+            thr5Elem.val("> " + $.percentage(expsimilarity, 1) + " %");
             thr6Elem.val(gravity);
             thr7Elem.val(charge);
 
-            thr1Elem.focus(function(){
-                thr1Elem.val($.percentage(similarityThr,1));
+            thr1Elem.focus(function () {
+                thr1Elem.val($.percentage(similarityThr, 1));
             });
-            thr1Elem.change(function(){
-                similarityThr = thr1Elem.val()/100;
+            thr1Elem.change(function () {
+                similarityThr = thr1Elem.val() / 100;
                 browseTick(false);
-                thr1Elem.val("> "+$.percentage(similarityThr,1)+" %");
+                thr1Elem.val("> " + $.percentage(similarityThr, 1) + " %");
             });
 
-            thr2Elem.focus(function(){
-                thr2Elem.val($.percentage(nodeConnectionsThr,1));
+            thr2Elem.focus(function () {
+                thr2Elem.val($.percentage(nodeConnectionsThr, 1));
             });
-            thr2Elem.change(function(){
-                nodeConnectionsThr = thr2Elem.val()/100;
+            thr2Elem.change(function () {
+                nodeConnectionsThr = thr2Elem.val() / 100;
                 browseTick(false);
-                thr2Elem.val("> "+$.percentage(nodeConnectionsThr,1)+" %");
+                thr2Elem.val("> " + $.percentage(nodeConnectionsThr, 1) + " %");
             });
 
-            thr3Elem.focus(function(){
-                thr3Elem.val($.percentage(linkThr,1));
+            thr3Elem.focus(function () {
+                thr3Elem.val($.percentage(linkThr, 1));
             });
-            thr3Elem.change(function(){
-                linkThr = thr3Elem.val()/100;
+            thr3Elem.change(function () {
+                linkThr = thr3Elem.val() / 100;
                 browseTick(true);
-                thr3Elem.val("> "+$.percentage(linkThr,1)+" %");
+                thr3Elem.val("> " + $.percentage(linkThr, 1) + " %");
             });
 
-            thr4Elem.focus(function(){
-                thr4Elem.val($.percentage(maxNodeConnectionsThr,1));
+            thr4Elem.focus(function () {
+                thr4Elem.val($.percentage(maxNodeConnectionsThr, 1));
             });
-            thr4Elem.change(function(){
-                maxNodeConnectionsThr = thr4Elem.val()/100;
+            thr4Elem.change(function () {
+                maxNodeConnectionsThr = thr4Elem.val() / 100;
                 browseTick(true);
-                thr4Elem.val("> "+$.percentage(maxNodeConnectionsThr,1)+" %");
+                thr4Elem.val("> " + $.percentage(maxNodeConnectionsThr, 1) + " %");
             });
 
-            thr5Elem.focus(function(){
-                thr5Elem.val($.percentage(expsimilarity,1));
+            thr5Elem.focus(function () {
+                thr5Elem.val($.percentage(expsimilarity, 1));
             });
-            thr5Elem.change(function(){
-                console.log("expsimilarity="+expsimilarity);
-                expsimilarity = thr5Elem.val()/100;
-                console.log("expsimilarity="+expsimilarity);
+            thr5Elem.change(function () {
+                console.log("expsimilarity=" + expsimilarity);
+                expsimilarity = thr5Elem.val() / 100;
+                console.log("expsimilarity=" + expsimilarity);
                 initializeExperimentPage();
-                if ((expsimilarity = thr5Elem.val()*0.01) > 1 || expsimilarity < 0) initializeExperimentPage();
+                if ((expsimilarity = thr5Elem.val() * 0.01) > 1 || expsimilarity < 0) initializeExperimentPage();
                 console.log(expsimilarity)
                 console.log(window.location.href)
                 history.pushState('data', '', updateURLParameter(window.location.href, 's', expsimilarity));
                 console.log(window.location.href)
                 graphLoad();
-                mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
-                thr5Elem.val("> "+$.percentage(expsimilarity,1)+" %");
+                mygraphContainerElem.attr("style", "position:fixed;width:" + 8 * w / 7);
+                thr5Elem.val("> " + $.percentage(expsimilarity, 1) + " %");
             });
 
-            thr6Elem.focus(function(){
-                console.log("gravity init="+gravity);
+            thr6Elem.focus(function () {
+                console.log("gravity init=" + gravity);
                 thr6Elem.val(gravity);
             });
-            thr6Elem.change(function(){
-                console.log("gravity="+gravity);
+            thr6Elem.change(function () {
+                console.log("gravity=" + gravity);
                 gravity = thr6Elem.val();
-                console.log("gravity="+gravity);
+                console.log("gravity=" + gravity);
                 console.log(window.location.href)
                 history.pushState('data', '', updateURLParameter(window.location.href, 'g', gravity));
                 console.log(window.location.href)
@@ -586,14 +589,14 @@
                 thr6Elem.val(gravity);
             });
 
-            thr7Elem.focus(function(){
-                console.log("charge init="+gravity);
+            thr7Elem.focus(function () {
+                console.log("charge init=" + gravity);
                 thr7Elem.val(charge);
             });
-            thr7Elem.change(function(){
-                console.log("charge="+charge);
+            thr7Elem.change(function () {
+                console.log("charge=" + charge);
                 charge = thr7Elem.val();
-                console.log("charge="+charge);
+                console.log("charge=" + charge);
                 console.log(window.location.href)
                 history.pushState('data', '', updateURLParameter(window.location.href, 'c', charge));
                 console.log(window.location.href)
@@ -606,55 +609,160 @@
 
             documentElem.on("myTrigger", function (evt) {       // http://www.htmlgoodies.com/beyond/javascript/creating-custom-events-with-jquery.html
                 console.log("myTrigger")
-                if(changed){
+                if (changed) {
                     initializeExperimentPage();
                     graphLoad();
                     changed = false;
                 }
             });
-            graphmenu1Elem.on("click", function(){if(trendsclicked){chordReset();graphReset()};legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");
+            graphmenu1Elem.on("click", function () {
+                if (trendsclicked) {
+                    chordReset();
+                    graphReset()
+                }
+                ;
+                legenddivElem.show();
+                legend2divElem.hide();
+                pill1Elem.removeClass("disabled");
 //                pill3Elem.addClass("disabled");
-                pagetitleElem.html(pagetitle);trendsclicked=false;});
-            chordmenu1Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");
+                pagetitleElem.html(pagetitle);
+                trendsclicked = false;
+            });
+            chordmenu1Elem.on("click", function () {
+                if (trendsclicked)chordReset();
+                legenddivElem.show();
+                legend2divElem.hide();
+                pill1Elem.removeClass("disabled");
 //                pill3Elem.addClass("disabled");
-                pagetitleElem.html(chordtitle);trendsclicked=false;});
-            chordmenu2Elem.on("click", function(){if(trendsclicked)chordReset();legenddivElem.show();legend2divElem.hide();pill1Elem.removeClass("disabled");
+                pagetitleElem.html(chordtitle);
+                trendsclicked = false;
+            });
+            chordmenu2Elem.on("click", function () {
+                if (trendsclicked)chordReset();
+                legenddivElem.show();
+                legend2divElem.hide();
+                pill1Elem.removeClass("disabled");
 //                pill3Elem.addClass("disabled");
-                pagetitleElem.html(chordtitle);trendsclicked=false;});
-    //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
-            trendmenu0Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
-                trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend0Elem.show();
-//                pill3Elem.removeClass("disabled");
-                pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu1Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
-                trendlegend0Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend1Elem.show();
-//                pill3Elem.removeClass("disabled");
-                pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu2Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
-                trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend2Elem.show();
+                pagetitleElem.html(chordtitle);
+                trendsclicked = false;
+            });
+            //todo mellontika na min ginetai reset o graph, alla na patiountai osa exoun sxesi me to patimeno trend
+            trendmenu0Elem.on("click", function () {
+                trendReset(true);
+                graphReset();
+                legenddivElem.hide();
+                legend2divElem.show();
+                trendlegend1Elem.hide();
+                trendlegend2Elem.hide();
+                trendlegend3Elem.hide();
+                trendlegend4Elem.hide();
+                trendlegend5Elem.hide();
+                trendlegend6Elem.hide();
+                trendlegend0Elem.show();
 //                pill3Elem.removeClass("disabled");
                 pagetitleElem.html(trendstitle);
-                trendsclicked=true;});
-            trendmenu3Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
-                trendlegend0Elem.hide();trendlegend2Elem.hide();trendlegend1Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend3Elem.show();
+                trendsclicked = true;
+            });
+            trendmenu1Elem.on("click", function () {
+                trendReset(true);
+                graphReset();
+                legenddivElem.hide();
+                legend2divElem.show();
+                trendlegend0Elem.hide();
+                trendlegend2Elem.hide();
+                trendlegend3Elem.hide();
+                trendlegend4Elem.hide();
+                trendlegend5Elem.hide();
+                trendlegend6Elem.hide();
+                trendlegend1Elem.show();
 //                pill3Elem.removeClass("disabled");
-                pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu4Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
-                trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.hide();trendlegend4Elem.show();
+                pagetitleElem.html(trendstitle);
+                trendsclicked = true;
+            });
+            trendmenu2Elem.on("click", function () {
+                trendReset(true);
+                graphReset();
+                legenddivElem.hide();
+                legend2divElem.show();
+                trendlegend0Elem.hide();
+                trendlegend1Elem.hide();
+                trendlegend3Elem.hide();
+                trendlegend4Elem.hide();
+                trendlegend5Elem.hide();
+                trendlegend6Elem.hide();
+                trendlegend2Elem.show();
 //                pill3Elem.removeClass("disabled");
-                pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu5Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
-                trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend6Elem.hide();trendlegend5Elem.show();
+                pagetitleElem.html(trendstitle);
+                trendsclicked = true;
+            });
+            trendmenu3Elem.on("click", function () {
+                trendReset(true);
+                graphReset();
+                legenddivElem.hide();
+                legend2divElem.show();
+                trendlegend0Elem.hide();
+                trendlegend2Elem.hide();
+                trendlegend1Elem.hide();
+                trendlegend4Elem.hide();
+                trendlegend5Elem.hide();
+                trendlegend6Elem.hide();
+                trendlegend3Elem.show();
 //                pill3Elem.removeClass("disabled");
-                pagetitleElem.html(trendstitle);trendsclicked=true;});
-            trendmenu6Elem.on("click", function(){trendReset(true);graphReset();legenddivElem.hide();legend2divElem.show();
-                trendlegend0Elem.hide();trendlegend1Elem.hide();trendlegend2Elem.hide();trendlegend3Elem.hide();trendlegend4Elem.hide();trendlegend5Elem.hide();trendlegend6Elem.show();
+                pagetitleElem.html(trendstitle);
+                trendsclicked = true;
+            });
+            trendmenu4Elem.on("click", function () {
+                trendReset(true);
+                graphReset();
+                legenddivElem.hide();
+                legend2divElem.show();
+                trendlegend0Elem.hide();
+                trendlegend1Elem.hide();
+                trendlegend2Elem.hide();
+                trendlegend3Elem.hide();
+                trendlegend5Elem.hide();
+                trendlegend6Elem.hide();
+                trendlegend4Elem.show();
 //                pill3Elem.removeClass("disabled");
-                pagetitleElem.html(trendstitle);trendsclicked=true;});
+                pagetitleElem.html(trendstitle);
+                trendsclicked = true;
+            });
+            trendmenu5Elem.on("click", function () {
+                trendReset(true);
+                graphReset();
+                legenddivElem.hide();
+                legend2divElem.show();
+                trendlegend0Elem.hide();
+                trendlegend1Elem.hide();
+                trendlegend2Elem.hide();
+                trendlegend3Elem.hide();
+                trendlegend4Elem.hide();
+                trendlegend6Elem.hide();
+                trendlegend5Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);
+                trendsclicked = true;
+            });
+            trendmenu6Elem.on("click", function () {
+                trendReset(true);
+                graphReset();
+                legenddivElem.hide();
+                legend2divElem.show();
+                trendlegend0Elem.hide();
+                trendlegend1Elem.hide();
+                trendlegend2Elem.hide();
+                trendlegend3Elem.hide();
+                trendlegend4Elem.hide();
+                trendlegend5Elem.hide();
+                trendlegend6Elem.show();
+//                pill3Elem.removeClass("disabled");
+                pagetitleElem.html(trendstitle);
+                trendsclicked = true;
+            });
 
 
             // the same piece of code with the below $(document).fullScreen() because it doesn't catch the escape button click
-            $(document).keyup(function(e) {
+            $(document).keyup(function (e) {
                 if (e.keyCode == 27) {   // esc
                     svgfullscreenExit();
                     pill1Elem.find("a").find("span").removeClass("glyphicon-resize-small");
@@ -664,8 +772,8 @@
                 }
             });
 
-            pill1Elem.on("click",function(){
-                if($(document).fullScreen()) {
+            pill1Elem.on("click", function () {
+                if ($(document).fullScreen()) {
                     svgfullscreenExit();
                     pill1Elem.find("a").find("span").removeClass("glyphicon-resize-small");
                     pill1Elem.find("a").find("span").addClass("glyphicon-fullscreen");
@@ -681,11 +789,11 @@
             });
 
 
-            pill2Elem.unbind().on("click",function(){
+            pill2Elem.unbind().on("click", function () {
                 pill2Elem.removeClass("active");
-                if(graphdivElem.hasClass("active")) graphReset();
-                else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
-                else if (trend0divElem.hasClass("active") || trend1divElem.hasClass("active") || trend2divElem.hasClass("active")  || trend3divElem.hasClass("active") || trend4divElem.hasClass("active")  || trend5divElem.hasClass("active") || trend6divElem.hasClass("active")) trendReset(true);
+                if (graphdivElem.hasClass("active")) graphReset();
+                else if (chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
+                else if (trend0divElem.hasClass("active") || trend1divElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active") || trend4divElem.hasClass("active") || trend5divElem.hasClass("active") || trend6divElem.hasClass("active")) trendReset(true);
 
                 pill2Elem.blur();
             });
@@ -702,17 +810,17 @@
 //
 //                pill3Elem.blur();
 //            });
-            pill4Elem.unbind().on("click",function(){
+            pill4Elem.unbind().on("click", function () {
                 pill4Elem.removeClass("active");
-                if(graphdivElem.hasClass("active")) graphCentralize();
-                else if(chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
+                if (graphdivElem.hasClass("active")) graphCentralize();
+                else if (chorddivElem.hasClass("active") || chord2divElem.hasClass("active")) chordReset();
                 else if (trend0divElem.hasClass("active") || trend1divElem.hasClass("active") || trend2divElem.hasClass("active") || trend3divElem.hasClass("active") || trend4divElem.hasClass("active") || trend5divElem.hasClass("active") || trend6divElem.hasClass("active")) trendReset(false);
 
                 pill4Elem.blur();
             });
 
 
-            exitclassifiedNodesHeaderElem.click(function(){
+            exitclassifiedNodesHeaderElem.click(function () {
                 classifiedNodesHeaderElem.hide();
                 classifiedNodesElem.hide();
                 nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
@@ -740,15 +848,15 @@
             /* https://github.com/mbostock/d3/wiki/Zoom-Behavior */
             zoomer = d3.behavior.zoom()
                 /* allow from an x0.5 to an x10 times zoom in or out */
-                .scaleExtent([0.5,10])
+                .scaleExtent([0.5, 10])
                 .on("zoomstart", zoomstart)
                 .on("zoom", zoom)
                 .on("zoomend", zoomend);
             vis.call(zoomer);
 
             /* moveToFront function to handle the svg */
-            d3.selection.prototype.moveToFront = function() {
-                return this.each(function(){
+            d3.selection.prototype.moveToFront = function () {
+                return this.each(function () {
                     this.parentNode.appendChild(this);
                 });
             };
@@ -758,32 +866,32 @@
                 charge *= 1.5;
 
             force = self.force = d3.layout.force()
-                .linkDistance(function(d) {
-                    return Math.round(10*d.value);
+                .linkDistance(function (d) {
+                    return Math.round(10 * d.value);
                 })
-                .linkStrength(function(d) {
+                .linkStrength(function (d) {
                     return d.value;
                 })
-                .charge( charge*((windowElem.width()*w*0.3)/(755*755))) // according to http://jsfiddle.net/cSn6w/8/
+                .charge(charge * ((windowElem.width() * w * 0.3) / (755 * 755))) // according to http://jsfiddle.net/cSn6w/8/
                 .gravity(gravity)
                 .size([w, h]);
 
-            if (graphPositionsExist){
+            if (graphPositionsExist) {
                 force.on("tick", jsonTick);
             }
-            else{
+            else {
                 force.on("tick", initialTick);
             }
 
 // Na tsekarw me to Enter ti tha anoigei. An  leitourgei swsta
-            documentElem.keydown(function(e) {
+            documentElem.keydown(function (e) {
                 //itan 13
                 if (e.keyCode == 14 && selectedLabelIndex !== null) {
                     openLink()(labels[selectedLabelIndex]);
                     return false;
                 }
                 else if (e.keyCode == 38 || e.keyCode == 40 && selectedLabelIndex !== null) {	// up and down buttom
-                    if (e.keyCode == 38){
+                    if (e.keyCode == 38) {
                         console.log("up btn")
                         selectedLabelIndex--;
                     }
@@ -796,11 +904,11 @@
                     if (selectedLabelIndex > labels.length - 1)
                         selectedLabelIndex = 0;
 
-                    vis.selectAll("text.nodetext").style("font-weight", function(d, i) {
+                    vis.selectAll("text.nodetext").style("font-weight", function (d, i) {
                         return labels[selectedLabelIndex] == d ? "bold" : "normal"
                     });
 
-                    vis.selectAll("circle.circle").style("stroke-width", function(d, i) {
+                    vis.selectAll("circle.circle").style("stroke-width", function (d, i) {
                         return labels[selectedLabelIndex] == d ? "5" : "1"
                     });
 
@@ -820,29 +928,29 @@
 
 
             /***************************************************************************
-             *******							FUNCTIONS							*******
+             *******                            FUNCTIONS                            *******
              ***************************************************************************/
 
 
             /**** DRAGGING FUNCTIONS ****/
-            function dragstarted(d){
+            function dragstarted(d) {
                 d3.event.sourceEvent.stopPropagation();
                 d3.select(this).classed("dragging", true);
                 force.stop(); //stop ticks while dragging
             }
 
-            function dragged(d){
+            function dragged(d) {
                 if (d.fixed) return; //root is fixed
 
                 //get mouse coordinates relative to the visualization
                 //coordinate system:
                 var mouse = d3.mouse(vis.node());
-                d.x = (mouse[0] - translation[0])/scaleFactor;
-                d.y = (mouse[1] - translation[1])/scaleFactor;
+                d.x = (mouse[0] - translation[0]) / scaleFactor;
+                d.y = (mouse[1] - translation[1]) / scaleFactor;
                 browseTick(false);//re-position this node and any links
             }
 
-            function dragended(d){
+            function dragended(d) {
                 d3.select(this).classed("dragging", false);
                 force.resume();
             }
@@ -851,9 +959,9 @@
             /**** ZOOOMING FUNCTIONS ****/
             /* function used for starting border coloring*/
             function zoomstart() {
-                vis.style("animation-play-state","play")
+                vis.style("animation-play-state", "play")
                     /*the below is to work in Safari and Chrome:*/
-                    .style("-webkit-animation-play-state","play");
+                    .style("-webkit-animation-play-state", "play");
             }
 
             /* function used for zooming and panning*/
@@ -862,23 +970,23 @@
 
                 scaleFactor = d3.event.scale;
                 translation = d3.event.translate;
-                if (previous_scale < d3.event.scale){
+                if (previous_scale < d3.event.scale) {
                     /* color change is animated infinite times of 3sec each one */
-                    vis.style("animation","zoominmove 3s infinite")
-                        .style("-webkit-animation","zoominmove 3s infinite");
+                    vis.style("animation", "zoominmove 3s infinite")
+                        .style("-webkit-animation", "zoominmove 3s infinite");
                     zoom_type = 1;
                 }
-                else if (previous_scale == d3.event.scale){
+                else if (previous_scale == d3.event.scale) {
                     /* color change is animated infinite times of 3sec each one */
-                    vis.style("animation","dragmove 3s infinite")
-                        .style("-webkit-animation","dragmove 3s infinite")
-                        .style("cursor","move");
+                    vis.style("animation", "dragmove 3s infinite")
+                        .style("-webkit-animation", "dragmove 3s infinite")
+                        .style("cursor", "move");
                     zoom_type = 2;
                 }
-                else{
+                else {
                     /* color change is animated infinite times of 3sec each one */
-                    vis.style("animation","zoomoutmove 3s infinite")
-                        .style("-webkit-animation","zoomoutmove 3s infinite");
+                    vis.style("animation", "zoomoutmove 3s infinite")
+                        .style("-webkit-animation", "zoomoutmove 3s infinite");
                     zoom_type = 3;
                 }
                 previous_scale = scaleFactor;
@@ -888,28 +996,27 @@
 
             /* function used for stopping border coloring*/
             function zoomend() {
-                console.log("previous_scale="+previous_scale);
-                if (zoom_type == 1){
+                console.log("previous_scale=" + previous_scale);
+                if (zoom_type == 1) {
                     vis
-                        /* continue with amimating the border for 2 times more*/
-                        .style("animation","zoominmove 3s 2")
-                        .style("-webkit-animation","zoominmove 3s 2");
+                    /* continue with amimating the border for 2 times more*/
+                        .style("animation", "zoominmove 3s 2")
+                        .style("-webkit-animation", "zoominmove 3s 2");
                 }
-                else if (zoom_type == 2){
+                else if (zoom_type == 2) {
                     vis
-                        /* continue with amimating the border for 2 times more*/
-                        .style("animation","dragmove 3s 2")
-                        .style("-webkit-animation","dragmove 3s 2")
-                        .style("cursor","pointer");
+                    /* continue with amimating the border for 2 times more*/
+                        .style("animation", "dragmove 3s 2")
+                        .style("-webkit-animation", "dragmove 3s 2")
+                        .style("cursor", "pointer");
                 }
-                else{
+                else {
                     vis
-                        /* continue with amimating the border for 2 times more*/
-                        .style("animation","zoomoutmove 3s 2")
-                        .style("-webkit-animation","zoomoutmove 3s 2");
+                    /* continue with amimating the border for 2 times more*/
+                        .style("animation", "zoomoutmove 3s 2")
+                        .style("-webkit-animation", "zoomoutmove 3s 2");
                 }
             }
-
 
 
             /**** FULLSCREEN AND RESIZING FUNCTIONS ****/
@@ -932,16 +1039,16 @@
 
                 ///initialize
                 var types = [];
-                $(".circle").each(function(){
+                $(".circle").each(function () {
                     types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
 
                 });
                 showtype(fade_out, types);
             }
 
-            function graphCentralize(){
+            function graphCentralize() {
                 scaleFactor = 1;
-                translation = [0,0];
+                translation = [0, 0];
                 previous_scale = 1;
                 zoomer.translate([0, 0]);
                 zoomer.scale(1);
@@ -951,44 +1058,44 @@
 
             /**** FADING AND COLORING FUNCTIONS ****/
             /* refills the opacity of each color after fading */
-            function showtype(opacity, types){
+            function showtype(opacity, types) {
 
                 nodeCircles
-                    .style("fill-opacity", function(o) {
+                    .style("fill-opacity", function (o) {
 
                         if (types.indexOf(o.index) === -1)return opacity;
                         return normal;
                     })
-                    .style("stroke-opacity", function(o) {
+                    .style("stroke-opacity", function (o) {
                         if (types.indexOf(o.index) === -1)return opacity;
                         return normal;
                     });
 
                 nodeLabels
-                    .style("fill-opacity", function(o) {
+                    .style("fill-opacity", function (o) {
                         if (types.indexOf(o.index) === -1) return opacity * 3;
                         return strong;
                     })
-                    .style("stroke-opacity", function(o) {
+                    .style("stroke-opacity", function (o) {
                         if (types.indexOf(o.index) === -1) return opacity * 3;
                         return strong;
                     });
 
-                linkLines.style("stroke-opacity", function(o) {
-                    return types.indexOf(o.source.index) != -1 || types.indexOf(o.target.index) != -1 ? normal/2 : opacity;
+                linkLines.style("stroke-opacity", function (o) {
+                    return types.indexOf(o.source.index) != -1 || types.indexOf(o.target.index) != -1 ? normal / 2 : opacity;
                 });
 
             }
 
 
             function fadeGraph(opacity) {
-                return function(d, i) {
+                return function (d, i) {
 //                    if($(".active_row").length == 0 && !classifiedNodesElem.find("div").find("ul").is(':visible')) {   // if there is active row or the left list of nodes is visible then don't fade
-                   //to fadelimit einai mia metabliti pithanotata idia i pio megali apo to normal etsi wste sta megala peiramata pou tha orizw egw poia tha einai auta na min ginetai fade
-                    if($(".circle").css("fill-opacity") >= fadelimit) {   // if there is active row or the left list of nodes is visible then don't fade
+                    //to fadelimit einai mia metabliti pithanotata idia i pio megali apo to normal etsi wste sta megala peiramata pou tha orizw egw poia tha einai auta na min ginetai fade
+                    if ($(".circle").css("fill-opacity") >= fadelimit) {   // if there is active row or the left list of nodes is visible then don't fade
 
-                    // addClass for svg to place yellow shadow
-                        $(this).attr('class', function(index, classNames) {
+                        // addClass for svg to place yellow shadow
+                        $(this).attr('class', function (index, classNames) {
                             return classNames + ' shadow';
                         });
 
@@ -1001,19 +1108,19 @@
             }
 
 
-            function clickGraph(mynode, opacity){
+            function clickGraph(mynode, opacity) {
 
                 chordReset();
-                graphHandler(mynode,opacity);
+                graphHandler(mynode, opacity);
                 clickedNode = mynode;
             }
 
-            function chordReset(){
+            function chordReset() {
                 reset();
 
-                if($(".active_row").length!=0){
-                    d3.selectAll(".legend_row").classed("inactive",false).classed("active_row",false);
-                    d3.selectAll(".chord").classed("activeSource",false).classed("activeTarget",false).classed("activeChord",false).style("opacity","1");
+                if ($(".active_row").length != 0) {
+                    d3.selectAll(".legend_row").classed("inactive", false).classed("active_row", false);
+                    d3.selectAll(".chord").classed("activeSource", false).classed("activeTarget", false).classed("activeChord", false).style("opacity", "1");
                 }
             }
 
@@ -1088,18 +1195,18 @@
 
                 selectedLabelIndex = 0;
 
-                mytextHandler(mynode,opacity);
+                mytextHandler(mynode, opacity);
 
                 classifiedNodeButtons();
 
-                fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;
+                fontsize = (fontsizeVar / (Math.sqrt(2 * previous_scale)) >= smallestFontVar) ? fontsizeVar / (Math.sqrt(2 * previous_scale)) : smallestFontVar;
 
                 vis.selectAll(".labels")
-                    .style("font-size",fontsize+"px");
+                    .style("font-size", fontsize + "px");
             }
 
 
-            function mytextHandler (mynode,opacity){
+            function mytextHandler(mynode, opacity) {
                 mytext.selectAll(".nodetext").remove();
 
                 mytext.selectAll("div.nodetext")
@@ -1123,10 +1230,10 @@
                                 .attr("class", "pagination active")
                                 .attr("data-toggle", "tooltip")
                                 .attr("data-placement", "right")
-//                                .attr("title", "...more about project and link...")
-                                .style("cursor","pointer")
-//                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).attr("style", "font-weight:400").html('<?php //echo $node_name;?>//: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
-                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).attr("style", "font-weight:400").html('<?php echo $node_name;?>: ' + o.name + "</br> Category: " + o.area);
+                                //                                .attr("title", "...more about project and link...")
+                                .style("cursor", "pointer")
+                                //                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id",o.index).attr("style", "font-weight:400").html('<?php //echo $node_name;?>//: ' + o.name + ' <span class=\"badge badge-info\">' + o.value + "</span></br> Category: " + o.area);
+                                .append("li").append("a").attr("class", "nodetext " + o.color + " active").attr("id", o.index).attr("style", "font-weight:400").html('<?php echo $node_name;?>: ' + o.name + "</br> Category: " + o.area);
                             var str = "";
                             topicsGroupPerNode = graphNodes[o.id];
                             if (topicsNotSorted != null) {
@@ -1137,7 +1244,7 @@
                                     var wlen = mywords.length;
                                     //todo now only available in ACM
                                     if (/^ACM*/.test(experimentName))
-                                        str += "<span class='topic' style='opacity:1;font-weight:600'>"+mywords[0].title+":</span><br/>";
+                                        str += "<span class='topic' style='opacity:1;font-weight:600'>" + mywords[0].title + ":</span><br/>";
                                     for (var j = 0; j < wlen; j++) {
                                         var opacity;
                                         if ((opacity = mywords[j].counts / mywords[0].counts) < 0.8) {
@@ -1175,12 +1282,12 @@
 
 
             /* function returns 1 if an array contains an object or 0 if not */
-            function include(arr,obj) {
+            function include(arr, obj) {
                 return (arr.indexOf(obj) != -1);
             }
 
 
-            function compare(a,b) {
+            function compare(a, b) {
                 if (a.pr < b.pr)
                     return 1;
                 if (a.pr > b.pr)
@@ -1189,8 +1296,7 @@
             }
 
 
-
-            function comparegraphNodes(a,b) {
+            function comparegraphNodes(a, b) {
                 if (a.name > b.name)
                     return 1;
                 if (a.name < b.name)
@@ -1199,11 +1305,11 @@
             }
 
             /* reset */
-            function reset(){					/* normalizeNodesAndRemoveLabels */
+            function reset() {                    /* normalizeNodesAndRemoveLabels */
 //                if (graphNodesElem.find("option:selected")[0] !== undefined) return 0;
 
                 var types = [];
-                $(".circle").each(function(){
+                $(".circle").each(function () {
                     types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
 
                 });
@@ -1230,7 +1336,7 @@
                 downButtonElem.hide();
 
                 filtersElem.val($("#filters option:first").val());
-                graphNodesElem.multiselect("deselectAll",false);
+                graphNodesElem.multiselect("deselectAll", false);
             }
 
             /* collide */
@@ -1241,7 +1347,7 @@
                     ny1 = nodeCircles.y - r,
                     ny2 = nodeCircles.y + r;
 
-                return function(quad, x1, y1, x2, y2) {
+                return function (quad, x1, y1, x2, y2) {
                     if (quad.point && (quad.point !== nodeCircles)) {
                         var x = nodeCircles.x - quad.point.x,
                             y = nodeCircles.y - quad.point.y,
@@ -1275,7 +1381,7 @@
 
 
             function openLink() {
-                return function(d) {
+                return function (d) {
                     var url = d.slug;
                     windowElem.open(url)
                 }
@@ -1286,27 +1392,27 @@
                 return x.toString().replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
             }
 
-            function classifiedNodeButtons(){
-                counter=0;						//(re)-initialize counter to zero
+            function classifiedNodeButtons() {
+                counter = 0;						//(re)-initialize counter to zero
                 listLength = 5;
 
-                classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
-                counter+=listLength;
+                classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter + listLength).show();
+                counter += listLength;
 
                 upButtonElem.hide();
 
-                if(classifiedNodesElem.find("div").find("ul").find("li:last").css('display') == 'inline')
+                if (classifiedNodesElem.find("div").find("ul").find("li:last").css('display') == 'inline')
                     downButtonElem.hide();
                 else
                     downButtonElem.show();
 
-                downButtonElem.unbind().click(function(){
+                downButtonElem.unbind().click(function () {
 
-                    if ((counter+listLength)<numOfClassifiedNodes){
-                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+                    if ((counter + listLength) < numOfClassifiedNodes) {
+                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter + listLength).show();
                         upButtonElem.show();
                         downButtonElem.show();
-                        counter+=listLength;
+                        counter += listLength;
                     }
                     else {
                         classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, numOfClassifiedNodes).show();
@@ -1318,20 +1424,20 @@
                 });
 
 
-                upButtonElem.unbind().click(function(){
+                upButtonElem.unbind().click(function () {
 
-                    if (counter-listLength>0){
-                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
+                    if (counter - listLength > 0) {
+                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter - listLength, counter).show();
                         upButtonElem.show();
                         downButtonElem.show();
-                        counter-=listLength;
+                        counter -= listLength;
                     }
-                    else{
-                        counter=0;
-                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+                    else {
+                        counter = 0;
+                        classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter + listLength).show();
                         upButtonElem.hide();
                         downButtonElem.show();
-                        counter+=listLength;
+                        counter += listLength;
                     }
                     console.log(counter)
 
@@ -1339,12 +1445,12 @@
 
                 //for mobile
                 classifiedNodesElem
-                    .one("swipeup",function(){
-                        if ((counter+listLength)<numOfClassifiedNodes){
-                            classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+                    .one("swipeup", function () {
+                        if ((counter + listLength) < numOfClassifiedNodes) {
+                            classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter + listLength).show();
                             upButtonElem.show();
                             downButtonElem.show();
-                            counter+=listLength;
+                            counter += listLength;
                         }
                         else {
                             classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, numOfClassifiedNodes).show();
@@ -1352,37 +1458,39 @@
                             downButtonElem.hide();
                         }
                     })
-                    .on("swipedown",function(){
-                        if (counter-listLength>0){
-                            classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter-listLength, counter).show();
+                    .on("swipedown", function () {
+                        if (counter - listLength > 0) {
+                            classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter - listLength, counter).show();
                             upButtonElem.show();
                             downButtonElem.show();
-                            counter-=listLength;
+                            counter -= listLength;
                         }
-                        else{
-                            counter=0;
-                            classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter+listLength).show();
+                        else {
+                            counter = 0;
+                            classifiedNodesElem.find("div").find("ul").find("li").hide().slice(counter, counter + listLength).show();
                             upButtonElem.hide();
                             downButtonElem.show();
-                            counter+=listLength;
+                            counter += listLength;
                         }
                     });
 
                 classifiedNodesElem.find("div").find("ul").find("li").find("a")
-                    .on("click",function(){
+                    .on("click", function () {
                         // for centering the node w/2 and h/3
                         var clickednodeid = this.id;
-                        var dcx = (w/2-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cx")));
-                        var dcy = (h/3-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cy")));
-                        translation = [dcx,dcy];
-                        vis.attr("transform", "translate("+ translation  + ")");
+                        var dcx = (w / 2 - parseInt(vis.select("#circle-node-" + clickednodeid).attr("cx")));
+                        var dcy = (h / 3 - parseInt(vis.select("#circle-node-" + clickednodeid).attr("cy")));
+                        translation = [dcx, dcy];
+                        vis.attr("transform", "translate(" + translation + ")");
 
-                        $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
+                        $("#circle-node-" + clickednodeid).attr('class', function (index, classNames) {
                             return classNames.replace('shadow', '');
                         });
 
-                        clickedNode = $.grep(nodes, function(obj) { return obj.index == clickednodeid })[0];
-                        clickGraph(clickedNode,fade_out);
+                        clickedNode = $.grep(nodes, function (obj) {
+                            return obj.index == clickednodeid
+                        })[0];
+                        clickGraph(clickedNode, fade_out);
 
                         // return the view to the F-D graph when click
                         myTabElem.find("li.active").removeClass("active");
@@ -1394,48 +1502,53 @@
                         legenddivElem.show();
                         legend2divElem.hide();
                     })
-                    .on("mouseover",function(){
-                        if($(".active_trend").length>0){
+                    .on("mouseover", function () {
+                        if ($(".active_trend").length > 0) {
                             //in order to see the classifed nodes where do they belong
                             legenddivElem.show();
                             legend2divElem.hide();
                         }
 
-                        $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
+                        $("#circle-node-" + this.id).attr('class', function (index, classNames) {
                             return classNames + ' shadow';
                         });
                     })
-                    .on("mouseout",function(){
-                        if($(".active_trend").length>0){
+                    .on("mouseout", function () {
+                        if ($(".active_trend").length > 0) {
                             //in order to see the classifed nodes where do they belong
                             legenddivElem.hide();
                             legend2divElem.show();
                         }
-                        if(graphdivElem.hasClass("active")){
+                        if (graphdivElem.hasClass("active")) {
                             //in order to see the classifed nodes where do they belong
                             legenddivElem.show();
                             legend2divElem.hide();
                             pill1Elem.removeClass("disabled");
 //                            pill3Elem.addClass("disabled");
-                            trend0divElem.removeClass("active");trend1divElem.removeClass("active");trend2divElem.removeClass("active");
-                            trend3divElem.removeClass("active");trend4divElem.removeClass("active");trend5divElem.removeClass("active");trend6divElem.removeClass("active");
+                            trend0divElem.removeClass("active");
+                            trend1divElem.removeClass("active");
+                            trend2divElem.removeClass("active");
+                            trend3divElem.removeClass("active");
+                            trend4divElem.removeClass("active");
+                            trend5divElem.removeClass("active");
+                            trend6divElem.removeClass("active");
                         }
 
-                        $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
+                        $("#circle-node-" + this.id).attr('class', function (index, classNames) {
                             return classNames.replace('shadow', '');
                         });
                     });
 
                 mytextTitleElem.find("div").find("ul").find("li").find("a")
-                    .on("click",function(){
+                    .on("click", function () {
                         // for centering the node w/2 and h/3
                         var clickednodeid = this.id;
-                        var dcx = (w/2-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cx")));
-                        var dcy = (h/3-parseInt(vis.select("#circle-node-"+clickednodeid).attr("cy")));
-                        translation = [dcx,dcy];
-                        vis.attr("transform", "translate("+ translation  + ")");
+                        var dcx = (w / 2 - parseInt(vis.select("#circle-node-" + clickednodeid).attr("cx")));
+                        var dcy = (h / 3 - parseInt(vis.select("#circle-node-" + clickednodeid).attr("cy")));
+                        translation = [dcx, dcy];
+                        vis.attr("transform", "translate(" + translation + ")");
 
-                        $( "#circle-node-"+clickednodeid).attr('class', function(index, classNames) {
+                        $("#circle-node-" + clickednodeid).attr('class', function (index, classNames) {
                             return classNames.replace('shadow', '');
                         });
 
@@ -1445,13 +1558,13 @@
                         chorddivElem.removeClass("active");
                         graphdivElem.addClass("active");
                     })
-                    .on("mouseover",function(){
-                        $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
+                    .on("mouseover", function () {
+                        $("#circle-node-" + this.id).attr('class', function (index, classNames) {
                             return classNames + ' shadow';
                         });
                     })
-                    .on("mouseout",function(){
-                        $( "#circle-node-"+this.id).attr('class', function(index, classNames) {
+                    .on("mouseout", function () {
+                        $("#circle-node-" + this.id).attr('class', function (index, classNames) {
                             return classNames.replace('shadow', '');
                         });
                     });
@@ -1463,33 +1576,33 @@
                 $(".loading").remove();
 
                 nodeCircles
-                    /* transition animates the elements selected. In browsing we don't need it */
-//                    .transition()
-//                    .duration(200)
-                    .attr("cx", function(d) {
+                /* transition animates the elements selected. In browsing we don't need it */
+                //                    .transition()
+                //                    .duration(200)
+                    .attr("cx", function (d) {
                         /* http://stackoverflow.com/questions/21344340/sematic-zooming-of-force-directed-graph-in-d3 */
-                        return translation[0] + scaleFactor*d.x;
+                        return translation[0] + scaleFactor * d.x;
                     })
-                    .attr("cy", function(d) {
-                        return translation[1] + scaleFactor*d.y;
+                    .attr("cy", function (d) {
+                        return translation[1] + scaleFactor * d.y;
                     });
 
 
                 linkLines
                 /* transition animates the elements selected. In browsing we don't need it */
-//                    .transition()
-//                    .duration(200)
-                    .attr("x1", function(d) {
-                        return translation[0] + scaleFactor*d.source.x;
+                //                    .transition()
+                //                    .duration(200)
+                    .attr("x1", function (d) {
+                        return translation[0] + scaleFactor * d.source.x;
                     })
-                    .attr("y1", function(d) {
-                        return translation[1] + scaleFactor*d.source.y;
+                    .attr("y1", function (d) {
+                        return translation[1] + scaleFactor * d.source.y;
                     })
-                    .attr("x2", function(d) {
-                        return translation[0] + scaleFactor*d.target.x;
+                    .attr("x2", function (d) {
+                        return translation[0] + scaleFactor * d.target.x;
                     })
-                    .attr("y2", function(d) {
-                        return translation[1] + scaleFactor*d.target.y;
+                    .attr("y2", function (d) {
+                        return translation[1] + scaleFactor * d.target.y;
                     });
 
                 if (firsttime) {            // true every time we change similarity or experiment
@@ -1499,22 +1612,22 @@
 
                 /* after creating the labels we put them in nodeLabels variable */
 
-                fontsize = (fontsizeVar/(Math.sqrt(2*previous_scale)) >= smallestFontVar) ? fontsizeVar/(Math.sqrt(2*previous_scale)) : smallestFontVar;
+                fontsize = (fontsizeVar / (Math.sqrt(2 * previous_scale)) >= smallestFontVar) ? fontsizeVar / (Math.sqrt(2 * previous_scale)) : smallestFontVar;
 
 
                 nodeLabels
-//                    .transition()
-//                    .duration(200)
-                    .attr("x",function (d){
-                        return (translation[0] + scaleFactor*d.x+7)
+                //                    .transition()
+                //                    .duration(200)
+                    .attr("x", function (d) {
+                        return (translation[0] + scaleFactor * d.x + 7)
                     })
-                    .attr("y",function (d){
-                        return (translation[1] + scaleFactor*d.y-7)
+                    .attr("y", function (d) {
+                        return (translation[1] + scaleFactor * d.y - 7)
                     })
-//				.text(function(d){return d.index;});
-                    .text(function(d) {
+                    //				.text(function(d){return d.index;});
+                    .text(function (d) {
 
-                        if (labeled[d.index]){
+                        if (labeled[d.index]) {
                             if (firsttime) {
                                 label[d.index] = "";
                                 // console.log("topicWords printed on graph:");
@@ -1530,17 +1643,17 @@
                                 }
                             }
 
-                            if((links[d.index].value>similarityThr-(0.2*previous_scale)) && (nodeConnections[d.index] > (nodeConnectionsThr/Math.sqrt(previous_scale))*maxNodeConnections)){
+                            if ((links[d.index].value > similarityThr - (0.2 * previous_scale)) && (nodeConnections[d.index] > (nodeConnectionsThr / Math.sqrt(previous_scale)) * maxNodeConnections)) {
                                 return label[d.index];
                             }
-                            else{
+                            else {
                                 return "";
                             }
                         }
                     });
 
                 vis.selectAll(".labels")
-                    .style("font-size",fontsize+"px");
+                    .style("font-size", fontsize + "px");
 
 
                 /* move circle elements above all others within the same grouping */
@@ -1550,19 +1663,19 @@
             };
 
 
-            function findTopicLabels(){
+            function findTopicLabels() {
 //NMP
                 /* The following code is executed only when the ajaxGraphCall has loaded all the Topics */
                 // documentElem.ajaxComplete(function() { 	// if "ajaxComplete" the code is executed every time one of the ajaxCalls is completed
                 // documentElem.bind("topicsDone",function() {	// if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
 
                 k = 0,
-                n = nodes.length,
-                topicsMap = {},
-                discriminativeTopic = {},
-                discriminativeTopicWeight = {},
-                discriminativeWord = {},
-                discriminativeWordCounts = {};
+                    n = nodes.length,
+                    topicsMap = {},
+                    discriminativeTopic = {},
+                    discriminativeTopicWeight = {},
+                    discriminativeWord = {},
+                    discriminativeWordCounts = {};
 
 
                 /* maybe use: tfidf algorithm to find discriminative topics and words */
@@ -1572,7 +1685,7 @@
                     /* temporarily we find if a node has high-connectivity (3/7 at least of the maximum node's connectivity) */
 //				if(links[nodes[k].index].value>0.75){
 
-                    if((nodeConnections[nodes[k].index] > maxNodeConnectionsThr*maxNodeConnections) && links[nodes[k].index]!==undefined && (links[nodes[k].index].value>linkThr)){		//afou maxNodeConnections=24 tha broume ta topics se omades toulaxiston twn 4 kai pou einai toulaxiston se kontini apostasi metaksu tous
+                    if ((nodeConnections[nodes[k].index] > maxNodeConnectionsThr * maxNodeConnections) && links[nodes[k].index] !== undefined && (links[nodes[k].index].value > linkThr)) {		//afou maxNodeConnections=24 tha broume ta topics se omades toulaxiston twn 4 kai pou einai toulaxiston se kontini apostasi metaksu tous
 
                         topicsGroupPerNode = graphNodes[nodes[k].id];
                         /* in order to find the most discriminative topic we find all the topics in a group with high-connectivity and we find the topic with the max weight
@@ -1588,28 +1701,28 @@
                         discriminativeTopicWeight[nodes[k].index] = topicsGroupPerNode[0].weight;
                         // console.log("IN k ="+k+": initial discriminativeTopic = "+discriminativeTopic[nodes[k].index]+" with weight = "+discriminativeTopicWeight[nodes[k].index])
 
-                        for(i=0;i<len;i++){
+                        for (i = 0; i < len; i++) {
                             topicPerTopicsGroup = topicsGroupPerNode[i].topic;
                             weightPerTopicsGroup = topicsGroupPerNode[i].weight;
                             /* Step 3: foreach of the node's topics get their 'discriminativity'-weight and how many times they reoccur in the other nodes of the node's group of nodes */
                             // the below must each time be set to 1 not only at the beginning
                             topicsMap[topicPerTopicsGroup] = 1;
 
-                            for (j=0; j<nodesInGroup[nodes[k].index].length ; j++) {
+                            for (j = 0; j < nodesInGroup[nodes[k].index].length; j++) {
                                 neighborNode = nodesInGroup[nodes[k].index][j];
-                                if (nodes[neighborNode] != null){
+                                if (nodes[neighborNode] != null) {
                                     neighborTopicsGroupPerNode = graphNodes[nodes[neighborNode].id];
                                     neighborLen = neighborTopicsGroupPerNode.length;
-                                    for(nl=0;nl<neighborLen;nl++){
-                                        if(topicPerTopicsGroup == neighborTopicsGroupPerNode[nl].topic){
+                                    for (nl = 0; nl < neighborLen; nl++) {
+                                        if (topicPerTopicsGroup == neighborTopicsGroupPerNode[nl].topic) {
                                             topicsMap[topicPerTopicsGroup] += 1;
                                         }
                                     }
                                 }
                             }
                             /* Step 4: After finishing the parsing of all the other nodes in group we multiply the topics' weights with the times they appeared in all groups' nodes and we hold the most discriminative*/
-                            if (discriminativeTopicWeight[nodes[k].index] < weightPerTopicsGroup*topicsMap[topicPerTopicsGroup]){
-                                discriminativeTopicWeight[nodes[k].index] = weightPerTopicsGroup*topicsMap[topicPerTopicsGroup];
+                            if (discriminativeTopicWeight[nodes[k].index] < weightPerTopicsGroup * topicsMap[topicPerTopicsGroup]) {
+                                discriminativeTopicWeight[nodes[k].index] = weightPerTopicsGroup * topicsMap[topicPerTopicsGroup];
                                 discriminativeTopic[nodes[k].index] = topicPerTopicsGroup;
                             }
                         }
@@ -1627,7 +1740,7 @@
 
                     /* algorithm steps */
                     /* Step 1: if the node has a lot of connection as found from the previous loop, then a discriminative topic exists and so we take it */
-                    if (discriminativeTopic[nodes[k].index] != null){
+                    if (discriminativeTopic[nodes[k].index] != null) {
                         mywords = topicsNotSorted[discriminativeTopic[nodes[k].index]];
                         wlen = mywords.length;
                         neighborNode;
@@ -1636,23 +1749,23 @@
                         var ii = 0;
                         searchWords = "";
 
-                        if (ii<wlen){
+                        if (ii < wlen) {
                             discriminativeWord[nodes[k].index] = mywords[ii].item;
                             ii++
                         }
 
-                        if (ii<wlen){
-                            discriminativeWord[nodes[k].index] += ","+mywords[ii].item;
+                        if (ii < wlen) {
+                            discriminativeWord[nodes[k].index] += "," + mywords[ii].item;
                             ii++
                         }
 
-                        if (ii<wlen){
-                            discriminativeWord[nodes[k].index] += ","+mywords[ii].item;
+                        if (ii < wlen) {
+                            discriminativeWord[nodes[k].index] += "," + mywords[ii].item;
 
-                        //todo edw mpainoun ta titles anti oi 3 lekseis
-                        //todo now only available in ACM  --- the below replaces the above lines and puts on graph the title
-                        if (/^ACM*/.test(experimentName))
-                            discriminativeWord[nodes[k].index]  = mywords[ii].title;
+                            //todo edw mpainoun ta titles anti oi 3 lekseis
+                            //todo now only available in ACM  --- the below replaces the above lines and puts on graph the title
+                            if (/^ACM*/.test(experimentName))
+                                discriminativeWord[nodes[k].index] = mywords[ii].title;
 
                             discriminativeWordCounts[nodes[k].index] = mywords[0].counts;
                             // console.log("IN k="+k+" FIRST discriminativeWord="+discriminativeWord[nodes[k].index]+" with counts = "+discriminativeWordCounts[nodes[k].index]);
@@ -1663,7 +1776,14 @@
                             labelIsOnGraph[discriminativeWord[nodes[k].index]] = false;
 
                             /* use sorting to avoid item multiply printed in d3 graph */
-                            svgSortedTopicWords.push({key:nodes[k].index, name:nodes[k].name, key_k:k, item:discriminativeWord[nodes[k].index], value:discriminativeWordCounts[nodes[k].index], area:nodes[k].color});
+                            svgSortedTopicWords.push({
+                                key: nodes[k].index,
+                                name: nodes[k].name,
+                                key_k: k,
+                                item: discriminativeWord[nodes[k].index],
+                                value: discriminativeWordCounts[nodes[k].index],
+                                area: nodes[k].color
+                            });
                             topicWords[nodes[k].index] = discriminativeWord[nodes[k].index];
                             // console.log("IN k="+k+" FINAL discriminativeWord="+discriminativeWord[nodes[k].index]+" with counts = "+discriminativeWordCounts[nodes[k].index]);
                         }
@@ -1689,49 +1809,61 @@
             }
 
 
-            function loadLabels(){
+            function loadLabels() {
                 availableTags = [];
                 availableLabels = [];
 
                 k = 0,
-                n = nodes.length,
-                str = "";
+                    n = nodes.length,
+                    str = "";
 
                 while (++k < n) {
                     topicsGroupPerNode = graphNodes[nodes[k].id];
-                    if(topicsNotSorted != null){
+                    if (topicsNotSorted != null) {
                         len = topicsGroupPerNode.length;
-                        for(var i=0;i<len;i++){
+                        for (var i = 0; i < len; i++) {
                             var mywords;
-                                mywords = topicsNotSorted[topicsGroupPerNode[i].topic];
+                            mywords = topicsNotSorted[topicsGroupPerNode[i].topic];
 
                             var wlen = mywords.length;
 
                             str = "";
-                            for(var j=0;j<wlen-1;j++){
-                                str += mywords[j].item+",";
+                            for (var j = 0; j < wlen - 1; j++) {
+                                str += mywords[j].item + ",";
                             }
                             str += mywords[j].item;
 
                             availableLabels.push(str);
                             //console.log("my= "+nodes[k].index+" "+nodes[k].value)
-                            availableTags.push({item:str, index:nodes[k].index, name:nodes[k].name, color:nodes[k].color, value:nodes[k].value});
+                            availableTags.push({
+                                item: str,
+                                index: nodes[k].index,
+                                name: nodes[k].name,
+                                color: nodes[k].color,
+                                value: nodes[k].value
+                            });
                         }
-                        for(var i=0;i<len;i++){
+                        for (var i = 0; i < len; i++) {
                             var mywords;
-                                mywords = topicsSorted[topicsGroupPerNode[i].topic];
+                            mywords = topicsSorted[topicsGroupPerNode[i].topic];
 
                             var wlen = mywords.length;
 
                             str = "";
-                            for(var j=0;j<wlen-1;j++){
-                                str += mywords[j].item+",";
+                            for (var j = 0; j < wlen - 1; j++) {
+                                str += mywords[j].item + ",";
                             }
                             str += mywords[j].item;
 
                             availableLabels.push(str);
                             //console.log("my= "+nodes[k].index+" "+nodes[k].value)
-                            availableTags.push({item:str, index:nodes[k].index, name:nodes[k].name, color:nodes[k].color, value:nodes[k].value});
+                            availableTags.push({
+                                item: str,
+                                index: nodes[k].index,
+                                name: nodes[k].name,
+                                color: nodes[k].color,
+                                value: nodes[k].value
+                            });
                         }
                     }
                 }
@@ -1740,9 +1872,9 @@
                     source: unique(availableLabels),
                     minLength: 2,
 
-                    select: function( event, ui ) {
+                    select: function (event, ui) {
                         classifiedNodesElem.find("div").find("ul").empty();   //clear anything included in child nodes
-                        autocompletelog( ui.item ?
+                        autocompletelog(ui.item ?
                             ui.item.label :
                         "Nothing selected, input was " + this.value);
 
@@ -1755,7 +1887,7 @@
             /* remove duplicates */
             function unique(list) {
                 var result = [];
-                $.each(list, function(i, e) {
+                $.each(list, function (i, e) {
                     if ($.inArray(e, result) == -1) result.push(e);
                 });
                 return result;
@@ -1763,7 +1895,7 @@
 
 //todo na to enwsw me to apo katw autocomple
             /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
-            function autocompletelogtrends( message, title ) {
+            function autocompletelogtrends(message, title) {
                 var classifiedNodes = "";
                 var searchResultNodes = [];				//initialize every time in topic word search
 
@@ -1771,28 +1903,28 @@
                 mytextTitleElem.show();
                 mytextTitle.append("div").append("ul")
                     .attr("class", "pagination active")
-//                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
-                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>"+message+"</small>");
+                    //                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + tit + "<br/><br/>Topic words: <br/><small>"+tittopic+"</small>");
+                    .append("li").append("a").attr("class", "nodetext active").attr("style", "color:gray;font-weight:400").html("Selected topic description: <br/>" + title + "<br/><br/>Topic words: <br/><small>" + message + "</small>");
 
-                tagsElem.attr("title",message);
+                tagsElem.attr("title", message);
 
                 classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
                 classifiedNodesHeaderElem.show();
 
 
-                for (i=0 ; i<availableTags.length ; i++){
-                    if (message==availableTags[i].item){
+                for (i = 0; i < availableTags.length; i++) {
+                    if (message == availableTags[i].item) {
 //                        classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
                         classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + "</a></li>";
 
                         searchResultNodes.push(availableTags[i].index);	//node results in topic word search
 
-                        $('#'+availableTags[i].index).hover(function(){
-                            $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-                            $(this).css("opacity","0.5");
-                        },function(){
-                            $(this).css("opacity","initial");
-                            $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                        $('#' + availableTags[i].index).hover(function () {
+                            $(this).css("color", "inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                            $(this).css("opacity", "0.5");
+                        }, function () {
+                            $(this).css("opacity", "initial");
+                            $(this).css("color", "inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
                         });
                     }
                 }
@@ -1805,10 +1937,9 @@
                 boostBtnElem.hide();
 
 
-
 ///initialize
                 var types = [];
-                $(".circle").each(function(){
+                $(".circle").each(function () {
                     types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
 
                 });
@@ -1823,35 +1954,35 @@
             }
 
             /* autocomplete api documentation: http://api.jqueryui.com/autocomplete/ */
-            function autocompletelog( message ) {
+            function autocompletelog(message) {
                 var classifiedNodes = "";
                 var searchResultNodes = [];				//initialize every time in topic word search
 
                 mytextTitleElem.empty();
                 mytextTitle.append("div").append("ul")
                     .attr("class", "pagination active")
-                    .attr("title","topic word search result")
+                    .attr("title", "topic word search result")
                     .append("li").append("a").attr("class", " ").html("Selected topic:<br/><em>" + message + "</em>");
                 mytextTitleElem.show();
-                tagsElem.attr("title",message);
+                tagsElem.attr("title", message);
 
                 classifiedNodesHeaderElem.html("Similar <?php echo $node_name;?>s based on topic words/phrases inference:&nbsp");
                 classifiedNodesHeaderElem.show();
 
 
-                for (i=0 ; i<availableTags.length ; i++){
-                    if (message==availableTags[i].item){
+                for (i = 0; i < availableTags.length; i++) {
+                    if (message == availableTags[i].item) {
 //                        classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + " <span class=\"badge badge-info\">"+ availableTags[i].value +"</span></a></li>";
                         classifiedNodes += "<li class=\"" + availableTags[i].color + "result\"><a class=\"" + availableTags[i].color + "result \" id=\"" + availableTags[i].index + "\">" + availableTags[i].name + "</a></li>";
 
                         searchResultNodes.push(availableTags[i].index);	//node results in topic word search
 
-                        $('#'+availableTags[i].index).hover(function(){
-                            $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
-                            $(this).css("opacity","0.5");
-                        },function(){
-                            $(this).css("opacity","initial");
-                            $(this).css("color","inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                        $('#' + availableTags[i].index).hover(function () {
+                            $(this).css("color", "inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
+                            $(this).css("opacity", "0.5");
+                        }, function () {
+                            $(this).css("opacity", "initial");
+                            $(this).css("color", "inherit");		// for this to work I put the same class name in the <li> parent element of the <a> element
                         });
                     }
                 }
@@ -1864,10 +1995,9 @@
                 boostBtnElem.hide();
 
 
-
 ///initialize
                 var types = [];
-                $(".circle").each(function(){
+                $(".circle").each(function () {
                     types.push(parseInt(this.classList[2])); // same as : types.push($(this).attr('class').split(' ')[2])
 
                 });
@@ -1881,7 +2011,7 @@
 
             }
 
-            function redirectUrl(url){
+            function redirectUrl(url) {
                 window.open(url, '_blank');
             }
 
@@ -1895,22 +2025,22 @@
                     browseTick(true);
                     force.stop();
                     $.event.trigger({               //trigger for charge and gravity change
-                        type:    "myTrigger",
+                        type: "myTrigger",
                         message: "myTrigger fired.",
-                        time:    new Date()
+                        time: new Date()
                     });
                 }
                 else {
 //				if (e.alpha < 0.015) {
 //                    if (e.alpha < 0.04) {
-                        var q = d3.geom.quadtree(nodes),				//ftiaxnei tous kombous se sxima quadtree
-                            i = 0,
-                            n = nodes.length;
-                        while (++i < n) {
-                            q.visit(collide(nodes[i]));
-                        }
+                    var q = d3.geom.quadtree(nodes),				//ftiaxnei tous kombous se sxima quadtree
+                        i = 0,
+                        n = nodes.length;
+                    while (++i < n) {
+                        q.visit(collide(nodes[i]));
+                    }
 //                    }
-                    loadingText.text(function() {
+                    loadingText.text(function () {
                         // before for alpha < 0.01 below instead of 143 was 100
                         return "Loading: " + Math.round((1 - (e.alpha * 10 - 0.1)) * 143) + "%"
                     });
@@ -1927,21 +2057,21 @@
             /**** AJAX FUNCTIONS ****/
 
 
-            function graphLoad(){
+            function graphLoad() {
 
-                jsonfilename = "data/graph_"+experimentName+"_"+expsimilarity+"_"+gravity+"_"+charge+".json";
-                graphPositionsExist=UrlExists(jsonfilename);  //graph positions set true if json file exists
+                jsonfilename = "data/graph_" + experimentName + "_" + expsimilarity + "_" + gravity + "_" + charge + ".json";
+                graphPositionsExist = UrlExists(jsonfilename);  //graph positions set true if json file exists
 
-                if (graphPositionsExist){
-                    $.when(getJSONpositions(), ajaxGraphCall(experimentName,expsimilarity)).done(function(a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
+                if (graphPositionsExist) {
+                    $.when(getJSONpositions(), ajaxGraphCall(experimentName, expsimilarity)).done(function (a1, a2) {      // waits for both ajax calls to finish and when done then renders the page
                         renderPageData = a2[0].resp;
                         renderpage(renderPageData);
                     });
                 }
-                else{
-                    graphPositionsExist=false;
-                    $.when(ajaxGraphCall(experimentName,expsimilarity)).done(function(a1) {   // waits for the ajaxGraphCall() to finish and when done then renders the page
-                       renderPageData = a1.resp;
+                else {
+                    graphPositionsExist = false;
+                    $.when(ajaxGraphCall(experimentName, expsimilarity)).done(function (a1) {   // waits for the ajaxGraphCall() to finish and when done then renders the page
+                        renderPageData = a1.resp;
                         renderpage(renderPageData);
                     });
                 }
@@ -1951,31 +2081,31 @@
             function getJSONpositions() {
                 // NOTE:  This function must return the value
                 //        from calling the $.ajax() method.
-                return $.getJSON( jsonfilename).done( function(json) {
+                return $.getJSON(jsonfilename).done(function (json) {
                     jsonNodes = $.parseJSON(json.nodes);
                     console.log ("as")
                     jsonLinks = $.parseJSON(json.links);
-                }).fail(function() {
-                    console.log( "error in json position reading file" );
+                }).fail(function () {
+                    console.log("error in json position reading file");
                 });
             }
 
-            function dothework(response,trendindex) {
+            function dothework(response, trendindex) {
                 //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
                 var result = pivot(response, ['year'], ['id'], {});
                 var line;
                 line = "quarter";
-                for (var k = 0;k < result.columnHeaders.length; k++) {
+                for (var k = 0; k < result.columnHeaders.length; k++) {
                     line += "," + result.columnHeaders[k];
                     columns.push(parseInt(result.columnHeaders[k]));
                 }
 
-                for (var i =0 ; i<result.rowHeaders.length ; i++) {
-                    line += "\n"+result.rowHeaders[i];
-                    for (var j = 0; j < result.columnHeaders.length; j++){
+                for (var i = 0; i < result.rowHeaders.length; i++) {
+                    line += "\n" + result.rowHeaders[i];
+                    for (var j = 0; j < result.columnHeaders.length; j++) {
 
                         if (result[i][j] !== undefined)
-                            line += "," +result[i][j][0].weight;
+                            line += "," + result[i][j][0].weight;
                         else
                             line += ",0"
                     }
@@ -1993,10 +2123,10 @@
                         id: trendindex      // id for distinguishing trends
                     },
                     success: function () {
-                     //   console.log("CSV file Created")
+                        //   console.log("CSV file Created")
                     },
                     error: function (e) {
-                       console.log("Error in file Creation:"+e);
+                        console.log("Error in file Creation:" + e);
                     }
                 })
             }
@@ -2004,7 +2134,7 @@
             function gettrendJSONpositions(trendsjsonfilename) {
                 // NOTE:  This function must return the value
                 //        from calling the $.ajax() method.
-                return $.getJSON(trendsjsonfilename).done( function(resp) {
+                return $.getJSON(trendsjsonfilename).done(function (resp) {
                     jsonTrendsLayout = resp;
                     trends = jsonTrendsLayout.trends;
                     for (var i = 0; i < trends.length; i++) {
@@ -2012,15 +2142,15 @@
                     }
                     heatmap = jsonTrendsLayout.heatmap;
 
-                }).fail(function() {
-                    console.log( "error in json position reading file" );
+                }).fail(function () {
+                    console.log("error in json position reading file");
                 });
             }
 
             function getlayoutJSONpositions(layoutjsonfilename) {
                 // NOTE:  This function must return the value
                 //        from calling the $.ajax() method.
-                return $.getJSON(layoutjsonfilename).done( function(resp) {
+                return $.getJSON(layoutjsonfilename).done(function (resp) {
                     spinner.stop();
                     jsonLayout = resp;
                     //documentElem.bind("graphDone",function() {    // if "bind" the code is executed every time the "topicsDone" is triggered. In this code it is triggered when the ajaxGraphCall has loaded all the Topics
@@ -2028,32 +2158,41 @@
                     topicsSorted = jsonLayout.topics;
                     graphNodes = jsonLayout.nodes;
                     experiments = jsonLayout.expers;
-                }).fail(function() {
-                    console.log( "error in json position reading file" );
+                }).fail(function () {
+                    console.log("error in json position reading file");
                 });
             }
 
 
-            function UrlExists(url)
-            {
+            function UrlExists(url) {
                 var http = new XMLHttpRequest();
                 http.open('HEAD', url, false);
                 http.send();
-                return http.status!=404;
+                return http.status != 404;
             }
 
 
-            function ajaxGraphCall(experiment,expsimilarity) {
+            function ajaxGraphCall(experiment, expsimilarity) {
 
 //todo epitides to allaksa to apo katw gia na min to brei kai na ektelestei to ajaxtrends gia na parw ta kainouriga dedomena
                 if (/^ACM*/.test(experimentName)) {
-                    var alltrendscsvFilesExist=false;
-                    for (var i=0 ; i<=6 ; i++){
-                        var trendsCSVfile = "../data/trendscsv"+i+".csv";
-                        alltrendscsvFilesExist=UrlExists(trendsCSVfile);
+
+//todo create respective html
+// add dynamically html elements for every trend
+//                    for (var i = 0; i < trendsNum; i++) {
+//                        var liid = "trendmenu" + i;
+//                        var litarget = "#trend" + i + "div";
+//                        trendmenudataElem.append("li").append("a").attr("id", liid).attr("data-toggle", "tab").attr("data-target", litarget).attr("href", "#").attr("target", "_blank").html("ACM Topic Trend Analysis 1950-2011");
+//                    }
+
+
+                    alltrendscsvFilesExist = false;
+                    for (var i = 0; i < trendsNum; i++) {
+                        var trendsCSVfile = "../data/trendscsv" + i + ".csv";
+                        alltrendscsvFilesExist = UrlExists(trendsCSVfile);
 // todo tha prepei gia na isxuei to parakatw na exw panta tis teleutaies baseis... diaforetika tha prepei na sbinw apo to server ta palia arxeia
 // if all trends csv files exist then there is no need to generate them again and make a server call
-                        if (alltrendscsvFilesExist==0)
+                        if (alltrendscsvFilesExist == 0)
                             break;
                     }
 
@@ -2062,12 +2201,12 @@
                         ajaxTrendsCall(experiment);
                     }
                 }
-                console.log("ajaxCall for graph layout: "+experiment);
+                console.log("ajaxCall for graph layout: " + experiment);
 
 
-                var layoutjsonfilename = "../../../data/layout_"+experiment+"_"+expsimilarity+".json";
+                var layoutjsonfilename = "../../../data/layout_" + experiment + "_" + expsimilarity + ".json";
 //                trendsjsonfilename = "../data/trends1.json";
-                var layoutFileExist=UrlExists(layoutjsonfilename);  //graph positions set true if json file exists
+                var layoutFileExist = UrlExists(layoutjsonfilename);  //graph positions set true if json file exists
 
                 // if exists there is no need to query the DB
                 if (layoutFileExist) {
@@ -2076,7 +2215,7 @@
                 else {
                     layoutFileExist = false;
 
-                    var url= "./dbfront.php";
+                    var url = "./dbfront.php";
 
                     return $.ajax({
                         type: "GET",
@@ -2102,17 +2241,20 @@
 
 
             function ajaxTrendsCall(experiment) {
-                console.log("ajaxCall for trend layout: "+experiment);
+                console.log("ajaxCall for trend layout: " + experiment);
 
-                trendsjsonfilename = "../../../data/trends_"+experiment+".json";
+                trendsjsonfilename = "../../../data/trends_" + experiment + ".json";
 //                trendsjsonfilename = "../data/trends1.json";
-                trendsFileExist=UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
+                trendsFileExist = UrlExists(trendsjsonfilename);  //graph positions set true if json file exists
 
                 // if exists there is no need to query the DB
                 if (trendsFileExist) {
+                    console.log("exists")
+
                     return gettrendJSONpositions(trendsjsonfilename);
                 }
                 else {
+                    console.log("notexists")
                     trendsFileExist = false;
                     var url = "./trends.php";
 
@@ -2127,7 +2269,8 @@
                             //distribution = jsonTrendsLayout.distribution;
                             heatmap = jsonTrendsLayout.heatmap;
                             trends = jsonTrendsLayout.trends;
-                            for (var i = 0; i < trends.length; i++) {
+
+                            for (var i = 0; i < trendsNum; i++) {
                                 dothework(trends[i], i);
                             }
 
@@ -2143,134 +2286,177 @@
                 }
             }
 
-            function storeGraph(){
+            function storeGraph() {
                 // we send data with POST
                 $.ajax({
                     type: "POST",
-                    dataType : "json",
+                    dataType: "json",
                     async: false,
                     url: './saveGraphPositions.php',
-                    data: { datanodes: JSON.stringify(force.nodes()),
+                    data: {
+                        datanodes: JSON.stringify(force.nodes()),
                         datalinks: JSON.stringify(force.links()),
                         similarity: expsimilarity,
                         experiment: experimentName,
                         gravity: gravity,
                         charge: charge
                     },
-                    success: function () {alert("Thanks!"); },
-                    failure: function() {alert("Error!");}
+                    success: function () {
+                        alert("Thanks!");
+                    },
+                    failure: function () {
+                        alert("Error!");
+                    }
                 });
             }
 
 
             /**** RENDERING FUNCTIONS ****/
             /* renderpage called from ajax */
-            function renderpage(response){
+            function renderpage(response) {
                 pillsElem.show();
 //                pillsElem.attr("style","z-index:-1");
                 legend_data = [];
                 max_proj = 0;
                 var type_hash = [];
                 node_hash = [];
-                var color_hash = [];
                 var nodeCnt = 0;
-                var linkCnt = 0;
 
                 // because there in d3 there are 20 colors of 10 colors presented in two-shades each, we seperate them and rearrange them. We firstly put the light shades of colors to subdivisions with a lot of projects and them the strong shades to subdivisions with few projects in order to see them crearer.
                 var colorCnt = 0;
+                var nodetype = 0;
+                var nodeindex = 0;
 
                 for (var j = 0; j < response.length; j++) {
-                    if (typeof node_hash[response[j].node1id]==="undefined"){
-                        var nodetype;
-                        if (/^FET*/.test(experimentName)){
+                    if (typeof node_hash[response[j].node1id] === "undefined") {
+                        if (/^FET*/.test(experimentName)) {
                             response[j].category1_3 = response[j].category1_3.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-');
                             //					response[j].category1_1 = response[j].category1_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-                            var nodeindex = type_hash.indexOf(response[j].category1_3);
-                            if(nodeindex != -1){
+                            nodeindex = type_hash.indexOf(response[j].category1_3);
+                            if (nodeindex != -1) {
                                 nodetype = nodeindex;
                                 legend_data[nodeindex].pr++;
                             }
-                            else{
+                            else {
                                 type_hash.push(response[j].category1_3);
                                 nodetype = type_hash.length;
-                                legend_data[type_hash.length-1] = {};
-                                legend_data[type_hash.length-1].name = response[j].category1_3;
-                                legend_data[type_hash.length-1].pr=1;
-                                legend_data[type_hash.length-1].desc=response[j].category1_3descr;
+                                legend_data[type_hash.length - 1] = {};
+                                legend_data[type_hash.length - 1].name = response[j].category1_3;
+                                legend_data[type_hash.length - 1].pr = 1;
+                                legend_data[type_hash.length - 1].desc = response[j].category1_3descr;
 
                                 // if we want to have darker stroke, augment it to 2 or more
-                                if (response[j].category1_1 == "FETOpen"){
-                                    style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; background-color:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
+                                if (response[j].category1_1 == "FETOpen") {
+                                    style.innerHTML += "." + response[j].category1_3 + "{stroke:" + d3.rgb("#1f77b4").darker(1) + "; fill:" + "#1f77b4" + "; background-color:" + "#1f77b4" + "; color:" + "#1f77b4" + ";} ";
                                     /* styling for results in autocomplete search */
-                                    style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
-                                    fetOpenNum ++;
+                                    style.innerHTML += "." + response[j].category1_3 + "result{stroke:" + d3.rgb("#1f77b4").darker(1) + "; fill:" + "#1f77b4" + "; color:" + "#1f77b4" + ";} ";
+                                    fetOpenNum++;
                                 }
-                                else if (response[j].category1_1 == "FETProactive"){
-                                    style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; background-color:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
+                                else if (response[j].category1_1 == "FETProactive") {
+                                    style.innerHTML += "." + response[j].category1_3 + "{stroke:" + d3.rgb("#ff7f0e").darker(1) + "; fill:" + "#ff7f0e" + "; background-color:" + "#ff7f0e" + "; color:" + "#ff7f0e" + ";} ";
                                     /* styling for results in autocomplete search */
-                                    style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
-                                    fetProactiveNum ++;
+                                    style.innerHTML += "." + response[j].category1_3 + "result{stroke:" + d3.rgb("#ff7f0e").darker(1) + "; fill:" + "#ff7f0e" + "; color:" + "#ff7f0e" + ";} ";
+                                    fetProactiveNum++;
                                 }
-                                else if (response[j].category1_1 == "FETFlagship"){
-                                    style.innerHTML += "."+response[j].category1_3+"{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; background-color:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
+                                else if (response[j].category1_1 == "FETFlagship") {
+                                    style.innerHTML += "." + response[j].category1_3 + "{stroke:" + d3.rgb("#2ca02c").darker(1) + "; fill:" + "#2ca02c" + "; background-color:" + "#2ca02c" + "; color:" + "#2ca02c" + ";} ";
                                     /* styling for results in autocomplete search */
-                                    style.innerHTML += "."+response[j].category1_3+"result{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
-                                    fetFlagshipNum ++;
+                                    style.innerHTML += "." + response[j].category1_3 + "result{stroke:" + d3.rgb("#2ca02c").darker(1) + "; fill:" + "#2ca02c" + "; color:" + "#2ca02c" + ";} ";
+                                    fetFlagshipNum++;
                                 }
                                 else {
-                                    console.log("error: "+response[j].category1_3)
+                                    console.log("error: " + response[j].category1_3)
                                 }
 
                                 colorCnt++;
                             }
 
-                            nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_2, subarea: response[j].category1_3, subareaDescr: response[j].category1_3descr, color:response[j].category1_3}; //value # of publications
+                            nodes[nodeCnt] = {
+                                index: nodeCnt,
+                                id: response[j].node1id,
+                                name: response[j].node1name,
+                                slug: "http://www.md-paedigree.eu/",
+                                type: nodetype,
+                                value: response[j].category1_counts,
+                                FP7: response[j].category1_0,
+                                FET: response[j].category1_1,
+                                area: response[j].category1_2,
+                                subarea: response[j].category1_3,
+                                subareaDescr: response[j].category1_3descr,
+                                color: response[j].category1_3
+                            }; //value # of publications
 
                             node_hash[response[j].node1id] = nodeCnt;
                             nodeCnt++;
 
                         }
-                        else if (/^HEALTH*/.test(experimentName)){
+                        else if (/^HEALTH*/.test(experimentName)) {
                             response[j].category1_3 = response[j].category1_3.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-');
                             //					response[j].category1_1 = response[j].category1_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-                            var nodeindex = type_hash.indexOf(response[j].category1_3);
-                            if(nodeindex != -1){
+                            nodeindex = type_hash.indexOf(response[j].category1_3);
+                            if (nodeindex != -1) {
                                 nodetype = nodeindex;
                                 legend_data[nodeindex].pr++;
                             }
-                            else{
+                            else {
                                 type_hash.push(response[j].category1_3);
                                 nodetype = type_hash.length;
-                                legend_data[type_hash.length-1] = {};
-                                legend_data[type_hash.length-1].name = response[j].category1_3;
-                                legend_data[type_hash.length-1].pr=1;
-                                legend_data[type_hash.length-1].desc=response[j].category1_3descr;
+                                legend_data[type_hash.length - 1] = {};
+                                legend_data[type_hash.length - 1].name = response[j].category1_3;
+                                legend_data[type_hash.length - 1].pr = 1;
+                                legend_data[type_hash.length - 1].desc = response[j].category1_3descr;
                             }
 
-                            nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_2, subarea: response[j].category1_3, subareaDescr: response[j].category1_3descr, color:response[j].category1_3}; //value # of publications
+                            nodes[nodeCnt] = {
+                                index: nodeCnt,
+                                id: response[j].node1id,
+                                name: response[j].node1name,
+                                slug: "http://www.md-paedigree.eu/",
+                                type: nodetype,
+                                value: response[j].category1_counts,
+                                FP7: response[j].category1_0,
+                                FET: response[j].category1_1,
+                                area: response[j].category1_2,
+                                subarea: response[j].category1_3,
+                                subareaDescr: response[j].category1_3descr,
+                                color: response[j].category1_3
+                            }; //value # of publications
 
                             node_hash[response[j].node1id] = nodeCnt;
                             nodeCnt++;
 
                         }
-                        else{
+                        else {
                             response[j].category1_2 = response[j].category1_2.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-');
                             //					response[j].category1_1 = response[j].category1_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-                            var nodeindex = type_hash.indexOf(response[j].category1_2);
-                            if(nodeindex != -1){
+                            nodeindex = type_hash.indexOf(response[j].category1_2);
+                            if (nodeindex != -1) {
                                 nodetype = nodeindex;
                                 legend_data[nodeindex].pr++;
                             }
-                            else{
+                            else {
                                 type_hash.push(response[j].category1_2);
                                 nodetype = type_hash.length;
-                                legend_data[type_hash.length-1] = {};
-                                legend_data[type_hash.length-1].name = response[j].category1_2;
-                                legend_data[type_hash.length-1].pr=1;
-                                legend_data[type_hash.length-1].desc=response[j].category1_3descr;
+                                legend_data[type_hash.length - 1] = {};
+                                legend_data[type_hash.length - 1].name = response[j].category1_2;
+                                legend_data[type_hash.length - 1].pr = 1;
+                                legend_data[type_hash.length - 1].desc = response[j].category1_3descr;
                             }
 
-                            nodes[nodeCnt] = {index: nodeCnt, id: response[j].node1id, name: response[j].node1name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category1_counts, FP7: response[j].category1_0, FET: response[j].category1_1, area: response[j].category1_2, subarea: response[j].category1_3, subareaDescr: response[j].category1_3descr, color:response[j].category1_2}; //value # of publications
+                            nodes[nodeCnt] = {
+                                index: nodeCnt,
+                                id: response[j].node1id,
+                                name: response[j].node1name,
+                                slug: "http://www.md-paedigree.eu/",
+                                type: nodetype,
+                                value: response[j].category1_counts,
+                                FP7: response[j].category1_0,
+                                FET: response[j].category1_1,
+                                area: response[j].category1_2,
+                                subarea: response[j].category1_3,
+                                subareaDescr: response[j].category1_3descr,
+                                color: response[j].category1_2
+                            }; //value # of publications
 
                             node_hash[response[j].node1id] = nodeCnt;
                             nodeCnt++;
@@ -2278,100 +2464,142 @@
 
                     }
 
-                    if (typeof node_hash[response[j].node2id]==="undefined"){
-                        var nodetype;
-                        if (/^FET*/.test(experimentName)){
+                    if (typeof node_hash[response[j].node2id] === "undefined") {
+                        if (/^FET*/.test(experimentName)) {
                             response[j].category2_3 = response[j].category2_3.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-');
                             //					response[j].category2_1 = response[j].category2_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-                            var nodeindex = type_hash.indexOf(response[j].category2_3);
-                            if(nodeindex != -1){
+                            nodeindex = type_hash.indexOf(response[j].category2_3);
+                            if (nodeindex != -1) {
                                 nodetype = nodeindex;
                                 legend_data[nodeindex].pr++;
                             }
-                            else{
+                            else {
                                 type_hash.push(response[j].category2_3);
                                 nodetype = type_hash.length;
-                                legend_data[type_hash.length-1] = {};
-                                legend_data[type_hash.length-1].name = response[j].category2_3;
-                                legend_data[type_hash.length-1].pr=1;
-                                legend_data[type_hash.length-1].desc=response[j].category2_3descr;
+                                legend_data[type_hash.length - 1] = {};
+                                legend_data[type_hash.length - 1].name = response[j].category2_3;
+                                legend_data[type_hash.length - 1].pr = 1;
+                                legend_data[type_hash.length - 1].desc = response[j].category2_3descr;
 
 
-                                if (response[j].category2_1 == "FETOpen"){
-                                    style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; background-color:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
+                                if (response[j].category2_1 == "FETOpen") {
+                                    style.innerHTML += "." + response[j].category2_3 + "{stroke:" + d3.rgb("#1f77b4").darker(1) + "; fill:" + "#1f77b4" + "; background-color:" + "#1f77b4" + "; color:" + "#1f77b4" + ";} ";
                                     /* styling for results in autocomplete search */
-                                    style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#1f77b4").darker(1)+"; fill:"+"#1f77b4"+"; color:"+"#1f77b4"+";} ";
-                                    fetOpenNum ++;
+                                    style.innerHTML += "." + response[j].category2_3 + "result{stroke:" + d3.rgb("#1f77b4").darker(1) + "; fill:" + "#1f77b4" + "; color:" + "#1f77b4" + ";} ";
+                                    fetOpenNum++;
                                 }
-                                else if (response[j].category2_1 == "FETProactive"){
-                                    style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; background-color:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
+                                else if (response[j].category2_1 == "FETProactive") {
+                                    style.innerHTML += "." + response[j].category2_3 + "{stroke:" + d3.rgb("#ff7f0e").darker(1) + "; fill:" + "#ff7f0e" + "; background-color:" + "#ff7f0e" + "; color:" + "#ff7f0e" + ";} ";
                                     /* styling for results in autocomplete search */
-                                    style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#ff7f0e").darker(1)+"; fill:"+"#ff7f0e"+"; color:"+"#ff7f0e"+";} ";
-                                    fetProactiveNum ++;
+                                    style.innerHTML += "." + response[j].category2_3 + "result{stroke:" + d3.rgb("#ff7f0e").darker(1) + "; fill:" + "#ff7f0e" + "; color:" + "#ff7f0e" + ";} ";
+                                    fetProactiveNum++;
                                 }
-                                else if (response[j].category2_1 == "FETFlagship"){
-                                    style.innerHTML += "."+response[j].category2_3+"{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; background-color:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
+                                else if (response[j].category2_1 == "FETFlagship") {
+                                    style.innerHTML += "." + response[j].category2_3 + "{stroke:" + d3.rgb("#2ca02c").darker(1) + "; fill:" + "#2ca02c" + "; background-color:" + "#2ca02c" + "; color:" + "#2ca02c" + ";} ";
                                     /* styling for results in autocomplete search */
-                                    style.innerHTML += "."+response[j].category2_3+"result{stroke:"+d3.rgb("#2ca02c").darker(1)+"; fill:"+"#2ca02c"+"; color:"+"#2ca02c"+";} ";
-                                    fetFlagshipNum ++;
+                                    style.innerHTML += "." + response[j].category2_3 + "result{stroke:" + d3.rgb("#2ca02c").darker(1) + "; fill:" + "#2ca02c" + "; color:" + "#2ca02c" + ";} ";
+                                    fetFlagshipNum++;
                                 }
                                 else {
-                                    console.log("error: "+response[j].category2_1)
+                                    console.log("error: " + response[j].category2_1)
                                 }
 
 
                                 colorCnt++;
                             }
 
-                            nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_2, subarea: response[j].category2_3, subareaDescr: response[j].category2_3descr, color:response[j].category2_3}; //value # of publications
+                            nodes[nodeCnt] = {
+                                index: nodeCnt,
+                                id: response[j].node2id,
+                                name: response[j].node2name,
+                                slug: "http://www.md-paedigree.eu/",
+                                type: nodetype,
+                                value: response[j].category2_counts,
+                                FP7: response[j].category2_0,
+                                FET: response[j].category2_1,
+                                area: response[j].category2_2,
+                                subarea: response[j].category2_3,
+                                subareaDescr: response[j].category2_3descr,
+                                color: response[j].category2_3
+                            }; //value # of publications
                             node_hash[response[j].node2id] = nodeCnt;
                             nodeCnt++;
                         }
-                        else if (/^HEALTH*/.test(experimentName)){
+                        else if (/^HEALTH*/.test(experimentName)) {
                             response[j].category2_3 = response[j].category2_3.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-');
                             //					response[j].category2_1 = response[j].category2_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-                            var nodeindex = type_hash.indexOf(response[j].category2_3);
-                            if(nodeindex != -1){
+                            nodeindex = type_hash.indexOf(response[j].category2_3);
+                            if (nodeindex != -1) {
                                 nodetype = nodeindex;
                                 legend_data[nodeindex].pr++;
                             }
-                            else{
+                            else {
                                 type_hash.push(response[j].category2_3);
                                 nodetype = type_hash.length;
-                                legend_data[type_hash.length-1] = {};
-                                legend_data[type_hash.length-1].name = response[j].category2_3;
-                                legend_data[type_hash.length-1].pr=1;
-                                legend_data[type_hash.length-1].desc=response[j].category2_3descr;
+                                legend_data[type_hash.length - 1] = {};
+                                legend_data[type_hash.length - 1].name = response[j].category2_3;
+                                legend_data[type_hash.length - 1].pr = 1;
+                                legend_data[type_hash.length - 1].desc = response[j].category2_3descr;
                             }
 
-                            nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_2, subarea: response[j].category2_3, subareaDescr: response[j].category2_3descr, color:response[j].category2_3}; //value # of publications
+                            nodes[nodeCnt] = {
+                                index: nodeCnt,
+                                id: response[j].node2id,
+                                name: response[j].node2name,
+                                slug: "http://www.md-paedigree.eu/",
+                                type: nodetype,
+                                value: response[j].category2_counts,
+                                FP7: response[j].category2_0,
+                                FET: response[j].category2_1,
+                                area: response[j].category2_2,
+                                subarea: response[j].category2_3,
+                                subareaDescr: response[j].category2_3descr,
+                                color: response[j].category2_3
+                            }; //value # of publications
                             node_hash[response[j].node2id] = nodeCnt;
                             nodeCnt++;
                         }
-                        else{
+                        else {
                             response[j].category2_2 = response[j].category2_2.replace(/[ ,+.~!@#$%^&*()=`|:;'<>\{\}\[\]\\\/?]/g, '-');
                             //					response[j].category2_1 = response[j].category2_1.replace(/(.+?)\ (.+?)/, '$1-$2')
-                            var nodeindex = type_hash.indexOf(response[j].category2_2);
-                            if(nodeindex != -1){
+                            nodeindex = type_hash.indexOf(response[j].category2_2);
+                            if (nodeindex != -1) {
                                 nodetype = nodeindex;
                                 legend_data[nodeindex].pr++;
                             }
-                            else{
+                            else {
                                 type_hash.push(response[j].category2_2);
                                 nodetype = type_hash.length;
-                                legend_data[type_hash.length-1] = {};
-                                legend_data[type_hash.length-1].name = response[j].category2_2;
-                                legend_data[type_hash.length-1].pr=1;
-                                legend_data[type_hash.length-1].desc=response[j].category2_3descr;
+                                legend_data[type_hash.length - 1] = {};
+                                legend_data[type_hash.length - 1].name = response[j].category2_2;
+                                legend_data[type_hash.length - 1].pr = 1;
+                                legend_data[type_hash.length - 1].desc = response[j].category2_3descr;
                             }
 
-                            nodes[nodeCnt] = {index: nodeCnt, id: response[j].node2id, name: response[j].node2name, slug: "http://www.md-paedigree.eu/", type: nodetype, value: response[j].category2_counts, FP7: response[j].category2_0, FET: response[j].category2_1, area: response[j].category2_2, subarea: response[j].category2_3, subareaDescr: response[j].category2_3descr, color:response[j].category2_2}; //value # of publications
+                            nodes[nodeCnt] = {
+                                index: nodeCnt,
+                                id: response[j].node2id,
+                                name: response[j].node2name,
+                                slug: "http://www.md-paedigree.eu/",
+                                type: nodetype,
+                                value: response[j].category2_counts,
+                                FP7: response[j].category2_0,
+                                FET: response[j].category2_1,
+                                area: response[j].category2_2,
+                                subarea: response[j].category2_3,
+                                subareaDescr: response[j].category2_3descr,
+                                color: response[j].category2_2
+                            }; //value # of publications
                             node_hash[response[j].node2id] = nodeCnt;
                             nodeCnt++;
                         }
                     }
                     // the links only once between two nodes and after they have created because of node1 and node2
-                    links[j] = {source: parseInt(node_hash[response[j].node1id]), target: parseInt(node_hash[response[j].node2id]), value: response[j].Similarity};
+                    links[j] = {
+                        source: parseInt(node_hash[response[j].node1id]),
+                        target: parseInt(node_hash[response[j].node2id]),
+                        value: response[j].Similarity
+                    };
 
 // uncomment below to see how it works
 //				console.log("source "+j +"="+links[j].source+" -- target "+j +"="+links[j].target);
@@ -2380,34 +2608,34 @@
                 nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8;
 
                 var median = 0;
-                for (j = 0; j < links.length ; j++) {
-                    median = (parseFloat(links[j].value) + parseFloat(j*median))/parseFloat(j+1);
+                for (j = 0; j < links.length; j++) {
+                    median = (parseFloat(links[j].value) + parseFloat(j * median)) / parseFloat(j + 1);
                 }
 
 
-                for (var j = 0; j < links.length ; j++) {
+                for (var j = 0; j < links.length; j++) {
                     // console.log("links["+j+"]: source="+links[j].source+", target="+links[j].target+", value="+links[j].value);
 
-                    if(links[j].value>0.77){
-                        if(nodeConnections[links[j].source] == null)
+                    if (links[j].value > 0.77) {
+                        if (nodeConnections[links[j].source] == null)
                             nodeConnections[links[j].source] = 0;
-                        if(nodeConnections[links[j].target] == null){
+                        if (nodeConnections[links[j].target] == null) {
                             nodeConnections[links[j].target] = 0;
                         }
 
                         /*  */
-                        if(nodesInGroup[links[j].source] == null)
+                        if (nodesInGroup[links[j].source] == null)
                             nodesInGroup[links[j].source] = [];
 
                         /* if j is not already in the array */
-                        if(include(nodesInGroup[links[j].source],j) != -1)
+                        if (include(nodesInGroup[links[j].source], j) != -1)
                             nodesInGroup[links[j].source].push(j);
 
-                        if(nodesInGroup[links[j].target] == null)
+                        if (nodesInGroup[links[j].target] == null)
                             nodesInGroup[links[j].target] = [];
 
                         /* if j is not already in the array */
-                        if(include(nodesInGroup[links[j].target],j) != -1)
+                        if (include(nodesInGroup[links[j].target], j) != -1)
                             nodesInGroup[links[j].target].push(j);
 
                         nodeConnections[links[j].source] += 1;
@@ -2416,18 +2644,18 @@
                 }
 
 
-                for (var j = 0; j < nodeConnections.length ; j++) {
-                    if(maxNodeConnections < nodeConnections[j])
+                for (var j = 0; j < nodeConnections.length; j++) {
+                    if (maxNodeConnections < nodeConnections[j])
                         maxNodeConnections = nodeConnections[j];
                 }
-                console.log("maxNodeConnections = "+ maxNodeConnections);
+                console.log("maxNodeConnections = " + maxNodeConnections);
                 category1Elem.find("a").find("span").html(fetOpenNum)
                 category2Elem.find("a").find("span").html(fetProactiveNum)
                 category3Elem.find("a").find("span").html(fetFlagshipNum)
 
 
-                for(var i=0;i<legend_data.length;i++){
-                    if(legend_data[i].pr > max_proj)
+                for (var i = 0; i < legend_data.length; i++) {
+                    if (legend_data[i].pr > max_proj)
                         max_proj = legend_data[i].pr;
                 }
 
@@ -2438,8 +2666,8 @@
                 update();
 
                 legend_data.sort(compare);  // sort legend from max_nodes to min_nodes
-                legend_data.forEach(function(d,i) { //sort coloring on legends
-                    if (! /^FET*/.test(experimentName)) {       // when the experiment is a FET experiment then we need different coloring done above with legend_data creation
+                legend_data.forEach(function (d, i) { //sort coloring on legends
+                    if (!/^FET*/.test(experimentName)) {       // when the experiment is a FET experiment then we need different coloring done above with legend_data creation
                         // if we want to have darker stroke, augment it to 2 or more
                         style.innerHTML += "." + d.name + "{stroke:" + d3.rgb(clr[i]).darker(1) + "; fill:" + clr[i] + "; background-color:" + clr[i] + "; color:" + clr[i] + ";} ";
                         /* styling for results in autocomplete search */
@@ -2458,139 +2686,159 @@
                 rows
                     .enter()
                     .append("tr")
-                    .style("height","10px")
-                    .attr("class","legend_row")
-                    .attr("id",function(d) {return "legend_row" + d.name;})
-                    .attr("data-toggle","tooltip")
-                    .attr("data-placement","bottom")
-                    .attr("title",function(d) {return d.desc;})
+                    .style("height", "10px")
+                    .attr("class", "legend_row")
+                    .attr("id", function (d) {
+                        return "legend_row" + d.name;
+                    })
+                    .attr("data-toggle", "tooltip")
+                    .attr("data-placement", "bottom")
+                    .attr("title", function (d) {
+                        return d.desc;
+                    })
                     //.on("click",chord_click(d,i));
-                    .on("click",legendHandler);
+                    .on("click", legendHandler);
 //                .on("click",chordHandler);
                 //.style("width","140px");
 
                 rows.append("td")
                     .append("div")
-                    .style("width","60px")
-                    .style("height","100%")
-                    .text(function(d,i){return d.name;});
+                    .style("width", "60px")
+                    .style("height", "100%")
+                    .text(function (d, i) {
+                        return d.name;
+                    });
 
                 rows.append("td")
                     .append("div")
-                    .style("width","80px")
-                    .style("height","100%")
-                    .attr("class","bar")
+                    .style("width", "80px")
+                    .style("height", "100%")
+                    .attr("class", "bar")
                     .append("div")
-                    .style("height","10px")
-                    .attr("class",function(d) {return d.name;})
-                    .style("width",function(d){
-                        return Math.ceil(80*d.pr/max_proj);
+                    .style("height", "10px")
+                    .attr("class", function (d) {
+                        return d.name;
+                    })
+                    .style("width", function (d) {
+                        return Math.ceil(80 * d.pr / max_proj);
                     });
                 //.text(function(d,i){return d.name;});
 
                 rows.append("td")
                     .append("div")
-                    .style("width","40px")
-                    .style("height","100%")
-                    .text(function(d){return numberWithCommas(d.pr);});
-
+                    .style("width", "40px")
+                    .style("height", "100%")
+                    .text(function (d) {
+                        return numberWithCommas(d.pr);
+                    });
 
 
                 rows//.append("td")
                     .append("div")
-//				.attr("class","btn btn-primary btn-block")
-                    .attr("class","subd-vcenter btn-primary btn-block")
+                    //				.attr("class","btn btn-primary btn-block")
+                    .attr("class", "subd-vcenter btn-primary btn-block")
                     // .attr("type","button")
-                    .style("height","100%")
-                    .attr("data-toggle","collapse")
-                    .attr("data-target",function(d) {return "#collapse"+d.name;})
-                    .attr("aria-expanded","false")
-                    .attr("aria-controls",function(d) {return "#collapse"+d.name;})
+                    .style("height", "100%")
+                    .attr("data-toggle", "collapse")
+                    .attr("data-target", function (d) {
+                        return "#collapse" + d.name;
+                    })
+                    .attr("aria-expanded", "false")
+                    .attr("aria-controls", function (d) {
+                        return "#collapse" + d.name;
+                    })
                     .append("center")
                     .append("i")
-                    .attr("class","glyphicon glyphicon-chevron-down");
+                    .attr("class", "glyphicon glyphicon-chevron-down");
 
 
                 rows
                     .enter()
                     .append("tr")
-                    .attr("id",function(d) {return "collapse"+d.name;})
-                    .attr("class","collapse ")
-                    .attr("style","cursor:default")
-//				.attr("class",function(d) {return "collapse "+d.name;})
+                    .attr("id", function (d) {
+                        return "collapse" + d.name;
+                    })
+                    .attr("class", "collapse ")
+                    .attr("style", "cursor:default")
+                    //				.attr("class",function(d) {return "collapse "+d.name;})
                     .append("td")
-                    .attr("colspan","4")
+                    .attr("colspan", "4")
                     .append("div")
-                    .attr("display","table");
+                    .attr("display", "table");
 
                 rows
-                    .each(function(d, i) {
-                        $("#collapse"+d.name)
-                            .html(function() {
+                    .each(function (d, i) {
+                        $("#collapse" + d.name)
+                            .html(function () {
                                 for (var i = 0; i < subdConnections.length; i++) {
-                                    if (subdConnections[i] == d.name){
+                                    if (subdConnections[i] == d.name) {
                                         var str = "";
-                                        str += "<td colspan='4'><div class='table table-condensed table-striped'><div class='table-row-group' style='overflow-y:scroll;height:"+windowElem.height()/4+"'><div class='row'><div class='cell' style='border-top:solid'>Area </div><div class='cell' style='border-top:solid'>Relations</div></div>";
+                                        str += "<td colspan='4'><div class='table table-condensed table-striped'><div class='table-row-group' style='overflow-y:scroll;height:" + windowElem.height() / 4 + "'><div class='row'><div class='cell' style='border-top:solid'>Area </div><div class='cell' style='border-top:solid'>Relations</div></div>";
 
                                         for (var j = 0; j < subdConnections.length; j++) {
-                                            subdConnections.forEach(function(z){
-                                                if(z == d.name){
-                                                    if(z != subdConnections[j].name){
+                                            subdConnections.forEach(function (z) {
+                                                if (z == d.name) {
+                                                    if (z != subdConnections[j].name) {
 
-                                                        percentageSum = subdBiConnectionsNum[i][j]+subdBiConnectionsNum[j][i];
+                                                        percentageSum = subdBiConnectionsNum[i][j] + subdBiConnectionsNum[j][i];
 //                                                        percentageSum = subdBiConnectionsNum[i][j];
 // previous on 20150907 backup
-                                                        if (percentageSum > 0){
-                                                            str += "<div class='row'><div class='cell' style='color:"+rgb2hex(clrArray[j])+";'><div>" + subdConnections[j] + "</div></div>"
-                                                            + "<div class='cell' style='color:"+rgb2hex(clrArray[j])+";'>"
-                                                            + percentageSum
-                                                            + "</div></div>" ;
+                                                        if (percentageSum > 0) {
+                                                            str += "<div class='row'><div class='cell' style='color:" + rgb2hex(clrArray[j]) + ";'><div>" + subdConnections[j] + "</div></div>"
+                                                                + "<div class='cell' style='color:" + rgb2hex(clrArray[j]) + ";'>"
+                                                                + percentageSum
+                                                                + "</div></div>";
                                                         }
                                                     }
-                                                    else{
-                                                        if (subdBiConnectionsNum[i][i] > 0){
+                                                    else {
+                                                        if (subdBiConnectionsNum[i][i] > 0) {
 
                                                             str += "<div class='row'><div class='cell'>" + z + "</div><div class='cell'>"
-                                                            + subdBiConnectionsNum[i][i]
-                                                            + "</div></div>";
+                                                                + subdBiConnectionsNum[i][i]
+                                                                + "</div></div>";
                                                         }
                                                     }
                                                 }
                                             })
                                         }
-                                        str += "</div></td>" ;
+                                        str += "</div></td>";
                                     }
                                 }
                                 return str;
                             });
 
-                        $("#collapse"+d.name).insertAfter($("#legend_row"+d.name));
+                        $("#collapse" + d.name).insertAfter($("#legend_row" + d.name));
 
                     });
 
 
                 loadingText = vis.append("svg:text")
-                    .style("font-size",w/20)
+                    .style("font-size", w / 20)
                     .attr("class", "loading")
-                    .attr("x", (w / 2) - (w/7)) // pou einai to miso tou loading
+                    .attr("x", (w / 2) - (w / 7)) // pou einai to miso tou loading
                     .attr("y", h / 2)
                     .text("Loading");
-
 
 
                 explist.selectAll("option")
                     .data(experiments)
                     .enter()
                     .append("option")
-                    .attr("value",function(d){return d.id;})
-// below code makes first experiment unselectable
-                    .attr("selected",function(d){if(d.id == experimentName) return "selected";})
-                    .text(function(d){return d.id});
+                    .attr("value", function (d) {
+                        return d.id;
+                    })
+                    // below code makes first experiment unselectable
+                    .attr("selected", function (d) {
+                        if (d.id == experimentName) return "selected";
+                    })
+                    .text(function (d) {
+                        return d.id
+                    });
 
                 loadNodeList();
 
-                $(function(){
-                    if ($("#graphNodesButton").length > 0){
+                $(function () {
+                    if ($("#graphNodesButton").length > 0) {
                         graphNodesElem.multiselect('rebuild')
                     }
                     else {
@@ -2618,11 +2866,11 @@
                                     return obj.index == clickednodeid
                                 })[0];
 
-                                clickGraph(clickedNode,fade_out);
+                                clickGraph(clickedNode, fade_out);
                                 console.log("start")
 
                                 console.log(authorselected)
-authorselected = 1;
+                                authorselected = 1;
                                 console.log(authorselected)
                                 console.log("stop")
 // todo kai auto
@@ -2647,46 +2895,46 @@ authorselected = 1;
 //                    });
 
                     $(".multiselect-container")
-                        // .attr("style","max-width:300px;max-height:300px;")
+                    // .attr("style","max-width:300px;max-height:300px;")
                         .find("li").find("a").find("label")
-                        .attr("style","overflow:hidden;text-overflow:ellipsis;");
+                        .attr("style", "overflow:hidden;text-overflow:ellipsis;");
 
                     graphNodesElem.multiselect("refresh");
 
 
 //todo hard code....
-                    category1Elem.on("click", function (){
+                    category1Elem.on("click", function () {
                         //remove all active and inactive from chord and legend
                         chordReset();
 
-                        if (category1Elem.hasClass("activeCategory")){
-                            category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
-                            category1Elem.attr("class","");
+                        if (category1Elem.hasClass("activeCategory")) {
+                            category1Elem.find("a").attr("style", "background-color:#fff;color:#1f77b4");
+                            category1Elem.attr("class", "");
                         }
-                        else{
-                            category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
-                            category3Elem.find("a").attr("style","background-color:#fff;color:#2ca02c");
-                            categoriesElem.find("ul").find("li").attr("class","");
-                            category1Elem.attr("class","activeCategory");
-                            category1Elem.find("a").attr("style","background-color:#ddd;color:#1f77b4");
+                        else {
+                            category2Elem.find("a").attr("style", "background-color:#fff;color:#ff7f0e");
+                            category3Elem.find("a").attr("style", "background-color:#fff;color:#2ca02c");
+                            categoriesElem.find("ul").find("li").attr("class", "");
+                            category1Elem.attr("class", "activeCategory");
+                            category1Elem.find("a").attr("style", "background-color:#ddd;color:#1f77b4");
 
                             var collection = null;
-                            if($(".activeCategory").length == 0){
+                            if ($(".activeCategory").length == 0) {
                             }
-                            else{
-                                collection = $(".circle").filter(function(){
+                            else {
+                                collection = $(".circle").filter(function () {
                                     var color = $(this).css("color");
                                     return rgb2hex(color) === "#1f77b4";
                                 });
                             }
 
                             var types = [];
-                            collection.each(function(){
+                            collection.each(function () {
                                 //						types.push($(this).attr("class"));2ca02c
                                 types.push(parseInt(this.classList[2]));
                             });
 
-                            classifiedNodesHandler(collection,$(".circle"));
+                            classifiedNodesHandler(collection, $(".circle"));
                             showtype(fade_out, types);
                             // not show links in this ocassion
                             linkLines.style("stroke-opacity", function (o) {
@@ -2702,38 +2950,38 @@ authorselected = 1;
                         graphdivElem.addClass("active");
 
                     });
-                    category2Elem.on("click", function (){
+                    category2Elem.on("click", function () {
                         //remove all active and inactive from chord and legend
                         chordReset();
 
-                        if (category2Elem.hasClass("activeCategory")){
-                            category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
-                            category2Elem.attr("class","");
+                        if (category2Elem.hasClass("activeCategory")) {
+                            category2Elem.find("a").attr("style", "background-color:#fff;color:#ff7f0e");
+                            category2Elem.attr("class", "");
                         }
-                        else{
-                            category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
-                            category3Elem.find("a").attr("style","background-color:#fff;color:#2ca02c");
-                            categoriesElem.find("ul").find("li").attr("class","");
-                            category2Elem.attr("class","activeCategory");
-                            category2Elem.find("a").attr("style","background-color:#ddd;color:#ff7f0e");
+                        else {
+                            category1Elem.find("a").attr("style", "background-color:#fff;color:#1f77b4");
+                            category3Elem.find("a").attr("style", "background-color:#fff;color:#2ca02c");
+                            categoriesElem.find("ul").find("li").attr("class", "");
+                            category2Elem.attr("class", "activeCategory");
+                            category2Elem.find("a").attr("style", "background-color:#ddd;color:#ff7f0e");
 
                             var collection = null;
-                            if($(".activeCategory").length == 0){
+                            if ($(".activeCategory").length == 0) {
                             }
-                            else{
-                                collection = $(".circle").filter(function(){
+                            else {
+                                collection = $(".circle").filter(function () {
                                     var color = $(this).css("color");
                                     return rgb2hex(color) === "#ff7f0e";
                                 });
                             }
 
                             var types = [];
-                            collection.each(function(){
+                            collection.each(function () {
                                 //						types.push($(this).attr("class"));
                                 types.push(parseInt(this.classList[2]));
                             });
 
-                            classifiedNodesHandler(collection,$(".circle"));
+                            classifiedNodesHandler(collection, $(".circle"));
                             showtype(fade_out, types);
                             // not show links in this ocassion
                             linkLines.style("stroke-opacity", function (o) {
@@ -2749,39 +2997,39 @@ authorselected = 1;
                         graphdivElem.addClass("active");
 
                     });
-                    category3Elem.on("click", function (){
+                    category3Elem.on("click", function () {
                         //remove all active and inactive from chord and legend
                         chordReset();
 
-                        if (category3Elem.hasClass("activeCategory")){
-                            category3Elem.find("a").attr("style","background-color:#fff;color:#2ca02c");
-                            category3Elem.attr("class","");
+                        if (category3Elem.hasClass("activeCategory")) {
+                            category3Elem.find("a").attr("style", "background-color:#fff;color:#2ca02c");
+                            category3Elem.attr("class", "");
                         }
-                        else{
-                            category1Elem.find("a").attr("style","background-color:#fff;color:#1f77b4");
-                            category2Elem.find("a").attr("style","background-color:#fff;color:#ff7f0e");
-                            categoriesElem.find("ul").find("li").attr("class","");
-                            category3Elem.attr("class","activeCategory");
-                            category3Elem.find("a").attr("style","background-color:#ddd;color:#2ca02c");
+                        else {
+                            category1Elem.find("a").attr("style", "background-color:#fff;color:#1f77b4");
+                            category2Elem.find("a").attr("style", "background-color:#fff;color:#ff7f0e");
+                            categoriesElem.find("ul").find("li").attr("class", "");
+                            category3Elem.attr("class", "activeCategory");
+                            category3Elem.find("a").attr("style", "background-color:#ddd;color:#2ca02c");
 
 
                             var collection = null;
-                            if($(".activeCategory").length == 0){
+                            if ($(".activeCategory").length == 0) {
                             }
-                            else{
-                                collection = $(".circle").filter(function(){
+                            else {
+                                collection = $(".circle").filter(function () {
                                     var color = $(this).css("color");
                                     return rgb2hex(color) === "#2ca02c";
                                 });
                             }
 
                             var types = [];
-                            collection.each(function(){
+                            collection.each(function () {
                                 //						types.push($(this).attr("class"));
                                 types.push(parseInt(this.classList[2]));
                             });
 
-                            classifiedNodesHandler(collection,$(".circle"));
+                            classifiedNodesHandler(collection, $(".circle"));
                             showtype(fade_out, types);
                             // not show links in this ocassion
                             linkLines.style("stroke-opacity", function (o) {
@@ -2798,25 +3046,25 @@ authorselected = 1;
 
                     });
 
-                    experimentsElem.on("click", function (e,d){
+                    experimentsElem.on("click", function (e, d) {
                         // finds the click event and refreshes before the beforeclose event.
                         var myval = $(this).find("option:selected").val();
                     });
-                    experimentsElem.on("change", function (e,d){
+                    experimentsElem.on("change", function (e, d) {
                         var myval = $(this).find("option:selected").val();
 
-                        if(myval != experimentName){
+                        if (myval != experimentName) {
 
                             d3.select("#experiments").selectAll("option")
-                                .text(function(d){
-                                    if(experimentName == d.id){
+                                .text(function (d) {
+                                    if (experimentName == d.id) {
 
                                         experimentName = d.id;
                                         experimentDescription = d.desc;
-                                        if((expsimilarity = d.initialSimilarity) == null){
+                                        if ((expsimilarity = d.initialSimilarity) == null) {
                                             expsimilarity = <?php echo $expsimilarity ;?>;
                                         }
-                                        console.log("experimentName:"+d.id);
+                                        console.log("experimentName:" + d.id);
                                     }
                                     return d.id;
                                 });
@@ -2828,10 +3076,10 @@ authorselected = 1;
 
                             initializeExperimentPage();
                             graphLoad();
-                            mygraphContainerElem.attr("style","position:fixed;width:"+8*w/7);
+                            mygraphContainerElem.attr("style", "position:fixed;width:" + 8 * w / 7);
 
 //todo hard code for the Brusseles ... to be moved ... paizei rolo kai i othoni einia ftiagmena gia 13-15
-                            if (/^FET*/.test(experimentName)){
+                            if (/^FET*/.test(experimentName)) {
                                 gravity = 3;
                                 charge = -1100;
                                 window['force']['charge'](charge);
@@ -2839,14 +3087,14 @@ authorselected = 1;
                                 force.start();
                                 categoriesElem.show();
                             }
-                            else if (/^HEALTH*/.test(experimentName)){
+                            else if (/^HEALTH*/.test(experimentName)) {
                                 gravity = 7;
                                 charge = -1100;
                                 window['force']['charge'](charge);
                                 window['force']['gravity'](gravity);
                                 force.start();
                             }
-                            else if (/^Full*/.test(experimentName)){
+                            else if (/^Full*/.test(experimentName)) {
                                 gravity = 10;
                                 charge = -200;
                                 window['force']['charge'](charge);
@@ -2855,17 +3103,16 @@ authorselected = 1;
                             }
 
 
-
                             d3.select("#experiments").selectAll("option")
-                                .text(function(d){
-                                    if(experimentName == d.id){
+                                .text(function (d) {
+                                    if (experimentName == d.id) {
 
                                         experimentName = d.id;
                                         experimentDescription = d.desc;
-                                        if((expsimilarity = d.initialSimilarity) == null){
+                                        if ((expsimilarity = d.initialSimilarity) == null) {
                                             expsimilarity = <?php echo $expsimilarity ;?>;
                                         }
-                                        console.log("new experimentName:"+d.id);
+                                        console.log("new experimentName:" + d.id);
                                     }
                                     return d.id;
                                 });
@@ -2874,17 +3121,17 @@ authorselected = 1;
                     });
 
 
-                    filtersElem.on("click", function (e,d){
+                    filtersElem.on("click", function (e, d) {
                         // finds the click event and refreshes before the change event.
                         var myval = $(this).find("option:selected").val();
                     });
-                    filtersElem.on("change", function (e,d){
+                    filtersElem.on("change", function (e, d) {
                         // var myval = $(this).find("option:selected").val();
-                        if($(this).find("option:selected").is("#opt1")){
+                        if ($(this).find("option:selected").is("#opt1")) {
                             filter1Elem.show();
                             filter2Elem.hide()
                         }
-                        else if($(this).find("option:selected").is("#opt2")){
+                        else if ($(this).find("option:selected").is("#opt2")) {
                             filter1Elem.hide();
                             filter2Elem.show()
                         }
@@ -2898,47 +3145,46 @@ authorselected = 1;
 
                 myTabElem.show();
                 experimentBtnElem.show();
-                experimentBtnElem.unbind().on("click", function(){
+                experimentBtnElem.unbind().on("click", function () {
                     d3.select("#experiments").selectAll("option")
-                        .each(function(d){
-                            console.log("experimentName:"+d.id);
-                            console.log("experimentDescription:"+d.desc);
-                            console.log("expsimilarity:"+d.initialSimilarity);
-                            if(experimentName == d.id){
+                        .each(function (d) {
+                            console.log("experimentName:" + d.id);
+                            console.log("experimentDescription:" + d.desc);
+                            console.log("expsimilarity:" + d.initialSimilarity);
+                            if (experimentName == d.id) {
                                 experimentDescription = d.desc;
-                                if((expsimilarity = d.initialSimilarity) == null){
+                                if ((expsimilarity = d.initialSimilarity) == null) {
                                     expsimilarity = <?php echo $expsimilarity ;?>;
                                 }
                             }
                         });
 
-                    $(this).attr("data-title","Experiment Description");
-                    $(this).attr("data-content",experimentDescription);
+                    $(this).attr("data-title", "Experiment Description");
+                    $(this).attr("data-content", experimentDescription);
                     $(this).popover('toggle');
                 });
 
 
-                boostBtnElem.unbind().on("click", function(){
+                boostBtnElem.unbind().on("click", function () {
                     topicstemp = topicsNotSorted;
                     topicsNotSorted = topicsSorted;
                     topicsSorted = topicstemp;
 
                     mytextContentElem.hide();
                     browseTick(true);
-                    clickGraph(clickedNode,fade_out);   //clicking in order to reload node with new labels
+                    clickGraph(clickedNode, fade_out);   //clicking in order to reload node with new labels
 
 
-                    if (topicsFlag){
+                    if (topicsFlag) {
                         topicsFlag = false;
-                        boostBtnElem.find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-remove");
+                        boostBtnElem.find("ul").find("li").find("a").find("span").attr("class", "glyphicon glyphicon-remove");
                     }
-                    else{
+                    else {
                         topicsFlag = true;
-                        boostBtnElem.find("ul").find("li").find("a").find("span").attr("class","glyphicon glyphicon-ok");
+                        boostBtnElem.find("ul").find("li").find("a").find("span").attr("class", "glyphicon glyphicon-ok");
                     }
                     mytextContentElem.show();
                 });
-
 
 
                 createChord(1);
@@ -2952,7 +3198,6 @@ authorselected = 1;
                     createTrends(5);
                     createTrends(6);
                 }
-
 
 
                 chordElem = $("#chord");
@@ -2973,11 +3218,11 @@ authorselected = 1;
                 trendlegend6Elem = $("#trendlegend6");
                 seriesElem = $(".series");
                 streamPathElem = $("path");
-                mygraphContainerElem.attr("style","position:fixed;width:"+9*w/8);
+                mygraphContainerElem.attr("style", "position:fixed;width:" + 9 * w / 8);
                 resizeLayout();
             }
 
-            function initializeExperimentPage(){
+            function initializeExperimentPage() {
                 // hide until json data have been loaded from server
                 myTabElem.hide();
                 classifiedNodesHeaderElem.hide();
@@ -3015,97 +3260,100 @@ authorselected = 1;
 
                 filtersElem.val($("#filters option:first").val());
                 linkedByIndex = {},
-                nodeConnections = [],
-                maxNodeConnections = 0,
-                labeled = [],
-                topicWords = [],
-                topicsNotSorted = [],
-                topicsSorted = [],
-                topicstemp = [],
-                topicsFlag = false,
-                graphNodes = [],
-                jsonLayout = [],
-                jsonTrendsLayout = [],
-                distribution = [],
-                heatmap = [],
-                trends = {},
-                nodes = [],
-                links = [],
-                labels = [],
-                selectedLabelIndex = null,
-                scaleFactor = 1,
-                translation = [0,0],
-                legend_data = [],
-                max_proj = 0,
-                nodesInGroup = [],
-                labelIsOnGraph = {},
-                svgSortedTopicWords = [],
-                subdivisionsChord = [],
-                nodeLabels = {},
-                selectnodeLabels = {},
-                previous_scale = 1,
-                zoom_type = 1,
-                topicsMap = {},
-                discriminativeTopic = {},
-                discriminativeTopicWeight = {},
-                discriminativeWord = {},
-                discriminativeWordCounts = {},
-                label = {},
-                listLength = 5,
-                counter = 0,
-                numOfClassifiedNodes = 0,
-                flagForTranformation = 0,
-                clrArray = [],
-                relations,
-                relationsCross,
-                node_hash = [],
-                percentageSum = 0,
-                clickedNode = 0,
-                clickedChord = 0,
-                trendClicked = 0,
-                subdConnections = [],
-                subdConnectionsNum = [],
-                relations = [],
-                relationsCross = [],
-                subdBiConnections = [],
-                subdBiConnectionsNum = [],
-                nodesToFade = [],
-                availableTags = [],
-                availableLabels = [],
-                fetOpenNum = 0,
-                fetProactiveNum = 0,
-                fetFlagshipNum = 0,
-                fontsizeVar = <?php echo $fontsizeVar ;?>,
-                smallestFontVar = <?php echo $smallestFontVar ;?>,
-                similarityThr = <?php echo $similarityThr ;?>,
-                maxNodeConnectionsThr = <?php echo $maxNodeConnectionsThr ;?>,
-                linkThr = <?php echo $linkThr ;?>,
-                gravity = <?php echo $gravity ;?>,
-                charge = <?php echo $charge ;?>,
-                expsimilarity = <?php echo $expsimilarity ;?>,
-                nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>,
-                fade_out = <?php echo $fade_out ;?>,
-                strong = <?php echo $strong ;?>,
-                normal = <?php echo $normal ;?>,
-                pagetitle = "<?php echo $title ;?>",
-                chordtitle = "<?php echo $chord_title ;?>",
-                trendstitle = "<?php echo $trends_title ;?>",
-                nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8,                // fadelimit is a variable with values same or bigger than normal so that in bigger experiments we can define if we want or not the visualization to fade
-                w = windowElem.width()/2,//800,
-                h = windowElem.width()/2,//800,
-                trendsclicked=false,
-                clr20 = d3.scale.category20().range(),
-                clrEven = [],
-                clrOdd = [],
-                clickedTopics = [],
-                columns = [],
-                authorselected = 0;
+                    nodeConnections = [],
+                    maxNodeConnections = 0,
+                    labeled = [],
+                    topicWords = [],
+                    topicsNotSorted = [],
+                    topicsSorted = [],
+                    topicstemp = [],
+                    topicsFlag = false,
+                    graphNodes = [],
+                    jsonLayout = [],
+                    jsonTrendsLayout = [],
+                    distribution = [],
+                    heatmap = [],
+                    trends = {},
+                    nodes = [],
+                    links = [],
+                    labels = [],
+                    selectedLabelIndex = null,
+                    scaleFactor = 1,
+                    translation = [0, 0],
+                    legend_data = [],
+                    max_proj = 0,
+                    nodesInGroup = [],
+                    labelIsOnGraph = {},
+                    svgSortedTopicWords = [],
+                    subdivisionsChord = [],
+                    nodeLabels = {},
+                    selectnodeLabels = {},
+                    previous_scale = 1,
+                    zoom_type = 1,
+                    topicsMap = {},
+                    discriminativeTopic = {},
+                    discriminativeTopicWeight = {},
+                    discriminativeWord = {},
+                    discriminativeWordCounts = {},
+                    label = {},
+                    listLength = 5,
+                    counter = 0,
+                    numOfClassifiedNodes = 0,
+                    flagForTranformation = 0,
+                    clrArray = [],
+                    relations,
+                    relationsCross,
+                    node_hash = [],
+                    percentageSum = 0,
+                    clickedNode = 0,
+                    clickedChord = 0,
+                    trendClicked = 0,
+                    subdConnections = [],
+                    subdConnectionsNum = [],
+                    relations = [],
+                    relationsCross = [],
+                    subdBiConnections = [],
+                    subdBiConnectionsNum = [],
+                    nodesToFade = [],
+                    availableTags = [],
+                    availableLabels = [],
+                    fetOpenNum = 0,
+                    fetProactiveNum = 0,
+                    fetFlagshipNum = 0,
+                    fontsizeVar = <?php echo $fontsizeVar ;?>,
+                    smallestFontVar = <?php echo $smallestFontVar ;?>,
+                    similarityThr = <?php echo $similarityThr ;?>,
+                    maxNodeConnectionsThr = <?php echo $maxNodeConnectionsThr ;?>,
+                    linkThr = <?php echo $linkThr ;?>,
+                    gravity = <?php echo $gravity ;?>,
+                    charge = <?php echo $charge ;?>,
+                    layout = <?php echo $layout ;?>,
+                    expsimilarity = <?php echo $expsimilarity ;?>,
+                    nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?>,
+                    fade_out = <?php echo $fade_out ;?>,
+                    strong = <?php echo $strong ;?>,
+                    normal = <?php echo $normal ;?>,
+                    pagetitle = "<?php echo $title ;?>",
+                    chordtitle = "<?php echo $chord_title ;?>",
+                    trendstitle = "<?php echo $trends_title ;?>",
+                    trendsNum = <?php echo $trends_num;?>,
+                    nodes.length > 1000 ? fadelimit = 0.9 : fadelimit = 0.8,                // fadelimit is a variable with values same or bigger than normal so that in bigger experiments we can define if we want or not the visualization to fade
+                    w = windowElem.width() / 2,//800,
+                    h = windowElem.width() / 2,//800,
+                    trendsclicked = false,
+                    clr20 = d3.scale.category20().range(),
+                    clrEven = [],
+                    clrOdd = [],
+                    clickedTopics = [],
+                    columns = [],
+                    authorselected = 0,
+                    alltrendscsvFilesExist = false;
 
-                for (var i=0 ; i < clr20.length ; i++)
+                for (var i = 0; i < clr20.length; i++)
                     if (i % 2) clrEven.push(clr20[i]);
                     else clrOdd.push(clr20[i]);
-                clr= [];
-                for (var i=0 ; i < clrEven.length ; i++){
+                clr = [];
+                for (var i = 0; i < clrEven.length; i++) {
                     clr.push(clrEven[i]);
                     clr.push(clrOdd[i])
                 }
@@ -3115,15 +3363,15 @@ authorselected = 1;
                 $.merge(clr, clr3);					// add second array's elements to first
 
 
-                if (/chrome/.test(navigator.userAgent.toLowerCase())) webkit=1;
-                else if (/webkit/.test(navigator.userAgent.toLowerCase())) webkit=2;
-                else webkit=0;
+                if (/chrome/.test(navigator.userAgent.toLowerCase())) webkit = 1;
+                else if (/webkit/.test(navigator.userAgent.toLowerCase())) webkit = 2;
+                else webkit = 0;
 //                jQuery.browser = {};
 //                jQuery.browser.mozilla = /mozilla/.test(navigator.userAgent.toLowerCase()) && !/webkit/.test(navigator.userAgent.toLowerCase());
 //                jQuery.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
 //                jQuery.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
 //                jQuery.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
-                    //the below 2 only for ACM
+                //the below 2 only for ACM
                 trendmenu0Elem.parent().hide();
 //                pill3Elem.hide();
 
@@ -3131,34 +3379,34 @@ authorselected = 1;
 //                trendCSV12 = "comminicationACM_pivot_1990-2011_new.csv",
 //                trendCSV13 = "acm-sigmod-pivot-all-1976-2011_new.csv";
                 trendCSV10 = "trendscsv0.csv",
-                trendCSV11 = "trendscsv1.csv",
-                trendCSV12 = "trendscsv2.csv",
-                trendCSV13 = "trendscsv3.csv",
-                trendCSV14 = "trendscsv4.csv",
-                trendCSV15 = "trendscsv5.csv";
+                    trendCSV11 = "trendscsv1.csv",
+                    trendCSV12 = "trendscsv2.csv",
+                    trendCSV13 = "trendscsv3.csv",
+                    trendCSV14 = "trendscsv4.csv",
+                    trendCSV15 = "trendscsv5.csv";
                 trendCSV16 = "trendscsv6.csv";
 //                trendCSV2 = "weighted_topics2.csv";
 
-                if (/^FET*/.test(experimentName)){
+                if (/^FET*/.test(experimentName)) {
                     categoriesElem.show();
-                    nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> + 0.3;
+                    nodeConnectionsThr = <?php echo $nodeConnectionsThr ;?> +0.3;
                     expsimilarity = 0.45;
                     gravity = 1;
                     charge = -1100;
                 }
-                else if (/^HEALTH*/.test(experimentName)){
+                else if (/^HEALTH*/.test(experimentName)) {
                     expsimilarity = 0.45;
                     gravity = 3;
                     charge = -1100;
                     categoriesElem.hide();
                 }
-                else if (/^Full*/.test(experimentName)){
+                else if (/^Full*/.test(experimentName)) {
                     expsimilarity = 0.6;
                     gravity = 7;
                     charge = -400;
                     categoriesElem.hide();
                 }
-                else if (/^ACM*/.test(experimentName)){
+                else if (/^ACM*/.test(experimentName)) {
                     categoriesElem.hide();
 //                    pill3Elem.show();
                     trendmenu0Elem.parent().show();
@@ -3166,31 +3414,30 @@ authorselected = 1;
 
 
                 chord_formatPercent = d3.format(".1%"),
-                target = document.getElementById('graphdiv'),
-                opts = {
-                    lines: 17,              // The number of lines to draw
-                    length: 20,             // The length of each line
-                    width: 10,              // The line thickness
-                    radius: 30,             // The radius of the inner circle
-                    corners: 1,             // Corner roundness (0..1)
-                    rotate: 0,              // The rotation offset
-                    direction: 1,           // 1: clockwise, -1: counterclockwise
-                    color: '#000',          // #rgb or #rrggbb or array of colors
-                    speed: 1,               // Rounds per second
-                    trail: 60,              // Afterglow percentage
-                    shadow: false,          // Whether to render a shadow
-                    hwaccel: false,         // Whether to use hardware acceleration
-                    className: 'spinner',   // The CSS class to assign to the spinner
-                    zIndex: 2e9,            // The z-index (defaults to 2000000000)
-                    top: '100',             // Top position relative to parent
-                    left: '50%'             // Left position relative to parent
-                };
+                    target = document.getElementById('graphdiv'),
+                    opts = {
+                        lines: 17,              // The number of lines to draw
+                        length: 20,             // The length of each line
+                        width: 10,              // The line thickness
+                        radius: 30,             // The radius of the inner circle
+                        corners: 1,             // Corner roundness (0..1)
+                        rotate: 0,              // The rotation offset
+                        direction: 1,           // 1: clockwise, -1: counterclockwise
+                        color: '#000',          // #rgb or #rrggbb or array of colors
+                        speed: 1,               // Rounds per second
+                        trail: 60,              // Afterglow percentage
+                        shadow: false,          // Whether to render a shadow
+                        hwaccel: false,         // Whether to use hardware acceleration
+                        className: 'spinner',   // The CSS class to assign to the spinner
+                        zIndex: 2e9,            // The z-index (defaults to 2000000000)
+                        top: '100',             // Top position relative to parent
+                        left: '50%'             // Left position relative to parent
+                    };
 
                 spinner = new Spinner(opts).spin(target);
             }
 
-            function updateURLParameter(url, param, paramVal)
-            {
+            function updateURLParameter(url, param, paramVal) {
                 var TheAnchor = null;
                 var newAdditionalURL = "";
                 var tempArray = url.split("?");
@@ -3198,40 +3445,55 @@ authorselected = 1;
                 var additionalURL = tempArray[1];
                 var temp = "";
 
-                if (additionalURL)
-                {
+                if (additionalURL) {
                     var tmpAnchor = additionalURL.split("#");
                     var TheParams = tmpAnchor[0];
                     TheAnchor = tmpAnchor[1];
-                    if(TheAnchor)
+                    if (TheAnchor)
                         additionalURL = TheParams;
 
                     tempArray = additionalURL.split("&");
 
-                    for (i=0; i<tempArray.length; i++)
-                    {
-                        if(tempArray[i].split('=')[0] != param)
-                        {
+                    for (i = 0; i < tempArray.length; i++) {
+                        if (tempArray[i].split('=')[0] != param) {
                             newAdditionalURL += temp + tempArray[i];
                             temp = "&";
                         }
                     }
                 }
-                else
-                {
+                else {
                     var tmpAnchor = baseURL.split("#");
                     var TheParams = tmpAnchor[0];
-                    TheAnchor  = tmpAnchor[1];
+                    TheAnchor = tmpAnchor[1];
 
-                    if(TheParams)
+                    if (TheParams)
                         baseURL = TheParams;
                 }
 
-                if(TheAnchor)
+                if (TheAnchor)
                     paramVal += "#" + TheAnchor;
 
                 var rows_txt = temp + "" + param + "=" + paramVal;
                 return baseURL + "?" + newAdditionalURL + rows_txt;
+            }
+
+
+            function checkFirstLayoutToBeVisualized() {
+                if (layout == "chord"){
+                    chordmenu1Elem.trigger("click");
+//                    graphdivElem.removeClass("active");
+//                    graphmenu1Elem.parent().removeClass("active");
+//                    chorddivElem.addClass("active");
+//                    chordmenu1Elem.parent().addClass("active");
+//                    chordmenuElem.parent().addClass("active");
+                }
+                else if (layout == "trends"){
+                    trendmenu0Elem.trigger("click");
+//                    legenddivElem.hide()
+//                    legend2divElem.show()
+//                    legenddivElem.hide()
+//TODO na kanw dunamika ta trends na ta pairnei stin html opws kanw kai stin php kai edw mesa  tha prepei na allazw kai to legend kai ta panw deksia gia ta fet na min fainontai
+                }
             }
 
 
@@ -3254,13 +3516,20 @@ authorselected = 1;
                 if((charge = getUrlParameter('c')) == null){
                     charge = <?php echo $charge ;?>;
                 }
+
+                if((layout = getUrlParameter('l')) == null){
+                    layout = <?php echo $layout ;?>;
+                }
             }
 
             function loadNodeList(){
                 // empty for re-initializing graphNodesList
 
                 graphNodesElem.empty();
-                graphNodesElem.append("<optgroup id=\"graphNodesGroup1\" label=\"<?php echo $node_groupName1 ;?>\"><optgroup id=\"graphNodesGroup2\" label=\"<?php echo $node_groupName2 ;?>\">")
+
+                graphNodesElem.append("optgroup").attr("id", "graphNodesGroup1").attr("label", "<?php echo $node_groupName1 ;?>");
+                graphNodesElem.append("optgroup").attr("id", "graphNodesGroup2").attr("label", "<?php echo $node_groupName2 ;?>");
+//                graphNodesElem.append("<optgroup id=\"graphNodesGroup1\" label=\"<?php //echo $node_groupName1 ;?>//\"><optgroup id=\"graphNodesGroup2\" label=\"<?php //echo $node_groupName2 ;?>//\">")
                 graphNodesGroup1Elem = $("#graphNodesGroup1");
 //                graphNodesGroup2Elem = $("#graphNodesGroup2");
                 graphNodesList1 = d3.select("#graphNodesGroup1");
@@ -4150,10 +4419,15 @@ authorselected = 1;
 //                console.log(topicsNotSortedtrends)
                 for (var key in topicsNotSortedtrends){
                     var keyint = parseInt(key);
-                    if (columns.indexOf(keyint) > -1 && columns !== undefined){
-//                        console.log(topicsNotSortedtrends[keyint])
+                    if (!alltrendscsvFilesExist) {
+                        if (columns.indexOf(keyint) > -1 && columns !== undefined){
+    //                        console.log(topicsNotSortedtrends[keyint])
+                            trendstopics[keyint] = topicsNotSortedtrends[keyint];
+    //                        trendstopics.push(topicsNotSortedtrends[keyint]);
+                        }
+                    }
+                    else{
                         trendstopics[keyint] = topicsNotSortedtrends[keyint];
-//                        trendstopics.push(topicsNotSortedtrends[keyint]);
                     }
                 }
 
@@ -4201,6 +4475,7 @@ authorselected = 1;
                             clickPopover(topic, type, true);
                         })
                     });
+
 //
 //                        VIZ.onResize();
 //
@@ -4208,116 +4483,6 @@ authorselected = 1;
 //                            VIZ.onResize();
 //                        });
 //
-
-                    function stackBarChart(data) {
-                        var seriesArr = [], series = {};
-                        varNamesReversed.forEach(function (name) {
-                            series[name] = {name: name, values:[]};
-                            seriesArr.push(series[name]);
-                        });
-
-                        var topic_hash = [];
-                        topicnames = [];
-                        var index = 0;
-
-                        for (var key in trendstopics) {
-                            console.log("key")
-                            console.log(key)
-                            $.each(trendstopics[key], function (i, d) {
-                                console.log("line d")
-                                console.log(d)
-                                console.log("line i")
-                                console.log(i)
-                                //
-                                var nodeindex = topic_hash.indexOf(key);
-                                if (nodeindex != -1) {
-                                    var newname = topicnames[nodeindex].name;
-                                    newname += "," + d.item;
-                                    topicnames[nodeindex].name = newname;
-                                }
-                                else {
-                                    topic_hash.push(key);
-                                    //            topicnames[topic_hash.length-1] = {};
-                                    topicnames.push({index: index, id: key, name: d.item});
-                                    index++;
-                                }
-
-                            });
-                        }
-//                        //todo edw kai sta alla antistoixa na balw ta topics pou thelw
-//                        topics.forEach(function(d,i) {
-//
-//                            var nodeindex = topic_hash.indexOf(i);
-//                            if(nodeindex != -1){
-//                                var newname = topicnames[nodeindex].name;
-//                                newname += "," + d[i].item;
-//                                topicnames[nodeindex].name = newname;
-//                            }
-//                            else{
-//                                topic_hash.push(i);
-//                                //            topicnames[topic_hash.length-1] = {};
-//                                topicnames.push({index:index, id:i, name:d[i].item});
-//                                index++;
-//                            }
-//
-//                        });
-
-                        data.forEach(function (d) {
-                            var y0 = 0;
-                            d.mapping = varNames.map(function (name) {
-                                series[name].values.push({name: name, label: d[labelVar], value: +d[name]});
-                                return {
-                                    name: name,
-                                    label: d[labelVar],
-                                    y0: y0,
-                                    y1: y0 += +d[name]
-                                };
-                            });
-                            d.total = d.mapping[d.mapping.length - 1].y1;
-                        });
-
-                        x.domain(data.map(function (d) { return d.quarter; }));
-                        y.domain([0, d3.max(data, function (d) { return d.total; })]);
-
-                       drawAxis();
-
-                        var selection = trend_svg.selectAll(".bar")
-                            .data(data)
-                            .enter().append("g")
-//                                .attr("id", function (d,i) { return "bar"+type+"_"+i })
-//                                .attr("class", "series");
-//                                .on("click", function (d) { clickPopover.call(this, d, type, false); });
-
-                        selection
-                            .attr("transform", function (d,i) {
-                                return "translate(" + x(d.quarter) + ",0)"; });
-
-                        selection.selectAll(".series")
-                            .data(function (d) {
-//                                    console.log("d.mapping");
-//                                    console.log(d.mapping);
-                                return d.mapping;})
-                            .enter().append("rect")
-                            .attr("id", function (d,i) {
-//                                    return "series"+type+"_"+d.mapping[i].name})
-                               return "series"+type+"_"+ i})
-                            .attr("class", function (d,i) {
-//                                    return "series"+type+"_"+d.mapping[i].name})
-                                return "series series"+type+"_"+ i})
-//                                .attr("id", function (d,i) { return "rect"+i })
-                            .attr("width", x.rangeBand())
-                            .attr("y", function (d) { return y(d.y1); })
-                            .attr("height", function (d) { return y(d.y0) - y(d.y1); })
-                            .style("fill", function (d) { return color(d.name); })
-                            .style("stroke", "grey")
-                            .on("mouseover", function (d) { showPopover.call(this, d); })
-                            .on("mouseout",  function (d) { removePopovers(); })
-                            .on("click", function (d) { clickPopover.call(this, d, type, false); });
-
-                        drawAxis();
-                        drawLegend(varNames,topic_hash);
-                    }
-
 
                     function lineChart(data) {
                         var line = d3.svg.line()
@@ -4449,23 +4614,26 @@ authorselected = 1;
                         var index = 0;
 
                         for (var key in trendstopics) {
-                            $.each(trendstopics[key], function (i, d) {
-                                var nodeindex = topic_hash.indexOf(key);
-                                if (nodeindex != -1) {
-                                    var newtopicitem = topicnames[nodeindex].topic;
-                                    newtopicitem += "," + d.item;
-                                    topicnames[nodeindex].topic = newtopicitem;
-                                }
-                                else {
-                                    topic_hash.push(key);
-                                            //            topicnames[topic_hash.length-1] = {};
+                            if (include(varNames, key)) {
+
+                                $.each(trendstopics[key], function (i, d) {
+                                    var nodeindex = topic_hash.indexOf(key);
+                                    if (nodeindex != -1) {
+                                        var newtopicitem = topicnames[nodeindex].topic;
+                                        newtopicitem += "," + d.item;
+                                        topicnames[nodeindex].topic = newtopicitem;
+                                    }
+                                    else {
+                                        topic_hash.push(key);
+                                        //            topicnames[topic_hash.length-1] = {};
 //todo na mpainei to title-description pleon sto legend oxi to topic
 //                                    topicnames.push({index: index, id: key, name: d.item});
-                                    topicnames.push({index: index, id: key, name: d.title, topic: d.item});
-                                    index++;
-                                }
+                                        topicnames.push({index: index, id: key, name: d.title, topic: d.item});
+                                        index++;
+                                    }
 
-                            });
+                                });
+                            }
                         }
 
                         data.forEach(function (d) {
@@ -4739,11 +4907,12 @@ authorselected = 1;
                         titname = o.name;
                         titindex= o.index;
                         tittopic= o.topic;
-
-                        if ($("#series" + type + "_" + i).attr("class") == "series active_trend") {
+//todo prepei to index i na einai aukswn kai oxi oti kai to id
+//                        console.log(o)
+                        if ($("#series" + type + "_" + titindex).attr("class") == "series active_trend") {
 //                            console.log("create series inactive_trend");
-                            $("#series" + type + "_" + i).attr("class", "series inactive_trend");
-                            $("#trendlegend" + type + "_" + i).attr("class", "trendlegend inactive_trend");
+                            $("#series" + type + "_" + titindex).attr("class", "series inactive_trend");
+                            $("#trendlegend" + type + "_" + titindex).attr("class", "trendlegend inactive_trend");
                             if ($(".active_trend").length == 0) {
                                 $(".inactive_trend").each(function () {
                                     if ($(this).attr("class") == "series inactive_trend")
@@ -4772,8 +4941,8 @@ authorselected = 1;
                         }
                         else {
 //                            console.log("create series active_trend");
-                            $("#series" + type + "_" + i).attr("class", "series active_trend");
-                            $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
+                            $("#series" + type + "_" + titindex).attr("class", "series active_trend");
+                            $("#trendlegend" + type + "_" + titindex).attr("class", "trendlegend active_trend");
 
                             if ($(".active_trend").length == 2) {       //ena gia to series kai ena gia to trendlegend
                                 $(".series").each(function () {
@@ -4783,8 +4952,8 @@ authorselected = 1;
                                     $(this).attr("class", "trendlegend inactive_trend");
                                 });
 
-                                $("#series" + type + "_" + i).attr("class", "series active_trend");
-                                $("#trendlegend" + type + "_" + i).attr("class", "trendlegend active_trend");
+                                $("#series" + type + "_" + titindex).attr("class", "series active_trend");
+                                $("#trendlegend" + type + "_" + titindex).attr("class", "trendlegend active_trend");
 
                                 mytextTitleElem.empty();
                                 mytextTitleElem.show();
@@ -5223,7 +5392,7 @@ authorselected = 1;
 <!--                        <li class="active"><a data-toggle="tab" data-target="#graphdiv">Force-Directed Graph <span class="divider-right"></span><span class="btn btn-xs glyphicon glyphicon-fullscreen glyphiconmystyle fullscreen" role="button" title="Fullscreen Mode" aria-hidden="true"></span><span class="btn btn-xs glyphicon glyphicon-refresh glyphiconmystyle fullscreen" role="button" title="Reset Mode" aria-hidden="true"></span></a></li>-->
                         <li class="dropdown">
                             <a class="dropdown-toggle" id="trendmenu" data-toggle="dropdown" data-target="#">Trends<b class="caret"></b></a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="trendmenu">
+                            <ul class="dropdown-menu" id="trendmenudata" role="menu" aria-labelledby="trendmenu">
                                 <!--                                <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="../../../trends/streamgraph-full.html" target="_blank">Trends 1  <span class="divider-right"></span><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>-->
                                 <li><a id="trendmenu0" data-toggle="tab" data-target="#trend0div" href="#" target="_blank">ACM Topic Trend Analysis 1950-2011</a></li>
                                 <li><a id="trendmenu1" data-toggle="tab" data-target="#trend1div" href="#" target="_blank">Journal: CACM, Communications of the ACM</a></li>

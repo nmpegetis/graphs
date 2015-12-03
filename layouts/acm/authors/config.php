@@ -83,6 +83,10 @@ where JournalISSN IS NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1
 // -- ACM SIGGRAPH Computer Graphics: 00978930
 $move_elems = array('?');
 $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
+$set_elemsTitles = array("ACM Topic Trend Analysis 1950-2011","Journal: CACM, Communications of the ACM","Journal: ACM SIGSOFT Software Engineering Notes","Journal: Journal of the ACM","Journal: ACM SIGMOD Records","Journal: ACM SIGPLAN Notices","Journal: ACM SIGGRAPH Computer Graphics");
+
+// DONT FORGET TO ALSO CHANGE THE TOTAL NUMBER OF TRENDS IN THE VARIABLE BELOW $trends_num
+
 
 // general query for all trends
 $query_trendsX = "Select BatchId, TopicDistributionPerBatch.TopicId, NormWeight, Title,TrendIndex, TotalAvgWeight , TopicDistributionPerBatch.ExperimentId
@@ -100,6 +104,8 @@ array_push($trends_queries,$query_trendsAll);
 foreach ($set_elems as &$elem) {
     array_push($trends_queries,str_replace($move_elems, $elem, $query_trendsX));
 }
+
+
 ///////////////////////////////////
 ///// front-end configuration /////
 ///////////////////////////////////
@@ -114,7 +120,8 @@ $node_name = "Author";
 $node_groupName1 = "Authors";
 $node_groupName2 = "Authors";
 $node_areaName = "ACM Category";
-
+$trends_num = 7;            // 6 Journals + 1 for all
+$layout = "graph";
 
 // appearance
 $fade_out = 0.05;

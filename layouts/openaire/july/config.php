@@ -34,6 +34,7 @@ $query_topics_nosort = "select TopicId, Item, WeightedCounts from topicdescripti
 $query_topicsdistribution = null;
 $query_heatmap = null;
 $query_trends = null;
+// DONT FORGET TO ALSO CHANGE THE TOTAL NUMBER OF TRENDS IN THE VARIABLE BELOW $trends_num
 
 
 ///////////////////////////////////
@@ -50,6 +51,8 @@ $node_name = "Grant";
 $node_groupName1 = "group1";
 $node_groupName2 = "group2";
 $node_areaName = "Subdivisions";
+$trends_num = 7;            // 6 Journals + 1 for all
+$layout = "graph";
 
 
 // appearance

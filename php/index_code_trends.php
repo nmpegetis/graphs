@@ -44,6 +44,9 @@
         jsonTopicsLayout, topics, topicsNoSort, topicsFile, topicsFileExist,
         jsonTrendsLayout, trends, trendsFile, trendsFileExist;
 
+
+var columns =[]; ///todo maybe not needed
+
     loadFromUrlParametersAndServer();
 
     trendsFile = "../data/"+layoutId+".csv";
@@ -458,12 +461,12 @@
 
     function dothework(response) {
         //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-        var result = pivot(response, ['year'], ['id'], {});
+        var result = pivot(response[0], ['year'], ['id'], {});
         var line;
         line = "quarter";
         for (var k = 0; k < result.columnHeaders.length; k++) {
             line += "," + result.columnHeaders[k];
-            columns.push(parseInt(result.columnHeaders[k]));
+//            columns.push(parseInt(result.columnHeaders[k]));
         }
 
         for (var i = 0; i < result.rowHeaders.length; i++) {
@@ -476,7 +479,8 @@
                     line += ",0"
             }
         }
-console.log(line)
+                console.log(line)
+
         $.ajax({
             type: "POST",
             async: true,
@@ -489,7 +493,7 @@ console.log(line)
                 id: layoutId      // id for distinguishing trends
             },
             success: function () {
-                //   console.log("CSV file Created")
+                   console.log("CSV file Created")
             },
             error: function (e) {
                 console.log("Error in file Creation:" + e);

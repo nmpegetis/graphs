@@ -41,7 +41,7 @@
 
 <script>
     var layoutId, layoutType, experiment,
-        jsonTopicsLayout, topics, topicsNoSort, topicsFile, topicsFileExist,
+        jsonTopicsLayout, topics, topicsNoSort, topicsSort, topicsFile, topicsFileExist,
         jsonTrendsLayout, trends, trendsFile, trendsFileExist;
 
 
@@ -82,18 +82,6 @@ var columns =[]; ///todo maybe not needed
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left");
-
-    var stack = d3.layout.stack()
-        .offset("wiggle")
-        .values(function (d) { return d.values; })
-        .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
-        .y(function (d) { return d.value; });
-
-    var area = d3.svg.area()
-        .interpolate("cardinal")
-        .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
-        .y0(function (d) { return y(d.y0); })
-        .y1(function (d) { return y(d.y0 + d.y); });
 
     var clr20 = d3.scale.category20().range(),
         clrEven = [],
@@ -151,8 +139,12 @@ var columns =[]; ///todo maybe not needed
     //      d3.csv("data/comminicationACM_pivot_1990-2011.csv", function (error, data) {
     d3.csv(trendsFile, function (error, data) {
         d3.json(topicsFile, function(error,json) {
-            var topicsjson = json.topics;
-            var topicsNoSortjson = json.topicsNoSort;
+
+            var topicsjson;
+            if (topicsSort == "yes")
+                topicsjson = json.topics;
+            else
+                topicsjson = json.topicsNoSort;
 
             var topickeys = d3.keys(topicsjson);
             var topicvalues = d3.values(topicsjson);
@@ -168,7 +160,6 @@ var columns =[]; ///todo maybe not needed
                 });
 
             var topics = [];
-            var topicnames = [];
             var topic_hash = [];
 
             var index = 0;
@@ -202,102 +193,210 @@ var columns =[]; ///todo maybe not needed
 //                      }
             })
 
-            var seriesArr = [], series = {};
-            varNames.forEach(function (name) {
-                series[name] = {name: name, values:[]};
-                seriesArr.push(series[name]);
-            });
             color.domain(varNames);
 
-            data.forEach(function (d) {
-                varNames.map(function (name) {
-                    series[name].values.push({name: name, label: d[labelVar], value: +d[name]});
+
+            if (layoutType == "stream"){
+                stackChart(data, "wiggle");
+            }
+            else if (layoutType == "line") {
+                lineChart(data);
+            }
+            else if (layoutType == "area") {
+                stackChart(data, "zero");
+            }
+
+
+            function lineChart(data) {
+                var line = d3.svg.line()
+                    .interpolate("cardinal")
+                    .x(function (d) {
+                        return x(d.label) + x.rangeBand() / 2;
+                    })
+                    .y(function (d) {
+                        return y(d.value);
+                    });
+
+
+                var seriesData = varNames.map(function (name) {
+                    return {
+                        name: name,
+                        values: data.map(function (d) {
+                            return {name: name, label: d[labelVar], value: +d[name]};
+                        })
+                    };
                 });
-            });
-
-            x.domain(data.map(function (d) { return d.quarter; }));
-
-            stack(seriesArr.reverse());
-
-            y.domain([0, d3.max(seriesArr, function (c) {
-                return d3.max(c.values, function (d) { return d.y0 + d.y; });
-            })]);
-
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis);
-
-            svg.append("g")
-                .attr("class", "y axis")
-                .call(yAxis)
-                .append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 6)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
-                .text("Weight");
-
-            var selection = svg.selectAll(".series")
-                .data(seriesArr.reverse())
-                .enter()
-                .append("g")
-                .attr("id", function (d,i) { return "series_"+i })
-                .attr("class", "series")
-                .style("cursor","pointer")
-                .on("click", function (d) { clickPopover.call(this, d); });
-
-            selection.append("path")
-                .attr("class", "streamPath")
-                .attr("d", function (d) { return area(d.values); })
-                .attr("id", function (d,i) { return "streamPath"+i })
-                .style("fill", function (d) { return color(d.name); })
-                .style("stroke", "grey");
-
-            var points = svg.selectAll(".seriesPoints")
-                .data(seriesArr)
-                .enter().append("g")
-                .attr("class", "seriesPoints");
-
-            points.selectAll(".point")
-                .data(function (d) { return d.values; })
-                .enter().append("circle")
-                .attr("class", "point")
-                .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
-                .attr("cy", function (d) { return y(d.y0 + d.y); })
-                .attr("r", "10px")
-                .style("cursor","pointer")
-                .style("fill",function (d) { return color(d.name); })
-                .on("mouseover", function (d) { showPopover.call(this, d); })
-                .on("mouseout",  function (d) { removePopovers(); });
 
 
-            var legend = svg.selectAll(".legend")
-                .data(varNames)
-                .enter().append("g")
-                .attr("id", function (d,i) { return "trendlegend_"+i })
-                .style("cursor","pointer")
-                .attr("class", "legend")
-                .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; })
-                .on("click", function (d) { clickPopover.call(this, d); });
+                x.domain(data.map(function (d) { return d.quarter; }));
+                y.domain([
+                    d3.min(seriesData, function (c) {
+                        return d3.min(c.values, function (d) { return d.value; });
+                    }),
+                    d3.max(seriesData, function (c) {
+                        return d3.max(c.values, function (d) { return d.value; });
+                    })
+                ]);
 
-            legend.append("rect")
-                .attr("x", width-30)    // gia na mpoun aristera
-                .attr("width", 10)
-                .attr("height", 10)
-                .style("fill", color)
-                .style("stroke", "grey");
+                drawAxis();
 
-            legend.append("text")
-                .attr("x", width-10)
-                .attr("y", 6)
-                .attr("dy", ".35em")
-                //.append("textpath") // using "end", the entire text disappears
-                .style("text-anchor", "start")
-                .text(function (d) {
-                    console.log("-- "+topic_hash.indexOf(d))
-                    return topics[topic_hash.indexOf(d)].index+". "+topics[topic_hash.indexOf(d)].title;
+                var series = svg.selectAll(".series")
+                    .data(seriesData)
+                    .enter().append("g")
+                    .attr("id", function (d,i) { return "series_"+i })
+                    .attr("class", "series")
+                    .on("click", function (d) { clickPopover.call(this, d); });
+
+                series.append("path")
+                    .attr("class", "line")
+                    .attr("d", function (d) { return line(d.values); })
+                    .attr("id", function (d,i) { return "streamPath"+i })
+                    .style("stroke", function (d) { return color(d.name); })
+                    .style("stroke-width", "4px")
+                    .style("fill", "none");
+
+                series.selectAll(".linePoint")
+                    .data(function (d) { return d.values; })
+                    .enter().append("circle")
+                    .attr("class", "linePoint")
+                    .attr("cx", function (d) { return x(d.label) + x.rangeBand()/2; })
+                    .attr("cy", function (d) { return y(d.value); })
+                    .attr("r", "3px")
+                    .style("fill", function (d) { return color(d.name); })
+                    .style("stroke", "grey")
+                    .style("stroke-width", "1px")
+                    .on("mouseover", function (d) { showPopover.call(this, d); })
+                    .on("mouseout",  function (d) { removePopovers(); })
+                    .on("click", function (d) { clickPopover.call(this, d); });
+
+                drawAxis();
+                drawLegend(varNames,topic_hash);
+
+            }
+
+
+            function stackChart(data, offset) {
+                var stack = d3.layout.stack()
+                    .offset(offset)
+                    .values(function (d) { return d.values; })
+                    .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+                    .y(function (d) { return d.value; });
+
+                var area = d3.svg.area()
+                    .interpolate("cardinal")
+                    .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+                    .y0(function (d) { return y(d.y0); })
+                    .y1(function (d) { return y(d.y0 + d.y); });
+
+                var seriesArr = [], series = {};
+                varNames.forEach(function (name) {
+                    series[name] = {name: name, values:[]};
+                    seriesArr.push(series[name]);
                 });
+
+                data.forEach(function (d) {
+                    varNames.map(function (name) {
+                        series[name].values.push({name: name, label: d[labelVar], value: +d[name]});
+                    });
+                });
+
+                x.domain(data.map(function (d) { return d.quarter; }));
+
+                stack(seriesArr.reverse());
+
+                y.domain([0, d3.max(seriesArr, function (c) {
+                    return d3.max(c.values, function (d) { return d.y0 + d.y; });
+                })]);
+
+
+                var selection = svg.selectAll(".series")
+                    .data(seriesArr.reverse())
+                    .enter()
+                    .append("g")
+                    .attr("id", function (d,i) { return "series_"+i })
+                    .attr("class", "series")
+                    .style("cursor","pointer")
+                    .on("click", function (d) { clickPopover.call(this, d); });
+
+                selection.append("path")
+                    .attr("class", "streamPath")
+                    .attr("d", function (d) { return area(d.values); })
+                    .attr("id", function (d,i) { return "streamPath"+i })
+                    .style("fill", function (d) { return color(d.name); })
+                    .style("stroke", "grey");
+
+                var points = svg.selectAll(".seriesPoints")
+                    .data(seriesArr)
+                    .enter().append("g")
+                    .attr("class", "seriesPoints");
+
+                points.selectAll(".point")
+                    .data(function (d) { return d.values; })
+                    .enter().append("circle")
+                    .attr("class", "point")
+                    .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
+                    .attr("cy", function (d) { return y(d.y0 + d.y); })
+                    .attr("r", "10px")
+                    .style("cursor","pointer")
+                    .style("fill",function (d) { return color(d.name); })
+                    .on("mouseover", function (d) { showPopover.call(this, d); })
+                    .on("mouseout",  function (d) { removePopovers(); })
+                    .on("click", function (d) { clickPopover.call(this, d); });
+
+
+                drawAxis();
+                drawLegend(varNames,topic_hash);
+
+                $(".y").find(".tick").find("text").hide();
+
+            }
+
+            function drawLegend (varNames,topic_hash) {
+                var legend = svg.selectAll(".legend")
+                    .data(varNames)
+                    .enter().append("g")
+                    .attr("id", function (d,i) { return "trendlegend_"+i })
+                    .style("cursor","pointer")
+                    .attr("class", "legend")
+                    .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; })
+                    .on("click", function (d) { clickPopover.call(this, d); });
+
+                legend.append("rect")
+                    .attr("x", width-30)    // gia na mpoun aristera
+                    .attr("width", 10)
+                    .attr("height", 10)
+                    .style("fill", color)
+                    .style("stroke", "grey");
+
+                legend.append("text")
+                    .attr("x", width-10)
+                    .attr("y", 6)
+                    .attr("dy", ".35em")
+                    //.append("textpath") // using "end", the entire text disappears
+                    .style("text-anchor", "start")
+                    .text(function (d) {
+                        console.log("-- "+topic_hash.indexOf(d))
+                        return topics[topic_hash.indexOf(d)].index+". "+topics[topic_hash.indexOf(d)].title;
+                    });
+            }
+
+            function drawAxis() {
+
+                svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+
+                svg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Weight");
+            }
 
             function removePopovers () {
                 $('.popover').each(function() {
@@ -408,6 +507,10 @@ var columns =[]; ///todo maybe not needed
 
         if((layoutType = getUrlParameter('type')) == null){
             layoutType = '<?php echo $layoutType ;?>';
+        }
+
+        if((topicsSort = getUrlParameter('sort')) == null){
+            topicsSort = '<?php echo $topicsSort ;?>';
         }
     }
 

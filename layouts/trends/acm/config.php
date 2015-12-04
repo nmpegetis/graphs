@@ -100,7 +100,7 @@ $layout = "graph";
 // trends conf init
 $layoutId = "00010782";
 $layoutType = "stream";  // default
-
+$topicsSort = "yes";
 
 // appearance
 $fade_out = 0.05;

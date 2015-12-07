@@ -2820,7 +2820,7 @@
                                         for (var j = 0; j < subdConnections.length; j++) {
                                             stringout += subdConnections[j]+",";
                                         }
-                                        stringout += "\n";
+                                        stringout += "\n"+ d.name;
                                         for (var j = 0; j < subdConnections.length; j++) {
                                             subdConnections.forEach(function (z) {
                                                 if (z == d.name) {

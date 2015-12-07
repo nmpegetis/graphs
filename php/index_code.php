@@ -2131,6 +2131,47 @@
                 })
             }
 
+            function chordcsvcreator(response, trendindex) {
+                //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
+                var result = pivot(response, ['year'], ['id'], {});
+                var line;
+                line = "quarter";
+                for (var k = 0; k < result.columnHeaders.length; k++) {
+                    line += "," + result.columnHeaders[k];
+                    columns.push(parseInt(result.columnHeaders[k]));
+                }
+
+                for (var i = 0; i < result.rowHeaders.length; i++) {
+                    line += "\n" + result.rowHeaders[i];
+                    for (var j = 0; j < result.columnHeaders.length; j++) {
+
+                        if (result[i][j] !== undefined)
+                            line += "," + result[i][j][0].weight;
+                        else
+                            line += ",0"
+                    }
+                }
+
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "./fileCreator.php",
+                    dataType: 'text',		// this is json if we put it like this JSON object
+                    data: {
+                        /*        json : JSON.stringify(jsonObject) /* convert here only */
+                        func: "csv",
+                        csv: line,
+                        id: trendindex      // id for distinguishing trends
+                    },
+                    success: function () {
+                        //   console.log("CSV file Created")
+                    },
+                    error: function (e) {
+                        console.log("Error in file Creation:" + e);
+                    }
+                })
+            }
+
             function gettrendJSONpositions(trendsjsonfilename) {
                 // NOTE:  This function must return the value
                 //        from calling the $.ajax() method.
@@ -2773,8 +2814,13 @@
                                 for (var i = 0; i < subdConnections.length; i++) {
                                     if (subdConnections[i] == d.name) {
                                         var str = "";
+                                        var stringout = "";
                                         str += "<td colspan='4'><div class='table table-condensed table-striped'><div class='table-row-group' style='overflow-y:scroll;height:" + windowElem.height() / 4 + "'><div class='row'><div class='cell' style='border-top:solid'>Area </div><div class='cell' style='border-top:solid'>Relations</div></div>";
 
+                                        for (var j = 0; j < subdConnections.length; j++) {
+                                            stringout += subdConnections[j]+",";
+                                        }
+                                        stringout += "\n";
                                         for (var j = 0; j < subdConnections.length; j++) {
                                             subdConnections.forEach(function (z) {
                                                 if (z == d.name) {
@@ -2798,12 +2844,14 @@
                                                                 + "</div></div>";
                                                         }
                                                     }
+                                                    stringout += percentageSum+",";
                                                 }
                                             })
                                         }
                                         str += "</div></td>";
                                     }
                                 }
+                                console.log(stringout);
                                 return str;
                             });
 
@@ -4049,6 +4097,9 @@
                 subdivisionsChord.sort(function (a, b) {
                     return b.projects - a.projects
                 });
+
+console.log(string)
+//                chordcsvcreator(response, trendindex)
             }
 
 

@@ -84,7 +84,9 @@ $mydb = new database("sqlite","",0,$db_path,"","");
 $everything = array();
 $allTrends = array();
 
-foreach ($trends_queries as $key => $query) {
+//foreach ($trends_queries as $key => $query) {
+$query = $trend_query;
+
 	if ($query != null) {
 
 		$memQuery = $query;
@@ -114,12 +116,14 @@ foreach ($trends_queries as $key => $query) {
 	}
 
 	// each time push the trends in allTrends
-	array_push($allTrends,$trends);
+	//array_push($allTrends,$trends);
 
-}
+//}
 
 // finally put them all in everything["trends"]
-$everything['trends'] = $allTrends;
+//$everything['trends'] = $allTrends;
+$everything['trends'] = $trends;
+
 
 //	print_r($everything['resp']);
 

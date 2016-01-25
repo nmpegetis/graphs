@@ -67,17 +67,20 @@
 <script>
     var experiment;
     var topics;
+    var listOfTopicIds=[];
+    listOfTopicIds.push("123");
+    listOfTopicIds.push("234");
 
     loadFromUrlParametersAndServer();
 
     //    trendsFile = "../data/"+layoutId+".csv";
-    topicsFile = "../data/topics.json";             // needed for the trend visualization
+    topicsFile = "../data/topics2.json";             // needed for the trend visualization
 
     // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately
     topicsFileExist  = UrlExists(topicsFile);
-//    if (!topicsFileExist) {
+    if (!topicsFileExist) {
         ajaxTopicsCall(experiment);
-//    }
+    }
 
     $(document).ready(function($) {
         $('#multiselect').multiselect();
@@ -87,8 +90,15 @@
                 right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             }
         });
-//        topics.
-
+        console.log(topics)
+        topics.forEach(function(i,obj){
+            console.log("i:"+i)
+            console.log("obj:"+obj)
+        });
+//        $.each(topics,function(i,obj){
+//            console.log("i:"+i)
+//            console.log("obj:"+obj)
+//        });
     });
 
     /* function returns 1 if an array contains an object or 0 if not */

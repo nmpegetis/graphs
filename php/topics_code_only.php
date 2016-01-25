@@ -101,8 +101,8 @@ $topics = $meminstance->get($querykey);
 if (!$topics) {
     $topics = array();
 //    $stmt = $mydb->doPrepare($query);
-    $stmt = $mydb->doPrepare("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'");
-    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+    $stmt = $mydb->doQuery("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'");
     $res = $stmt->fetch();
     do {
         if(!isset($topics[$res[0]]))

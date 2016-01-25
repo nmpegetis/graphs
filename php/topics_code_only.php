@@ -92,16 +92,17 @@ $mydb = new database("sqlite","",0,$db_path,"","");
 /////////////////////////
 
 $query = $query_topics;
-$move_elems = array("?");
-$set_elems = array($_GET['ex']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
+//$move_elems = array("?");
+//$set_elems = array($_GET['ex']);
+//$memQuery = str_replace($move_elems, $set_elems, $query);
 $querykey = "KEY" . md5($memQuery);
 $topics = $meminstance->get($querykey);
 
 if (!$topics) {
     $topics = array();
-    $stmt = $mydb->doPrepare($query);
-    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//    $stmt = $mydb->doPrepare($query);
+//    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+    $stmt = $mydb->doQuery($query);
     $res = $stmt->fetch();
     do {
         if(!isset($topics[$res[0]]))

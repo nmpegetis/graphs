@@ -100,7 +100,7 @@ $topics = $meminstance->get($querykey);
 
 try {
     $mydb = new PDO('sqlite:../../../dbs/PTM3DB.db');
-    foreach($mydb->query("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'") as $row) {
+    foreach($mydb->query($query) as $row) {
         print_r($row);
         if(!isset($topics[$res[0]]))
             $topics[$res[0]] = array();

@@ -75,11 +75,10 @@
 
     // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately
     topicsFileExist  = UrlExists(topicsFile);
-    if (!topicsFileExist) {
+//    if (!topicsFileExist) {
         ajaxTopicsCall(experiment);
-    }
+//    }
 
-    console.log(topics)
     $(document).ready(function($) {
         $('#multiselect').multiselect();
         $('#undo_redo').multiselect({
@@ -88,6 +87,8 @@
                 right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
             }
         });
+//        topics.
+
     });
 
     /* function returns 1 if an array contains an object or 0 if not */

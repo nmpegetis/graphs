@@ -78,8 +78,8 @@ class database {
 
 }
 
-if(!isset($_GET['s']) || !isset($_GET['ex'])){
-    echo "Parameters 's' and 'ex' on URL not set";
+if(!isset($_GET['ex'])){
+    echo "Parameter 'ex' on URL not set";
 }
 
 

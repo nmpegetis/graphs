@@ -78,12 +78,113 @@ class database {
 
 }
 
-if(!isset($_GET['ex'])){
-    echo "Parameter 'ex' on URL not set";
+if(!isset($_GET['s']) || !isset($_GET['ex'])){
+    echo "Parameters 's' and 'ex' on URL not set";
 }
 
 
 $mydb = new database("sqlite","",0,$db_path,"","");
+
+
+//////////////////////////////
+///// GRAPH LAYOUT QUERY /////
+//////////////////////////////
+
+$query = $query_graphLayout;
+$move_elems = array("=?",">?");
+$set_elems = array("=".$_GET['ex'],">".$_GET['s']);
+$memQuery = str_replace($move_elems, $set_elems, $query);
+$querykey = "KEY" . md5($memQuery);
+$list = $meminstance->get($querykey);
+
+if (!$list) {
+
+    $stmt = $mydb->doPrepare($query);
+
+    $stmt = $mydb->doExecute($stmt,array($_GET['ex'],$_GET['s']));
+
+// instead of fetching all together... delay a little but for sure change the encoding of each one
+//	$list = $stmt->fetchAll();
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+        foreach($row as &$value)
+        {
+            $value = mb_convert_encoding($value, "UTF-8", "Windows-1252");
+        }
+        unset($value); # safety: remove reference
+
+        $list[] = array_map('utf8_encode', $row );
+    }
+    //print_r($list);
+
+    $meminstance->set($querykey, $list, 0, $memcache_time);
+    //	print "got result from mysql\n";
+}
+else{
+    //	print "got result from memcached\n";
+}
+
+
+//////////////////////////////
+///// EXPERIMENTS QUERY //////
+//////////////////////////////
+
+
+$query = $query_experiments;
+
+$querykey = "KEY" . md5($query) . $db_name;		// to distinguish when the experiments are loaded from the correct database <-- because some layouts have different database
+
+$experiments = $meminstance->get($querykey);
+
+if (!$experiments) {
+    $experiments = array();
+    $stmt = $mydb->doQuery($query);
+    $res = $stmt->fetch();
+    do {
+        array_push($experiments,array("id"=>$res[0],"desc"=>$res[1],"Metadata"=>$res[2],"initialSimilarity"=>$res[3],"PhraseBoost"=>$res[4]));
+    } while ($res = $stmt->fetch());
+
+    $meminstance->set($querykey, $experiments, 0, $memcache_time);
+    //	print "got result from mysql\n";
+}
+else{
+    //	print "got result from memcached\n";
+}
+
+
+/////////////////////////
+///// GRANTS QUERY //////
+/////////////////////////
+
+
+$query = $query_nodes;
+$move_elems = array("?");
+$set_elems = array($_GET['ex']);
+$memQuery = str_replace($move_elems, $set_elems, $query);
+$querykey = "KEY" . md5($memQuery);
+$nodes = $meminstance->get($querykey);
+
+if (!$nodes) {
+
+    $nodes = array();
+    $stmt = $mydb->doPrepare($query);
+    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+
+    $res = $stmt->fetch();
+    do {
+        if(!isset($nodes[$res[0]]))
+            $nodes[$res[0]] = array();
+        if(count($nodes[$res[0]])>3)
+            continue;
+        array_push($nodes[$res[0]],array("topic"=>$res[1],"weight"=>$res[2]));
+    } while ($res = $stmt->fetch());
+
+    $meminstance->set($querykey, $nodes, 0, $memcache_time);
+    //	print "got result from mysql\n";
+}
+else{
+    //	print "got result from memcached\n";
+}
 
 /////////////////////////
 ///// TOPICS QUERY //////
@@ -116,6 +217,38 @@ else{
     //	print "got result from memcached\n";
 }
 
+
+// ////////////////////////////////////
+// ///// TOPICS NOT SORTED QUERY //////
+// ////////////////////////////////////
+
+
+$query = $query_topics_nosort;
+$move_elems = array("?");
+$set_elems = array($_GET['ex']);
+$memQuery = str_replace($move_elems, $set_elems, $query);
+$querykey = "KEY" . md5($memQuery);
+$topicsNoSort = $meminstance->get($querykey);
+
+if (!$topicsNoSort) {
+    $topicsNoSort = array();
+    $stmt = $mydb->doPrepare($query);
+    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+    $res = $stmt->fetch();
+    do {
+        if(!isset($topicsNoSort[$res[0]]))
+            $topicsNoSort[$res[0]] = array();
+        if(count($topicsNoSort[$res[0]])>9)
+            continue;
+        array_push($topicsNoSort[$res[0]],array("item"=>$res[1],"counts"=>$res[2],"title"=>$res[3]));
+    } while ($res = $stmt->fetch());
+
+    $meminstance->set($querykey, $topicsNoSort, 0, $memcache_time);
+    //	print "got result from mysql\n";
+}
+else{
+    //	print "got result from memcached\n";
+}
 
 
 $everything = array();

@@ -903,4 +903,919 @@
       <column name="ExperimentId" sqlType="NVARCHAR(50)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
     </table>
   </data-source>
+  <data-source name="Sqlite (Xerial) - PTM3DB_PM.db" uuid="a576f151-a656-450a-ba0b-190538bd134a">
+    <database-info product="SQLite" version="3.8.9" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
+    <schema name="" catalog=""/>
+    <table name="ACM98Class" schema="" catalog="" type="TABLE">
+      <column name="id0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="id1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="id2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_ACM98Class_Category1" unique="true" columns="id1,Category1"/>
+      <index name="IX_ACM98Class_Category2" unique="true" columns="id2,Category2"/>
+      <index name="IX_ACM98Class_Category3" unique="true" columns="Category3"/>
+    </table>
+    <table name="ACMClassView" schema="" catalog="" type="VIEW">
+      <column name="id" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ParentCategory" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="RootCategory" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="ACMPubView" schema="" catalog="" type="VIEW">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="journalISSN" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="batchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="text" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="fulltext" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="abstract" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="citations" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="authors" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="categories" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Period" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="Author" schema="" catalog="" type="TABLE">
+      <column name="AuthorId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="FirstName" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LastName" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="MiddleName" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Affilication" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="authorid"/>
+      <index name="IX_Name" unique="true" columns="FirstName,LastName,AuthorId"/>
+      <index name="IX_Author_Id_Name" unique="true" columns="AuthorId,FirstName,LastName"/>
+    </table>
+    <table name="AuthorACMCategories" schema="" catalog="" type="TABLE">
+      <column name="AuthorId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ACMCategory0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CatCnt" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="authorid asc,acmcategory0 asc"/>
+      <index name="IX_AuthorACMCategories_AuthorId" unique="true" columns="AuthorId,ACMCategory0,CatCnt"/>
+    </table>
+    <table name="AuthorTopACMCategoryView" schema="" catalog="" type="VIEW">
+      <column name="AuthorId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ACMCategory0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="Citation" schema="" catalog="" type="TABLE">
+      <column name="citationId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Reference" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="citationid"/>
+    </table>
+    <table name="CuratedTopics" schema="" catalog="" type="TABLE">
+      <column name="Topic" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Label" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Warning" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Score" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Comments" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="DiscrWeighConfPerTopicView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="DiscrWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="experimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="DiscrWeighJournalPerTopicView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="DiscrWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="experimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="EntitySimilarity" schema="" catalog="" type="TABLE">
+      <column name="EntityType" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="EntityId1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Similarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_EntSim_EntityType" unique="true" columns="EntityType"/>
+      <index name="IX_EntSim_Exper_Similar_EntType" unique="true" columns="ExperimentId,Similarity,EntityType"/>
+    </table>
+    <table name="EntitySimilarityView_Authors" schema="" catalog="" type="VIEW">
+      <column name="EntityId1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Author1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Author2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Similarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="catCnts1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="catCnts2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AC1_Category0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AC2_Category0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="EntitySimilarityView_Cat" schema="" catalog="" type="VIEW">
+      <column name="EntityId1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Similarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="catCnts1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="catCnts2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CV1_Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CV2_Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ParentCategory1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ParentCategory2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="RootCategory1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="RootCategory2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="EntitySimilarityView_Grant" schema="" catalog="" type="VIEW">
+      <column name="EntityId1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Similarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="grantsCnt1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="grantsCnt2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Acr1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Acr2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category3" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category3" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category3Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category3Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category0" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category0" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="EntityTopicDistribution" schema="" catalog="" type="TABLE">
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="NormWeight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityType" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_EntityTopicDistribution_TopicID_BatchId_NormWeight_ExpId" unique="true" columns="EntityId,EntityType,BatchId,TopicId,NormWeight,ExperimentId"/>
+      <index name="IX_EntityTopicDistribution_BatchId_NormWeight_ExpId" unique="true" columns="BatchId,TopicId,NormWeight,ExperimentId"/>
+    </table>
+    <table name="ExpDiagnostics" schema="" catalog="" type="TABLE">
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityType" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="ScoreName" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Score" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+    </table>
+    <table name="Experiment" schema="" catalog="" type="TABLE">
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Description" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Metadata" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="InitialSimilarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="PhraseBoost" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="experimentid"/>
+    </table>
+    <table name="FP7FinalReports" schema="" catalog="" type="TABLE">
+      <column name="ProjectId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="ExecutiveSummary" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Contextobjectives" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Results" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="PotentialImpact" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Comment" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="projectid"/>
+    </table>
+    <table name="FP7project" schema="" catalog="" type="TABLE">
+      <column name="CD_PROJ_ID" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="CD_LAST_AMD_NR" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_CALL_ID" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PROJECT_NUMBER" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PROPOSAL_TYPE_ID" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_ACRONYM" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PROJ_STATUS" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_STATUS_DESCR" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DT_PROJECT_START" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DT_PROJECT_END" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DT_CONTRACT_SIGNATURE" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_DG" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_TITLE" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_ABSTRACT" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_FRAMEWORK" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_SPECIFIC_PROGRAMME" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_WORK_PROGRAMME" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_ACTIVITY_3" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_RESEARCH_THEMA" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="QT_DURATION" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="AM_TOT_COST" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AM_EC_CONTRIBUTION" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="QT_NBR_OF_PARTICIPANTS" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="cd_proj_id"/>
+    </table>
+    <table name="FP7projectArea" schema="" catalog="" type="TABLE">
+      <column name="ID" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="USR_ORDER" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="USR_SP" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_DIVNAME" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_ABBR" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_DESC" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_LEVEL" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PARENT_DIVNAME" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="FP7projectFull" schema="" catalog="" type="TABLE">
+      <column name="ProjectId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Acronym" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Title" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category0" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3Code" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Abstract" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="StartDate" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EndDate" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="projectid"/>
+    </table>
+    <table name="FP7projectSubArea" schema="" catalog="" type="TABLE">
+      <column name="CD_DIVNAME" sqlType="" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="CD_ABBR" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_DESC" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_DIV_LEVEL" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PARENT_DIVNAME" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_LEVEL" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="FET_Category" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="cd_divname"/>
+    </table>
+    <table name="FullPubMedTopicDescriptionView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="TopicWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TotalTokens" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Modality" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Item" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="counts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ROUND(DiscrWeight,3)" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="WeightedCounts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Project" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ResearchArea" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="FullTopicDescriptionView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="TopicWeight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="TotalTokens" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Modality" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Item" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="counts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DiscrWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="WeightedCounts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ACMCategory" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ACMRootCategory" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Citation" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Author" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="HEALTHPubView_Grants" schema="" catalog="" type="VIEW">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DOI" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TEXT" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="GrantIds" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Funders" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Areas" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AreasDescr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Venue" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="MESHdescriptors" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="HealthPubView" schema="" catalog="" type="VIEW">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DOI" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TEXT" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="GrantIds" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Funders" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Areas" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AreasDescr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Venue" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="MESHdescriptors" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="ImportantTopicsView" schema="" catalog="" type="VIEW"/>
+    <table name="Journal" schema="" catalog="" type="TABLE">
+      <column name="ISSN" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="shortTitle" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="issn"/>
+    </table>
+    <table name="PubACMCategory" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="CatId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Descriptor" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="IsPrimary" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4" def="MQ=="/>
+      <index name="IX_PubCategory_CatId_PubId" unique="true" columns="CatId,PubId"/>
+      <index name="IX_PubCategory_PubId_CatId" unique="true" columns="PubId,CatId,IsPrimary"/>
+    </table>
+    <table name="PubACMCategoryView" schema="" catalog="" type="VIEW">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CatId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ParentCategory" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="PubACMconference" schema="" catalog="" type="TABLE">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="conference" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_PubACMconference_PubId" unique="true" columns="pubId,conference"/>
+    </table>
+    <table name="PubAuthor" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AuthorId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_PubAuthor_AuthorId" unique="true" columns="AuthorId,PubId"/>
+      <index name="IX_PubAuthor_PubId" unique="true" columns="PubId,AuthorId"/>
+    </table>
+    <table name="PubCitation" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CitationId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="PubFullText" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="FullText" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="pubid"/>
+    </table>
+    <table name="PubGrant" schema="" catalog="" type="TABLE">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="grantId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="funder" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ourmining" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <index name="IX_PubGrant_pubId" unique="true" columns="pubId"/>
+      <index name="IX_PubGrant_GrantId" unique="true" columns="grantId,funder"/>
+    </table>
+    <table name="PubMESHTerm" schema="" catalog="" type="TABLE">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="descriptormajortopic" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="descriptorText" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="qualifiermajortopic" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="qualifier" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_PubMESHTerm_Mesh_PmcId" unique="true" columns="pubId,descriptorText"/>
+    </table>
+    <table name="PubPDBCode" schema="" catalog="" type="TABLE">
+      <column name="pmcId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="pdbCode" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <index name="IX_PubPDBCode_Id_Code" unique="true" columns="pmcId,pdbCode"/>
+    </table>
+    <table name="PubTopic" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Weight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_PubTopic_DocId_ExpId" unique="true" columns="PubId,ExperimentId,Weight,TopicId"/>
+    </table>
+    <table name="Publication" schema="" catalog="" type="TABLE">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="referenceId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="repository" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="fulltext" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="abstract" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="journalISSN" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DOI" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="pubyear" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="keywords" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="batchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="pubid"/>
+      <index name="IX_publication_JournalISSN" unique="true" columns="journalISSN"/>
+      <index name="PK_FP7Publication_batchId" unique="true" columns="batchId"/>
+      <index name="PK_FP7Publication_referenceId" unique="true" columns="referenceId"/>
+    </table>
+    <table name="ResearchAreasPerTopicView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2Descr" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Weight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="TopicAnalysis" schema="" catalog="" type="TABLE">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="ItemType" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Item" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Counts" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_TopicAnalysis_Exp_TopicId_Item" unique="true" columns="ExperimentId,BatchId,TopicId,ItemType,Item,Counts"/>
+      <index name="IX_TopicAnalysis_Exp_Type_Item" unique="true" columns="ExperimentId,BatchId,ItemType,Item,TopicId,Counts"/>
+    </table>
+    <table name="TopicDescription" schema="" catalog="" type="TABLE">
+      <column name="Title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="VisibilityIndex" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <index name="IX_TopicDescription_VisibilityIndx" unique="true" columns="ExperimentId,VisibilityIndex,Title,TopicId"/>
+      <index name="PK_TopicDescription" unique="true" columns="TopicId,ExperimentId"/>
+    </table>
+    <table name="TopicDescriptionView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Item" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ItemType" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="TopicsCnt" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="counts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TypeWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DiscrWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="WeightedCounts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="TopicDetails" schema="" catalog="" type="TABLE">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="ItemType" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Weight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="TotalTokens" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="TopicDistributionPerBatch" schema="" catalog="" type="TABLE">
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="AvgWeigh" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="NormWeight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityType" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_TopicDistributionPerBatch_TopicID_BatchId_NormWeight_ExpId" unique="true" columns="TopicId,BatchId,NormWeight,ExperimentId"/>
+      <index name="IX_TopicDistributionPerBatch_BatchId_NormWeight_ExpId" unique="true" columns="BatchId,TopicId,NormWeight,ExperimentId"/>
+    </table>
+    <table name="TopicWeightView" schema="" catalog="" type="VIEW"/>
+    <table name="TrendsView" schema="" catalog="" type="VIEW"/>
+    <table name="projectview" schema="" catalog="" type="VIEW">
+      <column name="ProjectId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Acronym" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category0" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2Descr" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3Code" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Abstract" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="StartDate" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EndDate" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="sqlite_stat1" schema="" catalog="" type="TABLE">
+      <column name="tbl" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="idx" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="stat" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="topiccategoryview" schema="" catalog="" type="VIEW">
+      <column name="CatId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Weight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+  </data-source>
+  <data-source name="Sqlite (Xerial) - PTM3DB.db" uuid="482c93de-f0dd-41d2-b248-7c4aa48dfc06">
+    <database-info product="SQLite" version="3.8.9" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
+    <schema name="" catalog=""/>
+  </data-source>
+  <data-source name="OpenAIRE - PTM3DB.db [2]" uuid="293f9f39-5f7a-42ea-8eee-a406c72a3087">
+    <database-info product="SQLite" version="3.8.9" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
+    <schema name="" catalog=""/>
+    <table name="ACM98Class" schema="" catalog="" type="TABLE">
+      <column name="id0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="id1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="id2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_ACM98Class_Category1" unique="true" columns="id1,Category1"/>
+      <index name="IX_ACM98Class_Category2" unique="true" columns="id2,Category2"/>
+      <index name="IX_ACM98Class_Category3" unique="true" columns="Category3"/>
+    </table>
+    <table name="ACMClassView" schema="" catalog="" type="VIEW">
+      <column name="id" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ParentCategory" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="RootCategory" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="ACMPubView" schema="" catalog="" type="VIEW">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="journalISSN" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="batchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="text" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="fulltext" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="abstract" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="citations" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="authors" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="categories" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Period" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="Author" schema="" catalog="" type="TABLE">
+      <column name="AuthorId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="FirstName" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LastName" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="MiddleName" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Affilication" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="authorid"/>
+      <index name="IX_Name" unique="true" columns="FirstName,LastName,AuthorId"/>
+      <index name="IX_Author_Id_Name" unique="true" columns="AuthorId,FirstName,LastName"/>
+    </table>
+    <table name="AuthorACMCategories" schema="" catalog="" type="TABLE">
+      <column name="AuthorId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ACMCategory0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CatCnt" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="authorid asc,acmcategory0 asc"/>
+      <index name="IX_AuthorACMCategories_AuthorId" unique="true" columns="AuthorId,ACMCategory0,CatCnt"/>
+    </table>
+    <table name="AuthorTopACMCategoryView" schema="" catalog="" type="VIEW">
+      <column name="AuthorId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ACMCategory0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="Citation" schema="" catalog="" type="TABLE">
+      <column name="citationId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Reference" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="citationid"/>
+    </table>
+    <table name="CuratedTopics" schema="" catalog="" type="TABLE">
+      <column name="Topic" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Label" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Warning" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Score" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Comments" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="DiscrWeighConfPerTopicView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="DiscrWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="experimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="DiscrWeighJournalPerTopicView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="DiscrWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="experimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="EntitySimilarity" schema="" catalog="" type="TABLE">
+      <column name="EntityType" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="EntityId1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Similarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_EntSim_EntityType" unique="true" columns="EntityType"/>
+      <index name="IX_EntSim_Exper_Similar_EntType" unique="true" columns="ExperimentId,Similarity,EntityType"/>
+    </table>
+    <table name="EntitySimilarityView_Authors" schema="" catalog="" type="VIEW">
+      <column name="EntityId1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Author1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Author2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Similarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="catCnts1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="catCnts2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AC1_Category0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AC2_Category0" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="EntitySimilarityView_Cat" schema="" catalog="" type="VIEW">
+      <column name="EntityId1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Similarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="catCnts1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="catCnts2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CV1_Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CV2_Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ParentCategory1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ParentCategory2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="RootCategory1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="RootCategory2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="EntitySimilarityView_Grant" schema="" catalog="" type="VIEW">
+      <column name="EntityId1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Similarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="grantsCnt1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="grantsCnt2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Acr1" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Acr2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category3" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category3" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category3Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category3Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr1_Category0" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Gr2_Category0" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="EntityTopicDistribution" schema="" catalog="" type="TABLE">
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="NormWeight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityType" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_EntityTopicDistribution_TopicID_BatchId_NormWeight_ExpId" unique="true" columns="EntityId,EntityType,BatchId,TopicId,NormWeight,ExperimentId"/>
+      <index name="IX_EntityTopicDistribution_BatchId_NormWeight_ExpId" unique="true" columns="BatchId,TopicId,NormWeight,ExperimentId"/>
+    </table>
+    <table name="ExpDiagnostics" schema="" catalog="" type="TABLE">
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityType" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="ScoreName" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Score" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+    </table>
+    <table name="Experiment" schema="" catalog="" type="TABLE">
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Description" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Metadata" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="InitialSimilarity" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="PhraseBoost" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="experimentid"/>
+    </table>
+    <table name="FP7FinalReports" schema="" catalog="" type="TABLE">
+      <column name="ProjectId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="ExecutiveSummary" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Contextobjectives" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Results" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="PotentialImpact" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Comment" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="projectid"/>
+    </table>
+    <table name="FP7project" schema="" catalog="" type="TABLE">
+      <column name="CD_PROJ_ID" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="CD_LAST_AMD_NR" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_CALL_ID" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PROJECT_NUMBER" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PROPOSAL_TYPE_ID" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_ACRONYM" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PROJ_STATUS" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_STATUS_DESCR" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DT_PROJECT_START" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DT_PROJECT_END" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DT_CONTRACT_SIGNATURE" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_DG" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_TITLE" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_ABSTRACT" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_FRAMEWORK" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_SPECIFIC_PROGRAMME" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_WORK_PROGRAMME" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_ACTIVITY_3" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_RESEARCH_THEMA" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="QT_DURATION" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="AM_TOT_COST" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AM_EC_CONTRIBUTION" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="QT_NBR_OF_PARTICIPANTS" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <primary-key columns="cd_proj_id"/>
+    </table>
+    <table name="FP7projectArea" schema="" catalog="" type="TABLE">
+      <column name="ID" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="USR_ORDER" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="USR_SP" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_DIVNAME" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_ABBR" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_DESC" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_LEVEL" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PARENT_DIVNAME" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="FP7projectFull" schema="" catalog="" type="TABLE">
+      <column name="ProjectId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Acronym" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Title" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category0" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3Code" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Abstract" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="StartDate" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EndDate" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="projectid"/>
+    </table>
+    <table name="FP7projectSubArea" schema="" catalog="" type="TABLE">
+      <column name="CD_DIVNAME" sqlType="" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="CD_ABBR" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="LB_DESC" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_DIV_LEVEL" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_PARENT_DIVNAME" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CD_LEVEL" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="FET_Category" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="cd_divname"/>
+    </table>
+    <table name="FullPubMedTopicDescriptionView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="TopicWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TotalTokens" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Modality" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Item" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="counts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ROUND(DiscrWeight,3)" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="WeightedCounts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Project" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ResearchArea" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="FullTopicDescriptionView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="TopicWeight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="TotalTokens" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Modality" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Item" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="counts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DiscrWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="WeightedCounts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ACMCategory" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ACMRootCategory" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Citation" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Author" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="HEALTHPubView_Grants" schema="" catalog="" type="VIEW">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DOI" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TEXT" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="GrantIds" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Funders" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Areas" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AreasDescr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Venue" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="MESHdescriptors" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="HealthPubView" schema="" catalog="" type="VIEW">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DOI" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TEXT" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="GrantIds" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Funders" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Areas" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AreasDescr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Venue" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="MESHdescriptors" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="ImportantTopicsView" schema="" catalog="" type="VIEW"/>
+    <table name="Journal" schema="" catalog="" type="TABLE">
+      <column name="ISSN" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="shortTitle" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="issn"/>
+    </table>
+    <table name="PubACMCategory" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="CatId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="Descriptor" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="IsPrimary" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4" def="MQ=="/>
+      <index name="IX_PubCategory_CatId_PubId" unique="true" columns="CatId,PubId"/>
+      <index name="IX_PubCategory_PubId_CatId" unique="true" columns="PubId,CatId,IsPrimary"/>
+    </table>
+    <table name="PubACMCategoryView" schema="" catalog="" type="VIEW">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CatId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ParentCategory" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="PubACMconference" schema="" catalog="" type="TABLE">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="conference" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_PubACMconference_PubId" unique="true" columns="pubId,conference"/>
+    </table>
+    <table name="PubAuthor" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="AuthorId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_PubAuthor_AuthorId" unique="true" columns="AuthorId,PubId"/>
+      <index name="IX_PubAuthor_PubId" unique="true" columns="PubId,AuthorId"/>
+    </table>
+    <table name="PubCitation" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="CitationId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="PubFullText" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="FullText" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="pubid"/>
+    </table>
+    <table name="PubGrant" schema="" catalog="" type="TABLE">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="grantId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="funder" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ourmining" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <index name="IX_PubGrant_pubId" unique="true" columns="pubId"/>
+      <index name="IX_PubGrant_GrantId" unique="true" columns="grantId,funder"/>
+    </table>
+    <table name="PubMESHTerm" schema="" catalog="" type="TABLE">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="descriptormajortopic" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="descriptorText" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="qualifiermajortopic" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="qualifier" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_PubMESHTerm_Mesh_PmcId" unique="true" columns="pubId,descriptorText"/>
+    </table>
+    <table name="PubPDBCode" schema="" catalog="" type="TABLE">
+      <column name="pmcId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="pdbCode" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <index name="IX_PubPDBCode_Id_Code" unique="true" columns="pmcId,pdbCode"/>
+    </table>
+    <table name="PubTopic" schema="" catalog="" type="TABLE">
+      <column name="PubId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Weight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_PubTopic_DocId_ExpId" unique="true" columns="PubId,ExperimentId,Weight,TopicId"/>
+    </table>
+    <table name="Publication" schema="" catalog="" type="TABLE">
+      <column name="pubId" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="referenceId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="repository" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="fulltext" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="abstract" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="journalISSN" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DOI" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="pubyear" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="keywords" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="batchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <primary-key columns="pubid"/>
+      <index name="IX_publication_JournalISSN" unique="true" columns="journalISSN"/>
+      <index name="PK_FP7Publication_batchId" unique="true" columns="batchId"/>
+      <index name="PK_FP7Publication_referenceId" unique="true" columns="referenceId"/>
+    </table>
+    <table name="ResearchAreasPerTopicView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2Descr" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Weight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="TopicAnalysis" schema="" catalog="" type="TABLE">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="ItemType" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Item" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Counts" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_TopicAnalysis_Exp_TopicId_Item" unique="true" columns="ExperimentId,BatchId,TopicId,ItemType,Item,Counts"/>
+      <index name="IX_TopicAnalysis_Exp_Type_Item" unique="true" columns="ExperimentId,BatchId,ItemType,Item,TopicId,Counts"/>
+    </table>
+    <table name="TopicDescription" schema="" catalog="" type="TABLE">
+      <column name="Title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="VisibilityIndex" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <index name="IX_TopicDescription_VisibilityIndx" unique="true" columns="ExperimentId,VisibilityIndex,Title,TopicId"/>
+      <index name="PK_TopicDescription" unique="true" columns="TopicId,ExperimentId"/>
+    </table>
+    <table name="TopicDescriptionView" schema="" catalog="" type="VIEW">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Item" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ItemType" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="TopicsCnt" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="counts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TypeWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="DiscrWeight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="WeightedCounts" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="TopicDetails" schema="" catalog="" type="TABLE">
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="ItemType" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Weight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="TotalTokens" sqlType="INT" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="TopicDistributionPerBatch" schema="" catalog="" type="TABLE">
+      <column name="BatchId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="AvgWeigh" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="NormWeight" sqlType="DOUBLE" precision="0" scale="-1" nullable="true" jdbcType="6"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EntityType" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <index name="IX_TopicDistributionPerBatch_TopicID_BatchId_NormWeight_ExpId" unique="true" columns="TopicId,BatchId,NormWeight,ExperimentId"/>
+      <index name="IX_TopicDistributionPerBatch_BatchId_NormWeight_ExpId" unique="true" columns="BatchId,TopicId,NormWeight,ExperimentId"/>
+    </table>
+    <table name="TopicWeightView" schema="" catalog="" type="VIEW"/>
+    <table name="TrendsView" schema="" catalog="" type="VIEW"/>
+    <table name="projectview" schema="" catalog="" type="VIEW">
+      <column name="ProjectId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Acronym" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Title" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category0" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category1" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category2Descr" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3Descr" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Category3Code" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="Abstract" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="StartDate" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="EndDate" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="sqlite_stat1" schema="" catalog="" type="TABLE">
+      <column name="tbl" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="idx" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="stat" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="topiccategoryview" schema="" catalog="" type="VIEW">
+      <column name="CatId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="TopicId" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
+      <column name="Weight" sqlType="" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+      <column name="ExperimentId" sqlType="TEXT" precision="0" scale="-1" nullable="true" jdbcType="12"/>
+    </table>
+  </data-source>
 </component>

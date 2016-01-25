@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="2382673945">
+  <component name="DataSourceManagerImpl" format="xml" hash="2919491884">
     <data-source source="LOCAL" name="OpenAIRE July" uuid="73a1f035-7051-4847-88f0-01932dda3cb7">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/dbs/fp7openaire.db</jdbc-url>
-      <libraries />
     </data-source>
     <data-source source="LOCAL" name="ACM" uuid="7b7f74e7-01c2-4493-adc7-521972f16fd6">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/dbs/PTM3DB.db</jdbc-url>
-      <libraries />
     </data-source>
     <data-source source="LOCAL" name="OpenAIRE March" uuid="cf73fd72-8b73-4483-86ec-48d4b1efbf54">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/dbs/openairedb.db</jdbc-url>
-      <libraries />
+    </data-source>
+    <data-source source="LOCAL" name="Sqlite (Xerial) - PTM3DB_PM.db" uuid="a576f151-a656-450a-ba0b-190538bd134a">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/dbs/PTM3DB_PM.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="Sqlite (Xerial) - PTM3DB.db" uuid="482c93de-f0dd-41d2-b248-7c4aa48dfc06">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/dbs/PTM3DB.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="OpenAIRE - PTM3DB.db [2]" uuid="293f9f39-5f7a-42ea-8eee-a406c72a3087">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/dbs/PTM3DB.db</jdbc-url>
     </data-source>
   </component>
 </project>

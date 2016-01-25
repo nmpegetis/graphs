@@ -10,5 +10,17 @@
     <data-source name="OpenAIRE March" uuid="cf73fd72-8b73-4483-86ec-48d4b1efbf54">
       <secret-storage>master_key</secret-storage>
     </data-source>
+    <data-source name="Sqlite (Xerial) - PTM3DB_PM.db" uuid="a576f151-a656-450a-ba0b-190538bd134a">
+      <secret-storage>master_key</secret-storage>
+      <auth-required>false</auth-required>
+    </data-source>
+    <data-source name="Sqlite (Xerial) - PTM3DB.db" uuid="482c93de-f0dd-41d2-b248-7c4aa48dfc06">
+      <secret-storage>master_key</secret-storage>
+      <auth-required>false</auth-required>
+    </data-source>
+    <data-source name="OpenAIRE - PTM3DB.db [2]" uuid="293f9f39-5f7a-42ea-8eee-a406c72a3087">
+      <secret-storage>master_key</secret-storage>
+      <auth-required>false</auth-required>
+    </data-source>
   </component>
 </project>

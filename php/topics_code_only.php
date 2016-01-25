@@ -93,7 +93,7 @@ $mydb = new database("sqlite","",0,$db_path,"","");
 
 $query = $query_topics;
 $move_elems = array("?");
-$set_elems = $_GET['ex'];
+$set_elems = array($_GET['ex']);
 $memQuery = str_replace($move_elems, $set_elems, $query);
 $querykey = "KEY" . md5($memQuery);
 $topics = $meminstance->get($querykey);

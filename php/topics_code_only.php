@@ -98,26 +98,42 @@ $memQuery = str_replace($move_elems, $set_elems, $query);
 $querykey = "KEY" . md5($memQuery);
 $topics = $meminstance->get($querykey);
 
-if (!$topics) {
-    $topics = array();
-//    $stmt = $mydb->doPrepare($query);
-//    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-    $stmt = $mydb->doQuery("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'");
-    $res = $stmt->fetch();
-    do {
+try {
+    $mydb = new PDO('sqlite:../../../dbs/PTM3DB.db');
+    foreach($mydb->query("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'") as $row) {
+        print_r($row);
         if(!isset($topics[$res[0]]))
             $topics[$res[0]] = array();
         if(count($topics[$res[0]])>9)
             continue;
         array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2],"title"=>$res[3]));
-    } while ($res = $stmt->fetch());
+    }
+    $mydb = null;
+} catch (PDOException $e) {
+    print "Error!: " . $e->getMessage() . "<br/>";
+    die();
+}
 
-    $meminstance->set($querykey, $topics, 0, $memcache_time);
-    //	print "got result from mysql\n";
-}
-else{
-    //	print "got result from memcached\n";
-}
+//if (!$topics) {
+//    $topics = array();
+////    $stmt = $mydb->doPrepare($query);
+////    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//    $stmt = $mydb->doQuery("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'");
+//    $res = $stmt->fetch();
+//    do {
+//        if(!isset($topics[$res[0]]))
+//            $topics[$res[0]] = array();
+//        if(count($topics[$res[0]])>9)
+//            continue;
+//        array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2],"title"=>$res[3]));
+//    } while ($res = $stmt->fetch());
+//
+//    $meminstance->set($querykey, $topics, 0, $memcache_time);
+//    //	print "got result from mysql\n";
+//}
+//else{
+//    //	print "got result from memcached\n";
+//}
 
 
 

@@ -14,7 +14,7 @@ $db_name = "PTM3DB.db";
 $db_path = "../../../dbs/".$db_name;
 
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
-$query_topics="select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'";
+$query_topics="select * from TopicDescription where VisibilityIndex>=3 and ExperimentId=?";
 
 
 

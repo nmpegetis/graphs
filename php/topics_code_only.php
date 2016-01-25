@@ -78,9 +78,9 @@ class database {
 
 }
 
-//if(!isset($_GET['ex'])){
-//    echo "Parameters 's' and 'ex' on URL not set";
-//}
+if(!isset($_GET['ex'])){
+    echo "Parameters 's' and 'ex' on URL not set";
+}
 
 
 $mydb = new database("sqlite","",0,$db_path,"","");
@@ -92,19 +92,18 @@ $mydb = new database("sqlite","",0,$db_path,"","");
 /////////////////////////
 
 $query = $query_topics;
-//$move_elems = array("?");
-//$set_elems = array($_GET['ex']);
-//$memQuery = str_replace($move_elems, $set_elems, $query);
-//$querykey = "KEY" . md5($memQuery);
-$querykey = "KEY" . md5($query);
+$move_elems = array("?");
+$set_elems = array($_GET['ex']);
+$memQuery = str_replace($move_elems, $set_elems, $query);
+$querykey = "KEY" . md5($memQuery);
 $topics = $meminstance->get($querykey);
 
 if (!$topics) {
     $topics = array();
 //    $stmt = $mydb->doPrepare($query);
-//    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-    $stmt = $mydb->doQuery($query);
-    $res = $stmt->fetchAll();
+    $stmt = $mydb->doPrepare("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'");
+    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+    $res = $stmt->fetch();
     do {
         if(!isset($topics[$res[0]]))
             $topics[$res[0]] = array();

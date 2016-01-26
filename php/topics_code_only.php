@@ -92,11 +92,11 @@ $mydb = new database("sqlite","",0,$db_path,"","");
 /////////////////////////
 
 $query = $query_topics;
-$move_elems = array("?");
-$set_elems = array($_GET['ex']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
-$querykey = "KEY" . md5($memQuery);
-$topics = $meminstance->get($querykey);
+//$move_elems = array("?");
+//$set_elems = array($_GET['ex']);
+//$memQuery = str_replace($move_elems, $set_elems, $query);
+//$querykey = "KEY" . md5($memQuery);
+//$topics = $meminstance->get($querykey);
 
 try {
     $mydb = new PDO('sqlite:../../../dbs/PTM3DB.db');

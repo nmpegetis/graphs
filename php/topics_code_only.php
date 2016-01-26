@@ -100,6 +100,7 @@ $topics = $meminstance->get($querykey);
 
 try {
     $mydb = new PDO('sqlite:../../../dbs/PTM3DB.db');
+    print $mydb->query($query);
     foreach($mydb->query($query) as $row) {
         print_r($row);
         if(!isset($topics[$res[2]]))

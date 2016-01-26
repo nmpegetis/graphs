@@ -117,7 +117,7 @@ try {
 //    $topics = array();
 //    $stmt = $mydb->doPrepare($query);
 //    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-    $stmt = $mydb->doQuery($query);
+    $stmt = $mydb->query($query);
     $res = $stmt->fetch();
     do {
 //        if(!isset($topics[$res[0]]))

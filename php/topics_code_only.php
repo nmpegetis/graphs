@@ -101,9 +101,11 @@ $querykey = "KEY" . md5($memQuery);
 //if (!$topics) {
     $topics = array();
 echo $query;
-    $stmt = $mydb->doPrepare($query);
-echo $stmt;
-    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//    $stmt = $mydb->doPrepare($query);
+//echo $stmt;
+//    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//echo $stmt;
+$stmt = $mydb->doQuery($query);
 echo $stmt;
 //    $stmt = $mydb->doQuery("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'");
     $res = $stmt->fetch();

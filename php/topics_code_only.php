@@ -1,21 +1,5 @@
 <?php
 
-ini_set('max_execution_time', $max_execution_time);
-//ini_set('memory_limit', '-1');		// unlimited memory
-ini_set('memory_limit', $memory_limit);
-
-set_time_limit(0);
-/// ! important
-// Firstly memcache should be installed in server to use the class Memcache().
-// Check the below:
-// http://thelinuxfaq.com/93-how-can-i-configure-memcache-on-xampp-in-linux
-// https://www.digitalocean.com/community/tutorials/how-to-install-and-use-memcache-on-ubuntu-14-04
-// DON'T FORGET to restart the server at the end
-
-
-//$meminstance = new Memcache();
-//$meminstance->pconnect('localhost', $memcache_port);
-
 class database1 {
     private $db,$last_query = null;
 

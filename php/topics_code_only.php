@@ -16,7 +16,7 @@ set_time_limit(0);
 //$meminstance = new Memcache();
 //$meminstance->pconnect('localhost', $memcache_port);
 
-class database {
+class database1 {
     private $db,$last_query = null;
 
     function __construct($type,$host,$port,$name,$username,$password){
@@ -83,7 +83,7 @@ if(!isset($_GET['ex'])){
 }
 
 
-$mydb = new database("sqlite","",0,$db_path,"","");
+$mydb = new database1("sqlite","",0,$db_path,"","");
 
 
 

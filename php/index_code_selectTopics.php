@@ -74,7 +74,7 @@
     loadFromUrlParametersAndServer();
 
     //    trendsFile = "../data/"+layoutId+".csv";
-    topicsFile = "../data/topics2.json";             // needed for the trend visualization
+    topicsFile = "../data/topics.csv";             // needed for the trend visualization
 
     // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately
     topicsFileExist  = UrlExists(topicsFile);
@@ -91,10 +91,23 @@
             }
         });
         console.log(topics)
-        topics.forEach(function(i,obj){
-            console.log("i:"+i)
-            console.log("obj:"+obj)
+
+        d3.csv(topicsFile, function (error, data) {
+            console.log("data")
+            console.log(data)
+            var varNames = d3.keys(data[0])
+                .filter(function (key) {
+                    if (key==159 || key==271 || key==396) return 0;
+                    return key !== labelVar;
+                });
+            console.log("varNames")
+            console.log(varNames)
         });
+//
+//        topics.forEach(function(i,obj){
+//            console.log("i:"+i)
+//            console.log("obj:"+obj)
+//        });
 //        $.each(topics,function(i,obj){
 //            console.log("i:"+i)
 //            console.log("obj:"+obj)

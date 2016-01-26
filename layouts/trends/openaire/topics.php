@@ -1,6 +1,6 @@
 <?php
 
 require_once 'config.php';
-require_once '../../../php/topics_code_only.php';
+require_once '../../../php/dbfront_code.php';
 
 ?>

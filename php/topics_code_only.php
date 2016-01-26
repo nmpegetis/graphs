@@ -79,7 +79,7 @@ class database {
 }
 
 if(!isset($_GET['ex'])){
-    echo "Parameters 's' and 'ex' on URL not set";
+    echo "Parameter 'ex' on URL not set";
 }
 
 
@@ -98,44 +98,24 @@ $query = $query_topics;
 //$querykey = "KEY" . md5($memQuery);
 //$topics = $meminstance->get($querykey);
 
-try {
-    $mydb = new PDO('sqlite:../../../dbs/PTM3DB.db');
-    print $query;
-//    foreach($mydb->query($query) as $row) {
-//        print_r($row);
-//        if(!isset($topics[$res[2]]))
-//            $topics[$res[2]] = array();
-//        array_push($topics[$res[2]],array("title"=>$res[0]));
-//    }
-    $mydb = null;
-} catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}
-
-//if (!$topics) {
-//    $topics = array();
-//    $stmt = $mydb->doPrepare($query);
-//    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-    $stmt = $mydb->query($query);
+if (!$topics) {
+    $topics = array();
+    $stmt = $mydb->doPrepare($query);
+    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
+//    $stmt = $mydb->doQuery("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'");
     $res = $stmt->fetch();
     do {
-//        if(!isset($topics[$res[0]]))
-//            $topics[$res[0]] = array();
-//        if(count($topics[$res[0]])>9)
-//            continue;
-//        array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2],"title"=>$res[3]));
         if(!isset($topics[$res[2]]))
             $topics[$res[2]] = array();
         array_push($topics[$res[2]],array("title"=>$res[0]));
     } while ($res = $stmt->fetch());
-//
-//    $meminstance->set($querykey, $topics, 0, $memcache_time);
-//    //	print "got result from mysql\n";
-//}
-//else{
-//    //	print "got result from memcached\n";
-//}
+
+    $meminstance->set($querykey, $topics, 0, $memcache_time);
+    //	print "got result from mysql\n";
+}
+else{
+    //	print "got result from memcached\n";
+}
 
 
 

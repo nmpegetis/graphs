@@ -13,8 +13,8 @@ set_time_limit(0);
 // DON'T FORGET to restart the server at the end
 
 
-$meminstance = new Memcache();
-$meminstance->pconnect('localhost', $memcache_port);
+//$meminstance = new Memcache();
+//$meminstance->pconnect('localhost', $memcache_port);
 
 class database {
     private $db,$last_query = null;
@@ -98,7 +98,7 @@ $query = $query_topics;
 //$querykey = "KEY" . md5($memQuery);
 //$topics = $meminstance->get($querykey);
 
-if (!$topics) {
+//if (!$topics) {
     $topics = array();
     $stmt = $mydb->doPrepare($query);
     $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
@@ -112,10 +112,10 @@ if (!$topics) {
 
     $meminstance->set($querykey, $topics, 0, $memcache_time);
     //	print "got result from mysql\n";
-}
-else{
-    //	print "got result from memcached\n";
-}
+//}
+//else{
+//    //	print "got result from memcached\n";
+//}
 
 
 

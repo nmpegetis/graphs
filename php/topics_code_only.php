@@ -13,8 +13,8 @@ set_time_limit(0);
 // DON'T FORGET to restart the server at the end
 
 
-//$meminstance = new Memcache();
-//$meminstance->pconnect('localhost', $memcache_port);
+$meminstance = new Memcache();
+$meminstance->pconnect('localhost', $memcache_port);
 
 class database1 {
     private $db,$last_query = null;

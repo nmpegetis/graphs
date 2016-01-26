@@ -76,38 +76,17 @@ $mydb = new database1("sqlite","",0,$db_path,"","");
 /////////////////////////
 
 $query = $query_topics;
-$move_elems = array("?");
-$set_elems = array($_GET['ex']);
-$memQuery = str_replace($move_elems, $set_elems, $query);
-$querykey = "KEY" . md5($memQuery);
-//$topics = $meminstance->get($querykey);
-
-//if (!$topics) {
-    $topics = array();
+$topics = array();
 echo $query;
-//    $stmt = $mydb->doPrepare($query);
-//echo $stmt;
-//    $stmt = $mydb->doExecute($stmt,array($_GET['ex']));
-//echo $stmt;
+
 $stmt = $mydb->doQuery($query);
 echo $stmt;
-//    $stmt = $mydb->doQuery("select * from TopicDescription where VisibilityIndex>=3 and ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos'");
-    $res = $stmt->fetch();
-    do {
-        if(!isset($topics[$res[2]]))
-            $topics[$res[2]] = array();
-        array_push($topics[$res[2]],array("title"=>$res[0]));
-    } while ($res = $stmt->fetch());
-
-    $meminstance->set($querykey, $topics, 0, $memcache_time);
-    //	print "got result from mysql\n";
-//}
-//else{
-//    //	print "got result from memcached\n";
-//}
-
-
-
+$res = $stmt->fetch();
+do {
+    if(!isset($topics[$res[2]]))
+        $topics[$res[2]] = array();
+    array_push($topics[$res[2]],array("title"=>$res[0]));
+} while ($res = $stmt->fetch());
 
 
 $everything = array();

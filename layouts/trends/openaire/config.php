@@ -25,7 +25,7 @@ $query_topics="select * from TopicDescription where VisibilityIndex>=3 and Exper
 $title = "Health Tender";								// title of the webpage
 $trends_title = "ACM Trends";								// title of the webpage when ACM
 $subtitle = "";								// subtitle of the webpage
-$experimentName = "HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos";	// first experiment to load
+$experimentName = "HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos";	// first experiment to load HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos
 $experimentDescription = ""; 	// first description to load
 $node_name = "Author";
 $node_groupName1 = "Authors";

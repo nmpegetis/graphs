@@ -35,6 +35,7 @@ class database1 {
     function doQuery($query){
         $stmt = $this->db->query($query);
         $this->last_query = $query;
+        var_dump($stmt);
         if(!$stmt){
             error_log("Failed to do query with message: ".$this->db->errorInfo(), 0);
             return false;

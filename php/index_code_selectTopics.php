@@ -71,6 +71,7 @@
     var experiment;
     var topics;
     var listOfTopicIds=[];
+    var listOfTopics={};
     listOfTopicIds.push("123");
     listOfTopicIds.push("234");
 
@@ -86,6 +87,30 @@
     }
 
     $(document).ready(function($) {
+        d3.csv(topicsFile, function (error, data) {
+            console.log("data")
+            $.each(data,function (i,d) {
+                listOfTopics[i] = {
+                    id: d.TopicId,
+                    title: d.Title
+                }; //value # of publications
+
+                $('#undo_redo')
+                    .append("option")
+//                    .style("height", "10px")
+//                    .attr("class", function (d) {
+//                        return d.name;
+//                    })
+                    .attr("id", d.TopicId)
+                    .text("title", d.Title);
+                    .text(d.Title);
+
+            });
+
+
+            console.log(listOfTopics)
+        });
+
         $('#multiselect').multiselect();
         $('#undo_redo').multiselect({
             search: {
@@ -95,17 +120,6 @@
         });
         console.log(topics)
 
-        d3.csv(topicsFile, function (error, data) {
-            console.log("data")
-            console.log(data)
-            var varNames = d3.keys(data[0])
-                .filter(function (key) {
-                    if (key==159 || key==271 || key==396) return 0;
-                    return key !== labelVar;
-                });
-            console.log("varNames")
-            console.log(varNames)
-        });
 //
 //        topics.forEach(function(i,obj){
 //            console.log("i:"+i)

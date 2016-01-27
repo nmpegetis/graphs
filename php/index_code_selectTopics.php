@@ -22,30 +22,33 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right btn-success" >
-                    <li><a style="color:white" href="#">Go!</a></li>
+                    <li id="li1" style="margin:5px"><a style="color:white" href="#" target="_blank">All funders</a></li>
+                    <li id="li2" style="margin:5px"><a style="color:white" href="#" target="_blank">WT</a></li>
+                    <li id="li3" style="margin:5px"><a style="color:white" href="#" target="_blank">FP7</a></li>
+                    <li id="li4" style="margin:5px"><a style="color:white" href="#" target="_blank">NIH</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="col-xs-5" style="padding-top: 70px">
-        <select name="from[]" id="undo_redo" class="form-control" size="13" multiple="multiple">
-            <option value="1">C++</option>
-            <option value="2">C#</option>
-            <option value="3">Haskell</option>
-            <option value="4">Java</option>
-            <option value="5">JavaScript</option>
-            <option value="6">Lisp</option>
-            <option value="7">Lua</option>
-            <option value="8">MATLAB</option>
-            <option value="9">NewLISP</option>
-            <option value="10">PHP</option>
-            <option value="11">Perl</option>
-            <option value="12">SQL</option>
-            <option value="13">Unix shell</option>
+    <div class="col-xs-5" id="from" style="padding-top: 70px">
+        <select name="from[]" id="undo_redo" class="form-control" size="30" multiple="multiple">
+<!--            <option value="1">C++</option>-->
+<!--            <option value="2">C#</option>-->
+<!--            <option value="3">Haskell</option>-->
+<!--            <option value="4">Java</option>-->
+<!--            <option value="5">JavaScript</option>-->
+<!--            <option value="6">Lisp</option>-->
+<!--            <option value="7">Lua</option>-->
+<!--            <option value="8">MATLAB</option>-->
+<!--            <option value="9">NewLISP</option>-->
+<!--            <option value="10">PHP</option>-->
+<!--            <option value="11">Perl</option>-->
+<!--            <option value="12">SQL</option>-->
+<!--            <option value="13">Unix shell</option>-->
         </select>
     </div>
 
-    <div class="col-xs-2" style="padding-top: 70px">
+    <div class="col-xs-2" style="padding-top: 70px;">
         <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
         <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i class="glyphicon glyphicon-forward"></i></button>
         <button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
@@ -54,8 +57,8 @@
         <button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
     </div>
 
-    <div class="col-xs-5" style="padding-top: 70px">
-        <select name="to[]" id="undo_redo_to" class="form-control" size="13" multiple="multiple"></select>
+    <div class="col-xs-5" id="to" style="padding-top: 70px">
+        <select name="to[]" id="undo_redo_to" class="form-control" size="30" multiple="multiple"></select>
     </div>
 
 
@@ -88,7 +91,6 @@
 
     $(document).ready(function($) {
         d3.csv(topicsFile, function (error, data) {
-            console.log("data")
             $.each(data,function (i,d) {
                 listOfTopics[i] = {
                     id: d.TopicId,
@@ -96,39 +98,61 @@
                 }; //value # of publications
 
                 $('#undo_redo')
-                    .append("option")
-//                    .style("height", "10px")
-//                    .attr("class", function (d) {
-//                        return d.name;
-//                    })
-                    .attr("id", d.TopicId)
-                    .text("title", d.Title);
-                    .text(d.Title);
-
+                    .append("<option value=\""+i+"\" id=\""+d.TopicId+"\" title=\""+d.Title+"\"> "+d.Title+"</option>");
             });
+        });
 
+        $("#li1").on("click",function() {
+            var url="./trends.php?id=allfunder&type=stream&topics=";
+            var selected = $('#undo_redo_to').multiselect("leftAll").children();
+            selected.each(function(i,d){
+                url += d.id+","
+            });
+            console.log(url);
+//            window.location.replace(url);
+            window.open(url, '_blank');
+        });
 
-            console.log(listOfTopics)
+        $("#li2").on("click",function() {
+            var url="./trends.php?id=wt&type=stream&topics=";
+            var selected = $('#undo_redo_to').multiselect("leftAll").children();
+            selected.each(function(i,d){
+                url += d.id+","
+            });
+            console.log(url);
+//            window.location.replace(url);
+            window.open(url, '_blank');
+        });
+
+        $("#li3").on("click",function() {
+            var url="./trends.php?id=fp7&type=stream&topics=";
+            var selected = $('#undo_redo_to').multiselect("leftAll").children();
+            selected.each(function(i,d){
+                url += d.id+","
+            });
+            console.log(url);
+//            window.location.replace(url);
+            window.open(url, '_blank');
+        });
+
+        $("#li4").on("click",function() {
+            var url="./trends.php?id=nih&type=stream&topics=";
+            var selected = $('#undo_redo_to').multiselect("leftAll").children();
+            selected.each(function(i,d){
+                url += d.id+","
+            });
+            console.log(url);
+//            window.location.replace(url);
+            window.open(url, '_blank');
         });
 
         $('#multiselect').multiselect();
         $('#undo_redo').multiselect({
             search: {
-                left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
-                right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+                left: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
+                right: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
             }
         });
-        console.log(topics)
-
-//
-//        topics.forEach(function(i,obj){
-//            console.log("i:"+i)
-//            console.log("obj:"+obj)
-//        });
-//        $.each(topics,function(i,obj){
-//            console.log("i:"+i)
-//            console.log("obj:"+obj)
-//        });
     });
 
     /* function returns 1 if an array contains an object or 0 if not */

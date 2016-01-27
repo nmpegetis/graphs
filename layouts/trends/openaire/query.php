@@ -36,7 +36,7 @@ $layout = "graph";
 
 
 // trends conf init
-$layoutId = "allfunders";
+$layoutId = "00010782";
 $layoutType = "stream";  // default
 $topicsSort = "yes";
 
@@ -47,7 +47,7 @@ $normal = 0.8;
 $fontsizeVar = 26; 				// 43 fontsizeVar variable multiplied with previous_scale to change text font size
 $smallestFontVar = 13;
 
-// similarities for the graph labeling 
+// similarities for the graph labeling
 $expsimilarity = 0.70;			// similarity for querying the database
 $similarityThr = 0.68;			// similarity threshold
 $nodeConnectionsThr = 0.1; 		// node connections threshold

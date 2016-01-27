@@ -36,7 +36,7 @@ $layout = "graph";
 
 
 // trends conf init
-$layoutId = "allfunders";
+$layoutId = "allfunder";
 $layoutType = "stream";  // default
 $topicsSort = "yes";
 

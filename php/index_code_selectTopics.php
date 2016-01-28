@@ -22,10 +22,10 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right btn-success" >
-                    <li id="li1" style="margin:5px"><a style="color:white" href="#" target="_blank">All funders</a></li>
-                    <li id="li2" style="margin:5px"><a style="color:white" href="#" target="_blank">WT</a></li>
-                    <li id="li3" style="margin:5px"><a style="color:white" href="#" target="_blank">FP7</a></li>
-                    <li id="li4" style="margin:5px"><a style="color:white" href="#" target="_blank">NIH</a></li>
+                    <li id="li1" style="margin:5px"><a style="color:white" href="#" >All funders</a></li>
+                    <li id="li2" style="margin:5px"><a style="color:white" href="#" >WT</a></li>
+                    <li id="li3" style="margin:5px"><a style="color:white" href="#" >FP7</a></li>
+                    <li id="li4" style="margin:5px"><a style="color:white" href="#" >NIH</a></li>
                 </ul>
             </div>
         </div>

@@ -11,7 +11,7 @@
 	   	$csv = $_POST['csv'];
 	   	$id = $_POST['id'];
 	   	$info = $csv;		// json encode not needed
-		$filename = "../data/".$id.".csv";
+		$filename = "../../data/".$id.".csv";
 
 // $fh = fopen( 'Names.csv', 'w' );
 // ftruncate($fh,0);

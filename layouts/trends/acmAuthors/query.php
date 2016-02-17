@@ -35,7 +35,7 @@ $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum f
 
 //-- prepei kai to journal na einai null gia na paroume ola ta journals kai oxi gia kathena
 
-$trend_query = "Select TopicDistributionPerBatch.TopicId, BatchId, NormWeight, TopicDistributionPerBatch.ExperimentId
+$trend_query = "Select TopicDistributionPerBatch.TopicId, BatchId, Standard, TopicDistributionPerBatch.ExperimentId
 from TopicDistributionPerBatch
   INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId
 where AuthorId='".$_GET['layoutid']."' AND JournalISSN is NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TopicDistributionPerBatch.TopicId";

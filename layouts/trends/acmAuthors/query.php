@@ -9,7 +9,7 @@ $max_execution_time = 120;  //300 seconds = 5 minutes
 $memory_limit = '4096M';	//'-1';		// unlimited memory
 $memcache_port = 11211;
 $db_name = "PTM3DB_oct15.db";
-$db_path = "../../../dbs/".$db_name;
+$db_path = "../../dbs/".$db_name;
 
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
 
@@ -28,11 +28,17 @@ $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum f
 // DONT FORGET TO ALSO CHANGE THE TOTAL NUMBER OF TRENDS IN THE VARIABLE BELOW $trends_num
 
 // general query for all trends
-$trend_query = "Select TopicDistributionPerBatch.TopicId, BatchId, NormWeight, TotalAvgWeight, Title, TrendIndex, TopicDistributionPerBatch.ExperimentId
+
+
+//--  LEFT OUTER JOIN  ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
+//--                                    and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
+
+//-- prepei kai to journal na einai null gia na paroume ola ta journals kai oxi gia kathena
+
+$trend_query = "Select TopicDistributionPerBatch.TopicId, BatchId, NormWeight, TopicDistributionPerBatch.ExperimentId
 from TopicDistributionPerBatch
-INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='".$GET['layoutid']."' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TopicDistributionPerBatch.TopicId, BatchId, TrendIndex desc";
+  INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId
+where AuthorId='".$GET['layoutid']."' AND JournalISSN is NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TopicDistributionPerBatch.TopicId";
 
 // e.g.
 //$query_trends1 = str_replace($move_elems, $set_elems[0], $query_trendsX);

@@ -94,30 +94,30 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var mousex;
-    var vertical =  d3.select("#layout")
-        .append("div")
-        .attr("id","stream")
-        .style("position", "absolute")
-        .style("z-index", "19")
-        .style("width", "1px")
-        .style("max-width", "1000px")
-        .style("height", height)
-        .style("top", "60px")
-        .style("bottom", "-180px")
-        .style("left", "0px")
-        .style("background", "#000");
-
-    d3.select("#layout")
-        .on("mousemove", function(){
-            mousex = d3.mouse(this);
-            mousex = mousex[0]+3;
-            if (mousex >920) mousex = 920;
-            vertical.style("left", mousex + "px" )
-        })
-        .on("mouseover", function(){
-            mousex = d3.mouse(this);
-            mousex = mousex[0];
-            vertical.style("left", mousex + "px")});
+//    var vertical =  d3.select("#layout")
+//        .append("div")
+//        .attr("id","stream")
+//        .style("position", "absolute")
+//        .style("z-index", "19")
+//        .style("width", "1px")
+//        .style("max-width", "1000px")
+//        .style("height", height)
+//        .style("top", "60px")
+//        .style("bottom", "-180px")
+//        .style("left", "0px")
+//        .style("background", "#000");
+//
+//    d3.select("#layout")
+//        .on("mousemove", function(){
+//            mousex = d3.mouse(this);
+//            mousex = mousex[0]+3;
+//            if (mousex >920) mousex = 920;
+//            vertical.style("left", mousex + "px" )
+//        })
+//        .on("mouseover", function(){
+//            mousex = d3.mouse(this);
+//            mousex = mousex[0];
+//            vertical.style("left", mousex + "px")});
 
     loadFromUrlParametersAndServer();
 

@@ -32,7 +32,7 @@ $trend_query = "Select TopicDistributionPerBatch.TopicId, BatchId, NormWeight, T
 from TopicDistributionPerBatch
 INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-where JournalISSN='".$GET['layoutid']."' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TopicDistributionPerBatch.TopicId, BatchId, TrendIndex desc";
+where JournalISSN='".$_GET['layoutid']."' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TopicDistributionPerBatch.TopicId, BatchId, TrendIndex desc";
 
 // e.g.
 //$query_trends1 = str_replace($move_elems, $set_elems[0], $query_trendsX);

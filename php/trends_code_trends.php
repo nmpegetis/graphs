@@ -101,7 +101,7 @@ $query = $trend_query;
 
 			$res = $stmt->fetch();
 			do {
-				array_push($trends,array("id"=>$res[1],"year"=>$res[0],"weight"=>$res[2],"avgweight"=>$res[5]));
+				array_push($trends,array("id"=>$res[0],"year"=>$res[1],"weight"=>$res[2],"avgweight"=>$res[3]));
 			} while ($res = $stmt->fetch());
 
 			$meminstance->set($querykey, $trends, 0, $memcache_time);

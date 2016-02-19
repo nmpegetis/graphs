@@ -94,6 +94,8 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var mousex;
+
+    //to apokatw einai gia tin grammi
 //    var vertical =  d3.select("#layout")
 //        .append("div")
 //        .attr("id","stream")

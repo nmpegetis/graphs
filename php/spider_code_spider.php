@@ -135,8 +135,9 @@ echo $output;
 
 // todo do the below if needed to write output to file
 
-$file = fopen("../data/trends_".$_GET['ex'].".csv","w");
-fwrite($file, arrayToCsv($everything));
+//$file = fopen("../data/trends_".$_GET['ex'].".csv","w");
+$file = fopen("../data/spider_test.csv","w");
+fwrite($file, $trends);
 fclose($file);
 
 unset($everything);//release memory

@@ -97,14 +97,40 @@ $query = $spider_query;
 		if (!$trends) {
 
 			$trends = array();
+            $trendsAllValues = array();
 			$stmt = $mydb->doQuery($query);
 
 			$res = $stmt->fetch();
-			do {
-				array_push($trends,array("id"=>$res[0],"year"=>$res[1],"weight"=>$res[2],"avgweight"=>$res[3]));
-			} while ($res = $stmt->fetch());
 
-			$meminstance->set($querykey, $trends, 0, $memcache_time);
+
+            $topicids=array();
+			do {
+
+//array with topics deduplicated
+                if (!in_array($res[1], $topicids))
+                {
+                    $topicids[] = $res[1];
+                }
+				array_push($trends,array("group"=>$res[0],"axis"=>$res[1],"value"=>$res[2],"description"=>$res[3]));
+			} while ($res = $stmt->fetch());
+	print_r($topicids);
+
+            $i = 0;
+            while ($i < count($trends)){
+                for ($j=0 ; $j<count($topicids) ; $j++) {
+                    if ($trends[$i].axis != $topicids[$j]) {
+                        array_push($trendsAllValues,array("group"=>$trends[$i].group,"axis"=>$topicids[$j],"value"=>0,"description"=>0));
+                    }
+                    else{
+                        array_push($trendsAllValues,array("group"=>$trends[$i].group,"axis"=>$trends[$i].axis,"value"=>$trends[$i].value,"description"=>$trends[$i].description));
+                        $i++;
+                    }
+                }
+            }
+
+
+            $meminstance->set($querykey, $trendsAllValues, 0, $memcache_time);
+//			$meminstance->set($querykey, $trends, 0, $memcache_time);
 			//	print "got result from mysql\n";
 		}
 		else{
@@ -113,6 +139,7 @@ $query = $spider_query;
 	}
 	else{
 		$trends = null;
+        $trendsAllValues = null;
 	}
 
 	// each time push the trends in allTrends

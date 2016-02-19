@@ -137,7 +137,12 @@ echo $output;
 
 //$file = fopen("../data/trends_".$_GET['ex'].".csv","w");
 $file = fopen("../data/spider_test.csv","w");
-fwrite($file, $trends);
+$out = "";
+foreach($trends as $arr) {
+    $out .= implode(",", $arr) . "\r\n";
+
+}
+fwrite($file, $out);
 fclose($file);
 
 unset($everything);//release memory

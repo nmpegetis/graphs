@@ -150,6 +150,7 @@ $query = $spider_query;
 // finally put them all in everything["trends"]
 //$everything['trends'] = $allTrends;
 $everything['trends'] = $trends;
+$everything['trends1'] = $trendsAllValues;
 
 
 //	print_r($everything['resp']);

@@ -43,7 +43,7 @@ $spider_query = "";
 foreach ($pieces as $key=>&$value) {
     if ($key > 0)
         $spider_query .= " Union ";
-    $spider_query .= "Select authorid, TopicId,  Standard
+    $spider_query .= "Select authorid, TopicId,  Standard, Standard
 from TopicDistributionPerAuthor
 where AuthorId='".$value."'  ";
 }

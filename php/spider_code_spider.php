@@ -113,7 +113,6 @@ $query = $spider_query;
                 }
 				array_push($trends,array("group"=>$res[0],"axis"=>$res[1],"value"=>$res[2],"description"=>$res[3]));
 			} while ($res = $stmt->fetch());
-	print_r($topicids);
 
             $i = 0;
             while ($i < count($trends)){
@@ -127,6 +126,10 @@ $query = $spider_query;
                     }
                 }
             }
+            print_r($trends);
+echo "";
+
+            echo "";
             print_r($trendsAllValues);
 
 
@@ -151,7 +154,6 @@ $query = $spider_query;
 // finally put them all in everything["trends"]
 //$everything['trends'] = $allTrends;
 $everything['trends'] = $trends;
-$everything['trends2'] = $trendsAllValues;
 
 
 //	print_r($everything['resp']);

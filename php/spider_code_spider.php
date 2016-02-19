@@ -119,20 +119,17 @@ $query = $spider_query;
                 $authorid = $trends[$i]["group"];
                 for ($j=0 ; $j<count($topicids) ; $j++) {
                     if ($authorid == $trends[$i]["group"] && $trends[$i]["axis"] == $topicids[$j]){
-                        echo "\n<2-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
+//                        echo "\n<2-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
                         array_push($trendsAllValues,array("group"=>$trends[$i]["group"],"axis"=>$trends[$i]["axis"],"value"=>$trends[$i]["value"],"description"=>$trends[$i]["description"]));
                         $i++;
                     }
                     else {
-                        echo "\n<1-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
+//                        echo "\n<1-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
                         array_push($trendsAllValues,array("group"=>$authorid,"axis"=>$topicids[$j],"value"=>0,"description"=>0));
                     }
                 }
             }
 //            print_r($trends);
-echo "";
-
-            echo "";
 //            print_r($trendsAllValues);
 
 
@@ -156,6 +153,7 @@ echo "";
 
 // finally put them all in everything["trends"]
 //$everything['trends'] = $allTrends;
+//$everything['trends'] = $trends;
 $everything['trends'] = $trendsAllValues;
 
 

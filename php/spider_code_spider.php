@@ -127,6 +127,7 @@ $query = $spider_query;
                     }
                 }
             }
+            print_r($trendsAllValues);
 
 
             $meminstance->set($querykey, $trendsAllValues, 0, $memcache_time);
@@ -150,7 +151,6 @@ $query = $spider_query;
 // finally put them all in everything["trends"]
 //$everything['trends'] = $allTrends;
 $everything['trends'] = $trends;
-$everything['trends1'] = $trendsAllValues;
 
 
 //	print_r($everything['resp']);

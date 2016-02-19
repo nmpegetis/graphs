@@ -115,8 +115,10 @@ $query = $spider_query;
 			} while ($res = $stmt->fetch());
 
             $i = 0;
+            $filename = "";
             while ($i < count($trends)){
                 $authorid = $trends[$i]["group"];
+                $filename .= $authorid;
                 for ($j=0 ; $j<count($topicids) ; $j++) {
                     if ($authorid == $trends[$i]["group"] && $trends[$i]["axis"] == $topicids[$j]){
 //                        echo "\n<2-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
@@ -168,7 +170,7 @@ echo $output;
 // todo do the below if needed to write output to file
 
 //$file = fopen("../data/trends_".$_GET['ex'].".csv","w");
-$file = fopen("../data/spider_test.csv","w");
+$file = fopen("../data/".$filename.".csv","w");
 $out = "";
 foreach($trends as $arr) {
     $out .= implode(",", $arr) . "\r\n";

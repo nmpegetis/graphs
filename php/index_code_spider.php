@@ -142,8 +142,8 @@
                   data: "ex=" + experiment + "&layoutid=" + layoutId,
                   success: function (resp) {
                       jsonSpiderLayout = JSON.parse(resp);
-                      spider = jsonSpiderLayout.spider;
-                      dothework(spider);
+//                      spider = jsonSpiderLayout.spider;
+//                      dothework(spider);
 //          init();   renamed to createSpider
                       createSpider();
                   },

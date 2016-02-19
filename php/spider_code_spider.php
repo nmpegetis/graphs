@@ -118,9 +118,11 @@ $query = $spider_query;
             while ($i < count($trends)){
                 for ($j=0 ; $j<count($topicids) ; $j++) {
                     if ($trends[$i]["axis"] != $topicids[$j]) {
+                        echo "\n<1-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
                         array_push($trendsAllValues,array("group"=>$trends[$i]["group"],"axis"=>$topicids[$j],"value"=>0,"description"=>0));
                     }
                     else{
+                        echo "\n<2-".$trends[$i]["axis"]."-".$topicids2[$j].">\n";
                         array_push($trendsAllValues,array("group"=>$trends[$i]["group"],"axis"=>$trends[$i]["axis"],"value"=>$trends[$i]["value"],"description"=>$trends[$i]["description"]));
                         $i++;
                     }

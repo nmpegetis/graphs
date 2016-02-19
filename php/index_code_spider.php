@@ -175,9 +175,9 @@
                   layoutId = '<?php echo $layoutId ;?>';
               }
 
-              if((layoutType = getUrlParameter('type')) == null){
-                  layoutType = '<?php echo $layoutType ;?>';
-              }
+//              if((layoutType = getUrlParameter('type')) == null){
+//                  layoutType = '<?php //echo $layoutType ;?>//';
+//              }
           }
 
           function getUrlParameter(name) {

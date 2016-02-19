@@ -118,11 +118,11 @@ $query = $spider_query;
             $i = 0;
             while ($i < count($trends)){
                 for ($j=0 ; $j<count($topicids) ; $j++) {
-                    if ($trends[$i].axis != $topicids[$j]) {
-                        array_push($trendsAllValues,array("group"=>$trends[$i].group,"axis"=>$topicids[$j],"value"=>0,"description"=>0));
+                    if ($trends[$i]["axis"] != $topicids[$j]) {
+                        array_push($trendsAllValues,array("group"=>$trends[$i]["group"],"axis"=>$topicids[$j],"value"=>0,"description"=>0));
                     }
                     else{
-                        array_push($trendsAllValues,array("group"=>$trends[$i].group,"axis"=>$trends[$i].axis,"value"=>$trends[$i].value,"description"=>$trends[$i].description));
+                        array_push($trendsAllValues,array("group"=>$trends[$i]["group"],"axis"=>$trends[$i]["axis"],"value"=>$trends[$i]["value"],"description"=>$trends[$i]["description"]));
                         $i++;
                     }
                 }

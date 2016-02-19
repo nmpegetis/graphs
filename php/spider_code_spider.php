@@ -172,7 +172,7 @@ echo $output;
 //$file = fopen("../data/trends_".$_GET['ex'].".csv","w");
 $file = fopen("../data/".$filename.".csv","w");
 $out = "";
-foreach($trends as $arr) {
+foreach($trendsAllValues as $arr) {
     $out .= implode(",", $arr) . "\r\n";
 
 }

@@ -43,12 +43,10 @@ $spider_query = "";
 foreach ($pieces as $key=>&$value) {
     if ($key > 0)
         $spider_query .= " Union ";
-    $spider_query .= "Select authorid, TopicDistributionPerBatch.TopicId,  Standard, TopicDistributionPerBatch.ExperimentId
-from TopicDistributionPerBatch
-  INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId
-where AuthorId='".$value."' AND JournalISSN is NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' ";
+    $spider_query .= "Select authorid, TopicId,  Standard
+from TopicDistributionPerAuthor
+where AuthorId='".$value."'  ";
 }
-$spider_query .= " order by TopicDistributionPerBatch.TopicId";
 //$spider_query = "Select authorid, TopicDistributionPerBatch.TopicId,  Standard, TopicDistributionPerBatch.ExperimentId
 //from TopicDistributionPerBatch
 //  INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId

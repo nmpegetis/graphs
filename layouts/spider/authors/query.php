@@ -35,10 +35,24 @@ $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum f
 
 //-- prepei kai to journal na einai null gia na paroume ola ta journals kai oxi gia kathena
 
-$spider_query = "Select TopicDistributionPerBatch.TopicId, BatchId, Standard, TopicDistributionPerBatch.ExperimentId
+$pieces = explode(",", $_GET['layoutid']);
+//echo $pieces[0]; // piece1
+//echo $pieces[1]; // piece2
+
+$spider_query = "";
+foreach ($pieces as $key=>&$value) {
+    if ($key > 0)
+        $spider_query .= " Union ";
+    $spider_query .= "Select authorid, TopicDistributionPerBatch.TopicId,  Standard, TopicDistributionPerBatch.ExperimentId
 from TopicDistributionPerBatch
   INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId
-where AuthorId='".$_GET['layoutid']."' AND JournalISSN is NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TopicDistributionPerBatch.TopicId";
+where AuthorId='".$value."' AND JournalISSN is NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' ";
+}
+$spider_query .= " order by TopicDistributionPerBatch.TopicId";
+//$spider_query = "Select authorid, TopicDistributionPerBatch.TopicId,  Standard, TopicDistributionPerBatch.ExperimentId
+//from TopicDistributionPerBatch
+//  INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId
+//where AuthorId='".$_GET['layoutid']."' AND JournalISSN is NULL AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TopicDistributionPerBatch.TopicId";
 
 // e.g.
 //$query_trends1 = str_replace($move_elems, $set_elems[0], $query_trendsX);

@@ -125,7 +125,7 @@ $query = $spider_query;
                     }
                     else {
                         echo "\n<1-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
-                        array_push($trendsAllValues,array("group"=>$trends[$i]["group"],"axis"=>$topicids[$j],"value"=>0,"description"=>0));
+                        array_push($trendsAllValues,array("group"=>$authorid,"axis"=>$topicids[$j],"value"=>0,"description"=>0));
                     }
                 }
             }

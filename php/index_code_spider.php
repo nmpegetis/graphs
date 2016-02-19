@@ -82,7 +82,7 @@
           loadFromUrlParametersAndServer();
 
 //          spiderFile = "../data/"+layoutId+".csv";
-          spiderFile = "../data/P100035P100040,.csv";
+          spiderFile = "../data/P100035P100040.csv";
           topicsFile = "../data/topics.json";             // needed for the trend visualization
 
           // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately

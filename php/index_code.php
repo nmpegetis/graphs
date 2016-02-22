@@ -3767,7 +3767,10 @@
                         });
                     })
                     .on("dblclick", function(d,i){
-console.log(d)
+console.log(d.id)
+                        var open = "http://astero.di.uoa.gr/graphs/layouts/spider/aut1hors/?ex=ACM_400T_1000IT_0IIT_100B_3M_cos&id=_"+ d.id;
+                        var win = window.open(open, '_blank');
+
                         graphNodesElem.multiselect('deselectAll', false);
                         $(this).attr('class', function(index, classNames) {
                             return classNames.replace('shadow', '');

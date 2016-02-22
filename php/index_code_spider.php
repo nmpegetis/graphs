@@ -205,7 +205,7 @@
             labelScale: 0.9,
             facetPaddingScale: 2.1,
             showLevels: true,
-            showLevelsLabels: false,
+            showLevelsLabels: true,
             showAxesLabels: true,
             showAxes: true,
             showLegend: true,

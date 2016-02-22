@@ -236,13 +236,14 @@
         };
       }
 
-
+$(".axis-labels").
+    attr("cursor","pointer");
   </script>
   <script src="../../../js/radar.js"></script>
   <script src="../../../js/radarDraw.js"></script>
   <script>
     // Hack to make this example display correctly in an iframe on bl.ocks.org
-    d3.select(self.frameElement).style("height", "1000px");
+//    d3.select(self.frameElement).style("height", "1000px");
   </script>
 </body>
 

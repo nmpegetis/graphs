@@ -119,7 +119,6 @@ $query = $spider_query;
             while ($i < count($trends)){
                 $authorid = $trends[$i]["group"];
                 $filename .= "_".$trends[$i]["description"];
-
                 for ($j=0 ; $j<count($topicids) ; $j++) {
                     if ($authorid == $trends[$i]["group"] && $trends[$i]["axis"] == $topicids[$j]){
 //                        echo "\n<2-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";

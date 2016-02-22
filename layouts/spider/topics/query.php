@@ -40,7 +40,7 @@ $pieces = explode("_", $_GET['id']);
 //echo $pieces[0]; // piece1
 //echo $pieces[1]; // piece2
 
-$spider_query = "select Title, Item, WeightedCounts from topicsweightsort as tw where ";
+$spider_query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
 foreach ($pieces as $key=>&$value) {
     if ($key > 0)
         $spider_query .= " or ";

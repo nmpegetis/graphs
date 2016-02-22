@@ -3765,6 +3765,52 @@
                         $(this).attr('class', function(index, classNames) {
                             return classNames.replace('shadow', '');
                         });
+                    })
+                    .on("dblclick", function(d,i){
+console.log(d)
+                        graphNodesElem.multiselect('deselectAll', false);
+                        $(this).attr('class', function(index, classNames) {
+                            return classNames.replace('shadow', '');
+                        });
+                        console.log("click")
+                        authorselected = 0;
+                        console.log(authorselected)
+
+//                        var myfade = fadeGraph(fade_out);
+                        if(focused == d.name){
+                            focused = '';
+                            nodeCircles.on("mouseover", fadeGraph(fade_out))
+                                .on("mouseout", function(d, i) {
+                                    console.log("mouseout 1");
+                                    console.log(authorselected);
+                                    if($(".active_row").length == 0 && authorselected == 0) {
+                                        reset();
+
+                                        $(this).attr('class', function (index, classNames) {
+                                            return classNames.replace('shadow', '');
+                                        });
+                                    }
+                                });
+
+                            reset();
+
+                            $(this).attr('class', function(index, classNames) {
+                                return classNames.replace('shadow', '');
+                            });
+                        }
+                        else{
+                            //   reset();
+                            focused = d.name;
+                            clickedNode = d;
+                            clickGraph(d,fade_out);
+                            nodeCircles.on("mouseout", function(){                        console.log("mouseout 3");
+                                    return false;})
+                                .on("mouseover", function(){return false;});
+                        }
+
+                        $(this).attr('class', function(index, classNames) {
+                            return classNames.replace('shadow', '');
+                        });
                     });
 
                 nodeCircles.exit().remove();

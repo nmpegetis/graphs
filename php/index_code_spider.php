@@ -189,7 +189,6 @@
           function delayfunc(){
               if (UrlExists("../data/" + layoutId + ".csv")){
                   console.log("kai dw")
-                  setTimeout(delayfunc, 1000);
                   createSpider();
               }
               else{

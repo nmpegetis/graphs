@@ -40,9 +40,12 @@ $pieces = explode("_", $_GET['id']);
 //echo $pieces[0]; // piece1
 //echo $pieces[1]; // piece2
 
-$spider_query = "select FirstName, LastName, Title, Standard, td.authorid from topicdistributionperauthor as td
-  inner join author as a on a.AuthorId=td.authorid
-  inner join TopicDescription as tw on tw.TopicId=td.topicid where ";
+//select FirstName, LastName, Title, Standard, td.authorid, tw.topicid from topicdistributionperauthor as td
+//  inner join author as a on a.AuthorId=td.authorid
+//  inner join TopicDescription as tw on tw.TopicId=td.topicid
+//    --where td.AuthorId="P100035" or td.AuthorId="P100038"
+//order by td.authorid,tw.topicid;
+$spider_query = "select FirstName, LastName, Title, Standard, authorid, topicid from authorRadar where ";
 //foreach ($pieces as $key=>&$value) {
 //    if ($key > 0)
 //        $spider_query .= " Union ";
@@ -53,9 +56,9 @@ $spider_query = "select FirstName, LastName, Title, Standard, td.authorid from t
 foreach ($pieces as $key=>&$value) {
     if ($key > 0)
         $spider_query .= " or ";
-    $spider_query .= "td.AuthorId='".$value."'  ";
+    $spider_query .= " AuthorId='".$value."'  ";
 }
-$spider_query .= " order by td.authorid,tw.topicid";
+$spider_query .= " order by authorid, topicid";
 //$spider_query = "Select authorid, TopicDistributionPerBatch.TopicId,  Standard, TopicDistributionPerBatch.ExperimentId
 //from TopicDistributionPerBatch
 //  INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId

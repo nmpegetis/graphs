@@ -185,9 +185,11 @@
 
           function delayfunc(){
               if (UrlExists("../data/" + layoutId + ".csv")){
+                  console.log("kai dw")
                   createSpider();
               }
               else{
+                  console.log("mipka")
                   setTimeout(delayfunc, 1000);
               }
           }

@@ -3768,7 +3768,7 @@
                     })
                     .on("dblclick", function(d,i){
 console.log(d.id)
-                        var open = "http://astero.di.uoa.gr/graphs/layouts/spider/aut1hors/?ex=ACM_400T_1000IT_0IIT_100B_3M_cos&id=_"+ d.id;
+                        var open = "http://astero.di.uoa.gr/graphs/layouts/spider/authors/?ex=ACM_400T_1000IT_0IIT_100B_3M_cos&id=_"+ d.id;
                         var win = window.open(open, '_blank');
 
                         graphNodesElem.multiselect('deselectAll', false);

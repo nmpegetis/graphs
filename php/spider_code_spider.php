@@ -107,12 +107,12 @@ $query = $spider_query;
 			do {
 
 //array with topics deduplicated
-                if (!in_array($res[5], $topicids))
+                if (!in_array($res[2], $topicids))
                 {
-                    $topicids[] = $res[5];
+                    $topicids[] = $res[2];
                 }
                 $name = $res[0]." ".$res[1];
-				array_push($trends,array("group"=>$name,"axis"=>$res[2],"value"=>$res[3]*100,"description"=>$res[4]));
+				array_push($trends,array("group"=>$name,"axis"=>$res[2],"value"=>$res[3]*100,"description"=>$res[4],"topicid"=>$res[5]));
 			} while ($res = $stmt->fetch());
 
             $i = 0;

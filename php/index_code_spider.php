@@ -172,8 +172,7 @@
               if((experiment = getUrlParameter('ex')) == null){
                   experiment = '<?php echo $experimentName ;?>';
               }
-console.log("id")
-console.log(getUrlParameter('id'))
+
               if((layoutId = getUrlParameter('id')) == null){         //default
                   layoutId = '<?php echo $layoutId ;?>';
               }
@@ -184,8 +183,6 @@ console.log(getUrlParameter('id'))
           }
 
           function getUrlParameter(name) {
-              // removed # hash because I use it in the id parameter
-//              return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
               return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
           }
 

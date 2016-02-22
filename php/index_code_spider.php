@@ -82,8 +82,6 @@
           loadFromUrlParametersAndServer();
 
           spiderFile = "../data/"+layoutId+".csv";
-          //todo the above below
-//          spiderFile = "../data/P100035P100040.csv";
           topicsFile = "../data/topics.json";             // needed for the trend visualization
 
           // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately
@@ -141,7 +139,7 @@
                   type: "GET",
                   async: true,
                   url: url,
-                  data: "ex=" + experiment + "&layoutid=" + layoutId,
+                  data: "ex=" + experiment + "&id=" + layoutId,
                   success: function (resp) {
                       jsonSpiderLayout = JSON.parse(resp);
 //                      spider = jsonSpiderLayout.spider;
@@ -172,7 +170,6 @@
               if((experiment = getUrlParameter('ex')) == null){
                   experiment = '<?php echo $experimentName ;?>';
               }
-console.log(layoutId)
               if((layoutId = getUrlParameter('id')) == null){         //default
                   layoutId = '<?php echo $layoutId ;?>';
               }

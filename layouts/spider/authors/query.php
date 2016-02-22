@@ -36,7 +36,7 @@ $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum f
 //-- prepei kai to journal na einai null gia na paroume ola ta journals kai oxi gia kathena
 
 // splits authorsid from string to array elements
-$pieces = explode("_", $_GET['layoutid']);
+$pieces = explode("_", $_GET['id']);
 //echo $pieces[0]; // piece1
 //echo $pieces[1]; // piece2
 

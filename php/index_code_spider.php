@@ -146,7 +146,9 @@
                   console.log(spider)
 //                      dothework(spider);
 //          init();   renamed to createSpider
-                  createSpider();
+                  $timeout(createSpider, 2000);
+
+//                  createSpider();
               }, function errorCallback(response) {
                   console.log("edw")
                   alert('Error: ' + JSON.stringify(e));
@@ -215,17 +217,17 @@
             //var file = "../data/data_plant_seasons.csv";
 //          var file = "../data/P100035P100040.csv";
             var file = "../data/" + layoutId + ".csv";
-            var handler = true;
-            while (handler){
+//            var handler = true;
+//            while (handler){
                 $http.get(file).success(function (data) {
                     console.log("ebgainw")
-                    handler = false;
+//                    handler = false;
                     ctrl.csv = data;
                 }).error(function (data, status, headers, config) {
                     console.log(".")
-                    handler = true;
+//                    handler = true;
                 });
-            }
+//            }
           ctrl.config = {
             w: 500,
             h: 500,

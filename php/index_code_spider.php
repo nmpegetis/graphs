@@ -96,7 +96,8 @@
           spiderFileExist  = UrlExists(spiderFile);
           if (!spiderFileExist) {
               ajaxSpiderCall(experiment);
-              createSpider();
+              setTimeout(delayfunc, 1000);
+//              createSpider();
 
 //todo na to allaksw to parapanw kai sta trends... tin prwti fora den kaleitai to trends kai to spider an den uparxei to arxeio gi auto kai emfanizontai problimata mallon thelei to create eksw apo tin else alla na perimenei na teleiwsei to ajaxcall
           }
@@ -143,19 +144,19 @@
               }).then(function successCallback(response) {
                   // this callback will be called asynchronously
                   // when the response is available
-                  jsonSpiderLayout = JSON.parse(resp);
-                  spider = jsonSpiderLayout.spider;
-                  console.log(spider)
+//                  jsonSpiderLayout = JSON.parse(resp);
+//                  spider = jsonSpiderLayout.spider;
+//                  console.log(spider)
 //                      dothework(spider);
 //          init();   renamed to createSpider
-                  setTimeout(delayfunc, 1000);
+//                  setTimeout(delayfunc, 1000);
 
 //                  createSpider();
-              }, function errorCallback(response) {
-                  console.log("edw")
-                  alert('Error: ' + JSON.stringify(e));
-                  // called asynchronously if an error occurs
-                  // or server returns response with an error status.
+//              }, function errorCallback(response) {
+//                  console.log("edw")
+//                  alert('Error: ' + JSON.stringify(e));
+//                  // called asynchronously if an error occurs
+//                  // or server returns response with an error status.
               });
               //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
 //              return $.ajax({
@@ -188,6 +189,7 @@
           function delayfunc(){
               if (UrlExists("../data/" + layoutId + ".csv")){
                   console.log("kai dw")
+                  setTimeout(delayfunc, 1000);
                   createSpider();
               }
               else{

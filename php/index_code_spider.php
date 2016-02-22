@@ -172,7 +172,8 @@
               if((experiment = getUrlParameter('ex')) == null){
                   experiment = '<?php echo $experimentName ;?>';
               }
-
+console.log("id")
+console.log(getUrlParameter('id'))
               if((layoutId = getUrlParameter('id')) == null){         //default
                   layoutId = '<?php echo $layoutId ;?>';
               }

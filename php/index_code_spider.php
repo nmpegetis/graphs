@@ -133,8 +133,6 @@
           function ajaxSpiderCall(experiment) {
               console.log("ajaxCall for spider layout: " + experiment);
               var url = "./spider.php";
-console.log(experiment)
-              console.log(layoutId)
               //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
               return $.ajax({
                   type: "GET",
@@ -150,6 +148,7 @@ console.log(experiment)
                       createSpider();
                   },
                   error: function (e) {
+                      console.log("edw")
                       alert('Error: ' + JSON.stringify(e));
                   }
               });

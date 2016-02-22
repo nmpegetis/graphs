@@ -131,9 +131,10 @@
           }
 
           function ajaxSpiderCall(experiment) {
-              console.log("ajaxCall for trend layout: " + experiment);
+              console.log("ajaxCall for spider layout: " + experiment);
               var url = "./spider.php";
-
+console.log(experiment)
+              console.log(layoutId)
               //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
               return $.ajax({
                   type: "GET",
@@ -142,6 +143,7 @@
                   data: "ex=" + experiment + "&id=" + layoutId,
                   success: function (resp) {
                       jsonSpiderLayout = JSON.parse(resp);
+                      console.log(jsonSpiderLayout)
 //                      spider = jsonSpiderLayout.spider;
 //                      dothework(spider);
 //          init();   renamed to createSpider

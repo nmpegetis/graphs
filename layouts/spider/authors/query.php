@@ -58,7 +58,7 @@ foreach ($pieces as $key=>&$value) {
         $spider_query .= " or ";
     $spider_query .= " AuthorId='".$value."'  ";
 }
-$spider_query .= " order by authorid, topicid";
+//$spider_query .= " order by authorid, TopicId";
 //$spider_query = "Select authorid, TopicDistributionPerBatch.TopicId,  Standard, TopicDistributionPerBatch.ExperimentId
 //from TopicDistributionPerBatch
 //  INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId

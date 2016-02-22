@@ -86,7 +86,7 @@ $allTrends = array();
 
 //foreach ($trends_queries as $key => $query) {
 $query = $spider_query;
-echo $query;
+
 	if ($query != null) {
 
 		$memQuery = $query;

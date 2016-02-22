@@ -97,7 +97,6 @@
           if (!spiderFileExist) {
               ajaxSpiderCall(experiment);
               setTimeout(delayfunc, 1000);
-//              createSpider();
 
 //todo na to allaksw to parapanw kai sta trends... tin prwti fora den kaleitai to trends kai to spider an den uparxei to arxeio gi auto kai emfanizontai problimata mallon thelei to create eksw apo tin else alla na perimenei na teleiwsei to ajaxcall
           }
@@ -144,39 +143,7 @@
               }).then(function successCallback(response) {
                   // this callback will be called asynchronously
                   // when the response is available
-//                  jsonSpiderLayout = JSON.parse(resp);
-//                  spider = jsonSpiderLayout.spider;
-//                  console.log(spider)
-//                      dothework(spider);
-//          init();   renamed to createSpider
-//                  setTimeout(delayfunc, 1000);
-
-//                  createSpider();
-//              }, function errorCallback(response) {
-//                  console.log("edw")
-//                  alert('Error: ' + JSON.stringify(e));
-//                  // called asynchronously if an error occurs
-//                  // or server returns response with an error status.
               });
-              //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-//              return $.ajax({
-//                  type: "GET",
-//                  async: true,
-//                  url: url,
-//                  data: "ex=" + experiment + "&id=" + layoutId,
-//                  success: function (resp) {
-//                      jsonSpiderLayout = JSON.parse(resp);
-//                      spider = jsonSpiderLayout.spider;
-//                      console.log(spider)
-////                      dothework(spider);
-////          init();   renamed to createSpider
-//                      createSpider();
-//                  },
-//                  error: function (e) {
-//                      console.log("edw")
-//                      alert('Error: ' + JSON.stringify(e));
-//                  }
-//              });
           }
 
           function UrlExists(url) {
@@ -188,11 +155,9 @@
 
           function delayfunc(){
               if (UrlExists("../data/" + layoutId + ".csv")){
-                  console.log("kai dw")
                   createSpider();
               }
               else{
-                  console.log("mipka")
                   setTimeout(delayfunc, 1000);
               }
           }
@@ -210,9 +175,6 @@
                   layoutId = '<?php echo $layoutId ;?>';
               }
 
-//              if((layoutType = getUrlParameter('type')) == null){
-//                  layoutType = '<?php //echo $layoutType ;?>//';
-//              }
           }
 
           function getUrlParameter(name) {
@@ -227,20 +189,13 @@
             // initialize controller variables
 
 
-            //var file = "../data/data_plant_seasons.csv";
-//          var file = "../data/P100035P100040.csv";
             var file = "../data/" + layoutId + ".csv";
-//            var handler = true;
-//            while (handler){
-                $http.get(file).success(function (data) {
-                    console.log("ebgainw")
-//                    handler = false;
-                    ctrl.csv = data;
-                }).error(function (data, status, headers, config) {
-                    console.log(".")
-//                    handler = true;
-                });
-//            }
+            $http.get(file).success(function (data) {
+                console.log("ebgainw")
+                ctrl.csv = data;
+            }).error(function (data, status, headers, config) {
+                console.log(".")
+            });
           ctrl.config = {
             w: 500,
             h: 500,

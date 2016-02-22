@@ -32,7 +32,7 @@ $layout = "graph";
 
 
 // trends conf init
-$layoutId = "00010782";
+$layoutId = "P100004";
 $layoutType = "stream";  // default
 $topicsSort = "yes";
 

@@ -236,7 +236,7 @@
         };
       }
 
-    d3.selectAll(".axis-labels").
+    d3.select(".axis-labels").
         attr("cursor","pointer");
   </script>
   <script src="../../../js/radar.js"></script>

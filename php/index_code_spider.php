@@ -81,9 +81,9 @@
 
           loadFromUrlParametersAndServer();
 
-//          spiderFile = "../data/"+layoutId+".csv";
+          spiderFile = "../data/"+layoutId+".csv";
           //todo the above below
-          spiderFile = "../data/P100035P100040.csv";
+//          spiderFile = "../data/P100035P100040.csv";
           topicsFile = "../data/topics.json";             // needed for the trend visualization
 
           // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately
@@ -195,8 +195,8 @@
 
 
           //var file = "../data/data_plant_seasons.csv";
-          var file = "../data/P100035P100040.csv";
-//          var file = "../data/"+layoutId+".csv";
+//          var file = "../data/P100035P100040.csv";
+          var file = "../data/"+layoutId+".csv";
           $http.get(file).success(function(data) {
             ctrl.csv = data;
           });

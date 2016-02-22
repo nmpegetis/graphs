@@ -32,7 +32,7 @@ $layout = "graph";
 
 
 // trends conf init
-$layoutId = "P100004";
+$layoutId = "#P100004";
 
 $w = 500;
 $h = 500;

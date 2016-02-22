@@ -146,7 +146,7 @@
                   console.log(spider)
 //                      dothework(spider);
 //          init();   renamed to createSpider
-                  $timeout(createSpider,4000);
+                  setTimeout(delayfunc, 1000);
 
 //                  createSpider();
               }, function errorCallback(response) {
@@ -183,6 +183,14 @@
               return http.status != 404;
           }
 
+          function delayfunc(){
+              if (UrlExists("../data/" + layoutId + ".csv")){
+                  createSpider();
+              }
+              else{
+                  setTimeout(delayfunc, 1000);
+              }
+          }
 
           /* function returns 1 if an array contains an object or 0 if not */
           function include(arr, obj) {

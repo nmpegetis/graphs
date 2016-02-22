@@ -133,25 +133,46 @@
           function ajaxSpiderCall(experiment) {
               console.log("ajaxCall for spider layout: " + experiment);
               var url = "./spider.php";
-              //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-              return $.ajax({
-                  type: "GET",
-                  async: true,
+
+//              $http.get('/someUrl', config).then(successCallback, errorCallback);
+              $http({
+                  method: 'GET',
                   url: url,
-                  data: "ex=" + experiment + "&id=" + layoutId,
-                  success: function (resp) {
-                      jsonSpiderLayout = JSON.parse(resp);
-                      spider = jsonSpiderLayout.spider;
-                      console.log(spider)
+                  data: "ex=" + experiment + "&id=" + layoutId
+              }).then(function successCallback(response) {
+                  // this callback will be called asynchronously
+                  // when the response is available
+                  jsonSpiderLayout = JSON.parse(resp);
+                  spider = jsonSpiderLayout.spider;
+                  console.log(spider)
 //                      dothework(spider);
 //          init();   renamed to createSpider
-                      createSpider();
-                  },
-                  error: function (e) {
-                      console.log("edw")
-                      alert('Error: ' + JSON.stringify(e));
-                  }
+                  createSpider();
+              }, function errorCallback(response) {
+                  console.log("edw")
+                  alert('Error: ' + JSON.stringify(e));
+                  // called asynchronously if an error occurs
+                  // or server returns response with an error status.
               });
+              //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
+//              return $.ajax({
+//                  type: "GET",
+//                  async: true,
+//                  url: url,
+//                  data: "ex=" + experiment + "&id=" + layoutId,
+//                  success: function (resp) {
+//                      jsonSpiderLayout = JSON.parse(resp);
+//                      spider = jsonSpiderLayout.spider;
+//                      console.log(spider)
+////                      dothework(spider);
+////          init();   renamed to createSpider
+//                      createSpider();
+//                  },
+//                  error: function (e) {
+//                      console.log("edw")
+//                      alert('Error: ' + JSON.stringify(e));
+//                  }
+//              });
           }
 
           function UrlExists(url) {

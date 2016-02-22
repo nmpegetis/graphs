@@ -137,8 +137,7 @@
 //              $http.get('/someUrl', config).then(successCallback, errorCallback);
               $http({
                   method: 'GET',
-                  url: url,
-                  data: "ex=" + experiment + "&id=" + layoutId
+                  url: url+ "?ex=" + experiment + "&id=" + layoutId
               }).then(function successCallback(response) {
                   // this callback will be called asynchronously
                   // when the response is available

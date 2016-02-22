@@ -96,6 +96,8 @@
           spiderFileExist  = UrlExists(spiderFile);
           if (!spiderFileExist) {
               ajaxSpiderCall(experiment);
+              createSpider();
+
 //todo na to allaksw to parapanw kai sta trends... tin prwti fora den kaleitai to trends kai to spider an den uparxei to arxeio gi auto kai emfanizontai problimata mallon thelei to create eksw apo tin else alla na perimenei na teleiwsei to ajaxcall
           }
           else {

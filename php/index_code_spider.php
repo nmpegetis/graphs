@@ -146,7 +146,7 @@
                   console.log(spider)
 //                      dothework(spider);
 //          init();   renamed to createSpider
-                  $timeout(createSpider, 2000);
+                  $timeout(createSpider,4000);
 
 //                  createSpider();
               }, function errorCallback(response) {

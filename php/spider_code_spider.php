@@ -111,23 +111,25 @@ $query = $spider_query;
                 {
                     $topicids[] = $res[5];
                 }
-				array_push($trends,array("group"=>$res[0]." ".$res[1],"axis"=>$res[2],"value"=>$res[3]*100,"description"=>$res[4]));
+                $name = $res[0]." ".$res[1];
+				array_push($trends,array("group"=>$name,"axis"=>$res[2],"value"=>$res[3]*100,"description"=>$res[4]));
 			} while ($res = $stmt->fetch());
 
             $i = 0;
             $filename = "";
             while ($i < count($trends)){
-                $authorid = $trends[$i]["group"];
+                $authorid = $trends[$i]["description"];
+                $authorname = $trends[$i]["group"];
                 $filename .= "_".$trends[$i]["description"];
                 for ($j=0 ; $j<count($topicids) ; $j++) {
-                    if ($authorid == $trends[$i]["group"] && $trends[$i]["axis"] == $topicids[$j]){
+                    if ($authorid == $trends[$i]["description"] && $trends[$i]["axis"] == $topicids[$j]){
 //                        echo "\n<2-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
                         array_push($trendsAllValues,array("group"=>$trends[$i]["group"],"axis"=>$trends[$i]["axis"],"value"=>$trends[$i]["value"],"description"=>$trends[$i]["description"]));
                         $i++;
                     }
                     else {
 //                        echo "\n<1-".$authorid."-".$trends[$i]["axis"]."-".$topicids[$j].">\n";
-                        array_push($trendsAllValues,array("group"=>$authorid,"axis"=>$topicids[$j],"value"=>0,"description"=>0));
+                        array_push($trendsAllValues,array("group"=>$authorname,"axis"=>$topicids[$j],"value"=>0,"description"=>$authorid));
                     }
                 }
             }

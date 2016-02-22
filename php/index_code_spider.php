@@ -209,15 +209,23 @@
 
         // function init - createSpider
         function createSpider() {
-          // initialize controller variables
+            // initialize controller variables
 
 
-          //var file = "../data/data_plant_seasons.csv";
+            //var file = "../data/data_plant_seasons.csv";
 //          var file = "../data/P100035P100040.csv";
-          var file = "../data/"+layoutId+".csv";
-          $http.get(file).success(function(data) {
-            ctrl.csv = data;
-          });
+            var file = "../data/" + layoutId + ".csv";
+            var handler = true;
+            while (handler){
+                $http.get(file).success(function (data) {
+                    console.log("ebgainw")
+                    handler = false;
+                    ctrl.csv = data;
+                }).error(function (data, status, headers, config) {
+                    console.log(".")
+                    handler = true;
+                });
+            }
           ctrl.config = {
             w: 500,
             h: 500,

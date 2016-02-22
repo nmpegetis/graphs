@@ -111,7 +111,7 @@ $query = $spider_query;
                 {
                     $topicids[] = $res[1];
                 }
-				array_push($trends,array("group"=>$res[0],"axis"=>$res[1],"value"=>$res[2],"description"=>$res[3]));
+				array_push($trends,array("group"=>$res[0],"axis"=>$res[1],"value"=>$res[2]*100,"description"=>$res[3]));
 			} while ($res = $stmt->fetch());
 
             $i = 0;

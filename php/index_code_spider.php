@@ -143,8 +143,8 @@ console.log(experiment)
                   data: "ex=" + experiment + "&id=" + layoutId,
                   success: function (resp) {
                       jsonSpiderLayout = JSON.parse(resp);
-                      console.log(jsonSpiderLayout)
-//                      spider = jsonSpiderLayout.spider;
+                      spider = jsonSpiderLayout.spider;
+                      console.log(spider)
 //                      dothework(spider);
 //          init();   renamed to createSpider
                       createSpider();

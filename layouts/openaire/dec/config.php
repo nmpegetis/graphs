@@ -25,9 +25,9 @@ $query_experiments = "select distinct ExperimentId,Description,initialSimilarity
 //$query_nodes = "select project_code, topicid, weight from topicsperdocview where ExperimentId=?";
 $query_nodes = "select grantid as project_code, TopicId, AVG(Weight) as weight
  from pubtopic Inner join pubgrant on pubtopic.pubId=pubgrant.pubid 
- where Weight>0.02 AND ExperimentId=? 
+ where Weight>0.02 AND ExperimentId=?  and grantid>0
 Group By grantid, TopicId Order by grantid, AVG(Weight) Desc";
-$query_nodes = "select projectid as project_code, TopicId, AVG(Weight) as weight from pubtopic where Weight>0.02 AND ExperimentId=? Group By projectid, TopicId Order by projectid, AVG(Weight) Desc";
+//$query_nodes = "select projectid as project_code, TopicId, AVG(Weight) as weight from pubtopic where Weight>0.02 AND ExperimentId=? Group By projectid, TopicId Order by projectid, AVG(Weight) Desc";
 
 ////dec15///$query_nodes = "select projectid as project_code, TopicId, AVG(Weight) as weight from pubtopic Inner join links on pubtopic.pubId=links.originalid where Weight>0.02 AND ExperimentId=? Group By projectid, TopicId Order by projectid, AVG(Weight) Desc";
 //select project_code, TopicId, AVG(Weight) as weight from TopicsPerDoc Inner join links on TopicsPerDoc.DocId=links.originalid where Weight>0.02 AND ExperimentId=? Group By project_code, TopicId Order by project_code, AVG(Weight) Desc
@@ -35,9 +35,15 @@ $query_nodes = "select projectid as project_code, TopicId, AVG(Weight) as weight
 
 //$query_nodes = "select PubCategory.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategory on topicsPerDoc.DocId= PubCategory.PubId INNER JOIN (Select Category FROM pubCategory GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategory.category where weight>0.02 AND ExperimentId=? group By PubCategory.Category , TopicId order by  pubCategory.Category, Weight desc, TopicId";
 
-$query_topics = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+//ta apo katw na ta sbisw... ta eftiaksa mono gia to chord 20160305
+$query_topics = "select td.TopicId, Item, Weight from TopicDetails as td, TopicAnalysis as ta where ta.TopicId=td.TopicId and td.ExperimentId=?";
+$query_topics_nosort = "select td.TopicId, Item, Weight from TopicDetails as td, TopicAnalysis as ta where ta.TopicId=td.TopicId and td.ExperimentId=?";
 
-$query_topics_nosort = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+//////auta na ta aposxoliasw... auta einai ta kanonika...
+//$query_topics = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+//
+//$query_topics_nosort = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+
 $query_topicsdistribution = null;
 $query_heatmap = null;
 $query_trends = null;

@@ -8,29 +8,38 @@
 $max_execution_time = 120;  //300 seconds = 5 minutes
 $memory_limit = '4096M';	//'-1';		// unlimited memory
 $memcache_port = 11211;
-$db_name = "fp7openaire.db";
+$db_name = "PTM3DB.db";
 $db_path = "../../../dbs/".$db_name;
 
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
 
 
 //den ebala ta acr1
-$query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,Acr1 as node1name,Acr2 as node2name,Gr1_Category0 as category1_0,Gr1_Category1 as category1_1,Gr1_Category2 as category1_2,Gr1_Category3 as category1_3,Gr1_Category3Descr as category1_3descr,Gr2_Category0 as category2_0,Gr2_Category1 as category2_1,Gr2_Category2 as category2_2,Gr2_Category3 as category2_3,Gr2_Category3Descr as category2_3descr,grantsCnt1 as category1_counts,grantsCnt2 as category2_counts,Similarity from EntitySimilarityView where ExperimentId=?  and  Similarity>?";
+$query_graphLayout = "select EntityId1 as node1id,EntityId2 as node2id,Acr1 as node1name,Acr2 as node2name,Gr1_Category0 as category1_0,Gr1_Category1 as category1_1,Gr1_Category2 as category1_2,Gr1_Category3 as category1_3,Gr1_Category3Descr as category1_3descr,
+Gr2_Category0 as category2_0,Gr2_Category1 as category2_1,Gr2_Category2 as category2_2,Gr2_Category3 as category2_3,Gr2_Category3Descr as category2_3descr,grantsCnt1 as category1_counts,grantsCnt2 as category2_counts,Similarity from EntitySimilarityView_grant where ExperimentId=? and Similarity>?";
 //$query_graphLayout = "select EntityId1,EntityId2,Acr1,Acr2,Gr1_Category0,Gr1_Category1,Gr1_Category2,Gr1_Category3,Gr1_Category3Descr,Gr2_Category0,Gr2_Category1,Gr2_Category2,Gr2_Category3,Gr2_Category3Descr,grantsCnt1,grantsCnt2,Similarity from EntitySimilarityView where ExperimentId=?  and  Similarity>?";
 
 $query_experiments = "select distinct ExperimentId,Description,initialSimilarity from experiment";
 
 //$query_nodes = "select project_code, TopicId, AVG(Weight) as weight from TopicsPerDoc Inner join links on TopicsPerDoc.DocId=links.originalid where Weight>0.02 AND ExperimentId=? Group By project_code, TopicId Order by project_code, AVG(Weight) Desc";
 //$query_nodes = "select project_code, topicid, weight from topicsperdocview where ExperimentId=?";
-$query_nodes = "select projectid as project_code, TopicId, AVG(Weight) as weight from pubtopic Inner join links on pubtopic.pubId=links.originalid where Weight>0.02 AND ExperimentId=? Group By projectid, TopicId Order by projectid, AVG(Weight) Desc";
+$query_nodes = "select grantid as project_code, TopicId, AVG(Weight) as weight
+ from pubtopic Inner join pubgrant on pubtopic.pubId=pubgrant.pubid
+ where Weight>0.02 AND ExperimentId=?  and grantid>0
+Group By grantid, TopicId Order by grantid, AVG(Weight) Desc";
+//$query_nodes = "select projectid as project_code, TopicId, AVG(Weight) as weight from pubtopic where Weight>0.02 AND ExperimentId=? Group By projectid, TopicId Order by projectid, AVG(Weight) Desc";
+
+////dec15///$query_nodes = "select projectid as project_code, TopicId, AVG(Weight) as weight from pubtopic Inner join links on pubtopic.pubId=links.originalid where Weight>0.02 AND ExperimentId=? Group By projectid, TopicId Order by projectid, AVG(Weight) Desc";
 //select project_code, TopicId, AVG(Weight) as weight from TopicsPerDoc Inner join links on TopicsPerDoc.DocId=links.originalid where Weight>0.02 AND ExperimentId=? Group By project_code, TopicId Order by project_code, AVG(Weight) Desc
 
 
 //$query_nodes = "select PubCategory.Category, TopicId, AVG(weight) as Weight from topicsPerDoc Inner Join PubCategory on topicsPerDoc.DocId= PubCategory.PubId INNER JOIN (Select Category FROM pubCategory GROUP BY Category HAVING Count(*)>10) catCnts1 ON catCnts1.Category = PubCategory.category where weight>0.02 AND ExperimentId=? group By PubCategory.Category , TopicId order by  pubCategory.Category, Weight desc, TopicId";
 
-$query_topics = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+//$query_topics = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, WeightedCounts DESC";
+//$query_topics_nosort = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
+$query_topics = "select ta.TopicId,Item,Weight from TopicAnalysis as ta, TopicDetails as td where ta.topicId=td.TopicId and ta.ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos' and td.ExperimentId=?";
+$query_topics_nosort = "select ta.TopicId,Item,Weight from TopicAnalysis as ta, TopicDetails as td where ta.topicId=td.TopicId and ta.ExperimentId='HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos' and td.ExperimentId=?";
 
-$query_topics_nosort = "select TopicId, Item, WeightedCounts from topicdescriptionview where ExperimentId=? Order By TopicID ASC, Counts DESC";
 $query_topicsdistribution = null;
 $query_heatmap = null;
 $query_trends = null;

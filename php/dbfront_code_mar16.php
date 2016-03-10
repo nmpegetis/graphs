@@ -49,10 +49,11 @@ class database {
 	}
 
 	function doQuery($query){
+//print_r(SQLite3::version());
 		$stmt = $this->db->query($query);
 		$this->last_query = $query;
 		if(!$stmt){
-			error_log("Failed to do query with message: ".$this->db->errorInfo(), 0);
+			error_log("Failed to do query with message: ".print_r($this->db->errorInfo()), 0);
 			return false;
 		}
 		return $stmt;
@@ -62,7 +63,7 @@ class database {
 		$stmt = $this->db->prepare($query);
 		$this->last_query = $query;
 		if(!$stmt){
-            error_log("Failed to prepare query with message: ".$this->db->errorInfo(), 0);
+            error_log("Failed to prepare query with message: ".print_r($this->db->errorInfo()), 0);
             return false;
 		}
 		return $stmt;
@@ -70,7 +71,7 @@ class database {
 
 	function doExecute($stmt,$params){
 		if(!$stmt->execute($params)){
-            error_log("Failed to execute query with message: ".$stmt->errorInfo(), 0);
+            error_log("Failed to execute query with message: ".print_r($stmt->errorInfo()), 0);
             return false;
 		}
 		return $stmt;
@@ -85,7 +86,6 @@ if(!isset($_GET['s']) || !isset($_GET['ex'])){
 
 $mydb = new database("sqlite","",0,$db_path,"","");
 
-
 //////////////////////////////
 ///// GRAPH LAYOUT QUERY /////
 //////////////////////////////
@@ -94,18 +94,24 @@ $query = $query_graphLayout;
 $move_elems = array("=?",">?"); 
 $set_elems = array("=".$_GET['ex'],">".$_GET['s']);
 $memQuery = str_replace($move_elems, $set_elems, $query);
-$querykey = "KEY" . md5($memQuery);
+
+//$query = $memQuery;
+
+$querykey = "KEY" . md5($query);
 $list = $meminstance->get($querykey);
 
-if (!$list) {
+//if (!$list) {
 
-	$stmt = $mydb->doPrepare($query);
-
-	$stmt = $mydb->doExecute($stmt,array($_GET['ex'],$_GET['s']));
-
+//$stmt = $mydb->doPrepare($query);
+//var_dump($mydb);
+//var_dump($mydb);
+//	$stmt = $mydb->doExecute($stmt,array($_GET['ex'],$_GET['s']));
+		$stmt = $mydb->doQuery($query);
+//var_dump($mydb);
+//print_r($mydb->query($query));
 // instead of fetching all together... delay a little but for sure change the encoding of each one
 //	$list = $stmt->fetchAll();
-	while($row = $stmt->fetch(PDO::FETCH_ASSOC))
+	while($row = $stmt->fetch())
 	{
 		foreach($row as &$value)
 		{
@@ -119,10 +125,10 @@ if (!$list) {
 
    $meminstance->set($querykey, $list, 0, $memcache_time);		
 	//	print "got result from mysql\n";
-}
-else{
+//}
+//else{
 	//	print "got result from memcached\n";
-}
+//}
 
 
 //////////////////////////////
@@ -141,7 +147,7 @@ if (!$experiments) {
 		$stmt = $mydb->doQuery($query);
 		$res = $stmt->fetch();
 	do {
-		array_push($experiments,array("id"=>$res[0],"desc"=>$res[1],"Metadata"=>$res[2],"initialSimilarity"=>$res[3],"PhraseBoost"=>$res[4]));
+		array_push($experiments,array("id"=>$res[0],"desc"=>$res[1],"initialSimilarity"=>$res[2]));
 	} while ($res = $stmt->fetch());
 
    	$meminstance->set($querykey, $experiments, 0, $memcache_time);
@@ -207,7 +213,7 @@ if (!$topics) {
 			$topics[$res[0]] = array();
 		if(count($topics[$res[0]])>9)
 			continue;
-		array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2],"title"=>$res[3]));	
+		array_push($topics[$res[0]],array("item"=>$res[1],"counts"=>$res[2],"title"=>"aaaa"));	
 	} while ($res = $stmt->fetch());
 
    	$meminstance->set($querykey, $topics, 0, $memcache_time);
@@ -268,7 +274,7 @@ $old = umask(0);
 //TODO http://stackoverflow.com/questions/8103860/move-uploaded-file-gives-failed-to-open-stream-permission-denied-error-after$file = fopen("../data/layout_".$_GET['ex']."_".$_GET['s'].".json","w");
 
 // cd layouts/acm/data 		or			cd layouts/openaire/data
-// sudo chown deamon ./				// set owner the www-data or daemon in order to be able the client to create file
+// sudo chown -R darmon ./				// set owner the www-data or daemon in order to be able the client to create file
 // sudo chmod -R 0755 ./
 $myFile = "../../../data/layout_".$_GET['ex']."_".$_GET['s'].".json";
 $file = fopen($myFile,"w");

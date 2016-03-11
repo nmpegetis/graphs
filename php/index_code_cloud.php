@@ -136,7 +136,10 @@
 
                 .words(
                         data.map(function(d) {
-                        return {text: d.quarter, size: d.quarter};
+                            console.log(d)
+                            console.log(d[0])
+                            console.log(d.quarter)
+                        return {text: d[0], size: d[1]};
                     }))
                     .rotate(function() { return ~~(Math.random() * 2) * 90; })
                     .font("Impact")

@@ -136,8 +136,6 @@
 
                 .words(
                         data.map(function(d,i) {
-                            console.log(d)
-                            console.log(d.layoutId)
                         return {text: d.quarter, size: d.value};
                     }))
                     .rotate(function() { return ~~(Math.random() * 2) * 90; })

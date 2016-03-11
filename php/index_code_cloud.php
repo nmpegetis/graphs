@@ -186,13 +186,6 @@
             layoutId = '<?php echo $layoutId ;?>';
         }
 
-        if((layoutType = getUrlParameter('type')) == null){
-            layoutType = '<?php echo $layoutType ;?>';
-        }
-
-        if((topicsSort = getUrlParameter('sort')) == null){
-            topicsSort = '<?php echo $topicsSort ;?>';
-        }
     }
 
     function getUrlParameter(name) {

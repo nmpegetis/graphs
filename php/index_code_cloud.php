@@ -136,10 +136,7 @@
 
                 .words(
                         data.map(function(d) {
-                            console.log(d)
-                            console.log(d[0])
-                            console.log(d.quarter)
-                        return {text: d[0], size: d[1]};
+                        return {text: d.quarter, size: d.};
                     }))
                     .rotate(function() { return ~~(Math.random() * 2) * 90; })
                     .font("Impact")
@@ -220,7 +217,7 @@
 
     function ajaxTrendsCall(experiment) {
         console.log("ajaxCall for trend layout: " + experiment);
-        var url = "./trends.php";
+        var url = "./cloud.php";
 
         //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
         return $.ajax({
@@ -242,7 +239,7 @@
 
     function dothework(response) {
         //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-        var result = pivot(response, ['year'], ['avgweight'], {});
+        var result = pivot(response, ['year'], ['id'], {});
         var line;
         line = "quarter";
         for (var k = 0; k < result.columnHeaders.length; k++) {

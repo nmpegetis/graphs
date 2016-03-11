@@ -40,13 +40,13 @@ $pieces = explode("_", $_GET['id']);
 //echo $pieces[0]; // piece1
 //echo $pieces[1]; // piece2
 
-$spider_query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
+$trend_query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
 foreach ($pieces as $key=>&$value) {
     if ($key > 0)
-        $spider_query .= " or ";
-    $spider_query .= "tw.TopicId='".$value."'  ";
+        $trend_query .= " or ";
+    $trend_query .= "tw.TopicId='".$value."'  ";
 }
-$spider_query .= " order by tw.topicid ";
+$trend_query .= " order by tw.topicid ";
 //$spider_query = "Select authorid, TopicDistributionPerBatch.TopicId,  Standard, TopicDistributionPerBatch.ExperimentId
 //from TopicDistributionPerBatch
 //  INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId

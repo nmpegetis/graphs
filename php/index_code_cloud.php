@@ -136,7 +136,7 @@
 
                 .words(
                         data.map(function(d) {
-                        return {text: d.quarter, size: d[1]};
+                        return {text: d.quarter, size: d.quarter};
                     }))
                     .rotate(function() { return ~~(Math.random() * 2) * 90; })
                     .font("Impact")
@@ -243,8 +243,7 @@
         var line;
         line = "quarter";
         for (var k = 0; k < result.columnHeaders.length; k++) {
-//            line += "," + result.columnHeaders[k];
-
+            line += "," + result.columnHeaders[k];
 //            columns.push(parseInt(result.columnHeaders[k]));
         }
 

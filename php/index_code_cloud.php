@@ -239,16 +239,17 @@
 
     function dothework(response) {
         //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-        var result = pivot(response, ['year'], ['id'], {});
+        var result = pivot(response, ['year'], ['avgweight'], {});
         var line;
         line = "quarter";
         for (var k = 0; k < result.columnHeaders.length; k++) {
-            line += "," + result.columnHeaders[k];
+//            line += "," + result.columnHeaders[k];
+
 //            columns.push(parseInt(result.columnHeaders[k]));
         }
 
         for (var i = 0; i < result.rowHeaders.length; i++) {
-            line += "\n" + layoutId;
+            line += "\n" + result.rowHeaders[i];
             for (var j = 0; j < result.columnHeaders.length; j++) {
 
                 if (result[i][j] !== undefined)

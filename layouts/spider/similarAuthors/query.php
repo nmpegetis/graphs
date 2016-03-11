@@ -46,7 +46,7 @@ $pieces = explode("_", $_GET['id']);
 //    --where td.AuthorId="P100035" or td.AuthorId="P100038"
 //order by td.authorid,tw.topicid;
 
-$spider_query = "select a1.FirstName, a1.LastName, a2.FirstName, a2.LastName, Similarity, EntityId1, EntityId2 from author as a1, author as a2, EntitySimilarity as es where a1.AuthorId=es.EntityId1 and a2.AuthorId=es.EntityId2 and Similarity>0.7 ";
+$spider_query = "select a1.FirstName, a1.LastName, a2.FirstName, a2.LastName, Similarity, EntityId1, EntityId2 from author as a1, author as a2, EntitySimilarity as es where a1.AuthorId=es.EntityId1 and a2.AuthorId=es.EntityId2 and Similarity>0.7 and (";
 //foreach ($pieces as $key=>&$value) {
 //    if ($key > 0)
 //        $spider_query .= " Union ";
@@ -55,11 +55,12 @@ $spider_query = "select a1.FirstName, a1.LastName, a2.FirstName, a2.LastName, Si
 //where AuthorId='".$value."'  ";
 //}
 
-///foreach ($pieces as $key=>&$value) {
-///    if ($key > 0)
-///        $spider_query .= " or ";
-///    $spider_query .= " a1.AuthorId='".$value."'  or a2.AuthorId='".$value."'  ";
-///}
+foreach ($pieces as $key=>&$value) {
+    if ($key > 0)
+//        $spider_query .= " or ";
+    $spider_query .= " a1.AuthorId='".$value."'  or a2.AuthorId='".$value."'  ";
+}
+$spider_query .= ")";
 //$spider_query .= " order by authorid, TopicId";
 
 

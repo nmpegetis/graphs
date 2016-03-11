@@ -135,11 +135,10 @@
 //                    }))
 
                 .words(
-                        data.map(function(d) {
+                        data.map(function(d,i) {
                             console.log(d)
-                            console.log(d.quarter)
-                            console.log(d.layoutid)
-                        return {text: d.quarter, size: d.layoutid};
+                            console.log(d.layoutId)
+                        return {text: d.quarter, size: d.value};
                     }))
                     .rotate(function() { return ~~(Math.random() * 2) * 90; })
                     .font("Impact")
@@ -244,11 +243,11 @@
         //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
         var result = pivot(response, ['year'], ['id'], {});
         var line;
-        line = "quarter";
-        for (var k = 0; k < result.columnHeaders.length; k++) {
-            line += "," + result.columnHeaders[k];
-//            columns.push(parseInt(result.columnHeaders[k]));
-        }
+        line = "quarter,value";
+//        for (var k = 0; k < result.columnHeaders.length; k++) {
+//            line += ",_" + result.columnHeaders[k];
+////            columns.push(parseInt(result.columnHeaders[k]));
+//        }
 
         for (var i = 0; i < result.rowHeaders.length; i++) {
             line += "\n" + result.rowHeaders[i];

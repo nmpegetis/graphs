@@ -224,7 +224,7 @@
             type: "GET",
             async: true,
             url: url,
-            data: "ex=" + experiment + "&layoutid=" + layoutId,
+            data: "ex=" + experiment + "&id=" + layoutId,
             success: function (resp) {
                 jsonTrendsLayout = JSON.parse(resp);
                 trends = jsonTrendsLayout.trends;

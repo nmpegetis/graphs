@@ -136,7 +136,7 @@
 
                 .words(
                         data.map(function(d) {
-                        return {text: d.quarter, size: d.};
+                        return {text: d.quarter, size: d."33"};
                     }))
                     .rotate(function() { return ~~(Math.random() * 2) * 90; })
                     .font("Impact")

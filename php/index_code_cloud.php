@@ -248,7 +248,7 @@
         }
 
         for (var i = 0; i < result.rowHeaders.length; i++) {
-            line += "\n" + result.rowHeaders[i];
+            line += "\n" + layoutId;
             for (var j = 0; j < result.columnHeaders.length; j++) {
 
                 if (result[i][j] !== undefined)

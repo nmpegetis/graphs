@@ -61,6 +61,7 @@ foreach ($pieces as $key=>&$value) {
     $spider_query .= " a1.AuthorId='".$value."'  or a2.AuthorId='".$value."'  ";
 }
 $spider_query .= ")";
+
 //$spider_query .= " order by authorid, TopicId";
 
 

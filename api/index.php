@@ -176,7 +176,6 @@
 
         });
 
-        $('#example-getting-started').multiselect();
     </script>
 </head>
 
@@ -203,19 +202,27 @@
             </li></ul>
         </h5>
     </div>
-    <select id="example-getting-started" multiple="multiple">
-        <option value="cheese">Cheese</option>
-        <option value="tomatoes">Tomatoes</option>
-        <option value="mozarella">Mozzarella</option>
-        <option value="mushrooms">Mushrooms</option>
-        <option value="pepperoni">Pepperoni</option>
-        <option value="onions">Onions</option>
-    </select>
+
     <ul class="thumbnails" id="hover-cap-unique">
-        <li class="span4">
+        <li class="span5">
+            <h4>ACM Authors Graph</h4>
             <form name="form1" action="./getGraphACM.php" method="get" target="_blank">
-            <span>Similarity:  <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/></span>
-            <div class="thumbnail">
+           <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+           <input type="text" name="id" value="null" />
+              <!-- // <script> -->
+            <!-- //     $('#ids').multiselect(); -->
+            <!-- // </script> -->
+<!--             <select id="ids" multiple="multiple">
+                <option value="cheese">Cheese</option>
+                <option value="tomatoes">Tomatoes</option>
+                <option value="mozarella">Mozzarella</option>
+                <option value="mushrooms">Mushrooms</option>
+                <option value="pepperoni">Pepperoni</option>
+                <option value="onions">Onions</option>
+            </select>
+ -->
+
+          <div class="thumbnail">
                 <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">ACM Authors Graph</p>
                 <div class="caption">
                     <h4>ACM Authors Graph</h4>
@@ -228,13 +235,15 @@
                 </div>
                 <img src="./images/acm_authors.png" alt="acm_authors.png">
             </div>
-            <h4>ACM Authors Graph</h4>
+            <h4><hr/></h4>
             </form>
         </li>
 
-        <li class="span4">
+        <li class="span5">
+            <h4>OpenAIRE Graph</h4>
             <form name="form2" action="./getGraphOpenaire.php" method="get" target="_blank">
-            <span>Similarity:  <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/></span>
+           <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+           <input type="text" name="id" value="null" />
             <div class="thumbnail">
                 <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">OpenAIRE Graph</p>
                 <div class="caption">
@@ -247,13 +256,15 @@
                 <!--<img src="http://placehold.it/600x400" alt="acm_authors.png">-->
                 <img src="./images/graph_openaire.png" alt="graph_openaire.png">
             </div>
-            <h4>OpenAIRE Graph</h4>
+            <h4><hr/></h4>
             </form>
         </li>
 
-        <li class="span4">
+        <li class="span5">
+            <h4>ACM Authors Spider Diagram</h4>
             <form name="form3" action="./getSpiderAuthors.php" method="get" target="_blank">
-            <span>Similarity:  <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/></span>
+           <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+           <input type="text" name="id" value="P100004_P10002" />
             <div class="thumbnail">
                 <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">ACM Authors Spider Diagram</p>
                 <div class="caption">
@@ -265,15 +276,16 @@
                 </div>
                 <img src="./images/spider_authors.png" alt="spider_authors.png">
             </div>
-            <h4>ACM Authors Spider Diagram</h4>
+            <h4><hr/></h4>
             </form>
         </li>
 
-<hr/>
-        <li class="span4">
+        <li class="span5">
+            <h4>ACM Similar Authors Spider Diagram</h4>
             <form name="form4" action="./getSpiderSimilarAuthors.php" method="get" target="_blank">
-                <span>Similarity:  <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/></span>
-            <div class="thumbnail">
+           <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+           <input type="text" name="id" value="P100004_P10002" />
+           <div class="thumbnail">
                 <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">ACM Similar Authors Spider Diagram</p>
                 <div class="caption">
                     <h4>ACM Similar Authors Spider Diagram</h4>
@@ -284,14 +296,16 @@
                 </div>
                 <img src="http://placehold.it/600x400" alt="acm_authors.png">
             </div>
-            <h4>ACM Similar Authors Spider Diagram</h4>
+            <h4><hr/></h4>
             </form>
         </li>
 
-        <li class="span4">
+        <li class="span5">
+            <h4>ACM Topics Spider Diagram</h4>
             <form name="form5" action="./getSpiderTopics.php" method="get" target="_blank">
-                <span>Similarity:  <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/></span>
-            <div class="thumbnail">
+           <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+           <input type="text" name="id" value="39_83" />
+           <div class="thumbnail">
                 <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">ACM Topics Spider Diagram</p>
                 <div class="caption">
                     <h4>ACM Topics Spider Diagram</h4>
@@ -302,13 +316,15 @@
                 </div>
                 <img src="./images/spider_topics.png" alt="spider_topics.png">
             </div>
-            <h4>ACM Topics Spider Diagram</h4>
+            <h4><hr/></h4>
             </form>
         </li>
 
-        <li class="span4">
+        <li class="span5">
+            <h4>ACM Journal Trends </h4>
             <form name="form6" action="./getTrendsACMJournals.php" method="get" target="_blank">
-                <span>Similarity:  <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/></span>
+           <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+           <input type="text" name="id" value="00010782" />
             <div class="thumbnail">
                 <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">ACM Journals Trends</p>
                 <div class="caption">
@@ -320,19 +336,21 @@
                 </div>
                 <img src="./images/trends_acmJournals.png" alt="trends_acmJournals.png">
             </div>
-            <h4>ACM Journal Trends</h4>
+            <h4><hr/></h4>
             </form>
         </li>
 
         <br/>
 
-        <li class="span4">
+        <li class="span5">
+            <h4>OpenAIRE Trends</h4>
             <form name="form7" action="./getTrendsOpenaire.php" method="get" target="_blank">
-                <span>Similarity:  <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/></span>
+           <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+           <input type="text" name="id" value="318,219," />
             <div class="thumbnail">
                 <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">OpenAIRE Trends</p>
                 <div class="caption">
-                    <h4>OpenAIRE Trends</h4>
+                    <h4>OpenAIRE Trends </h4>
 
                     <span style="overflow:inherit">Experiments:</span>
 
@@ -340,13 +358,14 @@
                 </div>
                 <img src="./images/trends_openaire.png" alt="trends_openaire.png">
             </div>
-            <h4>OpenAIRE Trends</h4>
             </form>
         </li>
 
-        <li class="span4">
+        <li class="span5" border='2'>
+                <h4>ACM Cloud</h4>
             <form name="form8" action="./getCloudTopics.php" method="get" target="_blank">
-                <span>Similarity:  <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/></span>
+           <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+           <input type="text" name="id" value="83" />
                 <div class="thumbnail">
                     <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">ACM Cloud</p>
                     <div class="caption">
@@ -358,7 +377,6 @@
                     </div>
                     <img src="./images/cloud_acm.png" alt="cloud_acm.png">
                 </div>
-                <h4>ACM Cloud</h4>
             </form>
         </li>
     </ul>
@@ -369,6 +387,7 @@
     </footer>
 </div>
 <!-- /container -->
+
 </body>
 
 </html>

@@ -1,16 +1,13 @@
 <?php
 
-ini_set('max_execution_time', $max_execution_time);
-//ini_set('memory_limit', '-1');		// unlimited memory
-ini_set('memory_limit', $memory_limit);	
-
-set_time_limit(0);
-
 $max_execution_time = 120;  //300 seconds = 5 minutes
 $memory_limit = '4096M';	//'-1';		// unlimited memory
-$memcache_port = 11211;
+ini_set('max_execution_time', $max_execution_time);
+ini_set('memory_limit', $memory_limit);
+
+set_time_limit(0);
 $db_name = "PTM3DB_oct15.db";
-$db_path = "../dbs/".$db_name;
+$db_path = "./dbs/".$db_name;
 
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
 
@@ -20,17 +17,6 @@ INNER Join ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributio
 and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
 where JournalISSN='".$_GET['layoutid']."' AND TopicDistributionPerBatch.ExperimentId='ACM_400T_1000IT_0IIT_100B_3M_cos' order by TopicDistributionPerBatch.TopicId, BatchId, TrendIndex desc";
 
-
-/// ! important
-// Firstly memcache should be installed in server to use the class Memcache().
-// Check the below:
-// http://thelinuxfaq.com/93-how-can-i-configure-memcache-on-xampp-in-linux
-// https://www.digitalocean.com/community/tutorials/how-to-install-and-use-memcache-on-ubuntu-14-04
-// DON'T FORGET to restart the server at the end
-
-
-$meminstance = new Memcache();
-$meminstance->pconnect('localhost', $memcache_port);
 
 class database {
 	private $db,$last_query = null;
@@ -105,53 +91,24 @@ $query = $trend_query;
 
 	if ($query != null) {
 
-		$memQuery = $query;
-		$querykey = "KEY" . md5($memQuery) . $db_name;
+		$trends = array();
+		$stmt = $mydb->doQuery($query);
 
-		$trends = $meminstance->get($querykey);
+		$res = $stmt->fetch();
+		do {
+			array_push($trends,array("id"=>$res[0],"year"=>$res[1],"weight"=>$res[2],"avgweight"=>$res[3]));
+		} while ($res = $stmt->fetch());
 
-		if (!$trends) {
-
-			$trends = array();
-			$stmt = $mydb->doQuery($query);
-
-			$res = $stmt->fetch();
-			do {
-				array_push($trends,array("id"=>$res[0],"year"=>$res[1],"weight"=>$res[2],"avgweight"=>$res[3]));
-			} while ($res = $stmt->fetch());
-
-			$meminstance->set($querykey, $trends, 0, $memcache_time);
-			//	print "got result from mysql\n";
-		}
-		else{
-			//	print "got result from memcached\n";
-		}
 	}
 	else{
 		$trends = null;
 	}
 
-	// each time push the trends in allTrends
-	//array_push($allTrends,$trends);
-
-//}
-
-// finally put them all in everything["trends"]
-//$everything['trends'] = $allTrends;
 $everything['trends'] = $trends;
 
 
-//	print_r($everything['resp']);
-
-//echo json_decode(json_encode($everything, JSON_UNESCAPED_UNICODE));
-// encode in every possibility
 $output = json_encode($everything,JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 echo $output;
-
-// todo do the below if needed to write output to file
-//$file = fopen("../data/trends_".$_GET['ex'].".json","w");
-//fwrite($file, $output);
-//fclose($file);
 
 unset($everything);//release memory
 

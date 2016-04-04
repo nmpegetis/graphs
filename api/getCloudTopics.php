@@ -7,15 +7,13 @@ ini_set('memory_limit', $memory_limit);
 set_time_limit(0);
 
 
-
 $max_execution_time = 120;  //300 seconds = 5 minutes
 $memory_limit = '4096M';	//'-1';		// unlimited memory
 $memcache_port = 11211;
 $db_name = "PTM3DB_oct15.db";
-$db_path = "../dbs/".$db_name;
+$db_path = "./dbs/".$db_name;
 
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
-
 
 $pieces = explode("_", $_GET['id']);
 $trend_query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
@@ -25,18 +23,6 @@ foreach ($pieces as $key=>&$value) {
 	$trend_query .= "tw.TopicId='".$value."'  ";
 }
 $trend_query .= " order by tw.topicid ";
-
-
-/// ! important
-// Firstly memcache should be installed in server to use the class Memcache().
-// Check the below:
-// http://thelinuxfaq.com/93-how-can-i-configure-memcache-on-xampp-in-linux
-// https://www.digitalocean.com/community/tutorials/how-to-install-and-use-memcache-on-ubuntu-14-04
-// DON'T FORGET to restart the server at the end
-
-
-$meminstance = new Memcache();
-$meminstance->pconnect('localhost', $memcache_port);
 
 class database {
 	private $db,$last_query = null;
@@ -98,7 +84,6 @@ if(!isset($_GET['ex'])){
 
 $mydb = new database("sqlite","",0,$db_path,"","");
 
-
 //////////////////////////////////////////////////
 ///// TOPICS DISTRIBUTION PER YEAR : TRENDS //////
 //////////////////////////////////////////////////
@@ -109,14 +94,9 @@ $allTrends = array();
 //foreach ($trends_queries as $key => $query) {
 $query = $trend_query;
 
-	if ($query != null) {
 
 		$memQuery = $query;
-		$querykey = "KEY" . md5($memQuery) . $db_name;
 
-		$trends = $meminstance->get($querykey);
-
-		if (!$trends) {
 
 			$trends = array();
 			$stmt = $mydb->doQuery($query);
@@ -126,21 +106,6 @@ $query = $trend_query;
 				array_push($trends,array("id"=>$res[3],"year"=>$res[1],"weight"=>$res[2],"avgweight"=>$res[0]));
 			} while ($res = $stmt->fetch());
 
-			$meminstance->set($querykey, $trends, 0, $memcache_time);
-			//	print "got result from mysql\n";
-		}
-		else{
-			//	print "got result from memcached\n";
-		}
-	}
-	else{
-		$trends = null;
-	}
-
-	// each time push the trends in allTrends
-	//array_push($allTrends,$trends);
-
-//}
 
 // finally put them all in everything["trends"]
 //$everything['trends'] = $allTrends;

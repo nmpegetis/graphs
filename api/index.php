@@ -95,6 +95,11 @@
     <!-- Include the plugin's CSS and JS: -->
     <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
     <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+
+
+    <script type="text/javascript" src="./js/less.min.js"></script>
+    <script type="text/javascript" src="./js/spin.min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {
 
@@ -174,8 +179,64 @@
                 }
             });
 
-        });
+            var exACM = "ACM_400T_1000IT_0IIT_100B_3M_cos";
+            var exOpenAIRE = "HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos";
+            var jsonData, topicidsACM, topicidsOpenAIRE, authorids, journalids;
 
+            var target = document.getElementById('graphdiv'),
+                opts = {
+                    lines: 17,              // The number of lines to draw
+                    length: 20,             // The length of each line
+                    width: 10,              // The line thickness
+                    radius: 30,             // The radius of the inner circle
+                    corners: 1,             // Corner roundness (0..1)
+                    rotate: 0,              // The rotation offset
+                    direction: 1,           // 1: clockwise, -1: counterclockwise
+                    color: '#000',          // #rgb or #rrggbb or array of colors
+                    speed: 1,               // Rounds per second
+                    trail: 60,              // Afterglow percentage
+                    shadow: false,          // Whether to render a shadow
+                    hwaccel: false,         // Whether to use hardware acceleration
+                    className: 'spinner',   // The CSS class to assign to the spinner
+                    zIndex: 2e9,            // The z-index (defaults to 2000000000)
+                    top: '100',             // Top position relative to parent
+                    left: '50%'             // Left position relative to parent
+                };
+
+            var spinner = new Spinner(opts).spin(target);
+
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: "getIndexDataACM.php",
+                data: "ex=" + exACM,
+                success: function (resp) {
+                    spinner.stop();
+                    jsonData = JSON.parse(resp);
+                    topicidsACM = jsonData.topics;
+                    authorids = jsonData.authors;
+                    journalids = jsonData.journals;
+                },
+                error: function (e) {
+                    alert('Error: ' + JSON.stringify(e));
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: "getIndexDataOpenAIRE.php",
+                data: "ex=" + exOpenAIRE,
+                success: function (resp) {
+                    spinner.stop();
+                    jsonData = JSON.parse(resp);
+                    topicidsOpenAIRE = jsonData.topics;
+                },
+                error: function (e) {
+                    alert('Error: ' + JSON.stringify(e));
+                }
+            });
+        });
     </script>
 </head>
 

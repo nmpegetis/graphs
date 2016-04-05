@@ -57,7 +57,7 @@ $spider_query = "select a1.FirstName, a1.LastName, a2.FirstName, a2.LastName, Si
 
 foreach ($pieces as $key=>&$value) {
     if ($key > 0)
-//        $spider_query .= " or ";
+        $spider_query .= " or ";
     $spider_query .= " a1.AuthorId='".$value."'  or a2.AuthorId='".$value."'  ";
 }
 $spider_query .= ")";

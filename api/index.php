@@ -213,43 +213,61 @@
 
             var spinner = new Spinner(opts).spin(target);
 
-            $.ajax({
-                type: "GET",
-                async: true,
-                url: "getIndexDataACM.php",
-                data: "ex=" + exACM,
-                success: function (resp) {
-                    spinner.stop();
-                    jsonData = JSON.parse(resp);
-                    topicidsACM = jsonData.topics;
-                    authorids = jsonData.authors;
-                    journalids = jsonData.journals;
-                    console.log("topicidsACM")
-                    console.log(topicidsACM)
-                },
-                error: function (e) {
-                    alert('Error: ' + JSON.stringify(e));
-                }
-            });
+           
+            function ajaxCallACM () {
+                return $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: "getIndexDataACM.php",
+                    data: "ex=" + exACM,
+                    success: function (resp) {
+                        spinner.stop();
+                        jsonData = JSON.parse(resp);
+                        topicidsACM = jsonData.topics;
+                        authorids = jsonData.authors;
+                        journalids = jsonData.journals;
+                        console.log("topicidsACM")
+                        console.log(topicidsACM)
+                    },
+                    error: function (e) {
+                        alert('Error: ' + JSON.stringify(e));
+                    }
+                });
+            };
 
-            $.ajax({
-                type: "GET",
-                async: true,
-                url: "getIndexDataOpenAIRE.php",
-                data: "ex=" + exOpenAIRE,
-                success: function (resp) {
-                    spinner.stop();
-                    jsonData = JSON.parse(resp);
-                    topicidsOpenAIRE = jsonData.topics;
-                    console.log("topicidsOpenAIRE")
-                    console.log(topicidsOpenAIRE)
-                    console.log($('ids'))
-                },
-                error: function (e) {
-                    alert('Error: ' + JSON.stringify(e));
-                }
-            });
-            
+            function ajaxCallOpenAIRE () {
+                return $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: "getIndexDataOpenAIRE.php",
+                    data: "ex=" + exOpenAIRE,
+                    success: function (resp) {
+                        spinner.stop();
+                        jsonData = JSON.parse(resp);
+                        topicidsOpenAIRE = jsonData.topics;
+                        console.log("topicidsOpenAIRE")
+                        console.log(topicidsOpenAIRE)
+                    },
+                    error: function (e) {
+                        alert('Error: ' + JSON.stringify(e));
+                    }
+                });
+            };
+
+            $.when( ajaxCallACM, ajaxCallOpenAIRE )
+            .then( dataLoader, myFailure );
+
+            $('#ids').multiselect();
+
+            function dataLoader () {
+                alert( "data loaded\n");
+                $('#ids').multiselect('dataprovider',topicsOpenAIRE);
+            };
+
+
+            function myFailure () {
+                alert( "data failure in loading\n");
+            };
 </script>
 <!-- Analytics Code -->
 <div class="container">
@@ -280,12 +298,9 @@
             <form name="form1" action="./getGraphACM.php" method="get" target="_blank">
            <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
            <input type="text" name="id" value="null" />
-              <!-- // <script> -->
-            <!-- //     $('#ids').multiselect(); -->
-            <!-- // </script> -->
-<!--             <select id="ids" multiple="multiple">-->
-<!--                <option value="cheese">Cheese</option>-->
-<!--            </select>-->
+             <select id="ids" multiple="multiple">
+                <option value="cheese">Cheese</option>
+            </select>
 
           <div class="thumbnail">
                 <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">ACM Authors Graph</p>
@@ -296,7 +311,7 @@
                     <!--<p style="overflow:scroll; height:30px; overflow-x:hidden;">-->
                     <!--</p>-->
                     <input type="submit" rel="tooltip" title="Visit Webpage" class="btn btn-inverse btn-submit" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos"/>
-                    <span style="overflow:inherit">Visualization:</span>
+<br/>                    <span style="overflow:inherit">Visualization:</span>
                     <a href="http://astero.di.uoa.gr/graphs/layouts/acm/authors/?s=0.8&ex=ACM_400T_1000IT_0IIT_100B_3M_cos" target="_blank"><input type="button" rel="tooltip" title="Visit Webpage" class="btn" value="ACM_400T_1000IT_0IIT_100B_3M_cos"/></a>
                 </div>
                 <img src="./images/acm_authors.png" alt="acm_authors.png">
@@ -317,7 +332,7 @@
 
                     <span style="overflow:inherit">Data:</span>
                     <input id="s2" type="submit" rel="tooltip" title="Visit Webpage" class="btn btn-inverse btn-submit" name="ex" value="HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos" />
-                    <span style="overflow:inherit">Visualization:</span>
+<br/>                    <span style="overflow:inherit">Visualization:</span>
                     <a href="http://astero.di.uoa.gr/graphs/layouts/openaire/mar16/?s=0.93&ex=HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos" target="_blank"><input type="button" rel="tooltip" title="Visit Webpage" class="btn" value="HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos"/></a>
                 </div>
                 <!--<img src="http://placehold.it/600x400" alt="acm_authors.png">-->
@@ -339,7 +354,7 @@
 
                     <span style="overflow:inherit">Data:</span>
                     <input id="s3" type="submit" rel="tooltip" title="Visit Webpage" class="btn btn-inverse btn-submit" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos" />
-                    <span style="overflow:inherit">Visualization:</span>
+<br/>                    <span style="overflow:inherit">Visualization:</span>
                     <a href="http://astero.di.uoa.gr/graphs/layouts/spider/authors/?ex=ACM_400T_1000IT_0IIT_100B_3M&id=_P1000673_P1000785_P1001039" target="_blank"><input type="button" rel="tooltip" title="Visit Webpage" class="btn" value="ACM_400T_1000IT_0IIT_100B_3M"/></a>
                 </div>
                 <img src="./images/spider_authors.png" alt="spider_authors.png">
@@ -360,7 +375,7 @@
 
                     <span style="overflow:inherit">Data:</span>
                     <input id="s4" type="submit" rel="tooltip" title="Visit Webpage" class="btn btn-inverse btn-submit" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos" />
-                    <span style="overflow:inherit">Visualization:</span>
+<br/>                    <span style="overflow:inherit">Visualization:</span>
                     <a href="http://astero.di.uoa.gr/graphs/layouts/spider/authors/?ex=ACM_400T_1000IT_0IIT_100B_3M&id=_P1000673_P1000785_P1001039" target="_blank"><input type="button" rel="tooltip" title="Visit Webpage" class="btn" value="ACM_400T_1000IT_0IIT_100B_3M"/></a>
                 </div>
                 <img src="http://placehold.it/600x400" alt="acm_authors.png">
@@ -381,7 +396,7 @@
 
                     <span style="overflow:inherit">Data:</span>
                     <input id="s5" type="submit" rel="tooltip" title="Visit Webpage" class="btn btn-inverse btn-submit" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos" />
-                    <span style="overflow:inherit">Visualization:</span>
+<br/>                    <span style="overflow:inherit">Visualization:</span>
                     <a href="http://astero.di.uoa.gr/graphs/layouts/spider/topics/?ex=ACM_400T_1000IT_0IIT_100B_3M_cos&id=_39" target="_blank"><input type="button" rel="tooltip" title="Visit Webpage" class="btn" value="ACM_400T_1000IT_0IIT_100B_3M"/></a>
                 </div>
                 <img src="./images/spider_topics.png" alt="spider_topics.png">
@@ -402,7 +417,7 @@
 
                     <span style="overflow:inherit">Data:</span>
                     <input id="s6" type="submit" rel="tooltip" title="Visit Webpage" class="btn btn-inverse btn-submit" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos" />
-                    <span style="overflow:inherit">Visualization:</span>
+<br/>                    <span style="overflow:inherit">Visualization:</span>
                     <a href="http://astero.di.uoa.gr/graphs/layouts/trends/acmJournals/" target="_blank"><input type="button" rel="tooltip" title="Visit Webpage" class="btn" value="ACM_400T_1000IT_0IIT_100B_3M"/></a>
                 </div>
                 <img src="./images/trends_acmJournals.png" alt="trends_acmJournals.png">
@@ -425,7 +440,7 @@
 
                     <span style="overflow:inherit">Data:</span>
                     <input id="s7" type="submit" rel="tooltip" title="Visit Webpage" class="btn btn-inverse btn-submit" name="ex" value="HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos" />
-                    <span style="overflow:inherit">Visualization:</span>
+<br/>                    <span style="overflow:inherit">Visualization:</span>
                     <a href="http://astero.di.uoa.gr/graphs/layouts/trends/openaire/" target="_blank"><input type="button" rel="tooltip" title="Visit Webpage" class="btn" value="HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos"/></a>
                 </div>
                 <img src="./images/trends_openaire.png" alt="trends_openaire.png">
@@ -445,7 +460,7 @@
 
                         <span style="overflow:inherit">Data:</span>
                         <input id="s8" type="submit" rel="tooltip" title="Visit Webpage" class="btn btn-inverse btn-submit" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos" />
-                        <span style="overflow:inherit">Visualization:</span>
+<br/>                        <span style="overflow:inherit">Visualization:</span>
                         <a href="http://astero.di.uoa.gr/graphs/layouts/cloud/topics/?ex=ACM_400T_1000IT_0IIT_100B_3M_cos&id=_19" target="_blank"><input type="button" rel="tooltip" title="Visit Webpage" class="btn" value="ACM_400T_1000IT_0IIT_100B_3M_cos"/></a>
                     </div>
                     <img src="./images/cloud_acm.png" alt="cloud_acm.png">

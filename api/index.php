@@ -236,6 +236,11 @@
                     alert('Error: ' + JSON.stringify(e));
                 }
             });
+            
+            console.log("topicidsACM")
+            console.log(topicidsACM)
+            console.log("topicidsOpenAIRE")
+            console.log(topicidsOpenAIRE)
         });
     </script>
 </head>

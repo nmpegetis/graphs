@@ -382,7 +382,7 @@
             <h4>ACM Authors Spider Diagram</h4>
             <form id="form3" name="form3" action="" method="get" target="_blank">
                 <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
-                <input type="text" name="id" value="P1000673_P1000785_P1001039"/>
+                <input type="text" name="id" value="_P1000673_P1000785_P1001039"/>
                 <input type="text" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos"
                        style="width: 20px; visibility: hidden"/>
                 <div class="thumbnail">
@@ -507,10 +507,10 @@
                         <span style="overflow:inherit">Experiment: HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos</span>
                         <br/><br/>
                         <input id="s7" type="submit" rel="tooltip" title="Visit Webpage"
-                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction6('./getTrendsOpenaire.php')"/>
+                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction7('./getTrendsOpenaire.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
-                               value="Show Visualization" onclick="doAction6('./layouts/trends/openaire/')"/>
+                               value="Show Visualization" onclick="doAction7('./layouts/trends/openaire/')"/>
                     </div>
                     <img src="./images/trends_openaire.png" alt="trends_openaire.png">
                 </div>
@@ -532,10 +532,10 @@
                         <span style="overflow:inherit">Experiment: ACM_400T_1000IT_0IIT_100B_3M_cos</span>
                         <br/><br/>
                         <input id="s8" type="submit" rel="tooltip" title="Visit Webpage"
-                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction7('./getCloudTopics.php')"/>
+                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction8('./getCloudTopics.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
-                               value="Show Visualization" onclick="doAction6('http://astero.di.uoa.gr/graphs/layouts/cloud/topics/')"/>
+                               value="Show Visualization" onclick="doAction8('http://astero.di.uoa.gr/graphs/layouts/cloud/topics/')"/>
                     </div>
                     <img src="./images/cloud_acm.png" alt="cloud_acm.png">
                 </div>
@@ -583,6 +583,12 @@
 
         function doAction7(action) {
             form = $("#form7");
+            form.attr("action", action);
+            form.submit();
+        }
+
+        function doAction8(action) {
+            form = $("#form8");
             form.attr("action", action);
             form.submit();
         }

@@ -89,40 +89,19 @@
         .mfp-with-zoom.mfp-removing.mfp-bg {
             opacity: 0;
         }
-
-        #overlay {
-            position: absolute;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background-color: #f00;
-            filter: alpha(opacity=10);
-            -moz-opacity: 0.1;
-            opacity: 0.1;
-            cursor: pointer;
-
-        }
-
-        .dialog {
-            position: absolute;
-            border: 2px solid #3366CC;
-            width: 250px;
-            height: 120px;
-            background-color: #ffffff;
-            z-index: 12;
-        }
-
     </style>
+    <!--    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>-->
+    <!-- Include Twitter Bootstrap and jQuery: -->
     <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css"/>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/d3.js"></script>
 
+    <!-- Include the plugin's CSS and JS: -->
     <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
     <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
     <script src="./js/magnific.min.js"></script>
+
 
     <script type="text/javascript" src="./js/less.min.js"></script>
     <script type="text/javascript" src="./js/spin.min.js"></script>
@@ -167,6 +146,42 @@
                 function () {
                     $(this).find('.caption').hide();
                 });
+            /*
+
+             $('.image-popup-vertical-fit').magnificPopup({
+             type: 'image',
+             closeOnContentClick: true,
+             mainClass: 'mfp-img-mobile',
+             image: {
+             verticalFit: true
+             }
+
+             });
+
+             $('.image-popup-fit-width').magnificPopup({
+             type: 'image',
+             closeOnContentClick: true,
+             image: {
+             verticalFit: false
+             }
+             });
+
+             $('.image-popup-no-margins').magnificPopup({
+             type: 'image',
+             closeOnContentClick: true,
+             closeBtnInside: false,
+             fixedContentPos: true,
+             mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+             image: {
+             verticalFit: true
+             },
+             zoom: {
+             enabled: true,
+             duration: 300 // don't foget to change the duration also in CSS
+             }
+             });
+             */
+
         });
     </script>
 </head>
@@ -213,15 +228,15 @@
                 topicidsACM = jsonData.topics;
                 authorids = jsonData.authors;
                 journalids = jsonData.journals;
-                console.log("topicidsACM");
+                console.log("topicidsACM")
                 console.log(topicidsACM)
             },
             error: function (e) {
-                console.log('Error: ' + JSON.stringify(e));
                 alert('Error: ' + JSON.stringify(e));
             }
         });
     }
+    ;
 
     function ajaxCallOpenAIRE() {
         return $.ajax({
@@ -233,23 +248,26 @@
                 spinner.stop();
                 jsonData = JSON.parse(resp);
                 topicidsOpenAIRE = jsonData.topics;
-                console.log("topicidsOpenAIRE");
+                console.log("topicidsOpenAIRE")
                 console.log(topicidsOpenAIRE)
             },
             error: function (e) {
-                console.log('Error: ' + JSON.stringify(e));
                 alert('Error: ' + JSON.stringify(e));
             }
         });
     }
+    ;
 
-    $.when(ajaxCallACM(), ajaxCallOpenAIRE())
+    $.when(ajaxCallACM, ajaxCallOpenAIRE)
         .then(dataLoader, myFailure);
+
+    $('#ids').multiselect();
 
     function dataLoader() {
         console.log("data loaded\n");
-//        $('#ids').multiselect('dataprovider', topicsOpenAIRE);
+        $('#ids').multiselect('dataprovider', topicsOpenAIRE);
     }
+    ;
 
 
     function myFailure() {
@@ -257,13 +275,6 @@
     }
 
 </script>
-<script type="text/javascript" src="js/d3.js"></script>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/bootstrap.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
-<script type="text/javascript" src="js/multiselect.min.js"></script>
 <!-- Analytics Code -->
 <div class="container">
     <a href="https://www.openaire.eu/" title="OpenAIRE"><img src="./images/logo_openaire.jpg" alt="logo_openaire"
@@ -303,130 +314,12 @@
         </h5>
     </div>
 
-
-    <div id="scoped-content">
-        <!--        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css"-->
-        <!--              rel="stylesheet">-->
-        <style>
-            .modal-backdrop, .modal-backdrop.fade.in {
-                opacity: 0;
-                z-index: auto;
-            }
-
-            .modal {
-                padding: inherit;
-                width: inherit;
-            }
-        </style>
-
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-                data-whatever="@mdo">Open modal for @mdo
-        </button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-                data-whatever="@fat">Open modal for @fat
-        </button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-                data-whatever="@getbootstrap">Open modal for @getbootstrap
-        </button>
-
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog" role="document">
-                <!--                <div class="modal-content">-->
-                <!--                    <div class="modal-header">-->
-                <!--                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                <!--                        <h4 class="modal-title" id="exampleModalLabel">New message</h4>-->
-                <!--                    </div>-->
-                <!--                    <div class="modal-body">-->
-                <!--                        <form>-->
-                <!--                            <div class="form-group">-->
-                <!--                                <label for="recipient-name" class="control-label">Recipient:</label>-->
-                <!--                                <input type="text" class="form-control" id="recipient-name">-->
-                <!--                            </div>-->
-                <!--                            <div class="form-group">-->
-                <!--                                <label for="message-text" class="control-label">Message:</label>-->
-                <!--                                <textarea class="form-control" id="message-text"></textarea>-->
-                <!--                            </div>-->
-                <!--                        </form>-->
-
-
-                <nav class="navbar navbar-fixed-top">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                                    data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand" href="#">Select Topics</a>
-                        </div>
-                        <div id="navbar" class="navbar-collapse collapse">
-                            <ul class="nav navbar-nav navbar-right btn-success">
-                                <li id="li1" style="margin:5px"><a style="color:white" href="#">All funders</a></li>
-                                <li id="li2" style="margin:5px"><a style="color:white" href="#">WT</a></li>
-                                <li id="li3" style="margin:5px"><a style="color:white" href="#">FP7</a></li>
-                                <li id="li4" style="margin:5px"><a style="color:white" href="#">NIH</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-                <div class="col-xs-5" id="from" style="padding-top: 70px">
-                    <select name="from[]" id="undo_redo" class="form-control" size="30" multiple="multiple">
-                        <option value="1">C++</option>
-                        <option value="2">C#</option>
-                    </select>
-                </div>
-
-                <div class="col-xs-2" style="padding-top: 70px;">
-                    <button type="button" id="undo_redo_undo" class="btn btn-primary btn-block">undo</button>
-                    <button type="button" id="undo_redo_rightAll" class="btn btn-default btn-block"><i
-                            class="glyphicon glyphicon-forward"></i></button>
-                    <button type="button" id="undo_redo_rightSelected" class="btn btn-default btn-block"><i
-                            class="glyphicon glyphicon-chevron-right"></i></button>
-                    <button type="button" id="undo_redo_leftSelected" class="btn btn-default btn-block"><i
-                            class="glyphicon glyphicon-chevron-left"></i></button>
-                    <button type="button" id="undo_redo_leftAll" class="btn btn-default btn-block"><i
-                            class="glyphicon glyphicon-backward"></i></button>
-                    <button type="button" id="undo_redo_redo" class="btn btn-warning btn-block">redo</button>
-                </div>
-
-                <div class="col-xs-5" id="to" style="padding-top: 70px">
-                    <select name="to[]" id="undo_redo_to" class="form-control" size="30" multiple="multiple"></select>
-                </div>
-
-
-                <!--                    </div>-->
-                <!--                    <div class="modal-footer">-->
-                <!--                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-                <!--                        <button type="button" class="btn btn-primary">Send message</button>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-            </div>
-        </div>
-    </div>
-
-
     <ul class="thumbnails" id="hover-cap-unique">
         <li class="span5">
             <h4>ACM Authors Graph</h4>
             <form id="form1" name="form1" action="" method="get" target="_blank">
-                <input id="asd" type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
+                <input type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
                 <input type="text" name="id" value="null" style="width: 20px; visibility: hidden"/>
-
-                <script type="text/javascript">
-                    $("#asd").focus(function () {
-                        console.log("asd");
-                        init();
-                    })
-
-                    function init() {
-                        $('#overlay').click(function () {
-                            closeDialog();
-                        })
-                    }
-
-                </script>
                 <input type="text" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos"
                        style="width: 20px; visibility: hidden"/>
                 <!---             <select id="ids" multiple="multiple">
@@ -455,7 +348,6 @@
             </form>
         </li>
 
-
         <li class="span5">
             <h4>OpenAIRE Graph</h4>
             <form id="form2" name="form2" action="" method="get" target="_blank">
@@ -475,8 +367,7 @@
                                value="Get Data" onclick="doAction2('./getGraphOpenaire.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
-                               value="Show Visualization"
-                               onclick="doAction2('http://astero.di.uoa.gr/graphs/layouts/openaire/mar16/')"/>
+                                                  value="Show Visualization" onclick="doAction2('http://astero.di.uoa.gr/graphs/layouts/openaire/mar16/')"/>
                     </div>
                     <!--<img src="http://placehold.it/600x400" alt="acm_authors.png">-->
                     <img src="./images/graph_openaire.png" alt="graph_openaire.png">
@@ -502,8 +393,7 @@
                         <span style="overflow:inherit">Experiment: ACM_400T_1000IT_0IIT_100B_3M_cos</span>
                         <br/><br/>
                         <input id="s3" type="submit" rel="tooltip" title="Visit Webpage"
-                               class="btn btn-inverse btn-submit" value="Get Data"
-                               onclick="doAction3('./getSpiderAuthors.php')"/>
+                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction3('./getSpiderAuthors.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
                                value="Show Visualization" onclick="doAction3('./layouts/spider/authors/')"/>
@@ -531,8 +421,7 @@
                         <span style="overflow:inherit">Experiment: ACM_400T_1000IT_0IIT_100B_3M_cos</span>
                         <br/><br/>
                         <input id="s4" type="submit" rel="tooltip" title="Visit Webpage"
-                               class="btn btn-inverse btn-submit" value="Get Data"
-                               onclick="doAction4('./getSpiderSimilarAuthors.php')"/>
+                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction4('./getSpiderSimilarAuthors.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
                                value="Show Visualization" onclick="doAction4('./layouts/spider/authors/')"/>
@@ -560,8 +449,7 @@
                         <span style="overflow:inherit">Experiment: ACM_400T_1000IT_0IIT_100B_3M_cos</span>
                         <br/><br/>
                         <input id="s5" type="submit" rel="tooltip" title="Visit Webpage"
-                               class="btn btn-inverse btn-submit" value="Get Data"
-                               onclick="doAction5('./getSpiderTopics.php')"/>
+                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction5('./getSpiderTopics.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
                                value="Show Visualization" onclick="doAction5('./layouts/spider/topics/')"/>
@@ -589,8 +477,7 @@
                         <span style="overflow:inherit">Experiment: ACM_400T_1000IT_0IIT_100B_3M_cos</span>
                         <br/><br/>
                         <input id="s6" type="submit" rel="tooltip" title="Visit Webpage"
-                               class="btn btn-inverse btn-submit" value="Get Data"
-                               onclick="doAction6('./getTrendsACMJournals.php')"/>
+                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction6('./getTrendsACMJournals.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
                                value="Show Visualization" onclick="doAction6('./layouts/trends/acmJournals/')"/>
@@ -620,8 +507,7 @@
                         <span style="overflow:inherit">Experiment: HEALTHTender_400T_1000IT_6000CHRs_100B_2M_cos</span>
                         <br/><br/>
                         <input id="s7" type="submit" rel="tooltip" title="Visit Webpage"
-                               class="btn btn-inverse btn-submit" value="Get Data"
-                               onclick="doAction7('./getTrendsOpenaire.php')"/>
+                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction7('./getTrendsOpenaire.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
                                value="Show Visualization" onclick="doAction7('./layouts/trends/openaire/')"/>
@@ -646,12 +532,10 @@
                         <span style="overflow:inherit">Experiment: ACM_400T_1000IT_0IIT_100B_3M_cos</span>
                         <br/><br/>
                         <input id="s8" type="submit" rel="tooltip" title="Visit Webpage"
-                               class="btn btn-inverse btn-submit" value="Get Data"
-                               onclick="doAction8('./getCloudTopics.php')"/>
+                               class="btn btn-inverse btn-submit" value="Get Data" onclick="doAction8('./getCloudTopics.php')"/>
                         <br/><br/>
                         <input type="button" rel="tooltip" title="Visit Webpage" class="btn"
-                               value="Show Visualization"
-                               onclick="doAction8('http://astero.di.uoa.gr/graphs/layouts/cloud/topics/')"/>
+                               value="Show Visualization" onclick="doAction8('http://astero.di.uoa.gr/graphs/layouts/cloud/topics/')"/>
                     </div>
                     <img src="./images/cloud_acm.png" alt="cloud_acm.png">
                 </div>
@@ -708,193 +592,6 @@
             form.attr("action", action);
             form.submit();
         }
-
-        // μαγκια
-        var experiment;
-        var topics;
-        var listOfTopicIds = [];
-        var listOfTopics = {};
-        listOfTopicIds.push("123");
-        listOfTopicIds.push("234");
-
-        loadFromUrlParametersAndServer();
-
-        //    trendsFile = "../data/"+layoutId+".csv";
-        topicsFile = "../data/topics.csv";             // needed for the trend visualization
-
-        // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately
-        topicsFileExist = UrlExists(topicsFile);
-        if (!topicsFileExist) {
-            ajaxTopicsCall(experiment);
-        }
-
-        $(document).ready(function ($) {
-            d3.csv(topicsFile, function (error, data) {
-                $.each(data, function (i, d) {
-                    listOfTopics[i] = {
-                        id: d.TopicId,
-                        title: d.Title
-                    }; //value # of publications
-
-                    $('#undo_redo')
-                        .append("<option value=\"" + i + "\" id=\"" + d.TopicId + "\" title=\"" + d.Title + "\"> " + d.Title + "</option>");
-                });
-            });
-
-            $("#li1").on("click", function () {
-                var url = "./trends.php?id=allfunder&type=stream&topics=";
-                var selected = $('#undo_redo_to').multiselect("leftAll").children();
-                selected.each(function (i, d) {
-                    url += d.id + ","
-                });
-                console.log(url);
-//            window.location.replace(url);
-                window.open(url, '_blank');
-            });
-
-            $("#li2").on("click", function () {
-                var url = "./trends.php?id=wt&type=stream&topics=";
-                var selected = $('#undo_redo_to').multiselect("leftAll").children();
-                selected.each(function (i, d) {
-                    url += d.id + ","
-                });
-                console.log(url);
-//            window.location.replace(url);
-                window.open(url, '_blank');
-            });
-
-            $("#li3").on("click", function () {
-                var url = "./trends.php?id=fp7&type=stream&topics=";
-                var selected = $('#undo_redo_to').multiselect("leftAll").children();
-                selected.each(function (i, d) {
-                    url += d.id + ","
-                });
-                console.log(url);
-//            window.location.replace(url);
-                window.open(url, '_blank');
-            });
-
-            $("#li4").on("click", function () {
-                var url = "./trends.php?id=nih&type=stream&topics=";
-                var selected = $('#undo_redo_to').multiselect("leftAll").children();
-                selected.each(function (i, d) {
-                    url += d.id + ","
-                });
-                console.log(url);
-//            window.location.replace(url);
-                window.open(url, '_blank');
-            });
-
-            $('#multiselect').multiselect();
-            $('#undo_redo').multiselect({
-                search: {
-                    left: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
-                    right: '<input type="text" name="q" class="form-control" placeholder="Search..."/>',
-                }
-            });
-        });
-
-        /* function returns 1 if an array contains an object or 0 if not */
-        function include(arr, obj) {
-            return (arr.indexOf(obj) != -1);
-        }
-
-        function loadFromUrlParametersAndServer() {
-//                $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
-
-            if ((experiment = getUrlParameter('ex')) == null) {
-                experiment = '<?php echo $experimentName;?>';
-            }
-
-            if ((layoutId = getUrlParameter('id')) == null) {         //default
-                layoutId = '<?php echo $layoutId;?>';
-            }
-
-            if ((layoutType = getUrlParameter('type')) == null) {
-                layoutType = '<?php echo $layoutType;?>';
-            }
-
-            if ((topicsSort = getUrlParameter('sort')) == null) {
-                topicsSort = '<?php echo $topicsSort;?>';
-            }
-        }
-
-        function getUrlParameter(name) {
-            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
-        }
-
-
-        function ajaxTopicsCall(experiment) {
-            console.log("ajaxCall for topics layout: " + experiment);
-            var url = "../layouts/trends/openaire/topics.php";
-
-
-            //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-            return $.ajax({
-                type: "GET",
-                async: true,
-                url: url,
-                data: "ex=" + experiment,
-                success: function (resp) {
-                    jsonTopicsLayout = JSON.parse(resp);
-                    topics = jsonTopicsLayout.topics;
-                    topicsNoSort = jsonTopicsLayout.topicsNoSort;
-                },
-                error: function (e) {
-                    alert('Error: ' + JSON.stringify(e));
-                }
-            });
-        }
-
-        function dothework(response) {
-            //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-            var result = pivot(response[0], ['year'], ['id'], {});
-            var line;
-            line = "quarter";
-            for (var k = 0; k < result.columnHeaders.length; k++) {
-                line += "," + result.columnHeaders[k];
-//            columns.push(parseInt(result.columnHeaders[k]));
-            }
-
-            for (var i = 0; i < result.rowHeaders.length; i++) {
-                line += "\n" + result.rowHeaders[i];
-                for (var j = 0; j < result.columnHeaders.length; j++) {
-
-                    if (result[i][j] !== undefined)
-                        line += "," + result[i][j][0].weight;
-                    else
-                        line += ",0"
-                }
-            }
-            console.log(line)
-
-            $.ajax({
-                type: "POST",
-                async: true,
-                url: "../layouts/trends/openaire/fileCreator.php",
-                dataType: 'text',		// this is json if we put it like this JSON object
-                data: {
-                    /*        json : JSON.stringify(jsonObject) /* convert here only */
-                    func: "csv",
-                    csv: line,
-                    id: layoutId      // id for distinguishing trends
-                },
-                success: function () {
-                    console.log("CSV file Created")
-                },
-                error: function (e) {
-                    console.log("Error in file Creation:" + e);
-                }
-            })
-        }
-
-        function UrlExists(url) {
-            var http = new XMLHttpRequest();
-            http.open('HEAD', url, false);
-            http.send();
-            return http.status != 404;
-        }
-
 
     </script>
 

@@ -8,7 +8,7 @@
 $max_execution_time = 120;  //300 seconds = 5 minutes
 $memory_limit = '4096M';	//'-1';		// unlimited memory
 $memcache_port = 11211;
-$db_name = "PTM3DB_oct15.db";
+$db_name = "PTMDB_ACM2016.db";
 $db_path = "../../../dbs/".$db_name;
 
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes

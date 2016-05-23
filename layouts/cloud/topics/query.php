@@ -14,39 +14,21 @@ $db_path = "../../../dbs/".$db_name;
 $memcache_time = 2592000;				//600 = 10 minutes 		//2592000 = 30 days (maximum for memcached) //600 = 10 minutes
 
 
-// --Journals
-// -- CACM, Communications of the ACM ISSN: 00010782
-// -- ACM SIGSOFT Software Engineering Notes, 01635948
-// --Journal of the ACM : 00045411
-// -- ACM SIGMOD Record: 01635808
-// -- ACM SIGPLAN Notices: 03621340
-// -- ACM SIGGRAPH Computer Graphics: 00978930
-//$move_elems = array('?');
-//$set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
-//$set_elemsTitles = array("ACM Topic Trend Analysis 1950-2011","Journal: CACM, Communications of the ACM","Journal: ACM SIGSOFT Software Engineering Notes","Journal: Journal of the ACM","Journal: ACM SIGMOD Records","Journal: ACM SIGPLAN Notices","Journal: ACM SIGGRAPH Computer Graphics");
 
-// DONT FORGET TO ALSO CHANGE THE TOTAL NUMBER OF TRENDS IN THE VARIABLE BELOW $trends_num
-
-// general query for all trends
-
-
-//--  LEFT OUTER JOIN  ImportantTopicsView on ImportantTopicsView.TopicId = TopicDistributionPerBatch.TopicId
-//--                                    and ImportantTopicsView.ExperimentId = TopicDistributionPerBatch.ExperimentId
-
-//-- prepei kai to journal na einai null gia na paroume ola ta journals kai oxi gia kathena
 
 // splits authorsid from string to array elements
 $pieces = explode("_", $_GET['id']);
 //echo $pieces[0]; // piece1
 //echo $pieces[1]; // piece2
 
-$trend_query = "select Title, Item, WeightedCounts, TopicId from topicsweightsort as tw where ";
+$trend_query = "select td.Title, ta.Item, ta.Counts, ta.TopicId from TopicAnalysis as ta, TopicDescription as td
+where ta.TopicId=td.TopicId and ";
 foreach ($pieces as $key=>&$value) {
     if ($key > 0)
         $trend_query .= " or ";
-    $trend_query .= "tw.TopicId='".$value."'  ";
+    $trend_query .= "ta.TopicId='".$value."'  ";
 }
-$trend_query .= " order by tw.topicid ";
+$trend_query .= " order by ta.topicid ";
 //$spider_query = "Select authorid, TopicDistributionPerBatch.TopicId,  Standard, TopicDistributionPerBatch.ExperimentId
 //from TopicDistributionPerBatch
 //  INNER Join TopicDistributionPerAuthor on TopicDistributionPerAuthor.TopicId = TopicDistributionPerBatch.TopicId

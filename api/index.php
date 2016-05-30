@@ -1,7 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Scholarly Communication &amp; Research Analytics</title>
@@ -10,162 +8,27 @@
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css"
           rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
-    <style>
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
-
-        #hover-cap-4col .thumbnail, #hover-cap-3col .thumbnail, #hover-cap-unique .thumbnail, #hover-cap-6col .thumbnail {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .caption {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: rgba(0, 0, 0, 0.4);
-            width: 100%;
-            height: 100%;
-            color: #fff !important;
-        }
-
-        .caption p {
-            padding: 6px;
-        }
-
-        a {
-            color: white;
-        }
-
-        a:hover {
-            color: gold;
-        }
-
-        /* padding-bottom and top for image */
-        .mfp-no-margins img.mfp-img {
-            padding: 0;
-        }
-
-        /* position of shadow behind the image */
-        .mfp-no-margins .mfp-figure:after {
-            top: 0;
-            bottom: 0;
-        }
-
-        /* padding for main container */
-        .mfp-no-margins .mfp-container {
-            padding: 0;
-        }
-
-        /*
-
-        for zoom animation
-        uncomment this part if you haven't added this code anywhere else
-
-        */
-
-        .mfp-with-zoom .mfp-container,
-        .mfp-with-zoom.mfp-bg {
-            opacity: 0;
-            -webkit-backface-visibility: hidden;
-            -webkit-transition: all 0.3s ease-out;
-            -moz-transition: all 0.3s ease-out;
-            -o-transition: all 0.3s ease-out;
-            transition: all 0.3s ease-out;
-        }
-
-        .mfp-with-zoom.mfp-ready .mfp-container {
-            opacity: 1;
-        }
-
-        .mfp-with-zoom.mfp-ready.mfp-bg {
-            opacity: 0.8;
-        }
-
-        .mfp-with-zoom.mfp-removing .mfp-container,
-        .mfp-with-zoom.mfp-removing.mfp-bg {
-            opacity: 0;
-        }
-
-        #overlay {
-            position: absolute;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background-color: #f00;
-            filter: alpha(opacity=10);
-            -moz-opacity: 0.1;
-            opacity: 0.1;
-            cursor: pointer;
-
-        }
-
-        .dialog {
-            position: absolute;
-            border: 2px solid #3366CC;
-            width: 250px;
-            height: 120px;
-            background-color: #ffffff;
-            z-index: 12;
-        }
-
-    </style>
+    <link href="./css/index.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/d3.js"></script>
-
     <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
-    <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
     <script src="./js/magnific.min.js"></script>
-
     <script type="text/javascript" src="./js/less.min.js"></script>
     <script type="text/javascript" src="./js/spin.min.js"></script>
-
     <script type="text/javascript">
         $(document).ready(function () {
 
             $("[rel='tooltip']").tooltip();
 
-            $('#hover-cap-4col .thumbnail').hover(
-                function () {
-                    $(this).find('.caption').slideDown(250);
-                },
-
-                function () {
-                    $(this).find('.caption').slideUp(250);
-                });
-
-            $('#hover-cap-3col .thumbnail').hover(
-                function () {
-                    $(this).find('.caption').fadeIn(250);
-                },
-
-                function () {
-                    $(this).find('.caption').fadeOut(250);
-                });
-
             $('#hover-cap-unique .thumbnail').hover(
                 function () {
                     $(this).find('.caption').slideDown(500);
                 },
-
                 function () {
                     $(this).find('.caption').slideUp(500);
-                });
-
-            $('#hover-cap-6col .thumbnail').hover(
-                function () {
-                    $(this).find('.caption').show();
-                },
-
-                function () {
-                    $(this).find('.caption').hide();
                 });
         });
     </script>
@@ -248,7 +111,6 @@
 
     function dataLoader() {
         console.log("data loaded\n");
-//        $('#ids').multiselect('dataprovider', topicsOpenAIRE);
     }
 
 
@@ -320,35 +182,17 @@
         </style>
 
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-                data-whatever="@mdo">Open modal for @mdo
+                data-whatever="@mdo">Select Authors
         </button>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-                data-whatever="@fat">Open modal for @fat
+                data-whatever="@fat">Select Topics
         </button>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
-                data-whatever="@getbootstrap">Open modal for @getbootstrap
+                data-whatever="@getbootstrap">Select Journals
         </button>
 
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog" role="document">
-                <!--                <div class="modal-content">-->
-                <!--                    <div class="modal-header">-->
-                <!--                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                <!--                        <h4 class="modal-title" id="exampleModalLabel">New message</h4>-->
-                <!--                    </div>-->
-                <!--                    <div class="modal-body">-->
-                <!--                        <form>-->
-                <!--                            <div class="form-group">-->
-                <!--                                <label for="recipient-name" class="control-label">Recipient:</label>-->
-                <!--                                <input type="text" class="form-control" id="recipient-name">-->
-                <!--                            </div>-->
-                <!--                            <div class="form-group">-->
-                <!--                                <label for="message-text" class="control-label">Message:</label>-->
-                <!--                                <textarea class="form-control" id="message-text"></textarea>-->
-                <!--                            </div>-->
-                <!--                        </form>-->
-
-
+            <div class="modal-dialog" role="document" style="width:1200px">
                 <nav class="navbar navbar-fixed-top">
                     <div class="container-fluid">
                         <div class="navbar-header">
@@ -363,18 +207,14 @@
                         </div>
                         <div id="navbar" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav navbar-right btn-success">
-                                <li id="li1" style="margin:5px"><a style="color:white" href="#">All funders</a></li>
-                                <li id="li2" style="margin:5px"><a style="color:white" href="#">WT</a></li>
-                                <li id="li3" style="margin:5px"><a style="color:white" href="#">FP7</a></li>
-                                <li id="li4" style="margin:5px"><a style="color:white" href="#">NIH</a></li>
+                                <li id="li1" style="margin:5px"><a style="color:white" href="#">Ok</a></li>
                             </ul>
                         </div>
                     </div>
                 </nav>
                 <div class="col-xs-5" id="from" style="padding-top: 70px">
                     <select name="from[]" id="undo_redo" class="form-control" size="30" multiple="multiple">
-                        <option value="1">C++</option>
-                        <option value="2">C#</option>
+                        <!--                        <option value="1">C++</option>-->
                     </select>
                 </div>
 
@@ -396,43 +236,41 @@
                 </div>
 
 
-                <!--                    </div>-->
-                <!--                    <div class="modal-footer">-->
-                <!--                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-                <!--                        <button type="button" class="btn btn-primary">Send message</button>-->
-                <!--                    </div>-->
-                <!--                </div>-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Ok</button>
+                </div>
             </div>
         </div>
     </div>
 
 
     <ul class="thumbnails" id="hover-cap-unique">
-        <li class="span5">
+        <option class="span5">
             <h4>ACM Authors Graph</h4>
             <form id="form1" name="form1" action="" method="get" target="_blank">
+
+                <div class="dropdown">
+                    <select class="btn btn-primary">
+                        <option id="a1" name="s" value="0.9" selected>Similarity e.g. 90%</option>
+                        <option id="a1" name="s" value="1.0">100</option>
+                        <option id="a2" name="s" value="0.9">90</option>
+                        <option id="a3" name="s" value="0.8">80</option>
+                        <option id="a4" name="s" value="0.7">70</option>
+                        <option id="a5" name="s" value="0.6">60</option>
+                        <option id="a6" name="s" value="0.5">50</option>
+                        <option id="a7" name="s" value="0.4">40</option>
+                        <option id="a8" name="s" value="0.3">30</option>
+                        <option id="a9" name="s" value="0.2">20</option>
+                        <option id="a10" name="s" value="0.1">10</option>
+                    </select>
+                </div>
+
                 <input id="asd" type="text" name="s" placeholder="0.9" maxlength="10" value="0.9"/>
                 <input type="text" name="id" value="null" style="width: 20px; visibility: hidden"/>
 
-                <script type="text/javascript">
-                    $("#asd").focus(function () {
-                        console.log("asd");
-                        init();
-                    })
-
-                    function init() {
-                        $('#overlay').click(function () {
-                            closeDialog();
-                        })
-                    }
-
-                </script>
                 <input type="text" name="ex" value="ACM_400T_1000IT_0IIT_100B_3M_cos"
                        style="width: 20px; visibility: hidden"/>
-                <!---             <select id="ids" multiple="multiple">
-                                <option value="cheese">Cheese</option>
-                            </select>
-                -->
                 <div class="thumbnail">
                     <p class="front" style="position: absolute; background: #000; opacity: 0.8; color:#fff; width:98%;">
                         ACM Authors Graph</p>
@@ -709,18 +547,14 @@
             form.submit();
         }
 
-        // μαγκια
         var experiment;
         var topics;
-        var listOfTopicIds = [];
         var listOfTopics = {};
-        listOfTopicIds.push("123");
-        listOfTopicIds.push("234");
 
         loadFromUrlParametersAndServer();
 
-        //    trendsFile = "../data/"+layoutId+".csv";
-        topicsFile = "../data/topics.csv";             // needed for the trend visualization
+
+        topicsFile = "../data/acmtopics.json";             // needed for the trend visualization
 
         // if all topics json files don't exist then we need to make a server call else we get them from the json file immediately
         topicsFileExist = UrlExists(topicsFile);
@@ -729,15 +563,17 @@
         }
 
         $(document).ready(function ($) {
-            d3.csv(topicsFile, function (error, data) {
-                $.each(data, function (i, d) {
+
+            d3.json(topicsFile, function (error, data) {
+                $.each(data.topics, function (i, d) {
                     listOfTopics[i] = {
-                        id: d.TopicId,
-                        title: d.Title
+                        id: i,
+                        title: d[0].title
                     }; //value # of publications
 
                     $('#undo_redo')
-                        .append("<option value=\"" + i + "\" id=\"" + d.TopicId + "\" title=\"" + d.Title + "\"> " + d.Title + "</option>");
+                        .append("<option value=\"" + i + "\" id=\"" + i + "\" title=\"" + d[0].title + "\"> " + d[0].title + "</option>");
+//                        .append("<option value=\"" + i + "\" id=\"" + d.TopicId + "\" title=\"" + d.Title + "\"> " + d.Title + "</option>");
                 });
             });
 
@@ -748,40 +584,6 @@
                     url += d.id + ","
                 });
                 console.log(url);
-//            window.location.replace(url);
-                window.open(url, '_blank');
-            });
-
-            $("#li2").on("click", function () {
-                var url = "./trends.php?id=wt&type=stream&topics=";
-                var selected = $('#undo_redo_to').multiselect("leftAll").children();
-                selected.each(function (i, d) {
-                    url += d.id + ","
-                });
-                console.log(url);
-//            window.location.replace(url);
-                window.open(url, '_blank');
-            });
-
-            $("#li3").on("click", function () {
-                var url = "./trends.php?id=fp7&type=stream&topics=";
-                var selected = $('#undo_redo_to').multiselect("leftAll").children();
-                selected.each(function (i, d) {
-                    url += d.id + ","
-                });
-                console.log(url);
-//            window.location.replace(url);
-                window.open(url, '_blank');
-            });
-
-            $("#li4").on("click", function () {
-                var url = "./trends.php?id=nih&type=stream&topics=";
-                var selected = $('#undo_redo_to').multiselect("leftAll").children();
-                selected.each(function (i, d) {
-                    url += d.id + ","
-                });
-                console.log(url);
-//            window.location.replace(url);
                 window.open(url, '_blank');
             });
 
@@ -800,22 +602,22 @@
         }
 
         function loadFromUrlParametersAndServer() {
-//                $set_elems = array("00010782","01635948","00045411","01635808","03621340","00978930");
+            var fs = require('config');
 
             if ((experiment = getUrlParameter('ex')) == null) {
-                experiment = '<?php echo $experimentName;?>';
+                experiment = fs.experimentName;
             }
 
             if ((layoutId = getUrlParameter('id')) == null) {         //default
-                layoutId = '<?php echo $layoutId;?>';
+                layoutId = fs.layoutId;
             }
 
             if ((layoutType = getUrlParameter('type')) == null) {
-                layoutType = '<?php echo $layoutType;?>';
+                layoutType = fs.layoutType;
             }
 
             if ((topicsSort = getUrlParameter('sort')) == null) {
-                topicsSort = '<?php echo $topicsSort;?>';
+                topicsSort = fs.topicsSort;
             }
         }
 
@@ -846,55 +648,12 @@
             });
         }
 
-        function dothework(response) {
-            //todo na ta metaferw server side http://stackoverflow.com/questions/10649419/pivot-tables-php-mysql
-            var result = pivot(response[0], ['year'], ['id'], {});
-            var line;
-            line = "quarter";
-            for (var k = 0; k < result.columnHeaders.length; k++) {
-                line += "," + result.columnHeaders[k];
-//            columns.push(parseInt(result.columnHeaders[k]));
-            }
-
-            for (var i = 0; i < result.rowHeaders.length; i++) {
-                line += "\n" + result.rowHeaders[i];
-                for (var j = 0; j < result.columnHeaders.length; j++) {
-
-                    if (result[i][j] !== undefined)
-                        line += "," + result[i][j][0].weight;
-                    else
-                        line += ",0"
-                }
-            }
-            console.log(line)
-
-            $.ajax({
-                type: "POST",
-                async: true,
-                url: "../layouts/trends/openaire/fileCreator.php",
-                dataType: 'text',		// this is json if we put it like this JSON object
-                data: {
-                    /*        json : JSON.stringify(jsonObject) /* convert here only */
-                    func: "csv",
-                    csv: line,
-                    id: layoutId      // id for distinguishing trends
-                },
-                success: function () {
-                    console.log("CSV file Created")
-                },
-                error: function (e) {
-                    console.log("Error in file Creation:" + e);
-                }
-            })
-        }
-
         function UrlExists(url) {
             var http = new XMLHttpRequest();
             http.open('HEAD', url, false);
             http.send();
             return http.status != 404;
         }
-
 
     </script>
 
